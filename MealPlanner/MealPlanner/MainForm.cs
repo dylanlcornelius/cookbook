@@ -12,6 +12,13 @@ namespace MealPlanner
 {
     public partial class MainForm : Form
     {
+        //private Color BACKCOLOR = Color.Black;
+        //private Color HIGHLIGHT = Color.FromArgb(60, 60, 60);
+
+        private const int BACKCOLOR = 0;
+        private const int HIGHLIGHT = 60;
+
+
         private bool isMouseDown = false;
         private Point firstPoint;
 
@@ -60,5 +67,41 @@ namespace MealPlanner
         }
 
         #endregion
+
+        async private void btnRecipes_MouseDown(object sender, MouseEventArgs e)
+        {
+            Color fadeColor;
+            for (int i = BACKCOLOR; i <= HIGHLIGHT; i+=10)
+            {
+                fadeColor = Color.FromArgb(i, i, i);
+                btnRecipes.BackColor = fadeColor;
+                pnlRecipes.BackColor = fadeColor;
+                await Delay();
+            }
+
+            //btnRecipes.BackColor = HIGHLIGHT;
+            //pnlRecipes.BackColor = HIGHLIGHT;
+        }
+
+        async private void btnRecipes_MouseUp(object sender, MouseEventArgs e)
+        {
+            Color fadeColor;
+            for (int i = HIGHLIGHT; i >= BACKCOLOR; i-=10)
+            {
+                fadeColor = Color.FromArgb(i, i, i);
+                btnRecipes.BackColor = fadeColor;
+                pnlRecipes.BackColor = fadeColor;
+                //await De
+                await Delay();
+            }
+
+            //btnRecipes.BackColor = BACKCOLOR;
+            //pnlRecipes.BackColor = BACKCOLOR;
+        }
+
+        async Task Delay()
+        {
+            await Task.Delay(1);
+        }
     }
 }

@@ -31,8 +31,13 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlRecipes = new System.Windows.Forms.Panel();
-            this.btnRecipes = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colServings = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEdit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnRecipes = new System.Windows.Forms.Button();
+            this.ucSearchBar1 = new MealPlanner.ucSearchBar();
             this.pnlRecipes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -75,17 +80,54 @@
             // 
             // pnlRecipes
             // 
+            this.pnlRecipes.Controls.Add(this.ucSearchBar1);
             this.pnlRecipes.Controls.Add(this.dataGridView1);
-            this.pnlRecipes.Location = new System.Drawing.Point(12, 78);
+            this.pnlRecipes.Location = new System.Drawing.Point(0, 65);
             this.pnlRecipes.Name = "pnlRecipes";
-            this.pnlRecipes.Size = new System.Drawing.Size(976, 510);
+            this.pnlRecipes.Size = new System.Drawing.Size(1000, 535);
             this.pnlRecipes.TabIndex = 2;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colName,
+            this.colCategory,
+            this.colServings,
+            this.colEdit});
+            this.dataGridView1.Location = new System.Drawing.Point(13, 35);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(974, 488);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // colName
+            // 
+            this.colName.HeaderText = "Recipe Name";
+            this.colName.Name = "colName";
+            // 
+            // colCategory
+            // 
+            this.colCategory.HeaderText = "Category";
+            this.colCategory.Name = "colCategory";
+            // 
+            // colServings
+            // 
+            this.colServings.HeaderText = "Number of Servings";
+            this.colServings.Name = "colServings";
+            // 
+            // colEdit
+            // 
+            this.colEdit.HeaderText = "Edit";
+            this.colEdit.Name = "colEdit";
+            this.colEdit.Text = "Ingredients";
+            this.colEdit.ToolTipText = "Click Here to Edit";
+            this.colEdit.UseColumnTextForButtonValue = true;
             // 
             // btnRecipes
             // 
             this.btnRecipes.FlatAppearance.BorderSize = 0;
-            this.btnRecipes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Black;
-            this.btnRecipes.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Black;
+            this.btnRecipes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnRecipes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRecipes.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecipes.ForeColor = System.Drawing.Color.Gray;
@@ -96,14 +138,17 @@
             this.btnRecipes.TabIndex = 3;
             this.btnRecipes.Text = "Recipes";
             this.btnRecipes.UseVisualStyleBackColor = true;
+            this.btnRecipes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRecipes_MouseDown);
+            this.btnRecipes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnRecipes_MouseUp);
             // 
-            // dataGridView1
+            // ucSearchBar1
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(231, 159);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(398, 172);
-            this.dataGridView1.TabIndex = 0;
+            this.ucSearchBar1.BackColor = System.Drawing.Color.Turquoise;
+            this.ucSearchBar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ucSearchBar1.Location = new System.Drawing.Point(12, 13);
+            this.ucSearchBar1.Name = "ucSearchBar1";
+            this.ucSearchBar1.Size = new System.Drawing.Size(975, 25);
+            this.ucSearchBar1.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -134,6 +179,11 @@
         private System.Windows.Forms.Panel pnlRecipes;
         private System.Windows.Forms.Button btnRecipes;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCategory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colServings;
+        private System.Windows.Forms.DataGridViewButtonColumn colEdit;
+        private ucSearchBar ucSearchBar1;
     }
 }
 
