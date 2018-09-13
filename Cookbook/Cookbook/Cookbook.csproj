@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{59CD57D7-2627-4745-88A1-9B8926ED5838}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MealPlanner</RootNamespace>
-    <AssemblyName>MealPlanner</AssemblyName>
+    <RootNamespace>Cookbook</RootNamespace>
+    <AssemblyName>Cookbook</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -70,6 +70,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ucSearchBar.resx">
       <DependentUpon>ucSearchBar.cs</DependentUpon>
