@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MealPlanner
+namespace Cookbook
 {
     public partial class MainForm : Form
     {
@@ -25,6 +25,20 @@ namespace MealPlanner
         public MainForm()
         {
             InitializeComponent();
+
+            List<Recipe> recipes = new List<Recipe>()
+            {
+                new Recipe(0, "Mac 'n Cheese", "Pasta", 15, 2, 500, 0)
+            };
+
+            /*
+            foreach (Recipe r in recipes)
+            {
+
+                dgvRecipes.Rows.Add(r.Name, r.Category, r.PrepTime, r.Servings, r.Calories, r.Quantity);
+            }
+            */
+            dgvRecipes.DataSource = recipes;
         }
 
         #region TITLE BAR
@@ -78,7 +92,6 @@ namespace MealPlanner
                 pnlRecipes.BackColor = fadeColor;
                 await Delay();
             }
-
             //btnRecipes.BackColor = HIGHLIGHT;
             //pnlRecipes.BackColor = HIGHLIGHT;
         }
@@ -91,7 +104,6 @@ namespace MealPlanner
                 fadeColor = Color.FromArgb(i, i, i);
                 btnRecipes.BackColor = fadeColor;
                 pnlRecipes.BackColor = fadeColor;
-                //await De
                 await Delay();
             }
 
@@ -102,6 +114,34 @@ namespace MealPlanner
         async Task Delay()
         {
             await Task.Delay(1);
+        }
+
+        private void dgvRecipes_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+
+            if (dgv.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            {
+                if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colRemove"])
+                {
+                    Recipe r = (Recipe)dgvRecipes.CurrentRow.DataBoundItem;
+                    if (r.Quantity > 0)
+                    {
+                        r.Quantity--;
+                    }
+                }
+                else if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colAdd"])
+                {
+                    Recipe r = (Recipe)dgvRecipes.CurrentRow.DataBoundItem;
+                    r.Quantity++;
+                }
+                else if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colView"])
+                {
+
+                }
+            }
+
+            dgv.Refresh();
         }
     }
 }

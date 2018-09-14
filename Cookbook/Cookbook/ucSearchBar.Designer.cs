@@ -1,4 +1,4 @@
-﻿namespace MealPlanner
+﻿namespace Cookbook
 {
     partial class ucSearchBar
     {

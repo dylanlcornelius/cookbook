@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace MealPlanner
+namespace Cookbook
 {
     static class Program
     {

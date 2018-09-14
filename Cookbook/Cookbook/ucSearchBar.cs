@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MealPlanner
+namespace Cookbook
 {
     public partial class ucSearchBar : UserControl
     {
