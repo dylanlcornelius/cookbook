@@ -26,19 +26,21 @@ namespace Cookbook
         {
             InitializeComponent();
 
+            pnlIngredients.Visible = false;
+
             List<Recipe> recipes = new List<Recipe>()
             {
                 new Recipe(0, "Mac 'n Cheese", "Pasta", 15, 2, 500, 0)
             };
 
-            /*
+            
             foreach (Recipe r in recipes)
             {
 
                 dgvRecipes.Rows.Add(r.Name, r.Category, r.PrepTime, r.Servings, r.Calories, r.Quantity);
             }
-            */
-            dgvRecipes.DataSource = recipes;
+            
+            //dgvRecipes.DataSource = recipes;
         }
 
         #region TITLE BAR
@@ -82,33 +84,52 @@ namespace Cookbook
 
         #endregion
 
-        async private void btnRecipes_MouseDown(object sender, MouseEventArgs e)
+        private void btnRecipes_MouseDown(object sender, MouseEventArgs e)
         {
-            Color fadeColor;
-            for (int i = BACKCOLOR; i <= HIGHLIGHT; i+=10)
-            {
-                fadeColor = Color.FromArgb(i, i, i);
-                btnRecipes.BackColor = fadeColor;
-                pnlRecipes.BackColor = fadeColor;
-                await Delay();
-            }
-            //btnRecipes.BackColor = HIGHLIGHT;
-            //pnlRecipes.BackColor = HIGHLIGHT;
+            pnlRecipes.Visible = true;
+            pnlIngredients.Visible = false;
+            FadeIn(btnRecipes, pnlRecipes);
         }
 
-        async private void btnRecipes_MouseUp(object sender, MouseEventArgs e)
+        private void btnRecipes_MouseUp(object sender, MouseEventArgs e)
+        {
+            FadeOut(btnRecipes, pnlRecipes);
+        }
+
+        private void btnIngredients_MouseDown(object sender, MouseEventArgs e)
+        {
+            pnlRecipes.Visible = false;
+            pnlIngredients.Visible = true;
+            FadeIn(btnIngredients, pnlIngredients);
+        }
+
+        private void btnIngredients_MouseUp(object sender, MouseEventArgs e)
+        {
+            FadeOut(btnIngredients, pnlIngredients);
+        }
+
+        async private void FadeIn(Button btn, Panel pnl)
         {
             Color fadeColor;
-            for (int i = HIGHLIGHT; i >= BACKCOLOR; i-=10)
+            for (int i = BACKCOLOR; i <= HIGHLIGHT; i += 20)
             {
                 fadeColor = Color.FromArgb(i, i, i);
-                btnRecipes.BackColor = fadeColor;
-                pnlRecipes.BackColor = fadeColor;
+                btn.BackColor = fadeColor;
+                pnl.BackColor = fadeColor;
                 await Delay();
             }
+        }
 
-            //btnRecipes.BackColor = BACKCOLOR;
-            //pnlRecipes.BackColor = BACKCOLOR;
+        async private void FadeOut(Button btn, Panel pnl)
+        {
+            Color fadeColor;
+            for (int i = HIGHLIGHT; i >= BACKCOLOR; i -= 10)
+            {
+                fadeColor = Color.FromArgb(i, i, i);
+                btn.BackColor = fadeColor;
+                pnl.BackColor = fadeColor;
+                await Delay();
+            }
         }
 
         async Task Delay()
@@ -116,7 +137,7 @@ namespace Cookbook
             await Task.Delay(1);
         }
 
-        private void dgvRecipes_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvRecipes_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
 
@@ -124,16 +145,25 @@ namespace Cookbook
             {
                 if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colRemove"])
                 {
-                    Recipe r = (Recipe)dgvRecipes.CurrentRow.DataBoundItem;
-                    if (r.Quantity > 0)
+                    int qty = (int)dgv.Rows[e.RowIndex].Cells["colQty"].Value;
+                    if (qty > 0)
                     {
-                        r.Quantity--;
+                        qty--;
+                        dgv.Rows[e.RowIndex].Cells["colQty"].Value = qty;
                     }
+                    //Recipe r = (Recipe)dgvRecipes.CurrentRow.DataBoundItem;
+                    //if (r.Quantity > 0)
+                    //{
+                    //    r.Quantity--;
+                    //}
                 }
                 else if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colAdd"])
                 {
-                    Recipe r = (Recipe)dgvRecipes.CurrentRow.DataBoundItem;
-                    r.Quantity++;
+                    int qty = (int)dgv.Rows[e.RowIndex].Cells["colQty"].Value;
+                    qty++;
+                    dgv.Rows[e.RowIndex].Cells["colQty"].Value = qty;
+                    //Recipe r = (Recipe)dgvRecipes.CurrentRow.DataBoundItem;
+                    //r.Quantity++;
                 }
                 else if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colView"])
                 {
