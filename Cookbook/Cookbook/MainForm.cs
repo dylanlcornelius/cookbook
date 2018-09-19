@@ -18,7 +18,6 @@ namespace Cookbook
         private const int BACKCOLOR = 0;
         private const int HIGHLIGHT = 60;
 
-
         private bool isMouseDown = false;
         private Point firstPoint;
 
@@ -108,35 +107,6 @@ namespace Cookbook
             FadeOut(btnIngredients, pnlIngredients);
         }
 
-        async private void FadeIn(Button btn, Panel pnl)
-        {
-            Color fadeColor;
-            for (int i = BACKCOLOR; i <= HIGHLIGHT; i += 20)
-            {
-                fadeColor = Color.FromArgb(i, i, i);
-                btn.BackColor = fadeColor;
-                pnl.BackColor = fadeColor;
-                await Delay();
-            }
-        }
-
-        async private void FadeOut(Button btn, Panel pnl)
-        {
-            Color fadeColor;
-            for (int i = HIGHLIGHT; i >= BACKCOLOR; i -= 10)
-            {
-                fadeColor = Color.FromArgb(i, i, i);
-                btn.BackColor = fadeColor;
-                pnl.BackColor = fadeColor;
-                await Delay();
-            }
-        }
-
-        async Task Delay()
-        {
-            await Task.Delay(1);
-        }
-
         private void dgvRecipes_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
@@ -167,11 +137,49 @@ namespace Cookbook
                 }
                 else if (dgv.Columns[e.ColumnIndex] == dgv.Columns["colView"])
                 {
-
+                    pnlRecipes.Visible = false;
+                    pnlIngredients.Visible = true;
+                    FadeIn(btnIngredients, pnlIngredients);
+                    FadeOut(btnIngredients, pnlIngredients);
                 }
             }
 
             dgv.Refresh();
         }
+
+        #region FADING
+
+        async private void FadeIn(Button btn, Panel pnl)
+        {
+            Color fadeColor;
+            for (int i = BACKCOLOR; i <= HIGHLIGHT; i += 20)
+            {
+                fadeColor = Color.FromArgb(i, i, i);
+                btn.BackColor = fadeColor;
+                pnl.BackColor = fadeColor;
+                await Delay(1);
+            }
+        }
+
+        async private void FadeOut(Button btn, Panel pnl)
+        {
+            await Delay(200);
+
+            Color fadeColor;
+            for (int i = HIGHLIGHT; i >= BACKCOLOR; i -= 10)
+            {
+                fadeColor = Color.FromArgb(i, i, i);
+                btn.BackColor = fadeColor;
+                pnl.BackColor = fadeColor;
+                await Delay(1);
+            }
+        }
+
+        async Task Delay(int i)
+        {
+            await Task.Delay(i);
+        }
+
+        #endregion
     }
 }

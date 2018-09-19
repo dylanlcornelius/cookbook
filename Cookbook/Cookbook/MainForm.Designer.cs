@@ -36,7 +36,6 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlRecipes = new System.Windows.Forms.Panel();
             this.dgvRecipes = new System.Windows.Forms.DataGridView();
-            this.btnRecipes = new System.Windows.Forms.Button();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPrepTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,11 +45,9 @@
             this.colRemove = new System.Windows.Forms.DataGridViewButtonColumn();
             this.colAdd = new System.Windows.Forms.DataGridViewButtonColumn();
             this.colView = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnRecipes = new System.Windows.Forms.Button();
             this.pnlIngredients = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btnIngredients = new System.Windows.Forms.Button();
-            this.ucSearchBar2 = new Cookbook.ucSearchBar();
-            this.ucSearchBar1 = new Cookbook.ucSearchBar();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,6 +57,9 @@
             this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dataGridViewButtonColumn2 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dataGridViewButtonColumn3 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnIngredients = new System.Windows.Forms.Button();
+            this.ucSearchBar2 = new Cookbook.ucSearchBar();
+            this.ucSearchBar1 = new Cookbook.ucSearchBar();
             this.pnlRecipes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecipes)).BeginInit();
             this.pnlIngredients.SuspendLayout();
@@ -141,23 +141,6 @@
             this.dgvRecipes.TabIndex = 0;
             this.dgvRecipes.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvRecipes_CellMouseUp);
             // 
-            // btnRecipes
-            // 
-            this.btnRecipes.FlatAppearance.BorderSize = 0;
-            this.btnRecipes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.btnRecipes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRecipes.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecipes.ForeColor = System.Drawing.Color.Gray;
-            this.btnRecipes.Location = new System.Drawing.Point(50, 50);
-            this.btnRecipes.Margin = new System.Windows.Forms.Padding(0);
-            this.btnRecipes.Name = "btnRecipes";
-            this.btnRecipes.Size = new System.Drawing.Size(100, 25);
-            this.btnRecipes.TabIndex = 3;
-            this.btnRecipes.Text = "Recipes";
-            this.btnRecipes.UseVisualStyleBackColor = true;
-            this.btnRecipes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRecipes_MouseDown);
-            this.btnRecipes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnRecipes_MouseUp);
-            // 
             // colName
             // 
             this.colName.HeaderText = "Recipe Name";
@@ -226,6 +209,23 @@
             this.colView.UseColumnTextForButtonValue = true;
             this.colView.Width = 50;
             // 
+            // btnRecipes
+            // 
+            this.btnRecipes.FlatAppearance.BorderSize = 0;
+            this.btnRecipes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btnRecipes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRecipes.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecipes.ForeColor = System.Drawing.Color.Gray;
+            this.btnRecipes.Location = new System.Drawing.Point(50, 50);
+            this.btnRecipes.Margin = new System.Windows.Forms.Padding(0);
+            this.btnRecipes.Name = "btnRecipes";
+            this.btnRecipes.Size = new System.Drawing.Size(100, 25);
+            this.btnRecipes.TabIndex = 3;
+            this.btnRecipes.Text = "Recipes";
+            this.btnRecipes.UseVisualStyleBackColor = true;
+            this.btnRecipes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRecipes_MouseDown);
+            this.btnRecipes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnRecipes_MouseUp);
+            // 
             // pnlIngredients
             // 
             this.pnlIngredients.Controls.Add(this.ucSearchBar2);
@@ -263,41 +263,6 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(975, 488);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // btnIngredients
-            // 
-            this.btnIngredients.FlatAppearance.BorderSize = 0;
-            this.btnIngredients.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.btnIngredients.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIngredients.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIngredients.ForeColor = System.Drawing.Color.Gray;
-            this.btnIngredients.Location = new System.Drawing.Point(150, 50);
-            this.btnIngredients.Margin = new System.Windows.Forms.Padding(0);
-            this.btnIngredients.Name = "btnIngredients";
-            this.btnIngredients.Size = new System.Drawing.Size(100, 25);
-            this.btnIngredients.TabIndex = 4;
-            this.btnIngredients.Text = "Ingredients";
-            this.btnIngredients.UseVisualStyleBackColor = true;
-            this.btnIngredients.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnIngredients_MouseDown);
-            this.btnIngredients.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnIngredients_MouseUp);
-            // 
-            // ucSearchBar2
-            // 
-            this.ucSearchBar2.BackColor = System.Drawing.Color.Turquoise;
-            this.ucSearchBar2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ucSearchBar2.Location = new System.Drawing.Point(12, 10);
-            this.ucSearchBar2.Name = "ucSearchBar2";
-            this.ucSearchBar2.Size = new System.Drawing.Size(975, 25);
-            this.ucSearchBar2.TabIndex = 1;
-            // 
-            // ucSearchBar1
-            // 
-            this.ucSearchBar1.BackColor = System.Drawing.Color.Turquoise;
-            this.ucSearchBar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ucSearchBar1.Location = new System.Drawing.Point(12, 10);
-            this.ucSearchBar1.Name = "ucSearchBar1";
-            this.ucSearchBar1.Size = new System.Drawing.Size(975, 25);
-            this.ucSearchBar1.TabIndex = 1;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -366,6 +331,41 @@
             this.dataGridViewButtonColumn3.ToolTipText = "Click Here to View Ingredients";
             this.dataGridViewButtonColumn3.UseColumnTextForButtonValue = true;
             this.dataGridViewButtonColumn3.Width = 50;
+            // 
+            // btnIngredients
+            // 
+            this.btnIngredients.FlatAppearance.BorderSize = 0;
+            this.btnIngredients.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btnIngredients.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIngredients.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIngredients.ForeColor = System.Drawing.Color.Gray;
+            this.btnIngredients.Location = new System.Drawing.Point(150, 50);
+            this.btnIngredients.Margin = new System.Windows.Forms.Padding(0);
+            this.btnIngredients.Name = "btnIngredients";
+            this.btnIngredients.Size = new System.Drawing.Size(100, 25);
+            this.btnIngredients.TabIndex = 4;
+            this.btnIngredients.Text = "Ingredients";
+            this.btnIngredients.UseVisualStyleBackColor = true;
+            this.btnIngredients.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnIngredients_MouseDown);
+            this.btnIngredients.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnIngredients_MouseUp);
+            // 
+            // ucSearchBar2
+            // 
+            this.ucSearchBar2.BackColor = System.Drawing.Color.Turquoise;
+            this.ucSearchBar2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ucSearchBar2.Location = new System.Drawing.Point(12, 10);
+            this.ucSearchBar2.Name = "ucSearchBar2";
+            this.ucSearchBar2.Size = new System.Drawing.Size(975, 25);
+            this.ucSearchBar2.TabIndex = 1;
+            // 
+            // ucSearchBar1
+            // 
+            this.ucSearchBar1.BackColor = System.Drawing.Color.Turquoise;
+            this.ucSearchBar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ucSearchBar1.Location = new System.Drawing.Point(12, 10);
+            this.ucSearchBar1.Name = "ucSearchBar1";
+            this.ucSearchBar1.Size = new System.Drawing.Size(975, 25);
+            this.ucSearchBar1.TabIndex = 1;
             // 
             // MainForm
             // 
