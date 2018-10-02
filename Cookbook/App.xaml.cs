@@ -16,7 +16,14 @@ namespace Cookbook
         protected override void OnStartup(StartupEventArgs e)
         {
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+#if DEBUG
+            bool dialog = true;
+
+#else
             bool? dialog = new LoginWindow().ShowDialog();
+#endif
+
+
             if (dialog == true)
             {
                 Window mainWindow = new MainWindow();

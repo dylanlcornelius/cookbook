@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="Black"
         Loaded="Window_Loaded" Closing="Window_Closing" AllowsTransparency="True">
-    <Grid>
+    <Grid Name="pnlMainGrid">
         <local:ucTitleBar/>
+        
         <Label x:Name="btnRecipes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50, 50, 0, 0" Height="30" Width="100"
                    Content="Recipes" Foreground="Gray" HorizontalContentAlignment="Center"
                    MouseDown="btnRecipes_MouseDown" MouseUp="btnRecipes_MouseUp">
@@ -31,9 +32,29 @@
                 </EventTrigger>
             </Label.Triggers>
         </Label>
-        <DockPanel x:Name="pnlRecipes" Margin="0,80,0,0"/>
-
-        <Label x:Name="btnIngredients" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150, 50, 0, 0" Height="30" Width="100"
+        <Label x:Name="btnRecipeEdit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150, 50, 0, 0" Height="30" Width="150"
+                   Content="Recipe Creation" Foreground="Gray" HorizontalContentAlignment="Center"
+                   MouseDown="btnRecipeEdit_MouseDown" MouseUp="btnRecipeEdit_MouseUp">
+            <Label.Triggers>
+                <EventTrigger RoutedEvent="UIElement.MouseDown">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="btnRecipeEdit" From="Black" To="#0a0a0a" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                            <ColorAnimation Storyboard.TargetName="pnlRecipeEdit" From="Black" To="#0a0a0a" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="UIElement.MouseUp">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="btnRecipeEdit" From="#0a0a0a" To="Black" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                            <ColorAnimation Storyboard.TargetName="pnlRecipeEdit" From="#0a0a0a" To="Black" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Label.Triggers>
+        </Label>
+        <Label x:Name="btnIngredients" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300, 50, 0, 0" Height="30" Width="100"
                    Content="Ingredients" Foreground="Gray" HorizontalContentAlignment="Center"
                    MouseDown="btnIngredients_MouseDown" MouseUp="btnIngredients_MouseUp">
             <Label.Triggers>
@@ -55,6 +76,206 @@
                 </EventTrigger>
             </Label.Triggers>
         </Label>
-        <DockPanel x:Name="pnlIngredients" Margin="0,80,0,0"/>
+        
+        <Grid x:Name="pnlIngredients" Margin="0,80,0,0" Background="Black">
+            
+        </Grid>
+        <Grid x:Name="pnlRecipes" Margin="0,80,0,0" Background="Black">
+            <Label Content="Recipes" FontSize="18" Foreground="LightGray" HorizontalAlignment="Center"/>
+            <DataGrid Name="dtgRecipes" Margin="20,40,20,20" Background="Transparent" AutoGenerateColumns="False"
+                      BorderThickness="0" CanUserResizeRows="False" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="200"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Prep Time" Binding="{Binding PrepTime}" IsReadOnly="True" Width="Auto"/>
+                    <DataGridTextColumn Header="Servings" Binding="{Binding Servings}" IsReadOnly="True" Width="Auto"/>
+                    <DataGridTextColumn Header="Calories" Binding="{Binding Calories}" IsReadOnly="True" Width="Auto"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" IsReadOnly="True" Width="Auto"/>
+                    <DataGridTemplateColumn Header="Remove" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label x:Name="btnRemove" FontSize="18" Content="-" Foreground="Gray"
+                                       HorizontalContentAlignment="Center"
+                                       MouseDown="btnRemove_MouseDown" MouseUp="btnRemove_MouseUp">
+                                    <Label.Triggers>
+                                        <EventTrigger RoutedEvent="UIElement.MouseDown">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetName="btnRemove" From="Black" To="#0a0a0a" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Add" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label x:Name="btnAdd" FontSize="18" Content="+" Foreground="Gray"
+                                       HorizontalContentAlignment="Center"
+                                       MouseDown="btnAdd_MouseDown" MouseUp="btnAdd_MouseUp">
+                                    <Label.Triggers>
+                                        <EventTrigger RoutedEvent="UIElement.MouseDown">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetName="btnAdd" From="Black" To="#0a0a0a" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Edit" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label x:Name="btnEdit" FontSize="18" Content="..." Foreground="Gray"
+                                       HorizontalContentAlignment="Center"
+                                       MouseDown="btnEdit_MouseDown" MouseUp="btnEdit_MouseUp">
+                                    <Label.Triggers>
+                                        <EventTrigger RoutedEvent="UIElement.MouseDown">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetName="btnEdit" From="Black" To="#0a0a0a" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="UIElement.MouseUp">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetName="btnEdit" From="#0a0a0a" To="Black" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Margin" Value="0,0,0,-1"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Margin" Value="-1"/>
+                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        <Setter Property="FontFamily" Value="Arial"/>
+                        <Setter Property="FontSize" Value="16"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter Property="FontFamily" Value="Arial"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Padding" Value="5,5,5,5"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0a0a0a"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Gray"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#0a0a0a"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="Gray"/>
+                </DataGrid.Resources>
+            </DataGrid>
+        </Grid>
+        <Grid x:Name="pnlRecipeEdit" Margin="0,80,0,0" Background="Black">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="1" Content="Recipe Creation" FontSize="18" Foreground="LightGray" HorizontalAlignment="Center"/>
+
+            <Label Grid.Column="0" Content="Recipe Name:" Margin="20,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Grid.Column="0" Name="tbxRecipeName" Width="200" Margin="115,105,0,0" Background="#0a0a0a" Foreground="Gray" BorderThickness="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <Label Grid.Column="0" Content="Prep Time:" Margin="40,150,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Grid.Column="0" Name="tbxPrepTime" Width="200" Margin="115,155,0,0" Background="#0a0a0a" Foreground="Gray" BorderThickness="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <Label Grid.Column="0" Content="Servings:" Margin="50,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Grid.Column="0" Name="tbxServings" Width="200" Margin="115,205,0,0" Background="#0a0a0a" Foreground="Gray" BorderThickness="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <Label Grid.Column="0" Content="Calories:" Margin="53,250,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Grid.Column="0" Name="tbxCalories" Width="200" Margin="115,255,0,0" Background="#0a0a0a" Foreground="Gray" BorderThickness="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <Label Grid.Column="0" Content="Quantity:" Margin="53,300,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Grid.Column="0" Name="tbxQuantity" Width="200" Margin="115,305,0,0" Background="#0a0a0a" Foreground="Gray" BorderThickness="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <DataGrid Grid.Column="1" Name="dtgCategories" Margin="20,40,20,20" Background="Transparent" AutoGenerateColumns="False"
+                      BorderThickness="0" CanUserResizeRows="False" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category}" IsReadOnly="True" Width="*"/>
+                    <DataGridTemplateColumn Header="Remove" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label x:Name="btnRemove" FontSize="18" Content="-" Foreground="Gray"
+                                       HorizontalContentAlignment="Center"
+                                       MouseDown="btnRemove_MouseDown" MouseUp="btnRemove_MouseUp">
+                                    <Label.Triggers>
+                                        <EventTrigger RoutedEvent="UIElement.MouseDown">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetName="btnRemove" From="Black" To="#0a0a0a" Duration="0:0:0.3" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Margin" Value="0,0,0,-1"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Margin" Value="-1"/>
+                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        <Setter Property="FontFamily" Value="Arial"/>
+                        <Setter Property="FontSize" Value="16"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter Property="FontFamily" Value="Arial"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Padding" Value="5,5,5,5"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0a0a0a"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Gray"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#0a0a0a"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="Gray"/>
+                </DataGrid.Resources>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>

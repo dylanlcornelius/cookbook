@@ -329,3 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /MealPlanner
+/Cookbook/DBConn.settings
+/Cookbook/DBConn.Designer.cs

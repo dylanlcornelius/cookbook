@@ -29,7 +29,7 @@ namespace Cookbook
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DoubleAnimation fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
+            DoubleAnimation fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
             BeginAnimation(OpacityProperty, fadeIn);
         }
 
@@ -40,6 +40,11 @@ namespace Cookbook
             DoubleAnimation fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.2));
             fadeOut.Completed += (s, _) => DialogResult = result;
             BeginAnimation(OpacityProperty, fadeOut);
+        }
+
+        private void tbxUsername_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lblUsername.BorderBrush = Brushes.Gray;
         }
 
         private void btnLogin_MouseDown(object sender, MouseButtonEventArgs e)
@@ -55,6 +60,10 @@ namespace Cookbook
             {
                 result = true;
                 Close();
+            }
+            else
+            {
+                lblUsername.BorderBrush = Brushes.Red;
             }
         }
 

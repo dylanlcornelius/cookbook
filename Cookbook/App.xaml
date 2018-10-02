@@ -8,6 +8,12 @@
             <Setter Property="Foreground" Value="Gray"/>
         </Style>
 
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="Gray"/>
+        </Style>
+
         <!--<LinearGradientBrush x:Key="DefaultBackground" StartPoint="0.2, 0" EndPoint="0.8, 1">
             <GradientStop Color="#0A0A0A" Offset="0.0"/>
             <GradientStop Color="#282828" Offset="0.5"/>
