@@ -1,0 +1,30 @@
+<div>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <!-- list of categories -->
+      <th>Prep Time</th>
+      <th>Servings</th>
+      <th>Calories</th>
+      <th>Quantity</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let recipe of recipes">
+      <td>{{ recipe.name }}</td>
+      <td>{{ recipe.category }}</td>
+      <td>{{ recipe.time }}</td>
+      <td>{{ recipe.servings }}</td>
+      <td>{{ recipe.calories }}</td>
+      <td>{{ recipe.quantity }}</td>
+      <td><button class="btn btn-info">+</button></td>
+      <td><button class="btn btn-info">-</button></td>
+      <td><button class="btn btn-info">...</button></td>
+    </tr>
+    <!-- <tr>
+       row for adding
+    </tr> -->
+  </table>
+</div>

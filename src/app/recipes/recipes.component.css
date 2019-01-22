@@ -1,0 +1,15 @@
+tr {
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+th {
+    padding: 10px;
+}
+
+button {
+    /* padding-left: 15px;
+    padding-right: 15px; */
+    margin-left: 10px;
+    width: 40px;
+}

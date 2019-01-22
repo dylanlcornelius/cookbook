@@ -1,0 +1,16 @@
+header {
+    background-color: #FFB80B;
+    /* padding-left: 25%; */
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.title {
+    color: white;
+    font-size: 30px;
+    margin-right: 5%;
+    /* margin-right: 10%; */
+}
+.btn {
+    border-radius: 0;
+    margin: 5px;
+}
