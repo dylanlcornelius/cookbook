@@ -1,4 +1,21 @@
-tr {
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    overflow: auto;
+}
+
+.title-col {
+    flex: 0 0 100px !important;
+    white-space: unset !important;
+}
+
+.button-row {
+    margin: 10px 0;
+}
+
+/* tr {
     border-bottom-width: 2px;
     border-bottom-style: solid;
 }
@@ -8,8 +25,8 @@ th {
 }
 
 button {
-    /* padding-left: 15px;
-    padding-right: 15px; */
+    #padding-left: 15px;
+    #padding-right: 15px;
     margin-left: 10px;
     width: 40px;
-}
+} */

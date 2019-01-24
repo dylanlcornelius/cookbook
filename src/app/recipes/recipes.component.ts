@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataSource } from '@angular/cdk/collections';
+import { FsService } from '../fs.service';
 
 @Component({
   selector: 'app-recipes',
@@ -7,15 +9,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RecipesComponent implements OnInit {
 
-  recipes = [
-    { name: 'Chili' },
-    { name: 'Spaghetti' },
-    { name: 'Hamburgers'}
-  ];
+  // recipes = [
+  //   { name: 'Chili' },
+  //   { name: 'Spaghetti' },
+  //   { name: 'Hamburgers'}
+  // ];
 
-  constructor() {
+  displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity'];
+  dataSource = new RecipeDataSource(this.fs);
+
+  constructor(private fs: FsService) {
   }
 
   ngOnInit() {
   }
+}
+
+export class RecipeDataSource extends DataSource<any> {
+
+  constructor(private fs: FsService) {
+    super();
+  }
+
+  connect() {
+    return this.fs.getRecipes();
+  }
+
+  disconnect() {}
 }

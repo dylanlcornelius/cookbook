@@ -1,8 +1,9 @@
 .page {
-    background-color: gray
+    height: 100%;
+    background-color: gray;
 }
 .content {
     background-color: lightgray;
-    margin-top: 15%;
-    padding: 10%;
+    margin-top: 10%;
+    padding: 5%;
 }
