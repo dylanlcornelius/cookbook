@@ -329,3 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 src/environments/
+src/environments/environment.ts
+src/environments/environment.prod.ts
