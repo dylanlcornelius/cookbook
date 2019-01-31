@@ -1,2 +1,2 @@
 # Cookbook
-A Program for collecting recipes.
+A program for collecting recipes.
