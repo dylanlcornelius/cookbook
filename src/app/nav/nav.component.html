@@ -1,0 +1,13 @@
+<div class="d-flex justify-content-center header">
+    <a routerLink="/" class="title">The Cookbook</a>
+
+    <div class="navbar" *ngIf="isLoggedIn | async">
+      <a routerLink="/" class="btn btn-dark">Home</a>
+      <a routerLink="/recipes" class="btn btn-dark">Recipes</a>
+      <a routerLink="/ingredients" class="btn btn-dark">Ingredients</a>
+      <a routerLink="/list" class="btn btn-dark">Shopping List</a>
+      <a routerLink="/about" class="btn btn-dark">About</a>
+      
+      <button (click)="signOut()" class="btn btn-dark">Sign-out</button>
+    </div>
+  </div>

@@ -1,0 +1,82 @@
+<div class="row justify-content-center">
+  <h2>
+    Edit a Recipe
+  </h2>
+</div>
+<br/>
+
+<app-loader *ngIf="loading" class="d-flex justify-content-center" style="margin-top: 100%;"></app-loader>
+
+<div *ngIf="!loading">
+  <div class="button-row">
+    <a mat-fab color="primary" (click)="recipesDetail()">
+      <mat-icon> arrow_back </mat-icon>
+    </a>
+  </div>
+
+  <form [formGroup]="recipesForm" (ngSubmit)="onFormSubmit(recipesForm.value)">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Name" formControlName="name"
+              [errorStateMatcher]="matcher">
+      <mat-error>
+        <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched">Please enter Recipe Name</span>
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field class="example-full-width">
+      <textarea matInput placeholder="Description" formControlName="description"></textarea>
+      <!-- <textarea matInput placeholder="Description" formControlName="description"
+              [errorStateMatcher]="matcher"></textarea>
+      <mat-error>
+        <span *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched">Please enter a Recipe Description</span>
+      </mat-error>-->
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Preparation Time" formControlName="time"
+              [errorStateMatcher]="matcher">
+      <mat-error>
+        <span *ngIf="!recipesForm.get('time').valid">Please enter a valid number for Recipe Preparation Time</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Servings" formControlName="servings"
+              [errorStateMatcher]="matcher">
+      <mat-error>
+        <span *ngIf="!recipesForm.get('servings').valid">Please enter a valid number for Recipe Servings</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Calories" formControlName="calories"
+              [errorStateMatcher]="matcher">
+      <mat-error>
+        <span *ngIf="!recipesForm.get('calories').valid">Please enter a valid number for Recipe Calories</span>
+      </mat-error>
+    </mat-form-field>
+
+    <div formArrayName="steps">
+      <button mat-mini-fab color="secondary" type="button" (click)="addStep()">
+        <mat-icon> add </mat-icon>
+      </button>
+
+      <div *ngFor="let step of recipesForm.controls.steps.controls; let i=index">
+        <div [formGroupName]="i" class="d-flex justify-content-center">
+          <mat-form-field style="width: 80%;">
+              <input matInput placeholder="Step: {{i + 1}}" formControlName="step">
+          </mat-form-field>
+          <button style="margin-left: 20px;" mat-mini-fab color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
+            <mat-icon> close </mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button type="submit" [disabled]="!recipesForm.valid" mat-fab color="primary">
+        <mat-icon> save </mat-icon>
+      </button>
+    </div>
+  </form>
+</div>

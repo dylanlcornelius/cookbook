@@ -1,0 +1,15 @@
+.page {
+    background-color: lightgray;
+    min-height: 100%;
+    margin-bottom: -50px;
+    position: relative;
+}
+.clear-footer {
+    height: 50px;
+    clear: both;
+}
+.content {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 5%;
+}
