@@ -15,25 +15,31 @@ export class RecipesComponent implements OnInit {
   //   { name: 'Hamburgers'}
   // ];
 
+  loading: Boolean = true;
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity'];
-  dataSource = new RecipeDataSource(this.fs);
+  // dataSource = new RecipeDataSource(this.fs);
+  dataSource = [];
 
   constructor(private fs: FsService) {
   }
 
   ngOnInit() {
+    this.fs.getRecipes().subscribe((result) => {
+      this.dataSource = result;
+      this.loading = false;
+    });
   }
 }
 
-export class RecipeDataSource extends DataSource<any> {
+// export class RecipeDataSource extends DataSource<any> {
 
-  constructor(private fs: FsService) {
-    super();
-  }
+//   constructor(private fs: FsService) {
+//     super();
+//   }
 
-  connect() {
-    return this.fs.getRecipes();
-  }
+//   connect() {
+//     // return this.fs.getRecipes();
+//   }
 
-  disconnect() {}
-}
+//   disconnect() {}
+// }

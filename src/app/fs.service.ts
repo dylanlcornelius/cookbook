@@ -16,9 +16,9 @@ export class FsService {
   getRecipes(): Observable<any> {
     return new Observable((observer) => {
       this.ref.onSnapshot((querySnapshot) => {
-        let recipes = [];
+        const recipes = [];
         querySnapshot.forEach((doc) => {
-          let data = doc.data();
+          const data = doc.data();
           recipes.push({
             key: doc.id,
             name: data.name,
@@ -26,7 +26,8 @@ export class FsService {
             time: data.time,
             calories: data.calories,
             servings: data.servings,
-            quantity: data.quantity
+            quantity: data.quantity,
+            steps: data.steps,
           });
         });
         observer.next(recipes);
@@ -37,7 +38,7 @@ export class FsService {
   getRecipe(id: string): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).get().then((doc) => {
-        let data = doc.data();
+        const data = doc.data();
         observer.next({
           key: doc.id,
           name: data.name,
@@ -45,7 +46,8 @@ export class FsService {
           time: data.time,
           calories: data.calories,
           servings: data.servings,
-          quantity: data.quantity
+          quantity: data.quantity,
+          steps: data.steps,
         });
       });
     });

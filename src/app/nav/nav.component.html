@@ -1,19 +1,13 @@
-<header class="d-flex justify-content-center">
-  <!-- <div class="container"> -->
-    <a routerLink="/" class="title">Cookbook</a>
-    <!-- <nav> -->
-      <!-- <ul>
-        <li><a routerLink="/" class="btn btn-primary">Home</a></li>
-        <li><a routerLink="/recipes" class="btn btn-primary">Recipes</a></li>
-        <li><a routerLink="/list" class="btn btn-primary">Shopping List</a></li>
-        <li><a routerLink="/about" class="btn btn-primary">About</a></li>
-      </ul> -->
-    <div class="navbar">
-      <a routerLink="/" class="btn btn-primary">Home</a>
-      <a routerLink="/recipes" class="btn btn-primary">Recipes</a>
-      <a routerLink="/ingredients" class="btn btn-primary">Ingredients</a>
-      <a routerLink="/list" class="btn btn-primary">Shopping List</a>
-      <a routerLink="/about" class="btn btn-primary">About</a>
+<div class="d-flex justify-content-center header">
+    <a routerLink="/" class="title">The Cookbook</a>
+
+    <div class="navbar" *ngIf="isLoggedIn | async">
+      <a routerLink="/" class="btn btn-dark">Home</a>
+      <a routerLink="/recipes" class="btn btn-dark">Recipes</a>
+      <a routerLink="/ingredients" class="btn btn-dark">Ingredients</a>
+      <a routerLink="/list" class="btn btn-dark">Shopping List</a>
+      <a routerLink="/about" class="btn btn-dark">About</a>
+      
+      <button (click)="signOut()" class="btn btn-dark">Sign-out</button>
     </div>
-    <!-- </nav> -->
-</header>
+  </div>

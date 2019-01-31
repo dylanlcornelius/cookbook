@@ -9,6 +9,7 @@ import { FsService } from '../fs.service';
 })
 export class RecipesDetailComponent implements OnInit {
 
+  loading: Boolean = true;
   recipe = {};
 
   constructor(private route: ActivatedRoute, private router: Router, private fs: FsService) { }
@@ -20,8 +21,9 @@ export class RecipesDetailComponent implements OnInit {
   getRecipeDetails(id) {
     this.fs.getRecipe(id)
       .subscribe(data => {
-        console.log(data);
+        // console.log(data);
         this.recipe = data;
+        this.loading = false;
       });
   }
 
