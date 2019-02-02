@@ -15,40 +15,42 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { AccountComponent } from './account/account.component';
-import { AuthComponent } from './auth/auth.component';
 import { HomeComponent } from './home/home.component';
-import { ListComponent } from './list/list.component';
-import { RecipesComponent } from './recipes/recipes.component';
 import { AboutComponent } from './about/about.component';
-import { IngredientsComponent } from './ingredients/ingredients.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RecipesDetailComponent } from './recipes-detail/recipes-detail.component';
-import { RecipesCreateComponent } from './recipes-create/recipes-create.component';
-import { RecipesUpdateComponent } from './recipes-update/recipes-update.component';
+import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
+import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
+import { RecipesCreateComponent } from './recipes/recipes-create/recipes-create.component';
+import { RecipesUpdateComponent } from './recipes/recipes-update/recipes-update.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoaderComponent } from './loader/loader.component';
-import { AuthService } from './services/auth.service';
-import { LoginComponent } from './login/login.component';
-import { LoggedInGuard } from './guards/logged-in-guard.guard';
+import { AuthService } from './user/auth.service';
+import { LoginComponent } from './user/login/login.component';
+import { LoggedInGuard } from './user/logged-in.guard';
+import { IngredientsListComponent } from './ingredients/ingredients-list/ingredients-list.component';
+import { IngredientsCreateComponent } from './ingredients/ingredients-create/ingredients-create.component';
+import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ingredients-detail.component';
+import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ingredients-update.component';
+import { ProfileComponent } from './user/profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
-    AccountComponent,
-    AuthComponent,
     HomeComponent,
-    ListComponent,
-    RecipesComponent,
+    RecipesListComponent,
     AboutComponent,
-    IngredientsComponent,
+    IngredientsListComponent,
     RecipesDetailComponent,
     RecipesCreateComponent,
     RecipesUpdateComponent,
     FooterComponent,
     LoaderComponent,
     LoginComponent,
+    IngredientsCreateComponent,
+    IngredientsDetailComponent,
+    IngredientsUpdateComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
