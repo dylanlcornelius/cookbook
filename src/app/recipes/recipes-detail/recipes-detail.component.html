@@ -16,7 +16,7 @@
     </mat-card-header>
 
     <div class="row">
-      <mat-card-content class="d-flex justify-content-center col-md-6 card-column">
+      <mat-card-content class="col-md-4">
         <dl>
           <dt> Preparation Time </dt>
           <dd> {{recipe.time || "No Preparation Time"}} </dd>
@@ -33,7 +33,7 @@
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="d-flex justify-content-center col-md-6 card-column"> 
+      <mat-card-content class="col-md-4"> 
         <dl>
           <div *ngFor="let step of recipe.steps; let i = index">
               <dt> Step: {{i+1}} </dt>
@@ -41,6 +41,22 @@
           </div>
         </dl>
       </mat-card-content>
+
+      <div class="col-xs-4">
+        <div class="row">
+          <div class="list-container">
+            <h3>
+              Ingredients
+            </h3>
+
+            <div  class="list">
+              <div class="box" *ngFor="let ingredient of recipe.ingredients | keyvalue">
+                {{ingredient.value.name}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">

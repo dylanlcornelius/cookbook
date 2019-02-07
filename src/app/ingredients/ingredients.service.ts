@@ -21,6 +21,7 @@ export class IngredientsService {
             key: doc.id,
             name: data.name,
             category: data.category,
+            amount: data.amount,
             calories: data.calories,
             quantity: data.quantity,
           });
@@ -38,6 +39,7 @@ export class IngredientsService {
           key: doc.id,
           name: data.name,
           category: data.category,
+          amount: data.amount,
           calories: data.calories,
           quantity: data.quantity,
         });

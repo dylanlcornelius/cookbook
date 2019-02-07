@@ -11,6 +11,8 @@ export class RecipesService {
 
   ref = firebase.firestore().collection('recipes');
 
+  // TODO: look into creating a recipe model "ng g model recipe"
+
   constructor() { }
 
   getRecipes(): Observable<any> {
@@ -28,6 +30,7 @@ export class RecipesService {
             servings: data.servings,
             quantity: data.quantity,
             steps: data.steps,
+            ingredients: data.ingredients,
           });
         });
         observer.next(recipes);
@@ -48,6 +51,7 @@ export class RecipesService {
           servings: data.servings,
           quantity: data.quantity,
           steps: data.steps,
+          ingredients: data.ingredients,
         });
       });
     });

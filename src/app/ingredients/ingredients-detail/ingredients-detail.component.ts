@@ -30,7 +30,7 @@ export class IngredientsDetailComponent implements OnInit {
   deleteIngredient(id) {
     this.ingredientsService.deleteIngredients(id)
       .subscribe(res => {
-        this.router.navigate(['/ingredients']);
+        this.router.navigate(['/ingredients-list']);
       }, (err) => {
         console.error(err);
       });

@@ -10,7 +10,7 @@ import { IngredientsService } from '../ingredients.service';
 export class IngredientsListComponent implements OnInit {
 
   loading: Boolean = true;
-  displayedColumns = ['name', 'category', 'calories', 'quantity'];
+  displayedColumns = ['name', 'category', 'amount', 'calories', 'quantity'];
   dataSource = [];
 
   constructor(private ingredientsService: IngredientsService) {

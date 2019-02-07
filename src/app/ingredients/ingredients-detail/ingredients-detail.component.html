@@ -16,7 +16,10 @@
       <mat-card-content class="d-flex justify-content-center card-column">
         <dl>
           <dt> Category </dt>
-          <dd> {{ingredient.servings || "No Category"}} </dd>
+          <dd> {{ingredient.category || "No Category"}} </dd>
+
+          <dt> Amount </dt>
+          <dd> {{ingredient.amount || "No Amount"}} </dd>
 
           <dt> Calories </dt>
           <dd> {{ingredient.calories || "No Calories"}} </dd>

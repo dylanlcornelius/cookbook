@@ -10,6 +10,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatFormFieldModule } from '@angular/material';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -68,6 +69,7 @@ import { ProfileComponent } from './user/profile/profile.component';
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
+    DragDropModule,
   ],
   providers: [AuthService, LoggedInGuard],
   bootstrap: [AppComponent]

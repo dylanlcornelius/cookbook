@@ -1,7 +1,8 @@
 <div class="d-flex justify-content-center header">
-    <a routerLink="/" class="title navbar">The Cookbook</a>
+  <div class="navbar" >
+    <a routerLink="/" class="title">The Cookbook</a>
 
-    <div class="navbar" *ngIf="isLoggedIn | async">
+    <div *ngIf="isLoggedIn | async">
       <a routerLink="/" class="btn btn-dark">Home</a>
       <a routerLink="/recipes-list" class="btn btn-dark">Recipes</a>
       <a routerLink="/ingredients-list" class="btn btn-dark">Ingredients</a>
@@ -11,3 +12,4 @@
       <button (click)="signOut()" class="btn btn-dark">Sign-out</button>
     </div>
   </div>
+</div>

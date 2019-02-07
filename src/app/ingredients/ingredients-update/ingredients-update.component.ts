@@ -22,6 +22,7 @@ export class IngredientsUpdateComponent implements OnInit {
   id: string;
   name: string;
   category: string;
+  amount: string;
   calories: number;
   // quantity: number;
 
@@ -33,8 +34,9 @@ export class IngredientsUpdateComponent implements OnInit {
   ngOnInit() {
     this.getIngredient(this.route.snapshot.params['id']);
     this.ingredientsForm = this.formBuilder.group({
-      'name' : [null, Validators.required],
-      'category' : [null],
+      'name': [null, Validators.required],
+      'category': [null],
+      'amount': [null],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       // 'quantity': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]]
     });
@@ -47,6 +49,7 @@ export class IngredientsUpdateComponent implements OnInit {
         this.ingredientsForm.setValue({
           name: data.name,
           category: data.category,
+          amount: data.amount,
           calories: data.calories
         });
         this.loading = false;
@@ -63,7 +66,7 @@ export class IngredientsUpdateComponent implements OnInit {
       });
   }
 
-  recipesDetail() {
+  ingredientsDetail() {
     this.router.navigate(['/ingredients-detail/', this.id]);
   }
 }

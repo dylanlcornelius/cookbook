@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class NavComponent implements OnInit {
 
+  // TODO: attempt button hightlight per page
   isLoggedIn: Observable<boolean>;
 
   constructor(private authService: AuthService) { }

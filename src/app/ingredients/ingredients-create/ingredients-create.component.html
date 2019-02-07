@@ -29,6 +29,14 @@
   </mat-form-field>
 
   <mat-form-field class="form-field">
+      <input matInput placeholder="Amount" formControlName="amount"
+              [errorStateMatcher]="matcher">
+      <mat-error>
+        <span *ngIf="!ingredientsForm.get('amount').valid">Please enter a valid number for Ingredient Amount</span>
+      </mat-error>
+    </mat-form-field>
+
+  <mat-form-field class="form-field">
     <input matInput placeholder="Calories" formControlName="calories"
             [errorStateMatcher]="matcher">
     <mat-error>

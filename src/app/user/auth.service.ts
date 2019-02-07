@@ -40,6 +40,7 @@ export class AuthService {
       // let token = result.credential.accessToken;
       self.user = result.user;
       self.loggedIn.next(true);
+      console.log(self.user.email);
       self.zone.run(() => self.router.navigate(['']));
     }).catch(function(error) {
       const errorCode = error.code;
