@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../user/auth.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class NavComponent implements OnInit {
 
+  // TODO: attempt button hightlight per page
   isLoggedIn: Observable<boolean>;
 
   constructor(private authService: AuthService) { }
