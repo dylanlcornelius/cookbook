@@ -76,9 +76,6 @@ export class RecipesCreateComponent implements OnInit {
   initIngredients() {
     this.ingredientsService.getIngredients()
       .subscribe(data => {
-        // data.forEach(d => {
-        //   this.ingredients.push({key: d.key, value: false});
-        // });
         this.availableIngredients = data;
         // console.log(this.availableIngredients);
       });

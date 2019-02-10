@@ -16,7 +16,7 @@
     </mat-card-header>
 
     <div class="row">
-      <mat-card-content class="col-md-4">
+      <mat-card-content class="col-sm-4">
         <dl>
           <dt> Preparation Time </dt>
           <dd> {{recipe.time || "No Preparation Time"}} </dd>
@@ -33,7 +33,7 @@
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-md-4"> 
+      <mat-card-content class="col-sm-4"> 
         <dl>
           <div *ngFor="let step of recipe.steps; let i = index">
               <dt> Step: {{i+1}} </dt>
@@ -42,8 +42,8 @@
         </dl>
       </mat-card-content>
 
-      <div class="col-xs-4">
-        <div class="row">
+      <div class="col-sm-4">
+        <!-- <div class="row"> -->
           <div class="list-container">
             <h3>
               Ingredients
@@ -53,9 +53,12 @@
               <div class="box" *ngFor="let ingredient of recipe.ingredients | keyvalue">
                 {{ingredient.value.name}}
               </div>
+              <div class="box" *ngIf="recipe.ingredients == null || recipe.ingredients.length == 0">
+                No Ingredients
+              </div>
             </div>
           </div>
-        </div>
+        <!-- </div> -->
       </div>
     </div>
 
