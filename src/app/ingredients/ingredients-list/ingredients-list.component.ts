@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
-import { IngredientsService } from '../ingredients.service';
+import { IngredientService } from '../ingredient.service';
 
 @Component({
   selector: 'app-ingredients-list',
@@ -13,11 +13,10 @@ export class IngredientsListComponent implements OnInit {
   displayedColumns = ['name', 'category', 'amount', 'calories', 'quantity'];
   dataSource = [];
 
-  constructor(private ingredientsService: IngredientsService) {
-  }
+  constructor(private ingredientService: IngredientService) { }
 
   ngOnInit() {
-    this.ingredientsService.getIngredients().subscribe((result) => {
+    this.ingredientService.getIngredients().subscribe((result) => {
       this.dataSource = result;
       this.loading = false;
     });

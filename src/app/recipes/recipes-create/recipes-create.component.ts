@@ -10,8 +10,8 @@ import {
   FormArray,
   NgModel} from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { RecipesService } from '../recipes.service';
-import { IngredientsService} from '../../ingredients/ingredients.service';
+import { RecipeService } from '../recipe.service';
+import { IngredientService} from '../../ingredients/ingredient.service';
 
 @Component({
   selector: 'app-recipes-create',
@@ -37,8 +37,8 @@ export class RecipesCreateComponent implements OnInit {
   availableIngredients = [];
 
   constructor(private router: Router,
-    private recipesService: RecipesService,
-    private ingredientsService: IngredientsService,
+    private recipeService: RecipeService,
+    private ingredientService: IngredientService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -74,7 +74,7 @@ export class RecipesCreateComponent implements OnInit {
   }
 
   initIngredients() {
-    this.ingredientsService.getIngredients()
+    this.ingredientService.getIngredients()
       .subscribe(data => {
         this.availableIngredients = data;
         // console.log(this.availableIngredients);
@@ -96,7 +96,7 @@ export class RecipesCreateComponent implements OnInit {
   }
 
   onFormSubmit(form: NgForm) {
-    this.recipesService.postRecipes(form)
+    this.recipeService.postRecipes(form)
       .subscribe(res => {
         const id = res['key'];
         this.router.navigate(['/recipes-detail/', id]);

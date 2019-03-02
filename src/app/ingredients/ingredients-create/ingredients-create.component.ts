@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IngredientsService } from '../ingredients.service';
+import { IngredientService } from '../ingredient.service';
 import {
   FormControl,
   FormGroupDirective,
@@ -24,7 +24,7 @@ export class IngredientsCreateComponent implements OnInit {
   calories: number;
   // quantity: number;
 
-  constructor(private router: Router, private ingredientsService: IngredientsService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private ingredientService: IngredientService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.ingredientsForm = this.formBuilder.group({
@@ -37,7 +37,7 @@ export class IngredientsCreateComponent implements OnInit {
   }
 
   onFormSubmit(form: NgForm) {
-    this.ingredientsService.postIndegredients(form)
+    this.ingredientService.postIndegredients(form)
       .subscribe(res => {
         const id = res['key'];
         this.router.navigate(['/ingredients-detail/', id]);

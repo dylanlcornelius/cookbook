@@ -10,10 +10,14 @@ import { environment } from '../environments/environment';
 })
 
 export class AppComponent implements OnInit {
+  // TODO: this needed anymore?
   title = 'Cookbook';
 
-  ngOnInit() {
+  constructor() {
     firebase.initializeApp(environment.config);
+  }
+
+  ngOnInit() {
     // firebase.firestore().settings(settings);
   }
 }

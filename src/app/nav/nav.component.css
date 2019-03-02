@@ -12,6 +12,11 @@
     /* height: 100px; */
 }
 
+.navbar {
+    display: inline-block;
+}
+
+
 .title {
     color: white;
     font-size: 30px;
@@ -19,8 +24,14 @@
     /* margin-right: 5%; */
 }
 
-.navbar {
-    display: inline-block;
+.title-bar {
+    float: right;
+}
+
+.title-bar label {
+    margin: 0;
+    position: relative;
+    padding-top: 10px;
 }
 
 a:hover {

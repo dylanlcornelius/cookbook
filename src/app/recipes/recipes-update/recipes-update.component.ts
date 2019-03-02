@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipesService } from '../recipes.service';
+import { RecipeService } from '../recipe.service';
 import {
   FormControl,
   FormGroupDirective,
@@ -10,7 +10,7 @@ import {
   Validators,
   FormArray } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientsService} from '../../ingredients/ingredients.service';
+import { IngredientService} from '../../ingredients/ingredient.service';
 
 @Component({
   selector: 'app-recipes-update',
@@ -36,8 +36,8 @@ export class RecipesUpdateComponent implements OnInit {
   constructor(private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private recipesService: RecipesService,
-    private ingredientsService: IngredientsService) { }
+    private recipeService: RecipeService,
+    private ingredientService: IngredientService) { }
 
   ngOnInit() {
     this.getRecipe(this.route.snapshot.params['id']);
@@ -71,7 +71,7 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   getRecipe(id) {
-    this.recipesService.getRecipe(id)
+    this.recipeService.getRecipe(id)
       .subscribe(data => {
         this.id = data.key;
         if (data.steps !== undefined) {
@@ -94,7 +94,7 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   initIngredients() {
-    this.ingredientsService.getIngredients()
+    this.ingredientService.getIngredients()
       .subscribe(data => {
         data.forEach(d => {
           let found = false;
@@ -142,7 +142,7 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   onFormSubmit(form: NgForm) {
-    this.recipesService.putRecipes(this.id, form)
+    this.recipeService.putRecipes(this.id, form)
       .subscribe(res => {
         // this.router.navigate(['/recipes']);
         this.router.navigate(['/recipes-detail/', this.id]);

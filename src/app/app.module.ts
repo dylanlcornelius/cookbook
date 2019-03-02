@@ -9,10 +9,13 @@ import {
   MatIconModule,
   MatButtonModule,
   MatCardModule,
-  MatFormFieldModule } from '@angular/material';
+  MatFormFieldModule,
+  MatSelectModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -32,7 +35,9 @@ import { IngredientsListComponent } from './ingredients/ingredients-list/ingredi
 import { IngredientsCreateComponent } from './ingredients/ingredients-create/ingredients-create.component';
 import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ingredients-detail.component';
 import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ingredients-update.component';
-import { ProfileComponent } from './user/profile/profile.component';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminGuard } from './admin/admin.guard';
 
 @NgModule({
   declarations: [
@@ -51,7 +56,8 @@ import { ProfileComponent } from './user/profile/profile.component';
     IngredientsCreateComponent,
     IngredientsDetailComponent,
     IngredientsUpdateComponent,
-    ProfileComponent,
+    UserProfileComponent,
+    AdminDashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,9 +75,15 @@ import { ProfileComponent } from './user/profile/profile.component';
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
+    MatSelectModule,
     DragDropModule,
   ],
-  providers: [AuthService, LoggedInGuard],
+  providers: [
+    CookieService,
+    AuthService,
+    LoggedInGuard,
+    AdminGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

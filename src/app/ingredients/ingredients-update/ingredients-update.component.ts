@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IngredientsService } from '../ingredients.service';
+import { IngredientService } from '../ingredient.service';
 import {
   FormControl,
   FormGroupDirective,
@@ -17,6 +17,8 @@ import {
 })
 export class IngredientsUpdateComponent implements OnInit {
 
+  // TODO: create validation for missing columns
+
   loading: Boolean = true;
   ingredientsForm: FormGroup;
   id: string;
@@ -28,7 +30,7 @@ export class IngredientsUpdateComponent implements OnInit {
 
   constructor(private router: Router,
     private route: ActivatedRoute,
-    private ingredientsService: IngredientsService,
+    private ingredientService: IngredientService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -43,7 +45,7 @@ export class IngredientsUpdateComponent implements OnInit {
   }
 
   getIngredient(id) {
-    this.ingredientsService.getIngredient(id)
+    this.ingredientService.getIngredient(id)
       .subscribe(data => {
         this.id = data.key;
         this.ingredientsForm.setValue({
@@ -57,7 +59,7 @@ export class IngredientsUpdateComponent implements OnInit {
   }
 
   onFormSubmit(form: NgForm) {
-    this.ingredientsService.putIngredients(this.id, form)
+    this.ingredientService.putIngredients(this.id, form)
       .subscribe(res => {
         // this.router.navigate(['/recipes']);
         this.router.navigate(['/ingredients-detail/', this.id]);

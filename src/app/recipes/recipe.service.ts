@@ -7,7 +7,7 @@ import firestore from 'firebase/firestore';
 @Injectable({
   providedIn: 'root'
 })
-export class RecipesService {
+export class RecipeService {
 
   ref = firebase.firestore().collection('recipes');
 

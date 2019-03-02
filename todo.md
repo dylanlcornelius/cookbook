@@ -8,3 +8,4 @@
 - [ ] fade in / fade out animiations for page load and data load
 - [ ] nutrition facts for ingredients
 - [ ] external meals for week planning / AI analysis
+- [ ] add table sorting with arrow indicators, filtering, sticky header

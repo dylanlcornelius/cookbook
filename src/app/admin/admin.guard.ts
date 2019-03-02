@@ -5,27 +5,28 @@ import {
   RouterStateSnapshot,
   Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from '../user/auth.service';
 import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoggedInGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      return this.authService.isLoggedIn
+      return this.authService.isAdmin
         .pipe(
           take(1),
-          map((isLoggedIn: boolean) => {
-            if (!isLoggedIn) {
-              this.router.navigate(['/login']);
+          map((isAdmin: boolean) => {
+            if (!isAdmin) {
+              console.log('false');
               return false;
             }
+            console.log('true');
             return true;
           })
         );

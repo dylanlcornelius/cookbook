@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { AuthService } from '../user/auth.service';
 import { Observable } from 'rxjs';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-nav',
@@ -13,13 +14,16 @@ export class NavComponent implements OnInit {
 
   // TODO: attempt button hightlight per page
   isLoggedIn: Observable<boolean>;
+  isAdmin: Observable<boolean>;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    // private userService: UserService
+  ) { }
 
   ngOnInit() {
-    // TODO: re-enable login (guards/logged-in-guard.guard.ts)
-    this.isLoggedIn = new Observable<boolean>(ob => {ob.next(true); });
-    // this.isLoggedIn = this.authService.isLoggedIn;
+    this.isLoggedIn = this.authService.isLoggedIn;
+    this.isAdmin = this.authService.isAdmin;
   }
 
   signOut() {
