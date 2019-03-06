@@ -38,6 +38,7 @@ import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ing
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGuard } from './admin/admin.guard';
+import { UserPendingComponent } from './user/user-pending/user-pending.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { AdminGuard } from './admin/admin.guard';
     IngredientsUpdateComponent,
     UserProfileComponent,
     AdminDashboardComponent,
+    UserPendingComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,6 +4,7 @@ import { IngredientService } from '../../ingredients/ingredient.service';
 import { RecipeService } from '../../recipes/recipe.service';
 import { UserService } from '../../user/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { ConfigService } from '../config.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -17,23 +18,28 @@ export class AdminDashboardComponent implements OnInit {
 
   loading: Boolean = true;
 
+  configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
+  configsDatasource = [];
+
+  usersDisplayedColumns = ['key', 'firstName', 'lastName', 'roles', 'delete'];
+  roleList = ['user', 'admin'];
+  usersDatasource = [];
+  usersForm: FormGroup;
+  selectedRow: {};
+
   // ingredientsDisplayedColumns = ['name', 'type'];
   // ingredientsDatasource = [];
   // recipesDisplayedColumns = ['name', 'type'];
   // recipesDatasource = [];
-  // usersDisplayedColumns = ['name', 'type'];
-  // usersDatasource = [];
-  usersDisplayedColumns = ['key', 'firstName', 'lastName', 'role'];
-  roleList = ['user', 'admin'];
-  usersDatasource = [];
-  form: FormGroup;
-  selectedRow: {};
 
   constructor(private formBuilder: FormBuilder,
+    private configService: ConfigService,
+    private userService: UserService,
     private ingredientService: IngredientService,
-    private recipeService: RecipeService,
-    private userService: UserService) {
-      this.form = this.formBuilder.group({
+    private recipeService: RecipeService) {
+      this.usersForm = this.formBuilder.group({
+        firstName: [''],
+        lastName: [''],
         roles: new FormArray(this.usersDatasource.map(item => new FormGroup({
           role: new FormControl(item.role)
         })))
@@ -41,11 +47,13 @@ export class AdminDashboardComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.userService.getUsers().subscribe((result) => {
-      this.usersDatasource = result;
+    this.configService.getConfigs().subscribe((result) => {
+      this.configsDatasource = result;
       this.loading = false;
     });
-    // users
+    this.userService.getUsers().subscribe((result) => {
+      this.usersDatasource = result;
+    });
     // this.recipeService.getRecipes().subscribe((result) => {
     //   this.recipesDatasource = this.getCollectionData(result);
     // });
@@ -70,9 +78,48 @@ export class AdminDashboardComponent implements OnInit {
     return data;
   }
 
-  // unlock row button / save row button?
-  // or just save users
+  // TODO: dynamically add, remove, init, revert, save datasources
 
-  // delete user
+  addConfig() {
+    this.configService.postConfigs({key: '', name: '', value: ''})
+      .subscribe(() => {},
+      (err) => {
+        console.error(err);
+      });
+  }
 
+  removeConfig(key) {
+    // add verification
+    this.configService.deleteConfigs(key)
+      .subscribe(() => {},
+      (err) => {
+        console.error(err);
+      });
+  }
+
+  removeUser(key) {
+    this.userService.deleteUsers(key)
+      .subscribe(() => {},
+      (err) => {
+        console.log(err);
+      });
+  }
+
+  // TODO rename all service functions and rename id to key
+
+  revert() {
+    // add verification
+    this.configService.getConfigs().subscribe((result) => {
+      this.configsDatasource = result;
+    });
+    this.userService.getUsers().subscribe((result) => {
+      this.usersDatasource = result;
+    });
+  }
+
+  save() {
+    // add verification
+    this.configService.putConfigs(this.configsDatasource);
+    // save users
+  }
 }

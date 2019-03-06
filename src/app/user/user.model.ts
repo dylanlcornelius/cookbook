@@ -1,4 +1,3 @@
-
 export class User {
     key: string;
     uid: string;

@@ -1,10 +1,11 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import firestore from 'firebase/firestore';
 import * as firebase from 'firebase/app';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigService } from '../admin/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +23,12 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private zone: NgZone,
     private cookieService: CookieService,
     private userService: UserService,
-  ) {
-    this.loggedIn.next(this.cookieService.get('LoggedIn') !== '');
-    this.userService.getUser(this.cookieService.get('LoggedIn')).subscribe(current => {
+    private configService: ConfigService
+    ) {
+      this.loggedIn.next(this.cookieService.get('LoggedIn') !== '');
+      this.userService.getUser(this.cookieService.get('LoggedIn')).subscribe(current => {
       this.userService.CurrentUser = current;
       this.admin.next(this.userService.isAdmin);
     });
@@ -40,7 +41,6 @@ export class AuthService {
       // let token = result.credential.accessToken;
       self.user = result.user;
       self.loggedIn.next(true);
-
       self.userService.getUser(self.user.uid).subscribe(current => self.login(self, current));
     }).catch(function(error) {
       const errorCode = error.code;
@@ -56,26 +56,25 @@ export class AuthService {
   login(self, currentUser) {
       if (currentUser) {
         self.userService.CurrentUser = currentUser;
-        // console.log(self.userService.isAdmin());
         self.finishLogin(self, currentUser);
       } else {
-        self.userService.postUsers({uid: self.user.uid, firstName: '', lastName: '', role: 'user'})
-          .subscribe(current => self.finishLogin(self, current));
+        self.userService.postUsers({uid: self.user.uid, firstName: '', lastName: '', role: 'pending'})
+        .subscribe(current => self.finishLogin(self, current));
       }
   }
 
   finishLogin(self, currentUser) {
-      this.admin.next(this.userService.isAdmin);
+    this.admin.next(this.userService.isAdmin);
 
       const expirationDate = new Date();
-      // TODO: choose a auto-logout time
-      // TODO: investigate incorrect login time?
-      // console.log(expirationDate.getMinutes() + 10);
-      expirationDate.setMinutes(expirationDate.getMinutes() + 10);
-      self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
-      console.log(this.cookieService.get('LoggedIn'));
+      this.configService.getConfig('auto-logout').subscribe(autoLogout => {
+        // TODO: check if minutes overflow hour
+        // TODO: check google sign without prompting for account
+        expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
+        self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
 
-      self.zone.run(() => self.router.navigate(['']));
+        self.zone.run(() => self.router.navigate(['']));
+      });
   }
 
   logout() {

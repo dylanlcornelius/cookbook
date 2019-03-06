@@ -12,6 +12,7 @@ import { IngredientsCreateComponent } from './ingredients/ingredients-create/ing
 import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ingredients-update.component';
 import { AboutComponent } from './about/about.component';
 import { LoggedInGuard } from './user/logged-in.guard';
+import { UserPendingComponent } from './user/user-pending/user-pending.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGuard } from './admin/admin.guard';
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'ingredients-create', component: IngredientsCreateComponent, canActivate: [LoggedInGuard] },
   { path: 'ingredients-update/:id', component: IngredientsUpdateComponent, canActivate: [LoggedInGuard] },
   { path: 'about', component: AboutComponent, canActivate: [LoggedInGuard] },
+  { path: 'user-pending', component: UserPendingComponent},
   { path: 'user-profile', component: UserProfileComponent, canActivate: [LoggedInGuard] },
   { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [LoggedInGuard, AdminGuard] },
 ];
