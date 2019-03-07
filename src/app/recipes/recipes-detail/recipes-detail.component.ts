@@ -25,10 +25,8 @@ export class RecipesDetailComponent implements OnInit {
   getRecipeDetails(id) {
     this.recipeService.getRecipe(id)
       .subscribe(data => {
-        // console.log(data);
         this.recipe = data;
         this.loading = false;
-        // console.log(this.recipe);
       });
   }
 
@@ -40,16 +38,4 @@ export class RecipesDetailComponent implements OnInit {
         console.error(err);
       });
   }
-
-  // initIngredients() {
-  //   this.ingredientService.getIngredients()
-  //     .subscribe(data => {
-  //       // data.forEach(d => {
-  //       //   this.ingredients.push({key: d.key, value: false});
-  //       // });
-  //       this.availableIngredients = data;
-  //       // console.log(this.ingredients);
-  //       console.log(this.availableIngredients);
-  //     });
-  // }
 }

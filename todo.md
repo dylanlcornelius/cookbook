@@ -3,7 +3,7 @@
 - [x] admin dashboard and user roles to allow elevated permissions
 - [x] re-enable login
 - [x] configs for auto-logout
-- [ ] pending user role for new sign ins
+- [x] pending user role for new sign ins
 - [ ] add users to recipes
 
 # Version 1.1
@@ -18,6 +18,8 @@
 
 # Version 1.3 - move to pre-release
 - [ ] dev notes
+- [ ] login page NotLoggedIn guard
+- [ ] user-pending page NotPending guard
 
 # Version 1.4 - prioritize over profile and/or shopping list
 - [ ] mobile friendly layout

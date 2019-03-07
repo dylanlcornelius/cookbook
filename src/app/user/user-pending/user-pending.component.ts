@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '.././auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-pending',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPendingComponent implements OnInit {
 
-  constructor() { }
+  isPending: Observable<boolean>;
+
+  constructor(
+    private authService: AuthService,
+  ) { }
 
   ngOnInit() {
+    this.isPending = this.authService.isPending;
   }
 
 }

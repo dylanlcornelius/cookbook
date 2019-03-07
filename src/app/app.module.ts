@@ -39,6 +39,7 @@ import { UserProfileComponent } from './user/user-profile/user-profile.component
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
+import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { UserPendingComponent } from './user/user-pending/user-pending.component
     AuthService,
     LoggedInGuard,
     AdminGuard,
+    UserPendingGuard,
   ],
   bootstrap: [AppComponent]
 })

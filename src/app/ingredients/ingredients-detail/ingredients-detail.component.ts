@@ -21,7 +21,6 @@ export class IngredientsDetailComponent implements OnInit {
   getIngredientDetails(id) {
     this.ingredientService.getIngredient(id)
       .subscribe(data => {
-        // console.log(data);
         this.ingredient = data;
         this.loading = false;
       });

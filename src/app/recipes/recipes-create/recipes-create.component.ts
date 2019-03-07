@@ -77,7 +77,6 @@ export class RecipesCreateComponent implements OnInit {
     this.ingredientService.getIngredients()
       .subscribe(data => {
         this.availableIngredients = data;
-        // console.log(this.availableIngredients);
       });
   }
 

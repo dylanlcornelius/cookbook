@@ -50,9 +50,7 @@ export class ConfigService {
   }
 
   postConfigs(data): Observable<Config> {
-    console.log(data);
     return new Observable((observer) => {
-      console.log('here');
       this.ref.add(data).then((doc) => {
         observer.next({
           key: doc.id,
@@ -60,8 +58,6 @@ export class ConfigService {
           value: data.value,
         });
       });
-      console.log(observer);
-      console.log('here');
     });
   }
 

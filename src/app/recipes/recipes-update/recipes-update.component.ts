@@ -99,7 +99,6 @@ export class RecipesUpdateComponent implements OnInit {
         data.forEach(d => {
           let found = false;
           this.addedIngredients.forEach(added => {
-            // console.log(d.key + ':' + added.key);
             if (d.key === added.key) {
               found = true;
             }
@@ -121,9 +120,6 @@ export class RecipesUpdateComponent implements OnInit {
         //     }
         //   });
         // });
-
-        // console.log(this.addedIngredients);
-        // console.log(this.availableIngredients);
       });
   }
 

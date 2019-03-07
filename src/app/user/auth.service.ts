@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import firestore from 'firebase/firestore';
 import * as firebase from 'firebase/app';
@@ -12,26 +12,37 @@ import { ConfigService } from '../admin/config.service';
 })
 export class AuthService {
 
+  redirectUrl: string;
+
   private user: firebase.User;
   private loggedIn = new BehaviorSubject<boolean>(false);
   private admin = new BehaviorSubject<boolean>(false);
+  private pending = new BehaviorSubject<boolean>(true);
 
 
   get getUser() { return this.user; }
   get isLoggedIn() { return this.loggedIn.asObservable(); }
   get isAdmin() { return this.admin.asObservable(); }
+  get isPending() { return this.pending.asObservable(); }
 
   constructor(
     private router: Router,
+    private zone: NgZone,
     private cookieService: CookieService,
     private userService: UserService,
     private configService: ConfigService
     ) {
       this.loggedIn.next(this.cookieService.get('LoggedIn') !== '');
       this.userService.getUser(this.cookieService.get('LoggedIn')).subscribe(current => {
-      this.userService.CurrentUser = current;
-      this.admin.next(this.userService.isAdmin);
-    });
+        if (current) {
+          this.userService.CurrentUser = current;
+          this.admin.next(this.userService.isAdmin);
+          this.pending.next(this.userService.isPending);
+          if (this.redirectUrl) {
+            this.router.navigate([this.redirectUrl]);
+          }
+        }
+      });
   }
 
   googleLogin() {
@@ -65,16 +76,17 @@ export class AuthService {
 
   finishLogin(self, currentUser) {
     this.admin.next(this.userService.isAdmin);
+    this.pending.next(this.userService.isPending);
 
-      const expirationDate = new Date();
-      this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-        // TODO: check if minutes overflow hour
-        // TODO: check google sign without prompting for account
-        expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-        self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
+    const expirationDate = new Date();
+    this.configService.getConfig('auto-logout').subscribe(autoLogout => {
+      // TODO: check if minutes overflow hour
+      // TODO: check google sign without prompting for account
+      expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
+      self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
 
-        self.zone.run(() => self.router.navigate(['']));
-      });
+      self.zone.run(() => self.router.navigate(['']));
+    });
   }
 
   logout() {

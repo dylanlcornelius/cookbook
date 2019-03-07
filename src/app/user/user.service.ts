@@ -13,11 +13,11 @@ export class UserService {
   ref = firebase.firestore().collection('users');
 
   private currentUser: User;
-  // private admin = new BehaviorSubject<boolean>(false);
 
   get CurrentUser() { return this.currentUser; }
   set CurrentUser(currentUser: User) { this.currentUser = currentUser; }
   get isAdmin() { return this.checkIsAdmin(); }
+  get isPending() { return this.checkIsPending(); }
 
   constructor() {}
 
@@ -25,7 +25,15 @@ export class UserService {
     if (this.currentUser) {
       return this.currentUser.role === 'admin';
     } else {
-      return false;
+      // return false;
+    }
+  }
+
+  checkIsPending() {
+    if (this.currentUser) {
+      return this.currentUser.role === 'pending';
+    } else {
+      // return true;
     }
   }
 
@@ -72,7 +80,6 @@ export class UserService {
   //   return new Observable((observer) => {
   //     this.ref.doc(id).get().then((doc) => {
   //       const data = doc.data();
-  //       console.log(data);
   //       // if (!data) {
   //       //   return;
   //       // }
