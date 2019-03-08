@@ -22,9 +22,9 @@ export class AdminDashboardComponent implements OnInit {
   configsDatasource = [];
 
   usersDisplayedColumns = ['key', 'firstName', 'lastName', 'roles', 'delete'];
-  roleList = ['user', 'admin'];
+  roleList = ['user', 'admin', 'pending'];
   usersDatasource = [];
-  usersForm: FormGroup;
+  // usersForm: FormGroup;
   selectedRow: {};
 
   // ingredientsDisplayedColumns = ['name', 'type'];
@@ -36,15 +36,7 @@ export class AdminDashboardComponent implements OnInit {
     private configService: ConfigService,
     private userService: UserService,
     private ingredientService: IngredientService,
-    private recipeService: RecipeService) {
-      this.usersForm = this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        roles: new FormArray(this.usersDatasource.map(item => new FormGroup({
-          role: new FormControl(item.role)
-        })))
-      });
-    }
+    private recipeService: RecipeService) {}
 
   ngOnInit() {
     this.configService.getConfigs().subscribe((result) => {
@@ -81,7 +73,7 @@ export class AdminDashboardComponent implements OnInit {
   // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
-    this.configService.postConfigs({key: '', name: '', value: ''})
+    this.configService.postConfig({key: '', name: '', value: ''})
       .subscribe(() => {},
       (err) => {
         console.error(err);
@@ -90,7 +82,7 @@ export class AdminDashboardComponent implements OnInit {
 
   removeConfig(key) {
     // add verification
-    this.configService.deleteConfigs(key)
+    this.configService.deleteConfig(key)
       .subscribe(() => {},
       (err) => {
         console.error(err);
@@ -98,14 +90,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   removeUser(key) {
-    this.userService.deleteUsers(key)
+    this.userService.deleteUser(key)
       .subscribe(() => {},
       (err) => {
         console.log(err);
       });
   }
-
-  // TODO rename all service functions and rename id to key
 
   revert() {
     // add verification
@@ -120,6 +110,6 @@ export class AdminDashboardComponent implements OnInit {
   save() {
     // add verification
     this.configService.putConfigs(this.configsDatasource);
-    // save users
+    this.userService.putUsers(this.usersDatasource);
   }
 }

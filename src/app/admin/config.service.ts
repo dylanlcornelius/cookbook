@@ -49,7 +49,7 @@ export class ConfigService {
     });
   }
 
-  postConfigs(data): Observable<Config> {
+  postConfig(data): Observable<Config> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         observer.next({
@@ -75,7 +75,7 @@ export class ConfigService {
     });
   }
 
-  deleteConfigs(id: string): Observable<{}> {
+  deleteConfig(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
         observer.next();

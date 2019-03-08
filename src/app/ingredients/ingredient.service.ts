@@ -47,7 +47,7 @@ export class IngredientService {
     });
   }
 
-  postIndegredients(data): Observable<any> {
+  postIndegredient(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         observer.next({

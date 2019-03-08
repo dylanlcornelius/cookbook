@@ -5,13 +5,13 @@ import {
   RouterStateSnapshot,
   Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoggedInGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -22,11 +22,13 @@ export class LoggedInGuard implements CanActivate {
         .pipe(
           take(1),
           map((isLoggedIn: boolean) => {
-            if (!isLoggedIn) {
-              this.router.navigate(['/login']);
-              return false;
+            if (isLoggedIn) {
+              return true;
             }
-            return true;
+            // this.authService.redirectUrl = state.url;
+
+            this.router.navigate(['/login']);
+            return false;
           })
         );
   }

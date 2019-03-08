@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 })
 export class NavComponent implements OnInit {
 
-  // TODO: attempt button hightlight per page
   isLoggedIn: Observable<boolean>;
   isAdmin: Observable<boolean>;
   isPending: Observable<boolean>;

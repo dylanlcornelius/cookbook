@@ -28,7 +28,7 @@
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let element">
         <mat-form-field>
-          <input matInput placeholder="name" [value]="element.name" [(ngModel)]="element.name">
+          <input matInput placeholder="Name" [value]="element.name" [(ngModel)]="element.name">
         </mat-form-field>
       </td>
     </ng-container>
@@ -37,7 +37,7 @@
       <th mat-header-cell *matHeaderCellDef> Value </th>
       <td mat-cell *matCellDef="let element">
         <mat-form-field>
-          <input matInput placeholder="value" [value]="element.value" [(ngModel)]="element.value">
+          <input matInput placeholder="Value" [value]="element.value" [(ngModel)]="element.value">
         </mat-form-field>
       </td>
     </ng-container>
@@ -45,7 +45,7 @@
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef> Delete </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-button class="btn btn-danger btn-block" (click)="removeConfig(element.key)">
+        <button mat-button class="btn btn-danger" (click)="removeConfig(element.key)">
           Delete
         </button>
       </td>
@@ -63,67 +63,57 @@
   </h2>
 </div>
 <br/>
-<form [formGroup]="usersForm">
-  <div class="table-container mat-elevation-z8">
-    <table mat-table #table [dataSource]="usersDatasource" formArrayName="roles">
-      <ng-container matColumnDef="key">
-        <th mat-header-cell *matHeaderCellDef> Key </th>
-        <td mat-cell *matCellDef="let element"> {{element.key}} </td>
-      </ng-container>
+<div class="table-container mat-elevation-z8">
+  <table mat-table #table [dataSource]="usersDatasource">
+    <ng-container matColumnDef="key">
+      <th mat-header-cell *matHeaderCellDef> Key </th>
+      <td mat-cell *matCellDef="let element"> {{element.key}} </td>
+    </ng-container>
 
-      <ng-container matColumnDef="firstName">
-        <th mat-header-cell *matHeaderCellDef> First Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="lastName">
-        <th mat-header-cell *matHeaderCellDef> Last Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
-      </ng-container>
-
-      <!-- <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef> Role </th>
-        <td mat-cell *matCellDef="let element"> {{element.role}} </td>
-      </ng-container> -->
-
-      <!-- <ng-container matColumnDef="roles">
-        <th mat-header-cell *matHeaderCellDef> Role </th>
-        <td *matCellDef="let element; let i = index;" [formGroupName]="i">
-          <mat-select formControlName="role">
-            <mat-option [value]="role" *ngFor="let role of roleList">
-              {{role}}
-            </mat-option>
-          </mat-select>
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef> First Name </th>
+      <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <input matInput placeholder="First Name" [value]="element.firstName" [(ngModel)]="element.firstName">
+          </mat-form-field>
         </td>
-      </ng-container> -->
+    </ng-container>
 
-      <ng-container matColumnDef="roles">
-          <th mat-header-cell *matHeaderCellDef> Role </th>
-          <td *matCellDef="let element; let i = index;">
-            <mat-form-field>
-              <mat-select [(value)]="element.role" placeholder="Role">
-                <mat-option [value]="role" *ngFor="let role of roleList">
-                  {{role}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Last Name </th>
+      <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <input matInput placeholder="Last Name" [value]="element.lastName" [(ngModel)]="element.lastName">
+          </mat-form-field>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="roles">
+        <th mat-header-cell *matHeaderCellDef> Role </th>
+        <td *matCellDef="let element; let i = index;">
+          <mat-form-field>
+            <mat-select [(value)]="element.role" placeholder="Role">
+              <mat-option [value]="role" *ngFor="let role of roleList">
+                {{role}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef> Delete </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button class="btn btn-danger" (click)="removeUser(element.key)">
+              Delete
+            </button>
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> Delete </th>
-            <td mat-cell *matCellDef="let element">
-              <button mat-button class="btn btn-danger btn-block" (click)="removeUser(element.key)">
-                Delete
-              </button>
-            </td>
-          </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: usersDisplayedColumns;"></tr>
-    </table>
-  </div>
-</form>
+    <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: usersDisplayedColumns;"></tr>
+  </table>
+</div>
 <br/>
 
 

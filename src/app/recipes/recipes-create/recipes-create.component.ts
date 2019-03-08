@@ -10,6 +10,7 @@ import {
   FormArray,
   NgModel} from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CookieService } from 'ngx-cookie-service';
 import { RecipeService } from '../recipe.service';
 import { IngredientService} from '../../ingredients/ingredient.service';
 
@@ -30,16 +31,15 @@ export class RecipesCreateComponent implements OnInit {
   // quantity: number;
   steps: Array<{step: string}>;
 
-  // TODO: get/show all ingredients,
-  // make master-detail for recipes-ingredients service,
-  // figure out how to save things from parent component
   addedIngredients = [];
   availableIngredients = [];
 
   constructor(private router: Router,
+    private cookieService: CookieService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+  ) { }
 
   ngOnInit() {
     this.initIngredients();
@@ -88,14 +88,14 @@ export class RecipesCreateComponent implements OnInit {
     }
   }
 
-  // TODO: combine submitForm and onFormSubmit into one?
   submitForm() {
     this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({name: c.name, key: c.key}))));
+    this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }
 
   onFormSubmit(form: NgForm) {
-    this.recipeService.postRecipes(form)
+    this.recipeService.postRecipe(form)
       .subscribe(res => {
         const id = res['key'];
         this.router.navigate(['/recipes-detail/', id]);

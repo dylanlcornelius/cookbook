@@ -1,15 +1,15 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 
-import { LoggedInGuard } from './logged-in.guard';
+import { LoginGuard } from './login.guard';
 
 describe('LoggedInGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LoggedInGuard]
+      providers: [LoginGuard]
     });
   });
 
-  it('should ...', inject([LoggedInGuard], (guard: LoggedInGuard) => {
+  it('should ...', inject([LoginGuard], (guard: LoginGuard) => {
     expect(guard).toBeTruthy();
   }));
 });

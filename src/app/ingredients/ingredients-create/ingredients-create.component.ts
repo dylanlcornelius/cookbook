@@ -37,7 +37,7 @@ export class IngredientsCreateComponent implements OnInit {
   }
 
   onFormSubmit(form: NgForm) {
-    this.ingredientService.postIndegredients(form)
+    this.ingredientService.postIndegredient(form)
       .subscribe(res => {
         const id = res['key'];
         this.router.navigate(['/ingredients-detail/', id]);

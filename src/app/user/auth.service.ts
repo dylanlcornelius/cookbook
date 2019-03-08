@@ -20,7 +20,7 @@ export class AuthService {
   private pending = new BehaviorSubject<boolean>(true);
 
 
-  get getUser() { return this.user; }
+  get User() { return this.user; }
   get isLoggedIn() { return this.loggedIn.asObservable(); }
   get isAdmin() { return this.admin.asObservable(); }
   get isPending() { return this.pending.asObservable(); }
@@ -32,9 +32,9 @@ export class AuthService {
     private userService: UserService,
     private configService: ConfigService
     ) {
-      this.loggedIn.next(this.cookieService.get('LoggedIn') !== '');
       this.userService.getUser(this.cookieService.get('LoggedIn')).subscribe(current => {
         if (current) {
+          this.loggedIn.next(this.cookieService.get('LoggedIn') !== '');
           this.userService.CurrentUser = current;
           this.admin.next(this.userService.isAdmin);
           this.pending.next(this.userService.isPending);
@@ -69,7 +69,7 @@ export class AuthService {
         self.userService.CurrentUser = currentUser;
         self.finishLogin(self, currentUser);
       } else {
-        self.userService.postUsers({uid: self.user.uid, firstName: '', lastName: '', role: 'pending'})
+        self.userService.postUser({uid: self.user.uid, firstName: '', lastName: '', role: 'pending'})
         .subscribe(current => self.finishLogin(self, current));
       }
   }
@@ -80,7 +80,6 @@ export class AuthService {
 
     const expirationDate = new Date();
     this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-      // TODO: check if minutes overflow hour
       // TODO: check google sign without prompting for account
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
       self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
@@ -92,7 +91,7 @@ export class AuthService {
   logout() {
     const self = this;
     firebase.auth().signOut().then(function() {
-      // TODO: get rid of loggedin cookie
+      self.cookieService.delete('LoggedIn');
       self.user = undefined;
       self.userService.CurrentUser = undefined;
       self.loggedIn.next(false);

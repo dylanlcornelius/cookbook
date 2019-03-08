@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
 import * as firebase from 'firebase';
-import firestore from 'firebase/firestore';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from './user.model';
 
 @Injectable({
@@ -24,16 +22,12 @@ export class UserService {
   checkIsAdmin() {
     if (this.currentUser) {
       return this.currentUser.role === 'admin';
-    } else {
-      // return false;
     }
   }
 
   checkIsPending() {
     if (this.currentUser) {
       return this.currentUser.role === 'pending';
-    } else {
-      // return true;
     }
   }
 
@@ -94,7 +88,7 @@ export class UserService {
   //   });
   // }
 
-  postUsers(data): Observable<User> {
+  postUser(data): Observable<User> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         observer.next({
@@ -108,7 +102,7 @@ export class UserService {
     });
   }
 
-  putUsers(id: string, data): Observable<User> {
+  putUser(id: string, data): Observable<User> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
         observer.next();
@@ -116,7 +110,13 @@ export class UserService {
     });
   }
 
-  deleteUsers(id: string): Observable<{}> {
+  putUsers(data) {
+    data.forEach(d => {
+      this.ref.doc(d.key).set(d);
+    });
+  }
+
+  deleteUser(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
         observer.next();

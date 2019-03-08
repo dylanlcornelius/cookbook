@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { IngredientService} from '../../ingredients/ingredient.service';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-recipes-detail',
@@ -12,11 +13,14 @@ export class RecipesDetailComponent implements OnInit {
 
   loading: Boolean = true;
   recipe = {};
+  user = {};
 
   constructor(private route: ActivatedRoute,
     private router: Router,
     private recipeService: RecipeService,
-    private ingredientService: IngredientService) { }
+    private ingredientService: IngredientService,
+    private userService: UserService,
+  ) { }
 
   ngOnInit() {
     this.getRecipeDetails(this.route.snapshot.params['id']);
@@ -26,7 +30,13 @@ export class RecipesDetailComponent implements OnInit {
     this.recipeService.getRecipe(id)
       .subscribe(data => {
         this.recipe = data;
-        this.loading = false;
+        this.userService.getUser(data.user).subscribe(user => {
+          this.user = user;
+          if (!this.user) {
+            this.user = { firstName: '', lastName: ''};
+          }
+          this.loading = false;
+        });
       });
   }
 

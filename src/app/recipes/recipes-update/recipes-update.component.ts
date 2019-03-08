@@ -131,7 +131,6 @@ export class RecipesUpdateComponent implements OnInit {
     }
   }
 
-  // TODO: combine submitForm and onFormSubmit into one?
   submitForm() {
     this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({name: c.name, key: c.key}))));
     this.onFormSubmit(this.recipesForm.value);

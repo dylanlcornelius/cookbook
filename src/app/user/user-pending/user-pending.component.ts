@@ -13,7 +13,7 @@ export class UserPendingComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.isPending = this.authService.isPending;

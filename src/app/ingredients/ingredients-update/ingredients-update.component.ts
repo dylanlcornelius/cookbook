@@ -17,8 +17,6 @@ import {
 })
 export class IngredientsUpdateComponent implements OnInit {
 
-  // TODO: create validation for missing columns
-
   loading: Boolean = true;
   ingredientsForm: FormGroup;
   id: string;
