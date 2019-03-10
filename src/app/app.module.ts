@@ -30,7 +30,7 @@ import { FooterComponent } from './footer/footer.component';
 import { LoaderComponent } from './loader/loader.component';
 import { AuthService } from './user/auth.service';
 import { LoginComponent } from './user/login/login.component';
-import { LoggedInGuard } from './user/logged-in.guard';
+import { LoginGuard } from './user/login/login.guard';
 import { IngredientsListComponent } from './ingredients/ingredients-list/ingredients-list.component';
 import { IngredientsCreateComponent } from './ingredients/ingredients-create/ingredients-create.component';
 import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ingredients-detail.component';
@@ -84,7 +84,7 @@ import { UserPendingGuard } from './user/user-pending/user-pending.guard';
   providers: [
     CookieService,
     AuthService,
-    LoggedInGuard,
+    LoginGuard,
     AdminGuard,
     UserPendingGuard,
   ],

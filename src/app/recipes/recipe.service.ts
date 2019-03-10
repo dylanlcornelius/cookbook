@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import * as firebase from 'firebase';
-import firestore from 'firebase/firestore';
+import { CookieService } from 'ngx-cookie-service';
+import { UserActionService } from '../user/user-action.service';
+import { Action } from '../user/action.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,10 @@ export class RecipeService {
 
   ref = firebase.firestore().collection('recipes');
 
-  constructor() { }
+  constructor(
+    private cookieService: CookieService,
+    private userActionService: UserActionService,
+  ) { }
 
   getRecipes(): Observable<any> {
     return new Observable((observer) => {
@@ -60,6 +64,7 @@ export class RecipeService {
   postRecipe(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE);
         observer.next({
           key: doc.id
         });
@@ -70,6 +75,7 @@ export class RecipeService {
   putRecipes(id: string, data): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE);
         observer.next();
       });
     });
@@ -78,6 +84,7 @@ export class RecipeService {
   deleteRecipes(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_RECIPE);
         observer.next();
       });
     });

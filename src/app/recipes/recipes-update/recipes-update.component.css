@@ -1,15 +1,8 @@
-.form {
+.form-column {
   min-width: 300px;
-  max-width: 700px;
 }
 
 .form-field {
-  width: 100%;
-}
-
-.steps {
-  min-width: 100px;
-  max-width: 300px;
   width: 100%;
 }
 
@@ -23,14 +16,10 @@
 }
 
 .list-container {
-  /* width: 200px;
-  max-width: 100%;
-  margin: 0 25px 25px 0;
-  display: inline-block;
-  vertical-align: top; */
   min-width: 150px;
   max-width: 200px;
   margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 .list {
@@ -47,7 +36,7 @@
 
 h3 {
   font-size: 18px;
-  /* white-space: nowrap; */
+  white-space: nowrap;
 }
 
 .box {

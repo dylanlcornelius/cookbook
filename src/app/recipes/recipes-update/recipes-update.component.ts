@@ -11,6 +11,7 @@ import {
   FormArray } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredients/ingredient.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-recipes-update',
@@ -33,11 +34,14 @@ export class RecipesUpdateComponent implements OnInit {
   addedIngredients = [];
   availableIngredients = [];
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private cookieService: CookieService,
     private recipeService: RecipeService,
-    private ingredientService: IngredientService) { }
+    private ingredientService: IngredientService,
+  ) { }
 
   ngOnInit() {
     this.getRecipe(this.route.snapshot.params['id']);
@@ -96,30 +100,20 @@ export class RecipesUpdateComponent implements OnInit {
   initIngredients() {
     this.ingredientService.getIngredients()
       .subscribe(data => {
+        const added = [];
         data.forEach(d => {
           let found = false;
-          this.addedIngredients.forEach(added => {
-            if (d.key === added.key) {
+          this.addedIngredients.forEach(addedIngredient => {
+            if (d.key === addedIngredient.key) {
               found = true;
+              added.push({name: d.name, key: d.key});
             }
           });
           if (!found) {
             this.availableIngredients.push({name: d.name, key: d.key});
           }
-          // TODO: Look into using indexOf instead of above loop
-          // if (this.addedIngredients.indexOf(d.key) == null) {
-          //   this.availableIngredients.push({name: d.name, key: d.key});
-          // }
         });
-        // TODO: Splice instead of above methods
-        // this.availableIngredients = data;
-        // this.availableIngredients.forEach(available => {
-        //   this.addedIngredients.forEach(added => {
-        //     if (added.key === available.key) {
-        //       this.availableIngredients.splice(this.availableIngredients.indexOf(available.key), 1);
-        //     }
-        //   });
-        // });
+        this.addedIngredients = added;
       });
   }
 
@@ -132,7 +126,8 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   submitForm() {
-    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({name: c.name, key: c.key}))));
+    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({key: c.key}))));
+    this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }
 

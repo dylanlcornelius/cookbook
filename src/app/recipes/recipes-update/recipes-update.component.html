@@ -5,19 +5,18 @@
 </div>
 <br/>
 
-<app-loader *ngIf="loading" class="d-flex justify-content-center" style="margin-top: 100%;"></app-loader>
+<app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
-<div *ngIf="!loading">
-  <div class="button-row">
-    <a mat-fab color="primary" (click)="recipesDetail()">
-      <mat-icon> arrow_back </mat-icon>
-    </a>
-  </div>
-
-  
+<div class="row justify-content-center" *ngIf="!loading">
   <form class="form" [formGroup]="recipesForm" (ngSubmit)="onFormSubmit(recipesForm.value)">
+    <div class="button-row">
+      <a mat-fab color="primary" (click)="recipesDetail()">
+        <mat-icon> arrow_back </mat-icon>
+      </a>
+    </div>
+    
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-6 form-column">
         <mat-form-field class="form-field">
           <input matInput placeholder="Name" formControlName="name"
                   [errorStateMatcher]="matcher">
@@ -28,11 +27,6 @@
         
         <mat-form-field class="form-field">
           <textarea matInput placeholder="Description" formControlName="description"></textarea>
-          <!-- <textarea matInput placeholder="Description" formControlName="description"
-                  [errorStateMatcher]="matcher"></textarea>
-          <mat-error>
-            <span *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched">Please enter a Recipe Description</span>
-          </mat-error>-->
         </mat-form-field>
 
         <mat-form-field class="form-field">
@@ -60,18 +54,22 @@
         </mat-form-field>
 
         <div formArrayName="steps">
-          <button mat-mini-fab color="secondary" type="button" (click)="addStep()">
-            <mat-icon> add </mat-icon>
-          </button>
+          <div class="row" *ngFor="let step of recipesForm.controls.steps.controls; let i=index">
+            <div class="col-2">
+              <button mat-mini-fab color="secondary" type="button" (click)="addStep()" *ngIf="i == 0">
+                <mat-icon> add </mat-icon>
+              </button>
+              <div style="padding: 20px;" *ngIf="i > 0"></div>
+            </div>
 
-          <div *ngFor="let step of recipesForm.controls.steps.controls; let i=index">
-            <div [formGroupName]="i" class="d-flex justify-content-center">
+            <div class="col-10 d-flex justify-content-center" [formGroupName]="i">
               <mat-form-field style="width: 80%;">
                   <input matInput placeholder="Step: {{i + 1}}" formControlName="step">
               </mat-form-field>
               <button style="margin-left: 20px;" mat-mini-fab color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
                 <mat-icon> close </mat-icon>
               </button>
+              <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length == 1"></div>
             </div>
           </div>
         </div>

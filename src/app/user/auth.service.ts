@@ -1,11 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import firestore from 'firebase/firestore';
 import * as firebase from 'firebase/app';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../admin/config.service';
+import { UserActionService } from '../user/user-action.service';
+import { Action } from '../user/action.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +31,13 @@ export class AuthService {
     private zone: NgZone,
     private cookieService: CookieService,
     private userService: UserService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private userActionService: UserActionService,
     ) {
-      this.userService.getUser(this.cookieService.get('LoggedIn')).subscribe(current => {
+      const loggedInCookie = this.cookieService.get('LoggedIn');
+      this.userService.getUser(loggedInCookie).subscribe(current => {
         if (current) {
-          this.loggedIn.next(this.cookieService.get('LoggedIn') !== '');
+          this.loggedIn.next(loggedInCookie !== '');
           this.userService.CurrentUser = current;
           this.admin.next(this.userService.isAdmin);
           this.pending.next(this.userService.isPending);
@@ -83,6 +86,7 @@ export class AuthService {
       // TODO: check google sign without prompting for account
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
       self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
+      this.userActionService.commitAction(self.user.uid, Action.LOGIN);
 
       self.zone.run(() => self.router.navigate(['']));
     });

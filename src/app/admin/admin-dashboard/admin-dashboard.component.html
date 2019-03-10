@@ -1,23 +1,13 @@
-<div class="row">
-  <div class="col-7"></div>
-  <button class="btn btn-warning col-2" (click)="revert()">
-    Revert
-  </button>
-  <button class="btn btn-primary offset-1 col-2" (click)="save()">
-    Save
-  </button>
-</div>
-
 <div class="row justify-content-center">
   <h2>
     Configurations
   </h2>
 </div>
 <br/>
-<button class="btn btn-success btn-block" (click)="addConfig()">
-  Add
-</button>
 <div class="table-container mat-elevation-z8">
+  <button class="btn btn-success btn-block" (click)="addConfig()">
+    Add
+  </button>
   <table mat-table #table [dataSource]="configsDatasource">
     <ng-container matColumnDef="key">
       <th mat-header-cell *matHeaderCellDef> Key </th>
@@ -115,6 +105,15 @@
   </table>
 </div>
 <br/>
+
+<div class="row" style="float: right;">
+  <button class="btn btn-warning" (click)="revert()" style="width: 100px;">
+    Revert
+  </button>
+  <button class="btn btn-primary" (click)="save()" style="width: 100px;">
+    Save
+  </button>
+</div>
 
 
 

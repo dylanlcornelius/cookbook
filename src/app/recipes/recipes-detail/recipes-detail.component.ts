@@ -13,6 +13,7 @@ export class RecipesDetailComponent implements OnInit {
 
   loading: Boolean = true;
   recipe = {};
+  ingredients = [];
   user = {};
 
   constructor(private route: ActivatedRoute,
@@ -35,7 +36,17 @@ export class RecipesDetailComponent implements OnInit {
           if (!this.user) {
             this.user = { firstName: '', lastName: ''};
           }
-          this.loading = false;
+          this.ingredientService.getIngredients()
+          .subscribe(allIngredients => {
+            allIngredients.forEach(i => {
+              data.ingredients.forEach(recipeIngredient => {
+                if (recipeIngredient.key === i.key) {
+                  this.ingredients.push({name: i.name, key: i.key});
+                }
+              });
+            });
+            this.loading = false;
+          });
         });
       });
   }

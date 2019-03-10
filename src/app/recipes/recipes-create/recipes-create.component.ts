@@ -21,6 +21,7 @@ import { IngredientService} from '../../ingredients/ingredient.service';
 })
 export class RecipesCreateComponent implements OnInit {
 
+  loading: Boolean = true;
   recipesForm: FormGroup;
   stepsForm: FormGroup;
   name: string;
@@ -35,10 +36,10 @@ export class RecipesCreateComponent implements OnInit {
   availableIngredients = [];
 
   constructor(private router: Router,
+    private formBuilder: FormBuilder,
     private cookieService: CookieService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
-    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit() {
@@ -77,6 +78,7 @@ export class RecipesCreateComponent implements OnInit {
     this.ingredientService.getIngredients()
       .subscribe(data => {
         this.availableIngredients = data;
+        this.loading = false;
       });
   }
 
@@ -89,7 +91,7 @@ export class RecipesCreateComponent implements OnInit {
   }
 
   submitForm() {
-    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({name: c.name, key: c.key}))));
+    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({key: c.key}))));
     this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }
