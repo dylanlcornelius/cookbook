@@ -7,10 +7,9 @@
 - [x] add users to recipes
 - [x] add activity tracking for analytics
 - [x] switch recipe-ingredients to only keep key and fetch current data
-- [ ] send to my email for pending users
 - [x] fix add recipe page and about page
 - [x] detail card change styling
-- [ ] new actions per week?
+- [x] new actions per week?
 
 # Version 1.1 - A Grocery List
 - [ ] shopping list
@@ -18,6 +17,7 @@
 - [ ] calculate recipes from ingredient quantities
 - [ ] add validation popup for deleting recipe (only owner can delete)
 - [ ] make all data fetches null-safe
+- [ ] send email to me for pending users
 
 # Version 1.2 - Your Profile
 - [ ] profile page
