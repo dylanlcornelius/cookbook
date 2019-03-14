@@ -1,0 +1,200 @@
+<div class="row justify-content-center">
+  <h2>
+    Configurations
+  </h2>
+</div>
+<br/>
+<div class="table-container mat-elevation-z8">
+  <button class="btn btn-success btn-block" (click)="addConfig()">
+    Add
+  </button>
+  <table mat-table #table [dataSource]="configsDatasource">
+    <ng-container matColumnDef="key">
+      <th mat-header-cell *matHeaderCellDef> Key </th>
+      <td mat-cell *matCellDef="let element"> {{element.key}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field>
+          <input matInput placeholder="Name" [value]="element.name" [(ngModel)]="element.name">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef> Value </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field>
+          <input matInput placeholder="Value" [value]="element.value" [(ngModel)]="element.value">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button class="btn btn-danger" (click)="removeConfig(element.key)">
+          Delete
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="configsDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: configsDisplayedColumns;"></tr>
+  </table>
+</div>
+<br/>
+
+<div class="row justify-content-center">
+  <h2>
+    Users
+  </h2>
+</div>
+<br/>
+<div class="table-container mat-elevation-z8">
+  <table mat-table #table [dataSource]="usersDatasource">
+    <ng-container matColumnDef="key">
+      <th mat-header-cell *matHeaderCellDef> Key </th>
+      <td mat-cell *matCellDef="let element"> {{element.key}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef> First Name </th>
+      <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <input matInput placeholder="First Name" [value]="element.firstName" [(ngModel)]="element.firstName">
+          </mat-form-field>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Last Name </th>
+      <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <input matInput placeholder="Last Name" [value]="element.lastName" [(ngModel)]="element.lastName">
+          </mat-form-field>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="roles">
+        <th mat-header-cell *matHeaderCellDef> Role </th>
+        <td *matCellDef="let element; let i = index;">
+          <mat-form-field>
+            <mat-select [(value)]="element.role" placeholder="Role">
+              <mat-option [value]="role" *ngFor="let role of roleList">
+                {{role}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef> Delete </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button class="btn btn-danger" (click)="removeUser(element.key)">
+              Delete
+            </button>
+          </td>
+        </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: usersDisplayedColumns;"></tr>
+  </table>
+</div>
+<br/>
+
+<div class="row" style="float: right;">
+  <button class="btn btn-warning" (click)="revert()" style="width: 100px;">
+    Revert
+  </button>
+  <button class="btn btn-primary" (click)="save()" style="width: 100px;">
+    Save
+  </button>
+</div>
+
+
+
+<!-- <div class="row justify-content-center">
+  <h2>
+    Users
+  </h2>
+</div>
+<br/>
+<div>
+  <div class="table-container mat-elevation-z8"> 
+    <table mat-table #table [dataSource]="usersDatasource">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      inline inputs -->
+      <!-- edit & delete buttons -->
+
+      <!-- add and save buttons
+
+      <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: usersDisplayedColumns;"></tr>
+    </table>
+  </div>
+</div>
+<br/>
+
+<div class="row justify-content-center">
+  <h2>
+    Recipes
+  </h2>
+</div>
+<br/>
+<div>
+  <div class="table-container mat-elevation-z8"> 
+    <table mat-table #table [dataSource]="recipesDatasource">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="recipesDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: recipesDisplayedColumns;"></tr>
+    </table>
+  </div>
+</div>
+<br/>
+
+<div class="row justify-content-center">
+  <h2>
+    Ingredients
+  </h2>
+</div>
+<br/>
+<div>
+  <div class="table-container mat-elevation-z8"> 
+    <table mat-table #table [dataSource]="ingredientsDatasource">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="ingredientsDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: ingredientsDisplayedColumns;"></tr>
+    </table>
+  </div>
+</div> -->

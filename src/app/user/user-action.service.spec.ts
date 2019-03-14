@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IngredientsService } from './ingredients.service';
+import { UserActionService } from './user-action.service';
 
-describe('IngredientsService', () => {
+describe('UserActionService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: IngredientsService = TestBed.get(IngredientsService);
+    const service: UserActionService = TestBed.get(UserActionService);
     expect(service).toBeTruthy();
   });
 });

@@ -9,10 +9,13 @@ import {
   MatIconModule,
   MatButtonModule,
   MatCardModule,
-  MatFormFieldModule } from '@angular/material';
+  MatFormFieldModule,
+  MatSelectModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -27,12 +30,16 @@ import { FooterComponent } from './footer/footer.component';
 import { LoaderComponent } from './loader/loader.component';
 import { AuthService } from './user/auth.service';
 import { LoginComponent } from './user/login/login.component';
-import { LoggedInGuard } from './user/logged-in.guard';
+import { LoginGuard } from './user/login/login.guard';
 import { IngredientsListComponent } from './ingredients/ingredients-list/ingredients-list.component';
 import { IngredientsCreateComponent } from './ingredients/ingredients-create/ingredients-create.component';
 import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ingredients-detail.component';
 import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ingredients-update.component';
-import { ProfileComponent } from './user/profile/profile.component';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminGuard } from './admin/admin.guard';
+import { UserPendingComponent } from './user/user-pending/user-pending.component';
+import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 
 @NgModule({
   declarations: [
@@ -51,7 +58,9 @@ import { ProfileComponent } from './user/profile/profile.component';
     IngredientsCreateComponent,
     IngredientsDetailComponent,
     IngredientsUpdateComponent,
-    ProfileComponent,
+    UserProfileComponent,
+    AdminDashboardComponent,
+    UserPendingComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,9 +78,16 @@ import { ProfileComponent } from './user/profile/profile.component';
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
+    MatSelectModule,
     DragDropModule,
   ],
-  providers: [AuthService, LoggedInGuard],
+  providers: [
+    CookieService,
+    AuthService,
+    LoginGuard,
+    AdminGuard,
+    UserPendingGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipesService } from '../recipes.service';
+import { RecipeService } from '../recipe.service';
 import {
   FormControl,
   FormGroupDirective,
@@ -10,7 +10,8 @@ import {
   Validators,
   FormArray } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientsService} from '../../ingredients/ingredients.service';
+import { IngredientService} from '../../ingredients/ingredient.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-recipes-update',
@@ -33,11 +34,14 @@ export class RecipesUpdateComponent implements OnInit {
   addedIngredients = [];
   availableIngredients = [];
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private recipesService: RecipesService,
-    private ingredientsService: IngredientsService) { }
+    private cookieService: CookieService,
+    private recipeService: RecipeService,
+    private ingredientService: IngredientService,
+  ) { }
 
   ngOnInit() {
     this.getRecipe(this.route.snapshot.params['id']);
@@ -71,7 +75,7 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   getRecipe(id) {
-    this.recipesService.getRecipe(id)
+    this.recipeService.getRecipe(id)
       .subscribe(data => {
         this.id = data.key;
         if (data.steps !== undefined) {
@@ -94,36 +98,22 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   initIngredients() {
-    this.ingredientsService.getIngredients()
+    this.ingredientService.getIngredients()
       .subscribe(data => {
+        const added = [];
         data.forEach(d => {
           let found = false;
-          this.addedIngredients.forEach(added => {
-            // console.log(d.key + ':' + added.key);
-            if (d.key === added.key) {
+          this.addedIngredients.forEach(addedIngredient => {
+            if (d.key === addedIngredient.key) {
               found = true;
+              added.push({name: d.name, key: d.key});
             }
           });
           if (!found) {
             this.availableIngredients.push({name: d.name, key: d.key});
           }
-          // TODO: Look into using indexOf instead of above loop
-          // if (this.addedIngredients.indexOf(d.key) == null) {
-          //   this.availableIngredients.push({name: d.name, key: d.key});
-          // }
         });
-        // TODO: Splice instead of above methods
-        // this.availableIngredients = data;
-        // this.availableIngredients.forEach(available => {
-        //   this.addedIngredients.forEach(added => {
-        //     if (added.key === available.key) {
-        //       this.availableIngredients.splice(this.availableIngredients.indexOf(available.key), 1);
-        //     }
-        //   });
-        // });
-
-        // console.log(this.addedIngredients);
-        // console.log(this.availableIngredients);
+        this.addedIngredients = added;
       });
   }
 
@@ -135,14 +125,14 @@ export class RecipesUpdateComponent implements OnInit {
     }
   }
 
-  // TODO: combine submitForm and onFormSubmit into one?
   submitForm() {
-    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({name: c.name, key: c.key}))));
+    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({key: c.key}))));
+    this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }
 
   onFormSubmit(form: NgForm) {
-    this.recipesService.putRecipes(this.id, form)
+    this.recipeService.putRecipes(this.id, form)
       .subscribe(res => {
         // this.router.navigate(['/recipes']);
         this.router.navigate(['/recipes-detail/', this.id]);

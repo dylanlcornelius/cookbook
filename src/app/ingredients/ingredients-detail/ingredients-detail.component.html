@@ -1,4 +1,4 @@
-<app-loader *ngIf="loading" class="d-flex justify-content-center" style="margin-top: 100%;"></app-loader>
+<app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
 <div *ngIf="!loading">
   <div class="button-row">
@@ -12,21 +12,32 @@
       </mat-card-title>
     </mat-card-header>
 
-    <div class="row">
-      <mat-card-content class="d-flex justify-content-center card-column">
+    <div class="row justify-content-center">
+      <mat-card-content class="col-3 d-flex justify-content-center card-column">
         <dl>
           <dt> Category </dt>
           <dd> {{ingredient.category || "No Category"}} </dd>
+        </dl>
+      </mat-card-content>
 
+      <mat-card-content class="col-3 d-flex justify-content-center card-column">
+        <dl>
           <dt> Amount </dt>
           <dd> {{ingredient.amount || "No Amount"}} </dd>
+        </dl>
+      </mat-card-content>
 
+      <mat-card-content class="col-3 d-flex justify-content-center card-column">
+        <dl>
           <dt> Calories </dt>
           <dd> {{ingredient.calories || "No Calories"}} </dd>
+        </dl>
+      </mat-card-content>
 
+      <mat-card-content class="col-3 d-flex justify-content-center card-column">
+        <dl>
           <dt> Quantity </dt>
           <dd> {{ingredient.quantity || "No Quantity"}} </dd>
-          <!-- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" -->
         </dl>
       </mat-card-content>
     </div>

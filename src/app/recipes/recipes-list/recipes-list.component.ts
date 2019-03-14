@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
-import { RecipesService } from '../recipes.service';
+import { RecipeService } from '../recipe.service';
 
 @Component({
   selector: 'app-recipes-list',
@@ -14,11 +14,11 @@ export class RecipesListComponent implements OnInit {
   // dataSource = new RecipeDataSource(this.fs);
   dataSource = [];
 
-  constructor(private recipesService: RecipesService) {
+  constructor(private recipeService: RecipeService) {
   }
 
   ngOnInit() {
-    this.recipesService.getRecipes().subscribe((result) => {
+    this.recipeService.getRecipes().subscribe((result) => {
       this.dataSource = result;
       this.loading = false;
     });

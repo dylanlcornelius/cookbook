@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import * as firebase from 'firebase';
-import firestore from 'firebase/firestore';
+import { CookieService } from 'ngx-cookie-service';
+import { UserActionService } from '../user/user-action.service';
+import { Action } from '../user/action.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecipesService {
+export class RecipeService {
 
   ref = firebase.firestore().collection('recipes');
 
-  // TODO: look into creating a recipe model "ng g model recipe"
-
-  constructor() { }
+  constructor(
+    private cookieService: CookieService,
+    private userActionService: UserActionService,
+  ) { }
 
   getRecipes(): Observable<any> {
     return new Observable((observer) => {
@@ -31,6 +33,7 @@ export class RecipesService {
             quantity: data.quantity,
             steps: data.steps,
             ingredients: data.ingredients,
+            user: data.user,
           });
         });
         observer.next(recipes);
@@ -52,14 +55,16 @@ export class RecipesService {
           quantity: data.quantity,
           steps: data.steps,
           ingredients: data.ingredients,
+          user: data.user,
         });
       });
     });
   }
 
-  postRecipes(data): Observable<any> {
+  postRecipe(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE);
         observer.next({
           key: doc.id
         });
@@ -70,6 +75,7 @@ export class RecipesService {
   putRecipes(id: string, data): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE);
         observer.next();
       });
     });
@@ -78,6 +84,7 @@ export class RecipesService {
   deleteRecipes(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_RECIPE);
         observer.next();
       });
     });

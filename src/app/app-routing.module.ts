@@ -11,21 +11,28 @@ import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ing
 import { IngredientsCreateComponent } from './ingredients/ingredients-create/ingredients-create.component';
 import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ingredients-update.component';
 import { AboutComponent } from './about/about.component';
-import { LoggedInGuard } from './user/logged-in.guard';
+import { LoginGuard } from './user/login/login.guard';
+import { UserPendingComponent } from './user/user-pending/user-pending.component';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminGuard } from './admin/admin.guard';
+import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 
 const routes: Routes = [
-  // TODO: Login Guard Home page or not?
-  { path: '', component: HomeComponent, canActivate: [LoggedInGuard] },
+  { path: '', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'recipes-list', component: RecipesListComponent, canActivate: [LoggedInGuard] },
-  { path: 'recipes-detail/:id', component: RecipesDetailComponent, canActivate: [LoggedInGuard] },
-  { path: 'recipes-create', component: RecipesCreateComponent },
-  { path: 'recipes-update/:id', component: RecipesUpdateComponent, canActivate: [LoggedInGuard] },
-  { path: 'ingredients-list', component: IngredientsListComponent, canActivate: [LoggedInGuard] },
-  { path: 'ingredients-detail/:id', component: IngredientsDetailComponent, canActivate: [LoggedInGuard] },
-  { path: 'ingredients-create', component: IngredientsCreateComponent, canActivate: [LoggedInGuard] },
-  { path: 'ingredients-update/:id', component: IngredientsUpdateComponent, canActivate: [LoggedInGuard] },
-  { path: 'about', component: AboutComponent, canActivate: [LoggedInGuard] },
+  { path: 'recipes-list', component: RecipesListComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'recipes-detail/:id', component: RecipesDetailComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'recipes-create', component: RecipesCreateComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'recipes-update/:id', component: RecipesUpdateComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'ingredients-list', component: IngredientsListComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'ingredients-detail/:id', component: IngredientsDetailComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'ingredients-create', component: IngredientsCreateComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'ingredients-update/:id', component: IngredientsUpdateComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'about', component: AboutComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
+  { path: 'user-profile', component: UserProfileComponent, canActivate: [LoginGuard, UserPendingGuard] },
+  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [LoginGuard, UserPendingGuard, AdminGuard] },
 ];
 
 @NgModule({

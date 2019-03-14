@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecipesService } from '../recipes.service';
-import { IngredientsService} from '../../ingredients/ingredients.service';
+import { RecipeService } from '../recipe.service';
+import { IngredientService} from '../../ingredients/ingredient.service';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-recipes-detail',
@@ -12,44 +13,50 @@ export class RecipesDetailComponent implements OnInit {
 
   loading: Boolean = true;
   recipe = {};
+  ingredients = [];
+  user = {};
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private recipesService: RecipesService,
-    private ingredientsService: IngredientsService) { }
+    private recipeService: RecipeService,
+    private ingredientService: IngredientService,
+    private userService: UserService,
+  ) { }
 
   ngOnInit() {
     this.getRecipeDetails(this.route.snapshot.params['id']);
   }
 
   getRecipeDetails(id) {
-    this.recipesService.getRecipe(id)
+    this.recipeService.getRecipe(id)
       .subscribe(data => {
-        // console.log(data);
         this.recipe = data;
-        this.loading = false;
-        // console.log(this.recipe);
+        this.userService.getUser(data.user).subscribe(user => {
+          this.user = user;
+          if (!this.user) {
+            this.user = { firstName: '', lastName: ''};
+          }
+          this.ingredientService.getIngredients()
+          .subscribe(allIngredients => {
+            allIngredients.forEach(i => {
+              data.ingredients.forEach(recipeIngredient => {
+                if (recipeIngredient.key === i.key) {
+                  this.ingredients.push({name: i.name, key: i.key});
+                }
+              });
+            });
+            this.loading = false;
+          });
+        });
       });
   }
 
   deleteRecipe(id) {
-    this.recipesService.deleteRecipes(id)
+    this.recipeService.deleteRecipes(id)
       .subscribe(res => {
         this.router.navigate(['/recipes-list']);
       }, (err) => {
         console.error(err);
       });
   }
-
-  // initIngredients() {
-  //   this.ingredientsService.getIngredients()
-  //     .subscribe(data => {
-  //       // data.forEach(d => {
-  //       //   this.ingredients.push({key: d.key, value: false});
-  //       // });
-  //       this.availableIngredients = data;
-  //       // console.log(this.ingredients);
-  //       console.log(this.availableIngredients);
-  //     });
-  // }
 }

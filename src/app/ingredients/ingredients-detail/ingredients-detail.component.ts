@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IngredientsService } from '../ingredients.service';
+import { IngredientService } from '../ingredient.service';
 
 @Component({
   selector: 'app-ingredients-detail',
@@ -12,23 +12,22 @@ export class IngredientsDetailComponent implements OnInit {
   loading: Boolean = true;
   ingredient = {};
 
-  constructor(private route: ActivatedRoute, private router: Router, private ingredientsService: IngredientsService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }
 
   ngOnInit() {
     this.getIngredientDetails(this.route.snapshot.params['id']);
   }
 
   getIngredientDetails(id) {
-    this.ingredientsService.getIngredient(id)
+    this.ingredientService.getIngredient(id)
       .subscribe(data => {
-        // console.log(data);
         this.ingredient = data;
         this.loading = false;
       });
   }
 
   deleteIngredient(id) {
-    this.ingredientsService.deleteIngredients(id)
+    this.ingredientService.deleteIngredients(id)
       .subscribe(res => {
         this.router.navigate(['/ingredients-list']);
       }, (err) => {
