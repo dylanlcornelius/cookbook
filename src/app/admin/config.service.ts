@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import * as firebase from 'firebase';
-import firestore from 'firebase/firestore';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
+import { Observable } from 'rxjs';
 import { Config } from './config.model';
 
 @Injectable({

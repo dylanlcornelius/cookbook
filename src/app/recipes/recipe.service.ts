@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import * as firebase from 'firebase';
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
 import { UserActionService } from '../user/user-action.service';
 import { Action } from '../user/action.enum';

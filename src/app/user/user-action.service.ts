@@ -1,5 +1,6 @@
 import { Injectable, isDevMode } from '@angular/core';
-import * as firebase from 'firebase';
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
 import { Action } from './action.enum';
 
 @Injectable({

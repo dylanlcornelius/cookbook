@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import * as firebase from 'firebase/app';
+import { firebase } from '@firebase/app';
+import '@firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -15,7 +16,7 @@ export class AuthService {
 
   redirectUrl: string;
 
-  private user: firebase.User;
+  private user;
   private loggedIn = new BehaviorSubject<boolean>(false);
   private admin = new BehaviorSubject<boolean>(false);
   private pending = new BehaviorSubject<boolean>(true);
