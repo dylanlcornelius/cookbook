@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from '@angular/cdk/collections';
 import { IngredientService } from '../../ingredients/ingredient.service';
 import { RecipeService } from '../../recipes/recipe.service';
 import { UserService } from '../../user/user.service';

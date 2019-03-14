@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { Action } from './action.enum';
 
@@ -71,15 +71,4 @@ export class UserActionService {
       console.error('error: ', error);
     });
   }
-
-  // getAction(uid: string) {
-  //   return this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
-  //     let key = '';
-  //     querySnapshot.forEach((doc) => {
-  //       key = doc.id;
-  //     });
-  //     // return only the first user
-  //     return key;
-  //   });
-  // }
 }

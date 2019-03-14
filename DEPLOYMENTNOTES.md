@@ -1,25 +1,26 @@
 # Deployement Notes
-## For Firebase Hosting
+#### For Firebase Hosting
+---
 
-'''
+##### Initialize Firebase
+```
 firebase login
 firebase init
-'''
-Choose options:
-'''
+```
+
+##### Choose options:
+```
 Hosting: Configure and deploy Firebase Hosting Sites
-Select default Firebase project
-Set public directory
-dist/Cookbook
-y
-'''
+Set public directory: dist/Cookbook
+SPA: Yes
+```
 
-Build app
-'''
+##### Build application
+```
 ng build --prod
-'''
+```
 
-Deploy app
-'''
+##### Deploy build
+```
 firebase deploy
-'''
+```
