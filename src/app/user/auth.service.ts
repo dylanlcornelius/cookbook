@@ -45,6 +45,15 @@ export class AuthService {
           if (this.redirectUrl) {
             this.router.navigate([this.redirectUrl]);
           }
+          this.configService.getConfig('auto-logout').subscribe(autoLogout => {
+            this.cookieService.delete('LoggedIn');
+            const expirationDate = new Date();
+            expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
+            this.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
+            setTimeout(() => {
+              this.logout();
+            }, Number(autoLogout.value) * 60000);
+          });
         }
       });
   }
@@ -82,14 +91,18 @@ export class AuthService {
     this.admin.next(this.userService.isAdmin);
     this.pending.next(this.userService.isPending);
 
-    const expirationDate = new Date();
     this.configService.getConfig('auto-logout').subscribe(autoLogout => {
       // TODO: check google sign without prompting for account
+      const expirationDate = new Date();
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
       self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
       this.userActionService.commitAction(self.user.uid, Action.LOGIN);
 
       self.zone.run(() => self.router.navigate(['']));
+
+      setTimeout(() => {
+        self.logout();
+      }, Number(autoLogout.value) * 60000);
     });
   }
 

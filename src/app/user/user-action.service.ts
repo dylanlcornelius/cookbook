@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { Action } from './action.enum';
@@ -16,20 +16,27 @@ export class UserActionService {
     const self = this;
     if (uid) {
       self.getAction(self, uid).then(function(userAction) {
+        const weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+        const week = weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear();
         if (userAction) {
-          let exists = false;
-          Object.keys(userAction.actions).forEach(key => {
-            if (key === action) {
-              userAction.actions[key]++;
-              exists = true;
+          if (userAction.actions[week.toString()]) {
+            let exists = false;
+            Object.keys(userAction.actions[week.toString()]).forEach(key => {
+              if (key === action) {
+                userAction.actions[week.toString()][action]++;
+                exists = true;
+              }
+            });
+            if (!exists) {
+              userAction.actions[week.toString()][action] = 1;
             }
-          });
-          if (!exists) {
-            userAction.actions[action] = 1;
+          } else {
+            userAction.actions[week.toString()] = {[action]: 1};
           }
           self.putAction(self, userAction);
         } else {
-          userAction = {'uid': uid, 'actions': {[action]: 1}};
+          userAction = {'uid': uid, 'actions': {[week.toString()]: {[action]: 1}}};
           self.postAction(self, userAction);
         }
       });
@@ -65,15 +72,4 @@ export class UserActionService {
       console.error('error: ', error);
     });
   }
-
-  // getAction(uid: string) {
-  //   return this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
-  //     let key = '';
-  //     querySnapshot.forEach((doc) => {
-  //       key = doc.id;
-  //     });
-  //     // return only the first user
-  //     return key;
-  //   });
-  // }
 }
