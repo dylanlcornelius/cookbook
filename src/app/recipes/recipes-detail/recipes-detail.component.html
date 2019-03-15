@@ -72,3 +72,5 @@
     </mat-card-actions>
   </mat-card>
 </div>
+
+<app-validation-modal *ngIf="modalKey" [modalText]="modalText" [modalKey]="modalKey" (closeEvent)="deleteEvent($event)"></app-validation-modal>

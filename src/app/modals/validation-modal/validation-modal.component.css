@@ -1,0 +1,14 @@
+modal-overlay {
+    position: absolute;
+    opacity: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+modal-container {
+    position: absolute;
+}
+
+modal-text {
+    font-size: 18px;
+}

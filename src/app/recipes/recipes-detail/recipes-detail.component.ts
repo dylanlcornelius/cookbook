@@ -11,7 +11,10 @@ import { UserService } from '../../user/user.service';
 })
 export class RecipesDetailComponent implements OnInit {
 
-  loading: Boolean = true;
+  loading = true;
+  modalText = 'Are you sure you want to delete this recipe?';
+  modalKey: string;
+
   recipe = {};
   ingredients = [];
   user = {};
@@ -52,11 +55,18 @@ export class RecipesDetailComponent implements OnInit {
   }
 
   deleteRecipe(id) {
-    this.recipeService.deleteRecipes(id)
+    this.modalKey = id;
+  }
+
+  deleteEvent(id) {
+    if (id) {
+      this.recipeService.deleteRecipes(id)
       .subscribe(res => {
         this.router.navigate(['/recipes-list']);
       }, (err) => {
         console.error(err);
       });
+    }
+    this.modalKey = undefined;
   }
 }
