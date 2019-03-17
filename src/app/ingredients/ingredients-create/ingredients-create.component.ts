@@ -20,8 +20,8 @@ export class IngredientsCreateComponent implements OnInit {
   ingredientsForm: FormGroup;
   name: string;
   category: string;
-  amount: string;
-  calories: number;
+  // amount: string;
+  // calories: number;
   // quantity: number;
 
   constructor(private router: Router, private ingredientService: IngredientService, private formBuilder: FormBuilder) { }
@@ -30,8 +30,8 @@ export class IngredientsCreateComponent implements OnInit {
     this.ingredientsForm = this.formBuilder.group({
       'name': [null, Validators.required],
       'category' : [null],
-      'amount': [null],
-      'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      // 'amount': [null],
+      // 'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       // 'quantity': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]]
     });
   }

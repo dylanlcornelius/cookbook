@@ -34,24 +34,29 @@ export class AuthService {
     private configService: ConfigService,
     private userActionService: UserActionService,
     ) {
-      const loggedInCookie = this.cookieService.get('LoggedIn');
-      this.userService.getUser(loggedInCookie).subscribe(current => {
-        if (current) {
-          this.loggedIn.next(loggedInCookie !== '');
-          this.userService.CurrentUser = current;
-          this.admin.next(this.userService.isAdmin);
-          this.pending.next(this.userService.isPending);
-          if (this.redirectUrl) {
-            this.router.navigate([this.redirectUrl]);
-          }
-          this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-            this.cookieService.delete('LoggedIn');
-            const expirationDate = new Date();
-            expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-            this.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
-            setTimeout(() => {
-              this.logout();
-            }, Number(autoLogout.value) * 60000);
+      const self = this;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          const loggedInCookie = self.cookieService.get('LoggedIn');
+          self.userService.getUser(loggedInCookie).subscribe(current => {
+            if (current) {
+              self.loggedIn.next(loggedInCookie !== '');
+              self.userService.CurrentUser = current;
+              self.admin.next(self.userService.isAdmin);
+              self.pending.next(self.userService.isPending);
+              if (self.redirectUrl) {
+                self.router.navigate([self.redirectUrl]);
+              }
+              self.configService.getConfig('auto-logout').subscribe(autoLogout => {
+                self.cookieService.delete('LoggedIn');
+                const expirationDate = new Date();
+                expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
+                self.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
+                setTimeout(() => {
+                  self.logout();
+                }, Number(autoLogout.value) * 60000);
+              });
+            }
           });
         }
       });
