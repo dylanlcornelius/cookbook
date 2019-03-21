@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-validation-modal',
@@ -7,14 +7,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ValidationModalComponent implements OnInit {
 
-  @Input()
-  modalText: string;
+  // @Input()
+  // modalText: string;
 
   @Input()
-  modalKey: string;
-
-  @Output()
-  closeEvent = new EventEmitter<string>();
+  validationModalParams;
 
   constructor() { }
 
@@ -22,11 +19,15 @@ export class ValidationModalComponent implements OnInit {
   }
 
   cancel() {
-    this.closeEvent.next(this.modalKey);
+    this.validationModalParams = undefined;
   }
 
   confirm() {
-    this.closeEvent.next(this.modalKey);
+    if (this.validationModalParams.id) {
+      this.validationModalParams.function(this.validationModalParams.self, this.validationModalParams.id);
+    } else {
+      this.validationModalParams.function(this.validationModalParams.self);
+    }
+    this.validationModalParams = undefined;
   }
-
 }

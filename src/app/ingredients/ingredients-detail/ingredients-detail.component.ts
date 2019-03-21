@@ -10,7 +10,8 @@ import { IngredientService } from '../ingredient.service';
 export class IngredientsDetailComponent implements OnInit {
 
   loading: Boolean = true;
-  ingredient = {};
+  validationModalParams: {};
+  ingredient;
 
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }
 
@@ -27,11 +28,22 @@ export class IngredientsDetailComponent implements OnInit {
   }
 
   deleteIngredient(id) {
-    this.ingredientService.deleteIngredients(id)
+    this.validationModalParams = {
+      function: this.deleteEvent,
+      id: id,
+      self: this,
+      text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?'
+    };
+  }
+
+  deleteEvent = function(self, id) {
+    if (id) {
+      self.ingredientService.deleteIngredients(id)
       .subscribe(res => {
-        this.router.navigate(['/ingredients-list']);
+        self.router.navigate(['/ingredients-list']);
       }, (err) => {
         console.error(err);
       });
-  }
+    }
+  };
 }
