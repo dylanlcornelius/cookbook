@@ -16,6 +16,7 @@ export class AdminDashboardComponent implements OnInit {
   // probably just only null for new records
 
   loading: Boolean = true;
+  validationModalParams: {};
 
   configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
   configsDatasource = [];
@@ -97,18 +98,28 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revert() {
-    // add verification
-    this.configService.getConfigs().subscribe((result) => {
-      this.configsDatasource = result;
-    });
-    this.userService.getUsers().subscribe((result) => {
-      this.usersDatasource = result;
-    });
+    this.validationModalParams = {
+      function: this.revertEvent,
+      self: this,
+      text: 'Are you sure you want to revert your changes?'
+    };
   }
 
+  revertEvent = function(self) {
+    self.configService.getConfigs().subscribe((result) => {
+      self.configsDatasource = result;
+    });
+    self.userService.getUsers().subscribe((result) => {
+      self.usersDatasource = result;
+    });
+  };
+
   save() {
-    // add verification
-    this.configService.putConfigs(this.configsDatasource);
-    this.userService.putUsers(this.usersDatasource);
+    this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
   }
+
+  saveEvent = function(self) {
+    self.configService.putConfigs(self.configsDatasource);
+    self.userService.putUsers(self.usersDatasource);
+  };
 }
