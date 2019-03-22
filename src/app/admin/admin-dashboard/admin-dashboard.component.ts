@@ -98,7 +98,11 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revert() {
-    this.validationModalParams = {function: this.revertEvent, self: this, text: 'Are you sure you want to revert your changes?'};
+    this.validationModalParams = {
+      function: this.revertEvent,
+      self: this,
+      text: 'Are you sure you want to revert your changes?'
+    };
   }
 
   revertEvent = function(self) {
