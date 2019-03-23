@@ -96,7 +96,7 @@ export class AuthService {
       const expirationDate = new Date();
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
       self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
-      this.userActionService.commitAction(self.user.uid, Action.LOGIN);
+      this.userActionService.commitAction(self.user.uid, Action.LOGIN, 1);
 
       self.zone.run(() => self.router.navigate(['']));
 

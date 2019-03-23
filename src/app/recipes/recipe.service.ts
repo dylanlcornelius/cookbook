@@ -65,7 +65,7 @@ export class RecipeService {
   postRecipe(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE, 1);
         observer.next({
           key: doc.id
         });
@@ -76,7 +76,7 @@ export class RecipeService {
   putRecipes(id: string, data): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE, 1);
         observer.next();
       });
     });
@@ -85,7 +85,7 @@ export class RecipeService {
   deleteRecipes(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_RECIPE);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_RECIPE, 1);
         observer.next();
       });
     });

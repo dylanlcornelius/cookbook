@@ -9,11 +9,13 @@ import { IngredientService } from '../ingredient.service';
 })
 export class IngredientsListComponent implements OnInit {
 
-  loading: Boolean = true;
+  loading = true;
   displayedColumns = ['name', 'category', 'amount', 'calories', 'quantity'];
   dataSource = [];
 
-  constructor(private ingredientService: IngredientService) { }
+  constructor(
+    private ingredientService: IngredientService
+  ) { }
 
   ngOnInit() {
     this.ingredientService.getIngredients().subscribe((result) => {

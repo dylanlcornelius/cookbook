@@ -24,16 +24,3 @@ export class RecipesListComponent implements OnInit {
     });
   }
 }
-
-// export class RecipeDataSource extends DataSource<any> {
-
-//   constructor(private fs: FsService) {
-//     super();
-//   }
-
-//   connect() {
-//     // return this.fs.getRecipes();
-//   }
-
-//   disconnect() {}
-// }
