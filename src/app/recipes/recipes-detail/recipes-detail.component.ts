@@ -11,8 +11,11 @@ import { UserService } from '../../user/user.service';
 })
 export class RecipesDetailComponent implements OnInit {
 
-  loading: Boolean = true;
-  recipe = {};
+  loading = true;
+  // deleteAction: {};
+  validationModalParams: {};
+
+  recipe;
   ingredients = [];
   user = {};
 
@@ -52,11 +55,22 @@ export class RecipesDetailComponent implements OnInit {
   }
 
   deleteRecipe(id) {
-    this.recipeService.deleteRecipes(id)
+    this.validationModalParams = {
+      function: this.deleteEvent,
+      id: id,
+      self: this,
+      text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?'
+    };
+  }
+
+  deleteEvent = function(self, id) {
+    if (id) {
+      self.recipeService.deleteRecipes(id)
       .subscribe(res => {
-        this.router.navigate(['/recipes-list']);
+        self.router.navigate(['/recipes-list']);
       }, (err) => {
         console.error(err);
       });
-  }
+    }
+  };
 }

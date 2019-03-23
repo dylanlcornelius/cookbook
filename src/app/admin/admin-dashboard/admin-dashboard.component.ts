@@ -16,6 +16,7 @@ export class AdminDashboardComponent implements OnInit {
   // probably just only null for new records
 
   loading: Boolean = true;
+  validationModalParams: {};
 
   configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
   configsDatasource = [];
@@ -79,36 +80,70 @@ export class AdminDashboardComponent implements OnInit {
       });
   }
 
-  removeConfig(key) {
-    // add verification
-    this.configService.deleteConfig(key)
+  removeConfig(key, name) {
+    if (!name) {
+      name = 'NO NAME';
+    }
+    this.validationModalParams = {
+      function: this.removeConfigEvent,
+      id: key,
+      self: this,
+      text: 'Are you sure you want to delete config ' + name + '?'
+    };
+  }
+
+  removeConfigEvent = function(self, key) {
+    self.configService.deleteConfig(key)
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
+  };
+
+  removeUser(key, firstName, lastName) {
+    if (!firstName && !lastName) {
+      firstName = 'NO';
+      lastName = 'NAME';
+    }
+    this.validationModalParams = {
+      function: this.removeUserEvent,
+      id: key,
+      self: this,
+      text: 'Are you sure you want to delete user ' + firstName + ' ' + lastName + '?'
+    };
   }
 
-  removeUser(key) {
-    this.userService.deleteUser(key)
-      .subscribe(() => {},
-      (err) => {
-        console.log(err);
-      });
-  }
+  removeUserEvent = function(self, key) {
+    self.userService.deleteUser(key)
+    .subscribe(() => {},
+    (err) => {
+      console.log(err);
+    });
+  };
 
   revert() {
-    // add verification
-    this.configService.getConfigs().subscribe((result) => {
-      this.configsDatasource = result;
-    });
-    this.userService.getUsers().subscribe((result) => {
-      this.usersDatasource = result;
-    });
+    this.validationModalParams = {
+      function: this.revertEvent,
+      self: this,
+      text: 'Are you sure you want to revert your changes?'
+    };
   }
 
+  revertEvent = function(self) {
+    self.configService.getConfigs().subscribe((result) => {
+      self.configsDatasource = result;
+    });
+    self.userService.getUsers().subscribe((result) => {
+      self.usersDatasource = result;
+    });
+  };
+
   save() {
-    // add verification
-    this.configService.putConfigs(this.configsDatasource);
-    this.userService.putUsers(this.usersDatasource);
+    this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
   }
+
+  saveEvent = function(self) {
+    self.configService.putConfigs(self.configsDatasource);
+    self.userService.putUsers(self.usersDatasource);
+  };
 }

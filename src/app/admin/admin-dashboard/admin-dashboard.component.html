@@ -1,4 +1,6 @@
-<div class="d-flex justify-content-center">
+<app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+
+<div class="row justify-content-center">
   <h2>
     Configurations
   </h2>
@@ -35,7 +37,7 @@
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef> Delete </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-button class="btn btn-danger" (click)="removeConfig(element.key)">
+        <button mat-button class="btn btn-danger" (click)="removeConfig(element.key, element.name)">
           Delete
         </button>
       </td>
@@ -92,13 +94,13 @@
     </ng-container>
 
       <ng-container matColumnDef="delete">
-        <th mat-header-cell *matHeaderCellDef> Delete </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-button class="btn btn-danger" (click)="removeUser(element.key)">
-            Delete
-          </button>
-        </td>
-      </ng-container>
+          <th mat-header-cell *matHeaderCellDef> Delete </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button class="btn btn-danger" (click)="removeUser(element.key, element.firstName, element.lastName)">
+              Delete
+            </button>
+          </td>
+        </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: usersDisplayedColumns;"></tr>
