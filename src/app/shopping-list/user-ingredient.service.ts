@@ -36,30 +36,20 @@ export class UserIngredientService {
     });
   }
 
-  putUserIngredient(data) {
-    this.ref.doc(data.key).set(data)
+  putUserIngredient(data: UserIngredient) {
+    this.ref.doc(data.getId()).set(data.getObject())
     .catch(function(error) {
       console.error('error: ', error);
     });
   }
 
-  buyUserIngredient(data) {
-    this.ref.doc(data.key).set(data).then(() => {
-      this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.BUY_INGREDIENT);
+  buyUserIngredient(data: UserIngredient, actions: Number) {
+    this.ref.doc(data.getId()).set(data.getObject()).then(() => {
+      this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.BUY_INGREDIENT, actions);
     })
     .catch(function(error) {
       console.error('error: ', error);
     });
-  }
-
-  buyUserIngredients(data) {
-    data.forEach(d => {
-      this.ref.doc(d.key).set(d).then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.BUY_INGREDIENT);
-      })
-      .catch(function(error) {
-        console.error('error: ', error);
-      });
-    });
+    this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.COMPLETE_SHOPPING_LIST, 1);
   }
 }

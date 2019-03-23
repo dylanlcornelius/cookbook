@@ -12,7 +12,7 @@ export class UserActionService {
 
   constructor() {}
 
-  commitAction(uid: string, action: Action) {
+  commitAction(uid: string, action: Action, number: Number) {
     const self = this;
     if (uid) {
       self.getAction(self, uid).then(function(userAction) {
@@ -24,19 +24,19 @@ export class UserActionService {
             let exists = false;
             Object.keys(userAction.actions[week.toString()]).forEach(key => {
               if (key === action) {
-                userAction.actions[week.toString()][action]++;
+                userAction.actions[week.toString()][action] += number;
                 exists = true;
               }
             });
             if (!exists) {
-              userAction.actions[week.toString()][action] = 1;
+              userAction.actions[week.toString()][action] = number;
             }
           } else {
-            userAction.actions[week.toString()] = {[action]: 1};
+            userAction.actions[week.toString()] = {[action]: number};
           }
           self.putAction(self, userAction);
         } else {
-          userAction = {'uid': uid, 'actions': {[week.toString()]: {[action]: 1}}};
+          userAction = {'uid': uid, 'actions': {[week.toString()]: {[action]: number}}};
           self.postAction(self, userAction);
         }
       });

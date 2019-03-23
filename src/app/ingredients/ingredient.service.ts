@@ -53,7 +53,7 @@ export class IngredientService {
   postIndegredient(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_INGREDIENT);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_INGREDIENT, 1);
         observer.next({
           key: doc.id
         });
@@ -64,7 +64,7 @@ export class IngredientService {
   putIngredient(id: string, data): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT, 1);
         observer.next();
       });
     });
@@ -74,7 +74,7 @@ export class IngredientService {
     // delete all user-ingredients too
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT, 1);
         observer.next();
       });
     });
