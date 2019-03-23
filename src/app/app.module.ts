@@ -40,6 +40,7 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
 import { UserPendingGuard } from './user/user-pending/user-pending.guard';
+import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { UserPendingGuard } from './user/user-pending/user-pending.guard';
     UserProfileComponent,
     AdminDashboardComponent,
     UserPendingComponent,
+    ShoppingListComponent,
   ],
   imports: [
     BrowserModule,

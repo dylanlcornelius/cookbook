@@ -28,9 +28,7 @@ export class IngredientService {
             key: doc.id,
             name: data.name,
             category: data.category,
-            amount: data.amount,
-            calories: data.calories,
-            quantity: data.quantity,
+            calories: data.calories ? data.calories : '',
           });
         });
         observer.next(ingredients);
@@ -46,9 +44,7 @@ export class IngredientService {
           key: doc.id,
           name: data.name,
           category: data.category,
-          amount: data.amount,
           calories: data.calories,
-          quantity: data.quantity,
         });
       });
     });
@@ -65,7 +61,7 @@ export class IngredientService {
     });
   }
 
-  putIngredients(id: string, data): Observable<any> {
+  putIngredient(id: string, data): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
         this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT);
@@ -75,6 +71,7 @@ export class IngredientService {
   }
 
   deleteIngredients(id: string): Observable<{}> {
+    // delete all user-ingredients too
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
         this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT);

@@ -6,6 +6,15 @@
     overflow: auto;
 }
 
+.buy-button {
+    padding: 3px;
+}
+
+.buy-icon {
+    vertical-align: middle;
+    font-size: 25px;
+}
+
 .button-row {
     margin: 10px 0;
 }
