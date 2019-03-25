@@ -21,8 +21,8 @@ export class ConfigService {
           const data = doc.data();
           users.push({
             key: doc.id,
-            name: data.name,
-            value: data.value,
+            name: data.name || '',
+            value: data.value || '',
           });
         });
         observer.next(users);
@@ -38,8 +38,8 @@ export class ConfigService {
           const data = doc.data();
           configs.push({
             key: doc.id,
-            name: data.name,
-            value: data.value,
+            name: data.name || '',
+            value: data.value || '',
           });
         });
         // return only the first config
@@ -53,8 +53,8 @@ export class ConfigService {
       this.ref.add(data).then((doc) => {
         observer.next({
           key: doc.id,
-          name: data.name,
-          value: data.value,
+          name: data.name || '',
+          value: data.value || '',
         });
       });
     });

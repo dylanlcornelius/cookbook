@@ -26,15 +26,15 @@ export class RecipeService {
           const data = doc.data();
           recipes.push({
             key: doc.id,
-            name: data.name,
-            description: data.description,
-            time: data.time,
-            calories: data.calories,
-            servings: data.servings,
-            quantity: data.quantity,
-            steps: data.steps,
-            ingredients: data.ingredients,
-            user: data.user,
+            name: data.name || '',
+            description: data.description || '',
+            time: data.time || '',
+            calories: data.calories || '',
+            servings: data.servings || '',
+            quantity: data.quantity || '',
+            steps: data.steps || [],
+            ingredients: data.ingredients || [],
+            user: data.user || '',
           });
         });
         observer.next(recipes);
@@ -48,15 +48,15 @@ export class RecipeService {
         const data = doc.data();
         observer.next({
           key: doc.id,
-          name: data.name,
-          description: data.description,
-          time: data.time,
-          calories: data.calories,
-          servings: data.servings,
-          quantity: data.quantity,
-          steps: data.steps,
-          ingredients: data.ingredients,
-          user: data.user,
+          name: data.name || '',
+          description: data.description || '',
+          time: data.time || '',
+          calories: data.calories || '',
+          servings: data.servings || '',
+          quantity: data.quantity || '',
+          steps: data.steps || [],
+          ingredients: data.ingredients || [],
+          user: data.user || '',
         });
       });
     });

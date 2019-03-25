@@ -40,10 +40,10 @@ export class UserService {
           const data = doc.data();
           users.push({
             key: doc.id,
-            uid: data.uid,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            role: data.role,
+            uid: data.uid || '',
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            role: data.role || '',
           });
         });
         observer.next(users);
@@ -59,10 +59,10 @@ export class UserService {
           const data = doc.data();
           users.push({
             key: doc.id,
-            uid: data.uid,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            role: data.role,
+            uid: data.uid || '',
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            role: data.role || '',
           });
         });
         // return only the first user
@@ -71,33 +71,15 @@ export class UserService {
     });
   }
 
-  // getUser(id: string): Observable<User> {
-  //   return new Observable((observer) => {
-  //     this.ref.doc(id).get().then((doc) => {
-  //       const data = doc.data();
-  //       // if (!data) {
-  //       //   return;
-  //       // }
-  //       observer.next({
-  //         key: doc.id,
-  //         uid: data.uid,
-  //         firstName: data.firstName,
-  //         lastName: data.lastName,
-  //         role: data.role,
-  //       });
-  //     });
-  //   });
-  // }
-
   postUser(data): Observable<User> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         observer.next({
           key: doc.id,
-          uid: data.uid,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          role: data.role,
+          uid: data.uid || '',
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          role: data.role || '',
         });
       });
     });

@@ -50,8 +50,8 @@ export class UserActionService {
         const data = doc.data();
         action.push({
             key: doc.id,
-            uid: data.uid,
-            actions: data.actions,
+            uid: data.uid || '',
+            actions: data.actions || {},
           });
       });
       // return only the first user
