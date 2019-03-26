@@ -23,7 +23,7 @@
 
       <ng-container matColumnDef="time">
         <th mat-header-cell *matHeaderCellDef> Preparation Time </th>
-        <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.time}} {{ element.time ? 'minutes' : ''}} </td>
       </ng-container>
 
       <ng-container matColumnDef="servings">
