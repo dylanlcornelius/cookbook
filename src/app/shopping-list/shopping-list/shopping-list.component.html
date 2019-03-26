@@ -1,3 +1,5 @@
+<app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+
 <div class="d-flex justify-content-center">
   <h2>
     Your Shopping List
@@ -23,15 +25,15 @@
       <ng-container matColumnDef="cartQuantity">
         <th mat-header-cell *matHeaderCellDef> Ingredients Needed </th>
         <td mat-cell *matCellDef="let element">
-          <button class="btn btn-dark buy-button" (click)="removeIngredient(element.key)">
+          <button class="btn btn-dark buy-button" (click)="removeIngredient(element.id)">
             <mat-icon class="buy-icon"> arrow_left </mat-icon>
           </button>
           <span style="margin: 0 10px;">
-            <label style="width: 20px; text-align: center;">
+            <label class="table-col">
               {{element.cartQuantity}}
             </label>
           </span>
-          <button class="btn btn-dark buy-button" (click)="addIngredient(element.key)">
+          <button class="btn btn-dark buy-button" (click)="addIngredient(element.id)">
             <mat-icon class="buy-icon"> arrow_right </mat-icon>
           </button>
         </td>
@@ -40,7 +42,7 @@
       <ng-container matColumnDef="buy">
         <th mat-header-cell *matHeaderCellDef> Add to Pantry </th>
         <td mat-cell *matCellDef="let element">
-          <button mat-button class="btn btn-primary" (click)="addToPantry(element.key)">
+          <button mat-button class="btn btn-primary" (click)="addToPantry(element.id)">
             Buy
           </button>
         </td>

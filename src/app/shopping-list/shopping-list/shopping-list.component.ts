@@ -14,10 +14,13 @@ import { MatTableDataSource } from '@angular/material';
 export class ShoppingListComponent implements OnInit {
 
   loading = true;
+  // TODO: Add data model for params
+  validationModalParams;
   uid: string;
-  key: string;
+  id: string;
   displayedColumns = ['name', 'pantryQuantity', 'cartQuantity', 'buy'];
   dataSource;
+  ingredients;
 
   constructor(
     private cookieService: CookieService,
@@ -32,14 +35,14 @@ export class ShoppingListComponent implements OnInit {
     this.userService.getUser(loggedInCookie).subscribe(user => {
       this.uid = user.uid;
       this.userIngredientService.getUserIngredients(user.uid).subscribe(userIngredients => {
-        this.key = userIngredients.key;
+        this.id = userIngredients.id;
         this.ingredientService.getIngredients().subscribe(ingredients => {
           ingredients.forEach(ingredient => {
             if (userIngredients && userIngredients.ingredients) {
               userIngredients.ingredients.forEach(myIngredient => {
-                if (myIngredient.key === ingredient.key) {
+                if (myIngredient.id === ingredient.id) {
                   myIngredients.push({
-                    key: myIngredient.key,
+                    id: myIngredient.id,
                     name: ingredient.name,
                     pantryQuantity: myIngredient.pantryQuantity,
                     cartQuantity: myIngredient.cartQuantity
@@ -52,6 +55,7 @@ export class ShoppingListComponent implements OnInit {
           // tslint:disable-next-line:triple-equals
           this.dataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
           this.applyFilter();
+          this.ingredients = ingredients;
           this.loading = false;
         });
       });
@@ -65,28 +69,32 @@ export class ShoppingListComponent implements OnInit {
   packageData() {
     const userIngredients = [];
     this.dataSource.data.forEach(data => {
-      userIngredients.push({key: data.key, pantryQuantity: data.pantryQuantity, cartQuantity: data.cartQuantity});
+      userIngredients.push({id: data.id, pantryQuantity: data.pantryQuantity, cartQuantity: data.cartQuantity});
     });
-    return new UserIngredient(this.key, this.uid, userIngredients);
+    return new UserIngredient(this.uid, userIngredients, this.id);
   }
 
-  removeIngredient(key) {
-    const data = this.dataSource.data.find(x => x.key === key);
-    if (Number(data.cartQuantity) > 0) {
-      data.cartQuantity = Number(data.cartQuantity) - 1;
+  removeIngredient(id) {
+    const data = this.dataSource.data.find(x => x.id === id);
+    const ingredient = this.ingredients.find(x => x.id === id);
+    if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
+      data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       this.userIngredientService.putUserIngredient(this.packageData());
     }
   }
 
-  addIngredient(key) {
-    const data = this.dataSource.data.find(x => x.key === key);
-    data.cartQuantity = Number(data.cartQuantity) + 1;
-    this.userIngredientService.putUserIngredient(this.packageData());
+  addIngredient(id) {
+    const data = this.dataSource.data.find(x => x.id === id);
+    const ingredient = this.ingredients.find(x => x.id === id);
+    if (ingredient && ingredient.amount) {
+      data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
+      this.userIngredientService.putUserIngredient(this.packageData());
+    }
   }
 
-  addToPantry(key) {
-    // add successful popup
-    const data = this.dataSource.data.find(x => x.key === key);
+  addToPantry(id) {
+    // TODO: add successful popup
+    const data = this.dataSource.data.find(x => x.id === id);
     data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
     data.cartQuantity = 0;
     this.userIngredientService.buyUserIngredient(this.packageData(), 1);
@@ -94,12 +102,20 @@ export class ShoppingListComponent implements OnInit {
   }
 
   addAllToPantry() {
-    // add validation and successful popup
-    this.dataSource.data.forEach(data => {
+    this.validationModalParams = {
+      function: this.addAllToPantryEvent,
+      self: this,
+      text: 'Are you sure you want to buy all ingredients?'
+    };
+  }
+
+  addAllToPantryEvent = function(self) {
+    // TODO: add successful popup
+    self.dataSource.data.forEach(data => {
       data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
       data.cartQuantity = 0;
     });
-    this.userIngredientService.buyUserIngredient(this.packageData(), this.dataSource.filteredData.length);
-    this.applyFilter();
-  }
+    self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length);
+    self.applyFilter();
+  };
 }

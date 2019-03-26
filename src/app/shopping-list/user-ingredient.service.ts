@@ -19,19 +19,38 @@ export class UserIngredientService {
     private userActionService: UserActionService
   ) { }
 
-  getUserIngredients(uid: string): Observable<UserIngredient> {
+  getUserIngredients(uid: string): Observable<any> {
+    const self = this;
     return new Observable((observer) => {
-        this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
-        const userIngredients = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          userIngredients.push({
-              key: doc.id,
-              uid: data.uid,
-              ingredients: data.ingredients,
-            });
+      this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
+        if (querySnapshot.size > 0) {
+          const userIngredients = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            userIngredients.push({
+                id: doc.id,
+                uid: data.uid,
+                ingredients: data.ingredients,
+              });
+          });
+          observer.next(userIngredients[0]);
+        } else {
+          self.postUserIngredient({uid: uid, ingredients: []}).subscribe(userIngredient => {
+            observer.next(userIngredient);
+          });
+        }
+      });
+    });
+  }
+
+  postUserIngredient(data): Observable<any> {
+    return new Observable((observer) => {
+      this.ref.add(data).then((doc) => {
+        observer.next({
+          id: doc.id,
+          uid: data.uid,
+          ingredients: data.ingredients,
         });
-        observer.next(userIngredients[0]);
       });
     });
   }

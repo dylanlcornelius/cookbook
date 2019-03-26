@@ -25,7 +25,7 @@ export class RecipeService {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           recipes.push({
-            key: doc.id,
+            id: doc.id,
             name: data.name,
             description: data.description,
             time: data.time,
@@ -47,7 +47,7 @@ export class RecipeService {
       this.ref.doc(id).get().then((doc) => {
         const data = doc.data();
         observer.next({
-          key: doc.id,
+          id: doc.id,
           name: data.name,
           description: data.description,
           time: data.time,
@@ -67,7 +67,7 @@ export class RecipeService {
       this.ref.add(data).then((doc) => {
         this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE, 1);
         observer.next({
-          key: doc.id
+          id: doc.id
         });
       });
     });

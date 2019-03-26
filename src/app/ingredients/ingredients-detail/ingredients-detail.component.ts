@@ -10,7 +10,7 @@ import { IngredientService } from '../ingredient.service';
 export class IngredientsDetailComponent implements OnInit {
 
   loading: Boolean = true;
-  validationModalParams: {};
+  validationModalParams;
   ingredient;
 
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }

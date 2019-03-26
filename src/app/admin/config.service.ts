@@ -16,16 +16,12 @@ export class ConfigService {
   getConfigs(): Observable<Config[]> {
     return new Observable((observer) => {
       this.ref.onSnapshot((querySnapshot) => {
-        const users = [];
+        const configs = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push({
-            key: doc.id,
-            name: data.name,
-            value: data.value,
-          });
+          configs.push(new Config(doc.id, data.name, data.value));
         });
-        observer.next(users);
+        observer.next(configs);
       });
     });
   }
@@ -36,41 +32,32 @@ export class ConfigService {
         const configs = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          configs.push({
-            key: doc.id,
-            name: data.name,
-            value: data.value,
-          });
+          configs.push(new Config(doc.id, data.name, data.value));
         });
-        // return only the first config
         observer.next(configs[0]);
       });
     });
   }
 
-  postConfig(data): Observable<Config> {
+  postConfig(data: Config): Observable<Config> {
     return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        observer.next({
-          key: doc.id,
-          name: data.name,
-          value: data.value,
-        });
+      this.ref.add(data.getObject()).then((doc) => {
+        observer.next(new Config(doc.id, data.name, data.value));
       });
     });
   }
 
-  putConfig(id: string, data): Observable<Config> {
+  putConfig(data: Config): Observable<Config> {
     return new Observable((observer) => {
-      this.ref.doc(id).set(data).then(() => {
+      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
         observer.next();
       });
     });
   }
 
-  putConfigs(data) {
+  putConfigs(data: Array<Config>) {
     data.forEach(d => {
-      this.ref.doc(d.key).set(d);
+      this.ref.doc(d.getId()).set(d.getObject());
     });
   }
 

@@ -4,6 +4,8 @@ import { RecipeService } from '../../recipes/recipe.service';
 import { UserService } from '../../user/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ConfigService } from '../config.service';
+import { Config } from '../config.model';
+import { User } from 'src/app/user/user.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,14 +18,14 @@ export class AdminDashboardComponent implements OnInit {
   // probably just only null for new records
 
   loading: Boolean = true;
-  validationModalParams: {};
+  validationModalParams;
 
-  configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
-  configsDatasource = [];
+  configsDisplayedColumns = ['id', 'name', 'value', 'delete'];
+  configsDatasource: Array<Config>;
 
-  usersDisplayedColumns = ['key', 'firstName', 'lastName', 'roles', 'delete'];
+  usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'delete'];
   roleList = ['user', 'admin', 'pending'];
-  usersDatasource = [];
+  usersDatasource: Array<User>;
   // usersForm: FormGroup;
   selectedRow: {};
 
@@ -41,10 +43,10 @@ export class AdminDashboardComponent implements OnInit {
   ngOnInit() {
     this.configService.getConfigs().subscribe((result) => {
       this.configsDatasource = result;
-      this.loading = false;
     });
     this.userService.getUsers().subscribe((result) => {
       this.usersDatasource = result;
+      this.loading = false;
     });
     // this.recipeService.getRecipes().subscribe((result) => {
     //   this.recipesDatasource = this.getCollectionData(result);
@@ -73,48 +75,48 @@ export class AdminDashboardComponent implements OnInit {
   // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
-    this.configService.postConfig({key: '', name: '', value: ''})
+    this.configService.postConfig(new Config('', '', ''))
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
   }
 
-  removeConfig(key, name) {
+  removeConfig(id, name) {
     if (!name) {
       name = 'NO NAME';
     }
     this.validationModalParams = {
       function: this.removeConfigEvent,
-      id: key,
+      id: id,
       self: this,
       text: 'Are you sure you want to delete config ' + name + '?'
     };
   }
 
-  removeConfigEvent = function(self, key) {
-    self.configService.deleteConfig(key)
+  removeConfigEvent = function(self, id) {
+    self.configService.deleteConfig(id)
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
   };
 
-  removeUser(key, firstName, lastName) {
+  removeUser(id, firstName, lastName) {
     if (!firstName && !lastName) {
       firstName = 'NO';
       lastName = 'NAME';
     }
     this.validationModalParams = {
       function: this.removeUserEvent,
-      id: key,
+      id: id,
       self: this,
       text: 'Are you sure you want to delete user ' + firstName + ' ' + lastName + '?'
     };
   }
 
-  removeUserEvent = function(self, key) {
-    self.userService.deleteUser(key)
+  removeUserEvent = function(self, id) {
+    self.userService.deleteUser(id)
     .subscribe(() => {},
     (err) => {
       console.log(err);

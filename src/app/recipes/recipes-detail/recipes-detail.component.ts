@@ -12,8 +12,7 @@ import { UserService } from '../../user/user.service';
 export class RecipesDetailComponent implements OnInit {
 
   loading = true;
-  // deleteAction: {};
-  validationModalParams: {};
+  validationModalParams;
 
   recipe;
   ingredients = [];
@@ -43,8 +42,8 @@ export class RecipesDetailComponent implements OnInit {
           .subscribe(allIngredients => {
             allIngredients.forEach(i => {
               data.ingredients.forEach(recipeIngredient => {
-                if (recipeIngredient.key === i.key) {
-                  this.ingredients.push({name: i.name, key: i.key});
+                if (recipeIngredient.id === i.id) {
+                  this.ingredients.push({name: i.name, id: i.id});
                 }
               });
             });
