@@ -23,7 +23,7 @@
           <dd> by {{user.firstName}} {{ user.lastName }} </dd> -->
 
           <dt> Preparation Time </dt>
-          <dd> {{recipe.time || "No Preparation Time"}} </dd>
+          <dd> {{recipe.time || "No Preparation Time"}} {{ recipe.time ? 'minutes' : ''}}  </dd>
 
           <dt> Servings </dt>
           <dd> {{recipe.servings || "No Servings"}} </dd>
