@@ -28,13 +28,27 @@
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field class="form-field">
+  <div class="row">
+    <mat-form-field class="col-8">
       <input matInput placeholder="Amount" formControlName="amount"
               [errorStateMatcher]="matcher">
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('amount').valid">Please enter a valid number for Ingredient Amount</span>
+        <span *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched">Please enter a valid number for Ingredient Amount</span>
       </mat-error>
     </mat-form-field>
+  
+    <mat-form-field class="col-4" style="min-width: 200px;">
+      <mat-label> Unit of Measurement </mat-label>
+      <mat-select formControlName="uom">
+        <mat-option *ngFor="let measurement of uom" [value]="measurement">
+          {{measurement}}
+        </mat-option>
+      </mat-select>
+      <mat-error>
+        <span *ngIf="!ingredientsForm.get('uom').valid && ingredientsForm.get('uom').touched">Please enter a valid Unit of Measurement</span>
+      </mat-error>
+    </mat-form-field>
+  </div>
 
   <mat-form-field class="form-field">
     <input matInput placeholder="Calories" formControlName="calories"

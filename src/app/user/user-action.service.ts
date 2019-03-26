@@ -22,8 +22,8 @@ export class UserActionService {
         if (userAction) {
           if (userAction.actions[week.toString()]) {
             let exists = false;
-            Object.keys(userAction.actions[week.toString()]).forEach(key => {
-              if (key === action) {
+            Object.keys(userAction.actions[week.toString()]).forEach(id => {
+              if (id === action) {
                 userAction.actions[week.toString()][action] += number;
                 exists = true;
               }
@@ -49,10 +49,10 @@ export class UserActionService {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         action.push({
-            key: doc.id,
-            uid: data.uid,
-            actions: data.actions,
-          });
+          id: doc.id,
+          uid: data.uid,
+          actions: data.actions,
+        });
       });
       // return only the first user
       return action[0];
@@ -67,7 +67,7 @@ export class UserActionService {
   }
 
   private putAction(self, data) {
-    self.ref.doc(data.key).set(data)
+    self.ref.doc(data.id).set(data)
     .catch(function(error) {
       console.error('error: ', error);
     });

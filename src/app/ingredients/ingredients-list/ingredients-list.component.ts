@@ -17,7 +17,7 @@ export class IngredientsListComponent implements OnInit {
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
   dataSource = [];
   uid: string;
-  key: string;
+  id: string;
   userIngredients = [];
 
   constructor(
@@ -33,23 +33,21 @@ export class IngredientsListComponent implements OnInit {
     this.userService.getUser(loggedInCookie).subscribe(user => {
       this.uid = user.uid;
       this.userIngredientService.getUserIngredients(user.uid).subscribe(userIngredients => {
-        this.key = userIngredients.key;
+        this.id = userIngredients.id;
         this.ingredientService.getIngredients().subscribe(ingredients => {
           ingredients.forEach(ingredient => {
-            if (userIngredients && userIngredients.ingredients) {
-              userIngredients.ingredients.forEach(myIngredient => {
-                if (myIngredient.key === ingredient.key) {
-                  ingredient.pantryQuantity = myIngredient.pantryQuantity;
-                  ingredient.cartQuantity = myIngredient.cartQuantity;
+            userIngredients.ingredients.forEach(myIngredient => {
+              if (myIngredient.id === ingredient.id) {
+                ingredient.pantryQuantity = myIngredient.pantryQuantity;
+                ingredient.cartQuantity = myIngredient.cartQuantity;
 
-                  myIngredients.push({
-                    key: myIngredient.key,
-                    pantryQuantity: myIngredient.pantryQuantity,
-                    cartQuantity: myIngredient.cartQuantity
-                  });
-                }
-              });
-            }
+                myIngredients.push({
+                  id: myIngredient.id,
+                  pantryQuantity: myIngredient.pantryQuantity,
+                  cartQuantity: myIngredient.cartQuantity
+                });
+              }
+            });
           });
           this.dataSource = ingredients;
           this.userIngredients = myIngredients;
@@ -59,34 +57,37 @@ export class IngredientsListComponent implements OnInit {
     });
   }
 
-  packageData(key) {
+  packageData() {
     const data = [];
     this.userIngredients.forEach(d => {
-      data.push({key: d.key, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
+      data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
     });
-    return new UserIngredient(this.key, this.uid, data);
+    return new UserIngredient(this.uid, data, this.id);
   }
 
-  removeIngredient(key) {
-    const data = this.userIngredients.find(x => x.key === key);
-    const ingredient = this.dataSource.find(x => x.key === key);
-    if (data && Number(data.cartQuantity) > 0) {
-      data.cartQuantity = Number(data.cartQuantity) - 1;
-      ingredient.cartQuantity = Number(ingredient.cartQuantity) - 1;
+  removeIngredient(id) {
+    const data = this.userIngredients.find(x => x.id === id);
+    const ingredient = this.dataSource.find(x => x.id === id);
+    if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
+      data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
+      ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
+      this.userIngredientService.putUserIngredient(this.packageData());
     }
-    this.userIngredientService.putUserIngredient(this.packageData(key));
   }
 
-  addIngredient(key) {
-    const data = this.userIngredients.find(x => x.key === key);
-    const ingredient = this.dataSource.find(x => x.key === key);
-    if (data) {
-      data.cartQuantity = Number(data.cartQuantity) + 1;
-      ingredient.cartQuantity = Number(ingredient.cartQuantity) + 1;
-    } else {
-      this.userIngredients.push({key: key, pantryQuantity: 0, cartQuantity: 1});
-      ingredient.cartQuantity = 1;
+  addIngredient(id) {
+    const data = this.userIngredients.find(x => x.id === id);
+    const ingredient = this.dataSource.find(x => x.id === id);
+    if (ingredient.amount) {
+      if (data) {
+        data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
+        ingredient.cartQuantity = Number(ingredient.cartQuantity) + Number(ingredient.amount);
+      } else {
+        this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
+        ingredient.cartQuantity = Number(ingredient.amount);
+      }
+      this.userIngredientService.putUserIngredient(this.packageData());
     }
-    this.userIngredientService.putUserIngredient(this.packageData(key));
+    // TODO: else show popup error message
   }
 }
