@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '../ingredient.service';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-ingredients-detail',
@@ -40,7 +41,12 @@ export class IngredientsDetailComponent implements OnInit {
     if (id) {
       self.ingredientService.deleteIngredients(id)
       .subscribe(res => {
-        self.router.navigate(['/ingredients-list']);
+        self.notificationModalParams = {
+          self: self,
+          type: Notification.SUCCESS,
+          path: '/ingredients-list',
+          text: 'Ingredient deleted!'
+        };
       }, (err) => {
         console.error(err);
       });
