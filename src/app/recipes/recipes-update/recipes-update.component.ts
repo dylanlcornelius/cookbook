@@ -12,6 +12,13 @@ import {
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredients/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
+import { ErrorStateMatcher } from '@angular/material';
+
+class ErrorMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    return (control && control.invalid && (control.dirty || control.touched));
+  }
+}
 
 @Component({
   selector: 'app-recipes-update',
@@ -33,6 +40,8 @@ export class RecipesUpdateComponent implements OnInit {
 
   addedIngredients = [];
   availableIngredients = [];
+
+  matcher = new ErrorMatcher();
 
   constructor(
     private router: Router,

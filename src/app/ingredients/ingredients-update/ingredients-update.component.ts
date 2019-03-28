@@ -10,6 +10,13 @@ import {
   Validators,
   FormArray } from '@angular/forms';
 import { UOM } from '../uom.emun';
+import { ErrorStateMatcher } from '@angular/material';
+
+class ErrorMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    return (control && control.invalid && (control.dirty || control.touched));
+  }
+}
 
 @Component({
   selector: 'app-ingredients-update',
@@ -26,6 +33,8 @@ export class IngredientsUpdateComponent implements OnInit {
   amount: string;
   uom: Array<UOM>;
   calories: number;
+
+  matcher = new ErrorMatcher();
 
   constructor(private router: Router,
     private route: ActivatedRoute,
