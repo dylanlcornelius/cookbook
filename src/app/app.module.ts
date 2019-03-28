@@ -42,6 +42,7 @@ import { UserPendingComponent } from './user/user-pending/user-pending.component
 import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
 import { ValidationModalComponent } from './modals/validation-modal/validation-modal.component';
+import { NotificationModalComponent } from './modals/notification-modal/notification-modal.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { ValidationModalComponent } from './modals/validation-modal/validation-m
     UserPendingComponent,
     ShoppingListComponent,
     ValidationModalComponent,
+    NotificationModalComponent,
   ],
   imports: [
     BrowserModule,

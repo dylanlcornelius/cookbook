@@ -4,6 +4,7 @@ import { RecipeService } from '../../recipes/recipe.service';
 import { UserService } from '../../user/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ConfigService } from '../config.service';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -17,6 +18,7 @@ export class AdminDashboardComponent implements OnInit {
 
   loading: Boolean = true;
   validationModalParams: {};
+  notificationModalParams;
 
   configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
   configsDatasource = [];
@@ -130,12 +132,18 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent = function(self) {
+    // TODO: check for errors
     self.configService.getConfigs().subscribe((result) => {
       self.configsDatasource = result;
     });
     self.userService.getUsers().subscribe((result) => {
       self.usersDatasource = result;
     });
+    self.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Changes reverted!'
+    };
   };
 
   save() {
@@ -143,7 +151,13 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   saveEvent = function(self) {
+    // TODO: check for errors
     self.configService.putConfigs(self.configsDatasource);
     self.userService.putUsers(self.usersDatasource);
+    self.notificationModalParams = {
+      self: this,
+      type: Notification.SUCCESS,
+      text: 'Changes saved!'
+    };
   };
 }
