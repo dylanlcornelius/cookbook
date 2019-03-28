@@ -91,7 +91,7 @@ export class RecipesCreateComponent implements OnInit {
   }
 
   submitForm() {
-    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({key: c.key}))));
+    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id}))));
     this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }
@@ -99,7 +99,7 @@ export class RecipesCreateComponent implements OnInit {
   onFormSubmit(form: NgForm) {
     this.recipeService.postRecipe(form)
       .subscribe(res => {
-        const id = res['key'];
+        const id = res['id'];
         this.router.navigate(['/recipes-detail/', id]);
       }, (err) => {
         console.error(err);

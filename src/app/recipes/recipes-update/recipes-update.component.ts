@@ -77,7 +77,7 @@ export class RecipesUpdateComponent implements OnInit {
   getRecipe(id) {
     this.recipeService.getRecipe(id)
       .subscribe(data => {
-        this.id = data.key;
+        this.id = data.id;
         if (data.steps !== undefined) {
           for (let i = 1; i < data.steps.length; i++) {
             this.addStep();
@@ -104,13 +104,13 @@ export class RecipesUpdateComponent implements OnInit {
         data.forEach(d => {
           let found = false;
           this.addedIngredients.forEach(addedIngredient => {
-            if (d.key === addedIngredient.key) {
+            if (d.id === addedIngredient.id) {
               found = true;
-              added.push({name: d.name, key: d.key});
+              added.push({name: d.name, id: d.id});
             }
           });
           if (!found) {
-            this.availableIngredients.push({name: d.name, key: d.key});
+            this.availableIngredients.push({name: d.name, id: d.id});
           }
         });
         this.addedIngredients = added;
@@ -126,7 +126,7 @@ export class RecipesUpdateComponent implements OnInit {
   }
 
   submitForm() {
-    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({key: c.key}))));
+    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id}))));
     this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }

@@ -11,7 +11,7 @@ import { Notification } from 'src/app/modals/notification-modal/notification.enu
 export class IngredientsDetailComponent implements OnInit {
 
   loading: Boolean = true;
-  validationModalParams: {};
+  validationModalParams;
   ingredient;
 
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }

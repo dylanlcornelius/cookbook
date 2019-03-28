@@ -13,7 +13,7 @@ import { Notification } from 'src/app/modals/notification-modal/notification.enu
 export class RecipesDetailComponent implements OnInit {
 
   loading = true;
-  validationModalParams: {};
+  validationModalParams;
   notificationModalParams;
 
   recipe;
@@ -44,8 +44,8 @@ export class RecipesDetailComponent implements OnInit {
           .subscribe(allIngredients => {
             allIngredients.forEach(i => {
               data.ingredients.forEach(recipeIngredient => {
-                if (recipeIngredient.key === i.key) {
-                  this.ingredients.push({name: i.name, key: i.key});
+                if (recipeIngredient.id === i.id) {
+                  this.ingredients.push({name: i.name, id: i.id});
                 }
               });
             });

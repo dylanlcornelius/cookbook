@@ -15,8 +15,9 @@
       </a>
     </div>
     
-    <div class="row">
-      <div class="col-sm-6 form-column">
+    <!-- TODO: make this row thingy and recipes-update like ingredients form -->
+    <div class="row justify-content-center">
+      <div class="col-sm-12 form-column">
         <mat-form-field class="form-field">
           <input matInput placeholder="Name" formControlName="name"
                   [errorStateMatcher]="matcher">
@@ -30,7 +31,7 @@
         </mat-form-field>
         
         <mat-form-field class="form-field">
-          <input matInput placeholder="Preparation Time" formControlName="time"
+          <input matInput placeholder="Preparation Time (minutes)" formControlName="time"
                   [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('time').valid">Please enter a valid number for Recipe Preparation Time</span>
@@ -62,10 +63,9 @@
               <div style="padding: 20px;" *ngIf="i > 0"></div>
             </div>
 
-            <!-- class="d-flex justify-content-center" -->
             <div class="col-10 d-flex justify-content-center"  [formGroupName]="i" >
               <mat-form-field style="width: 80%;">
-                  <input matInput placeholder="Step: {{i + 1}}" formControlName="step">
+                  <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
               </mat-form-field>
               <button style="margin-left: 20px;" mat-mini-fab color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
                 <mat-icon> close </mat-icon>
@@ -74,12 +74,8 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-sm-1"></div>
-
-      <div class="col-sm-5">
-        <div class="row">
+        <div class="row justify-content-center">
           <div class="col-sm-6 list-container">
             <h3>
               Added Ingredients

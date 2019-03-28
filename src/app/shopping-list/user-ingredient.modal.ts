@@ -1,28 +1,28 @@
 export class UserIngredient {
-    key: string;
+    id: string;
     uid: string;
     ingredients: Array<{
-        key: string;
+        id: string;
         pantryQuantity: string;
         cartQuantity: string;
     }>;
 
     constructor(
-        key: string,
         uid: string,
         ingredients: Array<{
-            key: string,
+            id: string,
             pantryQuantity: string,
             cartQuantity: string,
-        }>
+        }>,
+        id?: string,
     ) {
-        this.key = key;
+        this.id = id;
         this.uid = uid;
         this.ingredients = ingredients;
     }
 
     public getId() {
-        return this.key;
+        return this.id;
     }
 
     public getObject() {

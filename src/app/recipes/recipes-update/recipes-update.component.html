@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <h2>
     Edit a Recipe
   </h2>
@@ -7,7 +7,7 @@
 
 <app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
-<div class="row justify-content-center" *ngIf="!loading">
+<div class="d-flex justify-content-center" *ngIf="!loading">
   <form class="form" [formGroup]="recipesForm" (ngSubmit)="onFormSubmit(recipesForm.value)">
     <div class="button-row">
       <a mat-fab color="primary" (click)="recipesDetail()">
@@ -15,8 +15,8 @@
       </a>
     </div>
     
-    <div class="row">
-      <div class="col-sm-6 form-column">
+    <div class="row justify-content-center">
+      <div class="col-12 form-column">
         <mat-form-field class="form-field">
           <input matInput placeholder="Name" formControlName="name"
                   [errorStateMatcher]="matcher">
@@ -29,8 +29,9 @@
           <textarea matInput placeholder="Description" formControlName="description"></textarea>
         </mat-form-field>
 
+        <!-- click around and check that minutes are showing up -->
         <mat-form-field class="form-field">
-          <input matInput placeholder="Preparation Time" formControlName="time"
+          <input matInput placeholder="Preparation Time (minutes)" formControlName="time"
                   [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('time').valid">Please enter a valid number for Recipe Preparation Time</span>
@@ -64,7 +65,7 @@
 
             <div class="col-10 d-flex justify-content-center" [formGroupName]="i">
               <mat-form-field style="width: 80%;">
-                  <input matInput placeholder="Step: {{i + 1}}" formControlName="step">
+                  <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
               </mat-form-field>
               <button style="margin-left: 20px;" mat-mini-fab color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
                 <mat-icon> close </mat-icon>
@@ -73,13 +74,9 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-sm-1"></div>
-
-      <div class="col-sm-5">
-        <div class="row">
-          <div class="col-sm-6 list-container">
+        <div class="row justify-content-center">
+          <div class="col-6 list-container">
             <h3>
               Added Ingredients
             </h3>
@@ -95,7 +92,7 @@
             </div>
           </div>
         
-          <div class="col-sm-6 list-container">
+          <div class="col-6 list-container">
             <h3>
               Available Ingredients
             </h3>
