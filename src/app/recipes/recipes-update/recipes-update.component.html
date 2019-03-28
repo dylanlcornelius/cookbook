@@ -18,8 +18,7 @@
     <div class="row justify-content-center">
       <div class="col-12 form-column">
         <mat-form-field class="form-field">
-          <input matInput placeholder="Name" formControlName="name"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched">Please enter Recipe Name</span>
           </mat-error>
@@ -31,24 +30,21 @@
 
         <!-- click around and check that minutes are showing up -->
         <mat-form-field class="form-field">
-          <input matInput placeholder="Preparation Time (minutes)" formControlName="time"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Preparation Time (minutes)" formControlName="time" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('time').valid">Please enter a valid number for Recipe Preparation Time</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="form-field">
-          <input matInput placeholder="Servings" formControlName="servings"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Servings" formControlName="servings" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('servings').valid">Please enter a valid number for Recipe Servings</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="form-field">
-          <input matInput placeholder="Calories" formControlName="calories"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Calories" formControlName="calories" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('calories').valid">Please enter a valid number for Recipe Calories</span>
           </mat-error>
