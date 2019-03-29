@@ -19,7 +19,7 @@
 
       <ng-container matColumnDef="pantryQuantity">
         <th mat-header-cell *matHeaderCellDef> Ingredients in Pantry </th>
-        <td mat-cell *matCellDef="let element"> {{element.pantryQuantity}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.pantryQuantity}} {{element.uom === 'other'? '' : element.uom}} </td>
       </ng-container>
 
       <ng-container matColumnDef="cartQuantity">
@@ -30,7 +30,7 @@
           </button>
           <span style="margin: 0 10px;">
             <label class="table-col">
-              {{element.cartQuantity}}
+              {{element.cartQuantity}} {{element.uom === 'other'? '' : element.uom}}
             </label>
           </span>
           <button class="btn btn-dark buy-button" (click)="addIngredient(element.id)">
@@ -48,7 +48,7 @@
         </td>
       </ng-container>
 
-      <!-- checkboxes? -->
+      <!-- TODO: checkboxes? -->
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

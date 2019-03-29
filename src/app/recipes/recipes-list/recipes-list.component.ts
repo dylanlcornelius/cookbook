@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from '@angular/cdk/collections';
 import { RecipeService } from '../recipe.service';
 
 @Component({
@@ -10,8 +9,7 @@ import { RecipeService } from '../recipe.service';
 export class RecipesListComponent implements OnInit {
 
   loading: Boolean = true;
-  displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity'];
-  // dataSource = new RecipeDataSource(this.fs);
+  displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource = [];
 
   constructor(private recipeService: RecipeService) {
@@ -22,5 +20,13 @@ export class RecipesListComponent implements OnInit {
       this.dataSource = result;
       this.loading = false;
     });
+  }
+
+  removeIngredients(id) {
+
+  }
+
+  addIngredients(id) {
+
   }
 }

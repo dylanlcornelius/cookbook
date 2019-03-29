@@ -6,6 +6,19 @@
   width: 100%;
 }
 
+td {
+  justify-content: center;
+}
+
+.buy-button {
+  padding: 3px;
+}
+
+.buy-icon {
+  vertical-align: middle;
+  font-size: 20px;
+}
+
 .button-row {
   margin: 10px 0;
 }

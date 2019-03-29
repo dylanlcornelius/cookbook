@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import {
   FormControl,
-  FormGroupDirective,
   FormBuilder,
   FormGroup,
   NgForm,
@@ -28,7 +27,6 @@ export class RecipesUpdateComponent implements OnInit {
   time: number;
   servings: number;
   calories: number;
-  // quantity: number;
   steps: Array<{step: string}>;
 
   addedIngredients = [];
@@ -44,14 +42,63 @@ export class RecipesUpdateComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getRecipe(this.route.snapshot.params['id']);
+    this.recipeService.getRecipe(this.route.snapshot.params['id'])
+      .subscribe(data => {
+        this.id = data.id;
+        if (data.steps !== undefined) {
+          for (let i = 1; i < data.steps.length; i++) {
+            this.addStep();
+          }
+        }
+        this.addedIngredients = data.ingredients;
+        this.recipesForm.setValue({
+          name: data.name,
+          description: data.description,
+          time: data.time,
+          servings: data.servings,
+          calories: data.calories,
+          steps: data.steps
+        });
+
+        this.ingredientService.getIngredients()
+          .subscribe(ingredients => {
+            const added = [];
+            ingredients.forEach(ingredient => {
+              let found = false;
+              this.addedIngredients.forEach(addedIngredient => {
+                if (ingredient.id === addedIngredient.id) {
+                  found = true;
+                  added.push({
+                    id: ingredient.id,
+                    name: ingredient.name,
+                    amount: ingredient.amount,
+                    uom: ingredient.uom,
+                    quantity: addedIngredient.quantity
+                  });
+                }
+              });
+              if (!found) {
+                this.availableIngredients.push({
+                  id: ingredient.id,
+                  name: ingredient.name,
+                  amount: ingredient.amount,
+                  uom: ingredient.uom,
+                  quantity: 0
+                });
+              }
+            });
+            this.addedIngredients = added;
+            this.loading = false;
+          });
+      });
+
+
     this.recipesForm = this.formBuilder.group({
       'name' : [null, Validators.required],
       'description' : [null],
       'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      // 'quantity': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]]
       'steps': this.formBuilder.array([
         this.initStep()
       ])
@@ -74,49 +121,6 @@ export class RecipesUpdateComponent implements OnInit {
     control.removeAt(i);
   }
 
-  getRecipe(id) {
-    this.recipeService.getRecipe(id)
-      .subscribe(data => {
-        this.id = data.id;
-        if (data.steps !== undefined) {
-          for (let i = 1; i < data.steps.length; i++) {
-            this.addStep();
-          }
-        }
-        this.addedIngredients = data.ingredients;
-        this.recipesForm.setValue({
-          name: data.name,
-          description: data.description,
-          time: data.time,
-          servings: data.servings,
-          calories: data.calories,
-          steps: data.steps
-        });
-        this.initIngredients();
-        this.loading = false;
-      });
-  }
-
-  initIngredients() {
-    this.ingredientService.getIngredients()
-      .subscribe(data => {
-        const added = [];
-        data.forEach(d => {
-          let found = false;
-          this.addedIngredients.forEach(addedIngredient => {
-            if (d.id === addedIngredient.id) {
-              found = true;
-              added.push({name: d.name, id: d.id});
-            }
-          });
-          if (!found) {
-            this.availableIngredients.push({name: d.name, id: d.id});
-          }
-        });
-        this.addedIngredients = added;
-      });
-  }
-
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -125,8 +129,22 @@ export class RecipesUpdateComponent implements OnInit {
     }
   }
 
+  removeIngredient(id) {
+    const data = this.addedIngredients.find(x => x.id === id);
+    if (data.quantity > 0) {
+      data.quantity = Number(data.quantity) - Number(data.amount);
+    }
+  }
+
+  addIngredient(id) {
+    const data = this.addedIngredients.find(x => x.id === id);
+    data.quantity = Number(data.quantity) + Number(data.amount);
+  }
+
   submitForm() {
-    this.recipesForm.addControl('ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id}))));
+    this.recipesForm.addControl(
+      'ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id, quantity: c.quantity})))
+    );
     this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }
@@ -134,7 +152,6 @@ export class RecipesUpdateComponent implements OnInit {
   onFormSubmit(form: NgForm) {
     this.recipeService.putRecipes(this.id, form)
       .subscribe(res => {
-        // this.router.navigate(['/recipes']);
         this.router.navigate(['/recipes-detail/', this.id]);
       }, (err) => {
         console.error(err);
