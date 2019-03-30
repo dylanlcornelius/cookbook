@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UserActionService } from './user-action.service';
+import { ActionService } from 'src/app/profile/action.service';
 
-describe('UserActionService', () => {
+describe('ActionService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: UserActionService = TestBed.get(UserActionService);
+    const service: ActionService = TestBed.get(ActionService);
     expect(service).toBeTruthy();
   });
 });

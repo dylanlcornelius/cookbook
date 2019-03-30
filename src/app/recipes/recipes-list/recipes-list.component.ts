@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from '@angular/cdk/collections';
 import { RecipeService } from '../recipe.service';
 
 @Component({
@@ -11,7 +10,6 @@ export class RecipesListComponent implements OnInit {
 
   loading: Boolean = true;
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity'];
-  // dataSource = new RecipeDataSource(this.fs);
   dataSource = [];
 
   constructor(private recipeService: RecipeService) {

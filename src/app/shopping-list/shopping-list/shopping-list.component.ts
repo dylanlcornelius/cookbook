@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UserIngredientService } from '../../shopping-list/user-ingredient.service';
-import { UserService } from '../../user/user.service';
 import { IngredientService } from '../../ingredients/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../user-ingredient.modal';
 import { MatTableDataSource } from '@angular/material';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
+
+// TODO: Update all imports with @ and absolute paths
+// TODO: icons for notification modal
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
@@ -14,8 +17,9 @@ import { MatTableDataSource } from '@angular/material';
 export class ShoppingListComponent implements OnInit {
 
   loading = true;
-  // TODO: Add data model for params
   validationModalParams;
+  notificationModalParams;
+
   uid: string;
   id: string;
   displayedColumns = ['name', 'pantryQuantity', 'cartQuantity', 'buy'];
@@ -25,39 +29,35 @@ export class ShoppingListComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
     private userIngredientService: UserIngredientService,
-    private userService: UserService,
     private ingredientService: IngredientService
   ) { }
 
   ngOnInit() {
-    const loggedInCookie = this.cookieService.get('LoggedIn');
+    this.uid = this.cookieService.get('LoggedIn');
     const myIngredients = [];
-    this.userService.getUser(loggedInCookie).subscribe(user => {
-      this.uid = user.uid;
-      this.userIngredientService.getUserIngredients(user.uid).subscribe(userIngredients => {
-        this.id = userIngredients.id;
-        this.ingredientService.getIngredients().subscribe(ingredients => {
-          ingredients.forEach(ingredient => {
-            if (userIngredients && userIngredients.ingredients) {
-              userIngredients.ingredients.forEach(myIngredient => {
-                if (myIngredient.id === ingredient.id) {
-                  myIngredients.push({
-                    id: myIngredient.id,
-                    name: ingredient.name,
-                    pantryQuantity: myIngredient.pantryQuantity,
-                    cartQuantity: myIngredient.cartQuantity
-                  });
-                }
-              });
-            }
-          });
-          this.dataSource = new MatTableDataSource(myIngredients);
-          // tslint:disable-next-line:triple-equals
-          this.dataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-          this.applyFilter();
-          this.ingredients = ingredients;
-          this.loading = false;
+    this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
+      this.id = userIngredients.id;
+      this.ingredientService.getIngredients().subscribe(ingredients => {
+        ingredients.forEach(ingredient => {
+          if (userIngredients && userIngredients.ingredients) {
+            userIngredients.ingredients.forEach(myIngredient => {
+              if (myIngredient.id === ingredient.id) {
+                myIngredients.push({
+                  id: myIngredient.id,
+                  name: ingredient.name,
+                  pantryQuantity: myIngredient.pantryQuantity,
+                  cartQuantity: myIngredient.cartQuantity
+                });
+              }
+            });
+          }
         });
+        this.dataSource = new MatTableDataSource(myIngredients);
+        // tslint:disable-next-line:triple-equals
+        this.dataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+        this.applyFilter();
+        this.ingredients = ingredients;
+        this.loading = false;
       });
     });
   }
@@ -93,12 +93,16 @@ export class ShoppingListComponent implements OnInit {
   }
 
   addToPantry(id) {
-    // TODO: add successful popup
     const data = this.dataSource.data.find(x => x.id === id);
     data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
     data.cartQuantity = 0;
     this.userIngredientService.buyUserIngredient(this.packageData(), 1);
     this.applyFilter();
+    this.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Ingredient added!'
+    };
   }
 
   addAllToPantry() {
@@ -110,12 +114,16 @@ export class ShoppingListComponent implements OnInit {
   }
 
   addAllToPantryEvent = function(self) {
-    // TODO: add successful popup
     self.dataSource.data.forEach(data => {
       data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
       data.cartQuantity = 0;
     });
     self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length);
     self.applyFilter();
+    this.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Ingredients added!'
+    };
   };
 }

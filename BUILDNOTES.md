@@ -22,7 +22,8 @@
 
 
 #### Extensions (Optionals for VSCode):
-1. GitLens
+1. GitHub (only for personal access token)
 2. Git Graph
 3. Markdown Preview Enhanced
 4. TSLint
+5. TODO Highlight

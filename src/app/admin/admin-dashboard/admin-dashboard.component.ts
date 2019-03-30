@@ -15,9 +15,6 @@ import { Notification } from 'src/app/modals/notification-modal/notification.enu
 })
 export class AdminDashboardComponent implements OnInit {
 
-  // types: null, string, array droplist?
-  // probably just only null for new records
-
   loading: Boolean = true;
   validationModalParams;
   notificationModalParams;
@@ -28,7 +25,6 @@ export class AdminDashboardComponent implements OnInit {
   usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'delete'];
   roleList = ['user', 'admin', 'pending'];
   usersDatasource: Array<User>;
-  // usersForm: FormGroup;
   selectedRow: {};
 
   // ingredientsDisplayedColumns = ['name', 'type'];
@@ -134,7 +130,6 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent = function(self) {
-    // TODO: check for errors
     self.configService.getConfigs().subscribe((result) => {
       self.configsDatasource = result;
     });
@@ -153,7 +148,6 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   saveEvent = function(self) {
-    // TODO: check for errors
     self.configService.putConfigs(self.configsDatasource);
     self.userService.putUsers(self.usersDatasource);
     self.notificationModalParams = {

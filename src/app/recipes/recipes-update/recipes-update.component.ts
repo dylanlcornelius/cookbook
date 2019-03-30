@@ -8,7 +8,8 @@ import {
   FormGroup,
   NgForm,
   Validators,
-  FormArray } from '@angular/forms';
+  FormArray
+} from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredients/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -143,7 +144,6 @@ export class RecipesUpdateComponent implements OnInit {
   onFormSubmit(form: NgForm) {
     this.recipeService.putRecipes(this.id, form)
       .subscribe(res => {
-        // this.router.navigate(['/recipes']);
         this.router.navigate(['/recipes-detail/', this.id]);
       }, (err) => {
         console.error(err);

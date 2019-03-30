@@ -7,8 +7,8 @@ import {
   FormBuilder,
   FormGroup,
   NgForm,
-  Validators,
-  FormArray } from '@angular/forms';
+  Validators
+} from '@angular/forms';
 import { UOM } from '../uom.emun';
 import { ErrorStateMatcher } from '@angular/material';
 
@@ -25,7 +25,7 @@ class ErrorMatcher implements ErrorStateMatcher {
 })
 export class IngredientsUpdateComponent implements OnInit {
 
-  loading: Boolean = true;
+  loading = true;
   ingredientsForm: FormGroup;
   id: string;
   name: string;
@@ -73,7 +73,6 @@ export class IngredientsUpdateComponent implements OnInit {
   onFormSubmit(form: NgForm) {
     this.ingredientService.putIngredient(this.id, form)
       .subscribe(res => {
-        // this.router.navigate(['/recipes']);
         this.router.navigate(['/ingredients-detail/', this.id]);
       }, (err) => {
         console.error(err);
