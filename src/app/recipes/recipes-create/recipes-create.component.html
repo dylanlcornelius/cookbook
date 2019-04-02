@@ -8,7 +8,7 @@
 <app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
 <div class="row justify-content-center" *ngIf="!loading">
-  <form class="form" [formGroup]="recipesForm" (ngSubmit)="onFormSubmit(recipesForm.value)">
+  <form class="form" [formGroup]="recipesForm">
     <div class="button-row">
       <a mat-fab color="primary" [routerLink]="['/recipes-list']">
         <mat-icon> list </mat-icon>
@@ -72,15 +72,32 @@
         </div>
 
         <div class="row justify-content-center">
-          <div class="col-sm-6 list-container">
+          <div class="col-8" style="min-width: 350px; max-width: 450px;">
             <h3>
               Added Ingredients
             </h3>
         
-            <div  class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
-                [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)">
+            <div class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
+                [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)" style="margin-bottom: 20px;">
               <div class="box" *ngFor="let ingredient of addedIngredients" cdkDrag>
-                {{ingredient.name}}
+                <span class="col-5">
+                  <label> {{ingredient.name}} </label>
+                </span>
+                <span class="col-2">
+                  <button class="btn btn-dark buy-button" (click)="removeIngredient(ingredient.id)">
+                    <mat-icon class="buy-icon"> remove </mat-icon>
+                  </button>
+                </span>
+                <span class="col-3">
+                  <span>
+                      {{ingredient.quantity}} {{ingredient.uom === 'other'? '' : ingredient.uom}}
+                  </span>
+                </span>
+                <span class="col-2">
+                  <button class="btn btn-dark buy-button" (click)="addIngredient(ingredient.id)">
+                    <mat-icon class="buy-icon"> add </mat-icon>
+                  </button>
+                </span>
               </div>
               <div class="box" *ngIf="addedIngredients.length == 0">
                 No Ingredients
@@ -88,7 +105,7 @@
             </div>
           </div>
         
-          <div class="col-sm-6 list-container">
+          <div class="col-4" style="min-width: 150px">
             <h3>
               Available Ingredients
             </h3>
@@ -98,7 +115,7 @@
               <div class="box" *ngFor="let ingredient of availableIngredients" cdkDrag>
                 {{ingredient.name}}
               </div>
-              <div class="box" *ngIf="availableIngredients.length == 0">
+              <div class="box" *ngIf="availableIngredients == 0">
                 No Ingredients
               </div>
             </div>

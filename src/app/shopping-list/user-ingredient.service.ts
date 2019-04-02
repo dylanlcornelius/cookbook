@@ -24,16 +24,12 @@ export class UserIngredientService {
     return new Observable((observer) => {
       this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
         if (querySnapshot.size > 0) {
-          const userIngredients = [];
+          let userIngredient;
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            userIngredients.push({
-                id: doc.id,
-                uid: data.uid,
-                ingredients: data.ingredients,
-              });
+            userIngredient = new UserIngredient(data.uid, data.ingredients, doc.id);
           });
-          observer.next(userIngredients[0]);
+          observer.next(userIngredient);
         } else {
           self.postUserIngredient({uid: uid, ingredients: []}).subscribe(userIngredient => {
             observer.next(userIngredient);

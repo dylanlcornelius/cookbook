@@ -38,7 +38,25 @@
 
       <ng-container matColumnDef="quantity">
         <th mat-header-cell *matHeaderCellDef> Quantity </th>
-        <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.count}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cook">
+        <th mat-header-cell *matHeaderCellDef> Remove Ingredients </th>
+        <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+          <button mat-button class="btn btn-danger" (click)="removeIngredients(element.id)">
+            Cook
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="buy">
+        <th mat-header-cell *matHeaderCellDef> Add Ingredients </th>
+        <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+          <button mat-button class="btn btn-primary" (click)="addIngredients(element.id)">
+            Buy
+          </button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

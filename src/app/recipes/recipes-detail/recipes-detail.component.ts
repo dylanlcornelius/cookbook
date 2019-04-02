@@ -42,10 +42,15 @@ export class RecipesDetailComponent implements OnInit {
           }
           this.ingredientService.getIngredients()
           .subscribe(allIngredients => {
-            allIngredients.forEach(i => {
+            allIngredients.forEach(ingredient => {
               data.ingredients.forEach(recipeIngredient => {
-                if (recipeIngredient.id === i.id) {
-                  this.ingredients.push({name: i.name, id: i.id});
+                if (recipeIngredient.id === ingredient.id) {
+                  this.ingredients.push({
+                    id: ingredient.id,
+                    name: ingredient.name,
+                    uom: ingredient.uom,
+                    quantity: recipeIngredient.quantity
+                  });
                 }
               });
             });

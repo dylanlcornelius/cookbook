@@ -3,16 +3,16 @@ export class UserIngredient {
     uid: string;
     ingredients: Array<{
         id: string;
-        pantryQuantity: string;
-        cartQuantity: string;
+        pantryQuantity: number;
+        cartQuantity: number;
     }>;
 
     constructor(
         uid: string,
         ingredients: Array<{
             id: string,
-            pantryQuantity: string,
-            cartQuantity: string,
+            pantryQuantity: number,
+            cartQuantity: number,
         }>,
         id?: string,
     ) {

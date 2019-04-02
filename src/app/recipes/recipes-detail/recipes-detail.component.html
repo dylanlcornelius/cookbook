@@ -53,8 +53,8 @@
           </dt>
 
           <div  class="list">
-            <div class="box" *ngFor="let ingredient of ingredients | keyvalue">
-              {{ingredient.value.name}}
+            <div class="box" *ngFor="let ingredient of ingredients">
+                {{ingredient.quantity}}  {{ingredient.uom === 'other'? '' : ingredient.uom}} - {{ingredient.name}}
             </div>
             <div class="box" *ngIf="ingredients == null || ingredients.length == 0">
               No Ingredients

@@ -44,6 +44,7 @@ export class ShoppingListComponent implements OnInit {
                   myIngredients.push({
                     id: myIngredient.id,
                     name: ingredient.name,
+                    uom: ingredient.uom,
                     pantryQuantity: myIngredient.pantryQuantity,
                     cartQuantity: myIngredient.cartQuantity
                   });
