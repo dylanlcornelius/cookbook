@@ -27,11 +27,11 @@ export class IngredientService {
           const data = doc.data();
           ingredients.push({
             id: doc.id,
-            name: data.name,
-            category: data.category,
+            name: data.name || '',
+            category: data.category || '',
             amount: data.amount,
             uom: data.uom,
-            calories: data.calories ? data.calories : '',
+            calories: data.calories || '',
           });
         });
         observer.next(ingredients);
@@ -45,11 +45,11 @@ export class IngredientService {
         const data = doc.data();
         observer.next({
           id: doc.id,
-          name: data.name,
-          category: data.category,
+          name: data.name || '',
+          category: data.category || '',
           amount: data.amount,
           uom: data.uom,
-          calories: data.calories,
+          calories: data.calories || '',
         });
       });
     });

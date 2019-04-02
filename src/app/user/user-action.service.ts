@@ -49,10 +49,10 @@ export class UserActionService {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         action.push({
-          id: doc.id,
-          uid: data.uid,
-          actions: data.actions,
-        });
+            id: doc.id,
+            uid: data.uid || '',
+            actions: data.actions || {},
+          });
       });
       // return only the first user
       return action[0];

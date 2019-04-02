@@ -19,7 +19,7 @@ export class ConfigService {
         const configs = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          configs.push(new Config(doc.id, data.name, data.value));
+          configs.push(new Config(doc.id, data.name || '', data.value || ''));
         });
         observer.next(configs);
       });
@@ -32,7 +32,7 @@ export class ConfigService {
         const configs = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          configs.push(new Config(doc.id, data.name, data.value));
+          configs.push(new Config(doc.id, data.name || '', data.value || ''));
         });
         observer.next(configs[0]);
       });
@@ -42,7 +42,7 @@ export class ConfigService {
   postConfig(data: Config): Observable<Config> {
     return new Observable((observer) => {
       this.ref.add(data.getObject()).then((doc) => {
-        observer.next(new Config(doc.id, data.name, data.value));
+        observer.next(new Config(doc.id, data.name || '', data.value || ''));
       });
     });
   }
