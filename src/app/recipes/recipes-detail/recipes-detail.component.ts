@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { IngredientService} from '../../ingredients/ingredient.service';
 import { UserService } from '../../user/user.service';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-recipes-detail',
@@ -12,8 +13,8 @@ import { UserService } from '../../user/user.service';
 export class RecipesDetailComponent implements OnInit {
 
   loading = true;
-  // deleteAction: {};
-  validationModalParams: {};
+  validationModalParams;
+  notificationModalParams;
 
   recipe;
   ingredients = [];
@@ -41,10 +42,15 @@ export class RecipesDetailComponent implements OnInit {
           }
           this.ingredientService.getIngredients()
           .subscribe(allIngredients => {
-            allIngredients.forEach(i => {
+            allIngredients.forEach(ingredient => {
               data.ingredients.forEach(recipeIngredient => {
-                if (recipeIngredient.key === i.key) {
-                  this.ingredients.push({name: i.name, key: i.key});
+                if (recipeIngredient.id === ingredient.id) {
+                  this.ingredients.push({
+                    id: ingredient.id,
+                    name: ingredient.name,
+                    uom: ingredient.uom,
+                    quantity: recipeIngredient.quantity
+                  });
                 }
               });
             });
@@ -67,7 +73,12 @@ export class RecipesDetailComponent implements OnInit {
     if (id) {
       self.recipeService.deleteRecipes(id)
       .subscribe(res => {
-        self.router.navigate(['/recipes-list']);
+        self.notificationModalParams = {
+          self: self,
+          type: Notification.FAILURE,
+          path: '/recipes-list',
+          text: 'Recipe Deleted!'
+        };
       }, (err) => {
         console.error(err);
       });

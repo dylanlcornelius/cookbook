@@ -24,3 +24,9 @@ ng build --prod
 ```
 firebase deploy
 ```
+
+##### Change current Firebase project
+```
+firebase list
+firebase use <project_id>
+```

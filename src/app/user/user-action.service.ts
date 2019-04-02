@@ -12,7 +12,7 @@ export class UserActionService {
 
   constructor() {}
 
-  commitAction(uid: string, action: Action) {
+  commitAction(uid: string, action: Action, number: Number) {
     const self = this;
     if (uid) {
       self.getAction(self, uid).then(function(userAction) {
@@ -22,21 +22,21 @@ export class UserActionService {
         if (userAction) {
           if (userAction.actions[week.toString()]) {
             let exists = false;
-            Object.keys(userAction.actions[week.toString()]).forEach(key => {
-              if (key === action) {
-                userAction.actions[week.toString()][action]++;
+            Object.keys(userAction.actions[week.toString()]).forEach(id => {
+              if (id === action) {
+                userAction.actions[week.toString()][action] += number;
                 exists = true;
               }
             });
             if (!exists) {
-              userAction.actions[week.toString()][action] = 1;
+              userAction.actions[week.toString()][action] = number;
             }
           } else {
-            userAction.actions[week.toString()] = {[action]: 1};
+            userAction.actions[week.toString()] = {[action]: number};
           }
           self.putAction(self, userAction);
         } else {
-          userAction = {'uid': uid, 'actions': {[week.toString()]: {[action]: 1}}};
+          userAction = {'uid': uid, 'actions': {[week.toString()]: {[action]: number}}};
           self.postAction(self, userAction);
         }
       });
@@ -49,7 +49,7 @@ export class UserActionService {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         action.push({
-            key: doc.id,
+            id: doc.id,
             uid: data.uid || '',
             actions: data.actions || {},
           });
@@ -67,7 +67,7 @@ export class UserActionService {
   }
 
   private putAction(self, data) {
-    self.ref.doc(data.key).set(data)
+    self.ref.doc(data.id).set(data)
     .catch(function(error) {
       console.error('error: ', error);
     });

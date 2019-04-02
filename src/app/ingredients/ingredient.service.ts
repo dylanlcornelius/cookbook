@@ -5,6 +5,7 @@ import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
 import { UserActionService } from '../user/user-action.service';
 import { Action } from '../user/action.enum';
+import { Ingredient } from './ingredient.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +26,12 @@ export class IngredientService {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           ingredients.push({
-            key: doc.id,
+            id: doc.id,
             name: data.name || '',
             category: data.category || '',
-            amount: data.amount || '',
+            amount: data.amount,
+            uom: data.uom,
             calories: data.calories || '',
-            quantity: data.quantity || '',
           });
         });
         observer.next(ingredients);
@@ -43,41 +44,42 @@ export class IngredientService {
       this.ref.doc(id).get().then((doc) => {
         const data = doc.data();
         observer.next({
-          key: doc.id,
+          id: doc.id,
           name: data.name || '',
           category: data.category || '',
-          amount: data.amount || '',
+          amount: data.amount,
+          uom: data.uom,
           calories: data.calories || '',
-          quantity: data.quantity || '',
         });
       });
     });
   }
 
-  postIndegredient(data): Observable<any> {
+  postIngredient(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_INGREDIENT);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_INGREDIENT, 1);
         observer.next({
-          key: doc.id
+          id: doc.id
         });
       });
     });
   }
 
-  putIngredients(id: string, data): Observable<any> {
+  putIngredient(id, data): Observable<any> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT, 1);
         observer.next();
       });
     });
   }
 
   deleteIngredients(id: string): Observable<{}> {
+    // TODO: delete all user-ingredients too
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
-        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT);
+        this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT, 1);
         observer.next();
       });
     });

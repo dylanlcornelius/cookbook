@@ -8,18 +8,18 @@
 <app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
 <div class="row justify-content-center" *ngIf="!loading">
-  <form class="form" [formGroup]="recipesForm" (ngSubmit)="onFormSubmit(recipesForm.value)">
+  <form class="form" [formGroup]="recipesForm">
     <div class="button-row">
       <a mat-fab color="primary" [routerLink]="['/recipes-list']">
         <mat-icon> list </mat-icon>
       </a>
     </div>
     
-    <div class="row">
-      <div class="col-sm-6 form-column">
+    <!-- TODO: make this row thingy and recipes-update like ingredients form -->
+    <div class="row justify-content-center">
+      <div class="col-sm-12 form-column">
         <mat-form-field class="form-field">
-          <input matInput placeholder="Name" formControlName="name"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched">Please enter Recipe Name</span>
           </mat-error>
@@ -30,24 +30,21 @@
         </mat-form-field>
         
         <mat-form-field class="form-field">
-          <input matInput placeholder="Preparation Time" formControlName="time"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Preparation Time (minutes)" formControlName="time" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('time').valid">Please enter a valid number for Recipe Preparation Time</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="form-field">
-          <input matInput placeholder="Servings" formControlName="servings"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Servings" formControlName="servings" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('servings').valid">Please enter a valid number for Recipe Servings</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="form-field">
-          <input matInput placeholder="Calories" formControlName="calories"
-                  [errorStateMatcher]="matcher">
+          <input matInput placeholder="Calories" formControlName="calories" [errorStateMatcher]="matcher">
           <mat-error>
             <span *ngIf="!recipesForm.get('calories').valid">Please enter a valid number for Recipe Calories</span>
           </mat-error>
@@ -62,10 +59,9 @@
               <div style="padding: 20px;" *ngIf="i > 0"></div>
             </div>
 
-            <!-- class="d-flex justify-content-center" -->
             <div class="col-10 d-flex justify-content-center"  [formGroupName]="i" >
               <mat-form-field style="width: 80%;">
-                  <input matInput placeholder="Step: {{i + 1}}" formControlName="step">
+                  <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
               </mat-form-field>
               <button style="margin-left: 20px;" mat-mini-fab color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
                 <mat-icon> close </mat-icon>
@@ -74,21 +70,34 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-sm-1"></div>
-
-      <div class="col-sm-5">
-        <div class="row">
-          <div class="col-sm-6 list-container">
+        <div class="row justify-content-center">
+          <div class="col-8" style="min-width: 350px; max-width: 450px;">
             <h3>
               Added Ingredients
             </h3>
         
-            <div  class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
-                [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)">
+            <div class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
+                [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)" style="margin-bottom: 20px;">
               <div class="box" *ngFor="let ingredient of addedIngredients" cdkDrag>
-                {{ingredient.name}}
+                <span class="col-5">
+                  <label> {{ingredient.name}} </label>
+                </span>
+                <span class="col-2">
+                  <button class="btn btn-dark buy-button" (click)="removeIngredient(ingredient.id)">
+                    <mat-icon class="buy-icon"> remove </mat-icon>
+                  </button>
+                </span>
+                <span class="col-3">
+                  <span>
+                      {{ingredient.quantity}} {{ingredient.uom === 'other'? '' : ingredient.uom}}
+                  </span>
+                </span>
+                <span class="col-2">
+                  <button class="btn btn-dark buy-button" (click)="addIngredient(ingredient.id)">
+                    <mat-icon class="buy-icon"> add </mat-icon>
+                  </button>
+                </span>
               </div>
               <div class="box" *ngIf="addedIngredients.length == 0">
                 No Ingredients
@@ -96,7 +105,7 @@
             </div>
           </div>
         
-          <div class="col-sm-6 list-container">
+          <div class="col-4" style="min-width: 150px">
             <h3>
               Available Ingredients
             </h3>
@@ -106,7 +115,7 @@
               <div class="box" *ngFor="let ingredient of availableIngredients" cdkDrag>
                 {{ingredient.name}}
               </div>
-              <div class="box" *ngIf="availableIngredients.length == 0">
+              <div class="box" *ngIf="availableIngredients == 0">
                 No Ingredients
               </div>
             </div>

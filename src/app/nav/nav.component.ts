@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { AuthService } from '../user/auth.service';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-nav',
@@ -9,6 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class NavComponent implements OnInit {
 
+  title: string;
   isLoggedIn: Observable<boolean>;
   isAdmin: Observable<boolean>;
   isPending: Observable<boolean>;
@@ -18,6 +20,7 @@ export class NavComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.title = environment.config.title;
     this.isLoggedIn = this.authService.isLoggedIn;
     this.isAdmin = this.authService.isAdmin;
     this.isPending = this.authService.isPending;

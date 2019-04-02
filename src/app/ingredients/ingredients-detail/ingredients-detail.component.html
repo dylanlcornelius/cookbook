@@ -1,5 +1,6 @@
 <app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 <app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+<app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
 <div *ngIf="!loading">
   <div class="button-row">
@@ -24,7 +25,7 @@
       <mat-card-content class="col-3 d-flex justify-content-center card-column">
         <dl>
           <dt> Amount </dt>
-          <dd> {{ingredient.amount || "No Amount"}} </dd>
+          <dd> {{ingredient.amount || "No Amount"}} {{ingredient.uom === 'other'? '' : ingredient.uom}} </dd>
         </dl>
       </mat-card-content>
 
@@ -44,10 +45,10 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-fab color="primary" [routerLink]="['/ingredients-update/', ingredient.key]">
+      <a mat-fab color="primary" [routerLink]="['/ingredients-update/', ingredient.id]">
         <mat-icon> edit </mat-icon>
       </a>
-      <a mat-fab color="warn" (click)="deleteIngredient(ingredient.key)">
+      <a mat-fab color="warn" (click)="deleteIngredient(ingredient.id)">
         <mat-icon> delete </mat-icon>
       </a>
     </mat-card-actions>

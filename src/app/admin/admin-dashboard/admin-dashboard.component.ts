@@ -4,6 +4,9 @@ import { RecipeService } from '../../recipes/recipe.service';
 import { UserService } from '../../user/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ConfigService } from '../config.service';
+import { Config } from '../config.model';
+import { User } from 'src/app/user/user.model';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,14 +19,15 @@ export class AdminDashboardComponent implements OnInit {
   // probably just only null for new records
 
   loading: Boolean = true;
-  validationModalParams: {};
+  validationModalParams;
+  notificationModalParams;
 
-  configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
-  configsDatasource = [];
+  configsDisplayedColumns = ['id', 'name', 'value', 'delete'];
+  configsDatasource: Array<Config>;
 
-  usersDisplayedColumns = ['key', 'firstName', 'lastName', 'roles', 'delete'];
+  usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'delete'];
   roleList = ['user', 'admin', 'pending'];
-  usersDatasource = [];
+  usersDatasource: Array<User>;
   // usersForm: FormGroup;
   selectedRow: {};
 
@@ -41,10 +45,10 @@ export class AdminDashboardComponent implements OnInit {
   ngOnInit() {
     this.configService.getConfigs().subscribe((result) => {
       this.configsDatasource = result;
-      this.loading = false;
     });
     this.userService.getUsers().subscribe((result) => {
       this.usersDatasource = result;
+      this.loading = false;
     });
     // this.recipeService.getRecipes().subscribe((result) => {
     //   this.recipesDatasource = this.getCollectionData(result);
@@ -73,29 +77,53 @@ export class AdminDashboardComponent implements OnInit {
   // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
-    this.configService.postConfig({key: '', name: '', value: ''})
+    this.configService.postConfig(new Config('', '', ''))
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
   }
 
-  removeConfig(key) {
-    // add verification
-    this.configService.deleteConfig(key)
+  removeConfig(id, name) {
+    if (!name) {
+      name = 'NO NAME';
+    }
+    this.validationModalParams = {
+      function: this.removeConfigEvent,
+      id: id,
+      self: this,
+      text: 'Are you sure you want to delete config ' + name + '?'
+    };
+  }
+
+  removeConfigEvent = function(self, id) {
+    self.configService.deleteConfig(id)
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
+  };
+
+  removeUser(id, firstName, lastName) {
+    if (!firstName && !lastName) {
+      firstName = 'NO';
+      lastName = 'NAME';
+    }
+    this.validationModalParams = {
+      function: this.removeUserEvent,
+      id: id,
+      self: this,
+      text: 'Are you sure you want to delete user ' + firstName + ' ' + lastName + '?'
+    };
   }
 
-  removeUser(key) {
-    this.userService.deleteUser(key)
-      .subscribe(() => {},
-      (err) => {
-        console.log(err);
-      });
-  }
+  removeUserEvent = function(self, id) {
+    self.userService.deleteUser(id)
+    .subscribe(() => {},
+    (err) => {
+      console.log(err);
+    });
+  };
 
   revert() {
     this.validationModalParams = {
@@ -106,12 +134,18 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent = function(self) {
+    // TODO: check for errors
     self.configService.getConfigs().subscribe((result) => {
       self.configsDatasource = result;
     });
     self.userService.getUsers().subscribe((result) => {
       self.usersDatasource = result;
     });
+    self.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Changes reverted!'
+    };
   };
 
   save() {
@@ -119,7 +153,13 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   saveEvent = function(self) {
+    // TODO: check for errors
     self.configService.putConfigs(self.configsDatasource);
     self.userService.putUsers(self.usersDatasource);
+    self.notificationModalParams = {
+      self: this,
+      type: Notification.SUCCESS,
+      text: 'Changes saved!'
+    };
   };
 }

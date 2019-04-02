@@ -1,5 +1,6 @@
 <app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 <app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+<app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
 <div *ngIf="!loading">
   <div class="button-row">
@@ -23,7 +24,7 @@
           <dd> by {{user.firstName}} {{ user.lastName }} </dd> -->
 
           <dt> Preparation Time </dt>
-          <dd> {{recipe.time || "No Preparation Time"}} </dd>
+          <dd> {{recipe.time || "No Preparation Time"}} {{ recipe.time ? 'minutes' : ''}}  </dd>
 
           <dt> Servings </dt>
           <dd> {{recipe.servings || "No Servings"}} </dd>
@@ -52,8 +53,8 @@
           </dt>
 
           <div  class="list">
-            <div class="box" *ngFor="let ingredient of ingredients | keyvalue">
-              {{ingredient.value.name}}
+            <div class="box" *ngFor="let ingredient of ingredients">
+                {{ingredient.quantity}}  {{ingredient.uom === 'other'? '' : ingredient.uom}} - {{ingredient.name}}
             </div>
             <div class="box" *ngIf="ingredients == null || ingredients.length == 0">
               No Ingredients
@@ -64,10 +65,10 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-fab color="primary" [routerLink]="['/recipes-update/', recipe.key]">
+      <a mat-fab color="primary" [routerLink]="['/recipes-update/', recipe.id]">
         <mat-icon> edit </mat-icon>
       </a>
-      <a mat-fab color="warn" (click)="deleteRecipe(recipe.key)">
+      <a mat-fab color="warn" (click)="deleteRecipe(recipe.id)">
         <mat-icon> delete </mat-icon>
       </a>
     </mat-card-actions>
