@@ -18,7 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavComponent } from './nav/nav.component';
+import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -47,7 +47,7 @@ import { ProfileComponent } from './profile/profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent,
+    HeaderComponent,
     HomeComponent,
     RecipesListComponent,
     AboutComponent,

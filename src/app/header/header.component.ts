@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
-export class NavComponent implements OnInit {
+export class HeaderComponent implements OnInit {
 
   title: string;
   isLoggedIn: Observable<boolean>;

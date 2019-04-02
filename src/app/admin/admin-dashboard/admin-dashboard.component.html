@@ -11,7 +11,7 @@
   <button class="btn btn-success btn-block" (click)="addConfig()">
     Add
   </button>
-  <table mat-table #table [dataSource]="configsDatasource">
+  <table mat-table #table [dataSource]="configsDataSource">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Id </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
@@ -57,7 +57,7 @@
 </div>
 <br/>
 <div class="table-container mat-elevation-z8">
-  <table mat-table #table [dataSource]="usersDatasource">
+  <table mat-table #table [dataSource]="usersDataSource">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Id </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
@@ -128,7 +128,7 @@
 <br/>
 <div>
   <div class="table-container mat-elevation-z8"> 
-    <table mat-table #table [dataSource]="usersDatasource">
+    <table mat-table #table [dataSource]="usersDataSource">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -159,7 +159,7 @@
 <br/>
 <div>
   <div class="table-container mat-elevation-z8"> 
-    <table mat-table #table [dataSource]="recipesDatasource">
+    <table mat-table #table [dataSource]="recipesDataSource">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -185,7 +185,7 @@
 <br/>
 <div>
   <div class="table-container mat-elevation-z8"> 
-    <table mat-table #table [dataSource]="ingredientsDatasource">
+    <table mat-table #table [dataSource]="ingredientsDataSource">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
