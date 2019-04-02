@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from '@angular/cdk/collections';
 import { IngredientService } from '../ingredient.service';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
 import { CookieService } from 'ngx-cookie-service';
-import { UserService } from 'src/app/user/user.service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
 
 @Component({
@@ -23,36 +21,32 @@ export class IngredientsListComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
     private ingredientService: IngredientService,
-    private userService: UserService,
     private userIngredientService: UserIngredientService,
   ) { }
 
   ngOnInit() {
-    const loggedInCookie = this.cookieService.get('LoggedIn');
+    this.uid = this.cookieService.get('LoggedIn');
     const myIngredients = [];
-    this.userService.getUser(loggedInCookie).subscribe(user => {
-      this.uid = user.uid;
-      this.userIngredientService.getUserIngredients(user.uid).subscribe(userIngredients => {
-        this.id = userIngredients.id;
-        this.ingredientService.getIngredients().subscribe(ingredients => {
-          ingredients.forEach(ingredient => {
-            userIngredients.ingredients.forEach(myIngredient => {
-              if (myIngredient.id === ingredient.id) {
-                ingredient.pantryQuantity = myIngredient.pantryQuantity;
-                ingredient.cartQuantity = myIngredient.cartQuantity;
+    this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
+      this.id = userIngredients.id;
+      this.ingredientService.getIngredients().subscribe(ingredients => {
+        ingredients.forEach(ingredient => {
+          userIngredients.ingredients.forEach(myIngredient => {
+            if (myIngredient.id === ingredient.id) {
+              ingredient.pantryQuantity = myIngredient.pantryQuantity;
+              ingredient.cartQuantity = myIngredient.cartQuantity;
 
-                myIngredients.push({
-                  id: myIngredient.id,
-                  pantryQuantity: myIngredient.pantryQuantity,
-                  cartQuantity: myIngredient.cartQuantity
-                });
-              }
-            });
+              myIngredients.push({
+                id: myIngredient.id,
+                pantryQuantity: myIngredient.pantryQuantity,
+                cartQuantity: myIngredient.cartQuantity
+              });
+            }
           });
-          this.dataSource = ingredients;
-          this.userIngredients = myIngredients;
-          this.loading = false;
         });
+        this.dataSource = ingredients;
+        this.userIngredients = myIngredients;
+        this.loading = false;
       });
     });
   }
@@ -88,6 +82,5 @@ export class IngredientsListComponent implements OnInit {
       }
       this.userIngredientService.putUserIngredient(this.packageData());
     }
-    // TODO: else show popup error message
   }
 }

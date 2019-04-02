@@ -7,8 +7,8 @@ import {
   FormBuilder,
   FormGroup,
   NgForm,
-  Validators,
-  FormArray} from '@angular/forms';
+  Validators
+} from '@angular/forms';
 import { UOM } from '../uom.emun';
 import { ErrorStateMatcher } from '@angular/material';
 

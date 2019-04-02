@@ -15,26 +15,22 @@ import { Notification } from 'src/app/modals/notification-modal/notification.enu
 })
 export class AdminDashboardComponent implements OnInit {
 
-  // types: null, string, array droplist?
-  // probably just only null for new records
-
   loading: Boolean = true;
   validationModalParams;
   notificationModalParams;
 
   configsDisplayedColumns = ['id', 'name', 'value', 'delete'];
-  configsDatasource: Array<Config>;
+  configsDataSource: Array<Config>;
 
   usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'delete'];
   roleList = ['user', 'admin', 'pending'];
-  usersDatasource: Array<User>;
-  // usersForm: FormGroup;
+  usersDataSource: Array<User>;
   selectedRow: {};
 
   // ingredientsDisplayedColumns = ['name', 'type'];
-  // ingredientsDatasource = [];
+  // ingredientsDataSource = [];
   // recipesDisplayedColumns = ['name', 'type'];
-  // recipesDatasource = [];
+  // recipesDataSource = [];
 
   constructor(private formBuilder: FormBuilder,
     private configService: ConfigService,
@@ -44,17 +40,17 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.configService.getConfigs().subscribe((result) => {
-      this.configsDatasource = result;
+      this.configsDataSource = result;
     });
     this.userService.getUsers().subscribe((result) => {
-      this.usersDatasource = result;
+      this.usersDataSource = result;
       this.loading = false;
     });
     // this.recipeService.getRecipes().subscribe((result) => {
-    //   this.recipesDatasource = this.getCollectionData(result);
+    //   this.recipesDataSource = this.getCollectionData(result);
     // });
     // this.ingredientService.getIngredients().subscribe((result) => {
-    //   this.ingredientsDatasource = this.getCollectionData(result);
+    //   this.ingredientsDataSource = this.getCollectionData(result);
     // });
   }
 
@@ -134,12 +130,11 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent = function(self) {
-    // TODO: check for errors
     self.configService.getConfigs().subscribe((result) => {
-      self.configsDatasource = result;
+      self.configsDataSource = result;
     });
     self.userService.getUsers().subscribe((result) => {
-      self.usersDatasource = result;
+      self.usersDataSource = result;
     });
     self.notificationModalParams = {
       self: self,
@@ -153,9 +148,8 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   saveEvent = function(self) {
-    // TODO: check for errors
-    self.configService.putConfigs(self.configsDatasource);
-    self.userService.putUsers(self.usersDatasource);
+    self.configService.putConfigs(self.configsDataSource);
+    self.userService.putUsers(self.usersDataSource);
     self.notificationModalParams = {
       self: this,
       type: Notification.SUCCESS,

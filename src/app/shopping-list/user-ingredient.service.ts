@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { UserActionService } from '../user/user-action.service';
-import { Action } from '../user/action.enum';
+import { ActionService } from 'src/app/profile/action.service';
+import { Action } from '../profile/action.enum';
 import { UserIngredient } from './user-ingredient.modal';
 import { Observable } from 'rxjs';
 
@@ -16,7 +16,7 @@ export class UserIngredientService {
 
   constructor(
     private cookieService: CookieService,
-    private userActionService: UserActionService
+    private actionService: ActionService
   ) { }
 
   getUserIngredients(uid: string): Observable<any> {
@@ -60,11 +60,11 @@ export class UserIngredientService {
 
   buyUserIngredient(data: UserIngredient, actions: Number) {
     this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-      this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.BUY_INGREDIENT, actions);
+      this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.BUY_INGREDIENT, actions);
+      this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.COMPLETE_SHOPPING_LIST, 1);
     })
     .catch(function(error) {
       console.error('error: ', error);
     });
-    this.userActionService.commitAction(this.cookieService.get('LoggedIn'), Action.COMPLETE_SHOPPING_LIST, 1);
   }
 }

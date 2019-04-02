@@ -37,7 +37,7 @@ export class RecipesListComponent implements OnInit {
       });
     });
   }
-  
+
   getRecipeCount(id) {
     let recipeCount: number;
     let ingredientCount = 0;

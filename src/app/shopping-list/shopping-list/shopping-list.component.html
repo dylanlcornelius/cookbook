@@ -1,4 +1,6 @@
+<app-loading-modal *ngIf="loading"></app-loading-modal>
 <app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+<app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
 <div class="d-flex justify-content-center">
   <h2>
@@ -6,8 +8,6 @@
   </h2>
 </div>
 <br/>
-
-<app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
 <div *ngIf="!loading && dataSource.filteredData.length > 0">
   <div class="table-container mat-elevation-z8"> 

@@ -6,7 +6,7 @@ import { Action } from './action.enum';
 @Injectable({
   providedIn: 'root'
 })
-export class UserActionService {
+export class ActionService {
 
   ref = firebase.firestore().collection('user-actions');
 
@@ -54,7 +54,6 @@ export class UserActionService {
             actions: data.actions || {},
           });
       });
-      // return only the first user
       return action[0];
     });
   }

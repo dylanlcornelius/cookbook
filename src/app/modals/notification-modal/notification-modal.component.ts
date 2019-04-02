@@ -7,7 +7,7 @@
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 notificationModalParams;
 
-self.notificationModalParams = {
+this.notificationModalParams = {
   self: self,
   type: Notification.SUCCESS,
   path: 'path',

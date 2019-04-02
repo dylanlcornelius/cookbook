@@ -1,11 +1,11 @@
+<app-loading-modal *ngIf="loading"></app-loading-modal>
+
 <div class="d-flex justify-content-center">
   <h2>
     Edit a Recipe
   </h2>
 </div>
 <br/>
-
-<app-loader *ngIf="loading" class="d-flex justify-content-center"></app-loader>
 
 <div class="d-flex justify-content-center" *ngIf="!loading">
   <form class="form" [formGroup]="recipesForm">

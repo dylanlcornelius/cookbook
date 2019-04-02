@@ -13,7 +13,7 @@ import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ing
 import { AboutComponent } from './about/about.component';
 import { LoginGuard } from './user/login/login.guard';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
-import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { ProfileComponent } from 'src/app/profile/profile/profile.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingGuard } from './user/user-pending/user-pending.guard';
@@ -33,7 +33,7 @@ const routes: Routes = [
   {path: 'shopping-list', component: ShoppingListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'about', component: AboutComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
-  {path: 'user-profile', component: UserProfileComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [LoginGuard, UserPendingGuard, AdminGuard]},
 ];
 

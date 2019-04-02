@@ -6,8 +6,8 @@ import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../admin/config.service';
-import { UserActionService } from '../user/user-action.service';
-import { Action } from '../user/action.enum';
+import { ActionService } from 'src/app/profile/action.service';
+import { Action } from '../profile/action.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class AuthService {
     private cookieService: CookieService,
     private userService: UserService,
     private configService: ConfigService,
-    private userActionService: UserActionService,
+    private actionService: ActionService,
     ) {
       const loggedInCookie = this.cookieService.get('LoggedIn');
       this.userService.getUser(loggedInCookie).subscribe(current => {
@@ -92,11 +92,11 @@ export class AuthService {
     this.pending.next(this.userService.isPending);
 
     this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-      // TODO: check google sign without prompting for account
+      // TODO: check google signing in without prompting for account
       const expirationDate = new Date();
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
       self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
-      this.userActionService.commitAction(self.user.uid, Action.LOGIN, 1);
+      this.actionService.commitAction(self.user.uid, Action.LOGIN, 1);
 
       self.zone.run(() => self.router.navigate(['']));
 

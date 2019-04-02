@@ -7,7 +7,8 @@ import {
   FormGroup,
   NgForm,
   Validators,
-  FormArray } from '@angular/forms';
+  FormArray
+} from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredients/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
