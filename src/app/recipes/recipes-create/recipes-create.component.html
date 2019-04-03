@@ -63,7 +63,7 @@
               <mat-form-field style="width: 80%;">
                   <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
               </mat-form-field>
-              <button style="margin-left: 20px;" mat-mini-fab color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
+              <button mat-mini-fab style="margin-left: 20px;" color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
                 <mat-icon> close </mat-icon>
               </button>
               <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length == 1"></div>
@@ -84,7 +84,7 @@
                   <label> {{ingredient.name}} </label>
                 </span>
                 <span class="col-2">
-                  <button class="btn btn-dark buy-button" (click)="removeIngredient(ingredient.id)">
+                  <button mat-button class="btn btn-dark buy-button" (click)="removeIngredient(ingredient.id)">
                     <mat-icon class="buy-icon"> remove </mat-icon>
                   </button>
                 </span>
@@ -94,7 +94,7 @@
                   </span>
                 </span>
                 <span class="col-2">
-                  <button class="btn btn-dark buy-button" (click)="addIngredient(ingredient.id)">
+                  <button mat-button class="btn btn-dark buy-button" (click)="addIngredient(ingredient.id)">
                     <mat-icon class="buy-icon"> add </mat-icon>
                   </button>
                 </span>
@@ -125,7 +125,7 @@
     </div>
       
     <div class="button-row">
-      <button type="button" [disabled]="!recipesForm.valid" mat-fab color="primary" (click)="submitForm()">
+      <button mat-fab type="button" [disabled]="!recipesForm.valid" color="primary" (click)="submitForm()">
         <mat-icon> save </mat-icon>
       </button>
     </div>

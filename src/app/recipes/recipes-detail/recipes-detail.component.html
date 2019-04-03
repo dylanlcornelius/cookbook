@@ -20,7 +20,8 @@
     <div class="row">
       <mat-card-content class="col-sm-4 d-flex justify-content-center">
         <dl>
-          <!-- <dt> User </dt>
+          <!-- put in <mat-card-footer>?
+          <dt> User </dt>
           <dd> by {{user.firstName}} {{ user.lastName }} </dd> -->
 
           <dt> Preparation Time </dt>
@@ -39,8 +40,10 @@
 
       <mat-card-content class="col-sm-4 d-flex justify-content-center"> 
         <dl>
+          <dt> Directions </dt>
+
           <div *ngFor="let step of recipe.steps; let i = index">
-              <dt> Step: {{i+1}} </dt>
+              <span class="step-header"> Step: {{i+1}} </span>
               <dd> {{step.step || "No Steps"}} </dd>
           </div>
         </dl>
@@ -48,9 +51,7 @@
 
       <mat-card-content class="col-sm-4 d-flex justify-content-center">
         <dl>
-          <dt>
-            Ingredients
-          </dt>
+          <dt> Ingredients </dt>
 
           <div  class="list">
             <div class="box" *ngFor="let ingredient of ingredients">
