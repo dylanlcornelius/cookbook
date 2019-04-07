@@ -40,8 +40,8 @@
       <mat-form-field class="col-4" style="min-width: 200px;">
         <mat-label> Unit of Measurement </mat-label>
         <mat-select formControlName="uom">
-          <mat-option *ngFor="let measurement of uom" [value]="measurement">
-            {{measurement}}
+          <mat-option *ngFor="let uom of uoms" [value]="uom">
+            {{uom}}
           </mat-option>
         </mat-select>
         <mat-error>

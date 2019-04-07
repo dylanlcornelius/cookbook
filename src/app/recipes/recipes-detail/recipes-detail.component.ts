@@ -48,7 +48,7 @@ export class RecipesDetailComponent implements OnInit {
                   this.ingredients.push({
                     id: ingredient.id,
                     name: ingredient.name,
-                    uom: ingredient.uom,
+                    uom: recipeIngredient.uom,
                     quantity: recipeIngredient.quantity
                   });
                 }

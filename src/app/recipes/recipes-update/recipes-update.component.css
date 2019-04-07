@@ -35,8 +35,8 @@ td {
 }
 
 .list {
-  border: solid 1px #ccc;
   min-height: 40px;
+  border: solid 1px #ccc;
   background: white;
   border-radius: 4px;
   overflow: hidden;
@@ -52,20 +52,23 @@ h3 {
 }
 
 .box {
-  padding: 10px 10px;
   border-bottom: solid 1px #ccc;
-  display: flex;
   flex-direction: row;
   text-align: center;
-  justify-content: center;
   box-sizing: border-box;
   cursor: move;
   background: white;
   font-size: 14px;
+  min-height: 40px;
+  padding-top: 17.5px;
 }
 
 .box:last-child {
   border: none;
+}
+
+.box-bottom {
+  padding-bottom: 17.5px;
 }
 
 .cdk-drag-preview {

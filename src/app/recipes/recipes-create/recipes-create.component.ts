@@ -13,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { RecipeService } from '../recipe.service';
 import { IngredientService} from '../../ingredients/ingredient.service';
 import { ErrorStateMatcher } from '@angular/material';
+import { UOM } from 'src/app/ingredients/uom.emun';
 
 class ErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -40,6 +41,9 @@ export class RecipesCreateComponent implements OnInit {
   addedIngredients = [];
   availableIngredients = [];
 
+  quantities;
+  uoms: Array<UOM>;
+
   matcher = new ErrorMatcher();
 
   constructor(private router: Router,
@@ -47,7 +51,9 @@ export class RecipesCreateComponent implements OnInit {
     private cookieService: CookieService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
-  ) { }
+  ) {
+    this.uoms = Object.values(UOM);
+  }
 
   ngOnInit() {
     this.ingredientService.getIngredients()
@@ -56,11 +62,11 @@ export class RecipesCreateComponent implements OnInit {
           this.availableIngredients.push({
             id: ingredient.id,
             name: ingredient.name,
-            amount: ingredient.amount,
-            uom: ingredient.uom,
-            quantity: 0
+            quantity: '',
+            uom: '',
           });
         });
+
         this.loading = false;
       });
 
@@ -100,21 +106,17 @@ export class RecipesCreateComponent implements OnInit {
     }
   }
 
-  removeIngredient(id) {
-    const data = this.addedIngredients.find(x => x.id === id);
-    if (data.quantity > 0) {
-      data.quantity = Number(data.quantity) - Number(data.amount);
-    }
+  changeQuantity(event, ingredient) {
+    ingredient.quantity = event.value;
   }
 
-  addIngredient(id) {
-    const data = this.addedIngredients.find(x => x.id === id);
-    data.quantity = Number(data.quantity) + Number(data.amount);
+  changeUOM(event, ingredient) {
+    ingredient.uom = event.value;
   }
 
   submitForm() {
     this.recipesForm.addControl(
-      'ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id, quantity: c.quantity})))
+      'ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id, quantity: c.quantity, uom: c.uom})))
       );
     this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);

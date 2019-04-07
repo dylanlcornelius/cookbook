@@ -80,27 +80,30 @@
             <div class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
                 [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)" style="margin-bottom: 20px;">
               <div class="box" *ngFor="let ingredient of addedIngredients" cdkDrag>
-                <span class="col-5">
-                  <label> {{ingredient.name}} </label>
-                </span>
-                <span class="col-2">
-                  <button class="btn btn-dark buy-button" (click)="removeIngredient(ingredient.id)">
-                    <mat-icon class="buy-icon"> remove </mat-icon>
-                  </button>
-                </span>
-                <span class="col-3">
-                  <span>
-                      {{ingredient.quantity}} {{ingredient.uom === 'other'? '' : ingredient.uom}}
-                  </span>
-                </span>
-                <span class="col-2">
-                  <button class="btn btn-dark buy-button" (click)="addIngredient(ingredient.id)">
-                    <mat-icon class="buy-icon"> add </mat-icon>
-                  </button>
-                </span>
+                <mat-label class="col-6">
+                  {{ingredient.name}}
+                </mat-label>
+                <mat-form-field class="col-3">
+                  <mat-label> QTY </mat-label>
+                  <mat-select (selectionChange)="changeQuantity($event, ingredient)">
+                    <mat-option *ngFor="let quantity of quantities[ingredient.uom]" [value]="quantity">
+                      {{quantity}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-3">
+                  <mat-label> UOM </mat-label>
+                  <mat-select (selectionChange)="changeUOM($event, ingredient)">
+                    <mat-option *ngFor="let uom of uoms" [value]="uom">
+                      {{uom}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-              <div class="box" *ngIf="addedIngredients.length == 0">
-                No Ingredients
+              <div class="box box-bottom" *ngIf="addedIngredients.length == 0">
+                <mat-label class="col-12">
+                  No Ingredients
+                </mat-label>
               </div>
             </div>
           </div>
@@ -112,11 +115,15 @@
         
             <div class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
                 [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="drop($event)">
-              <div class="box" *ngFor="let ingredient of availableIngredients" cdkDrag>
-                {{ingredient.name}}
+              <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag>
+                <mat-label class="col-12">
+                  {{ingredient.name}}
+                </mat-label>
               </div>
-              <div class="box" *ngIf="availableIngredients == 0">
-                No Ingredients
+              <div class="box box-bottom" *ngIf="availableIngredients == 0">
+                <mat-label class="col-12">
+                  No Ingredients
+                </mat-label>
               </div>
             </div>
           </div>
