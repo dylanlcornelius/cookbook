@@ -66,7 +66,7 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-fab color="primary" [routerLink]="['/recipes-update/', recipe.id]">
+      <a mat-fab color="primary" [routerLink]="['/recipe-edit/', recipe.id]">
         <mat-icon> edit </mat-icon>
       </a>
       <a mat-fab color="warn" (click)="deleteRecipe(recipe.id)">

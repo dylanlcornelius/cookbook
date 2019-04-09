@@ -2,15 +2,18 @@
 
 <div class="d-flex justify-content-center">
   <h2>
-    Edit an Ingredient
+    {{this.title}}
   </h2>
 </div>
 <br/>
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-fab color="primary" (click)="ingredientsDetail()">
+    <a mat-fab color="primary" (click)="ingredientsDetail()" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
+    </a>
+    <a mat-fab color="primary" [routerLink]="['/ingredients-list']" *ngIf="!route.snapshot.params['id']">
+      <mat-icon> list </mat-icon>
     </a>
   </div>
 

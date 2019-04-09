@@ -14,7 +14,7 @@
       </mat-card-title>
     </mat-card-header>
 
-    <div class="d-flex justify-content-center">
+    <div class="row justify-content-center">
       <mat-card-content class="col-3 d-flex justify-content-center card-column">
         <dl>
           <dt> Category </dt>
@@ -45,7 +45,7 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-fab color="primary" [routerLink]="['/ingredients-update/', ingredient.id]">
+      <a mat-fab color="primary" [routerLink]="['/ingredient-edit/', ingredient.id]">
         <mat-icon> edit </mat-icon>
       </a>
       <a mat-fab color="warn" (click)="deleteIngredient(ingredient.id)">

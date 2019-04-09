@@ -24,17 +24,15 @@ import { AboutComponent } from './about/about.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
 import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
-import { RecipesCreateComponent } from './recipes/recipes-create/recipes-create.component';
-import { RecipesUpdateComponent } from './recipes/recipes-update/recipes-update.component';
+import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoadingModalComponent } from 'src/app/modals/loading-modal/loading-modal.component';
 import { AuthService } from './user/auth.service';
 import { LoginComponent } from './user/login/login.component';
 import { LoginGuard } from './user/login/login.guard';
 import { IngredientsListComponent } from './ingredients/ingredients-list/ingredients-list.component';
-import { IngredientsCreateComponent } from './ingredients/ingredients-create/ingredients-create.component';
 import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ingredients-detail.component';
-import { IngredientsUpdateComponent } from './ingredients/ingredients-update/ingredients-update.component';
+import { IngredientEditComponent } from './ingredients/ingredient-edit/ingredient-edit.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
@@ -53,14 +51,12 @@ import { ProfileComponent } from './profile/profile/profile.component';
     AboutComponent,
     IngredientsListComponent,
     RecipesDetailComponent,
-    RecipesCreateComponent,
-    RecipesUpdateComponent,
+    RecipeEditComponent,
     FooterComponent,
     LoadingModalComponent,
     LoginComponent,
-    IngredientsCreateComponent,
     IngredientsDetailComponent,
-    IngredientsUpdateComponent,
+    IngredientEditComponent,
     AdminDashboardComponent,
     UserPendingComponent,
     ShoppingListComponent,
