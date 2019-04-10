@@ -12,7 +12,7 @@
     <a mat-fab color="primary" (click)="recipesDetail()" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
-    <a mat-fab color="primary" [routerLink]="['/recipes-list']" *ngIf="!route.snapshot.params['id']">
+    <a mat-fab color="primary" [routerLink]="['/recipe-list']" *ngIf="!route.snapshot.params['id']">
       <mat-icon> list </mat-icon>
     </a>
   </div>

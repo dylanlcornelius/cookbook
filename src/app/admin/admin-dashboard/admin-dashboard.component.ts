@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IngredientService } from '../../ingredients/ingredient.service';
-import { RecipeService } from '../../recipes/recipe.service';
+import { IngredientService } from '../../ingredient/ingredient.service';
+import { RecipeService } from '../../recipe/recipe.service';
 import { UserService } from '../../user/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ConfigService } from '../config.service';

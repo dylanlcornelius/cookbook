@@ -22,17 +22,17 @@ import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
-import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+import { RecipeListComponent } from './recipe/recipe-list/recipe-list.component';
+import { RecipeDetailComponent } from './recipe/recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './recipe/recipe-edit/recipe-edit.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoadingModalComponent } from 'src/app/modals/loading-modal/loading-modal.component';
 import { AuthService } from './user/auth.service';
 import { LoginComponent } from './user/login/login.component';
 import { LoginGuard } from './user/login/login.guard';
-import { IngredientsListComponent } from './ingredients/ingredients-list/ingredients-list.component';
-import { IngredientsDetailComponent } from './ingredients/ingredients-detail/ingredients-detail.component';
-import { IngredientEditComponent } from './ingredients/ingredient-edit/ingredient-edit.component';
+import { IngredientListComponent } from './ingredient/ingredient-list/ingredient-list.component';
+import { IngredientDetailComponent } from './ingredient/ingredient-detail/ingredient-detail.component';
+import { IngredientEditComponent } from './ingredient/ingredient-edit/ingredient-edit.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
@@ -47,15 +47,15 @@ import { ProfileComponent } from './profile/profile/profile.component';
     AppComponent,
     HeaderComponent,
     HomeComponent,
-    RecipesListComponent,
+    RecipeListComponent,
     AboutComponent,
-    IngredientsListComponent,
-    RecipesDetailComponent,
+    IngredientListComponent,
+    RecipeDetailComponent,
     RecipeEditComponent,
     FooterComponent,
     LoadingModalComponent,
     LoginComponent,
-    IngredientsDetailComponent,
+    IngredientDetailComponent,
     IngredientEditComponent,
     AdminDashboardComponent,
     UserPendingComponent,

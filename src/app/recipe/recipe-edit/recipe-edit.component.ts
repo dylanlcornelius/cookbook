@@ -10,7 +10,7 @@ import {
   FormArray
 } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientService} from '../../ingredients/ingredient.service';
+import { IngredientService} from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ErrorStateMatcher } from '@angular/material';
 
@@ -183,14 +183,14 @@ export class RecipeEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.recipeService.putRecipes(this.id, form)
         .subscribe(() => {
-          this.router.navigate(['/recipes-detail/', this.id]);
+          this.router.navigate(['/recipe-detail/', this.id]);
         }, (err) => {
           console.error(err);
         });
     } else {
       this.recipeService.postRecipe(form)
         .subscribe(res => {
-          this.router.navigate(['/recipes-detail/', res.id]);
+          this.router.navigate(['/recipe-detail/', res.id]);
         }, (err) => {
           console.error(err);
         });
@@ -198,6 +198,6 @@ export class RecipeEditComponent implements OnInit {
   }
 
   recipesDetail() {
-    this.router.navigate(['/recipes-detail/', this.id]);
+    this.router.navigate(['/recipe-detail/', this.id]);
   }
 }

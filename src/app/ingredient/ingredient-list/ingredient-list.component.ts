@@ -5,11 +5,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
 
 @Component({
-  selector: 'app-ingredients-list',
-  templateUrl: './ingredients-list.component.html',
-  styleUrls: ['./ingredients-list.component.css']
+  selector: 'app-ingredient-list',
+  templateUrl: './ingredient-list.component.html',
+  styleUrls: ['./ingredient-list.component.css']
 })
-export class IngredientsListComponent implements OnInit {
+export class IngredientListComponent implements OnInit {
 
   loading = true;
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];

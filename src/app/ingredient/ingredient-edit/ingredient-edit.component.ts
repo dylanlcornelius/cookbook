@@ -80,7 +80,7 @@ export class IngredientEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.ingredientService.putIngredient(this.id, form)
         .subscribe(() => {
-          this.router.navigate(['/ingredients-detail/', this.id]);
+          this.router.navigate(['/ingredient-detail/', this.id]);
         }, (err) => {
           console.error(err);
         });
@@ -88,7 +88,7 @@ export class IngredientEditComponent implements OnInit {
       this.ingredientService.postIngredient(form)
         .subscribe(res => {
           const id = res['id'];
-          this.router.navigate(['/ingredients-detail/', id]);
+          this.router.navigate(['/ingredient-detail/', id]);
         }, (err) => {
           console.error(err);
         });
@@ -96,6 +96,6 @@ export class IngredientEditComponent implements OnInit {
   }
 
   ingredientsDetail() {
-    this.router.navigate(['/ingredients-detail/', this.id]);
+    this.router.navigate(['/ingredient-detail/', this.id]);
   }
 }

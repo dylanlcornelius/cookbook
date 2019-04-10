@@ -4,11 +4,11 @@ import { IngredientService } from '../ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
-  selector: 'app-ingredients-detail',
-  templateUrl: './ingredients-detail.component.html',
-  styleUrls: ['./ingredients-detail.component.css']
+  selector: 'app-ingredient-detail',
+  templateUrl: './ingredient-detail.component.html',
+  styleUrls: ['./ingredient-detail.component.css']
 })
-export class IngredientsDetailComponent implements OnInit {
+export class IngredientDetailComponent implements OnInit {
 
   loading: Boolean = true;
   validationModalParams;
@@ -44,7 +44,7 @@ export class IngredientsDetailComponent implements OnInit {
         self.notificationModalParams = {
           self: self,
           type: Notification.SUCCESS,
-          path: '/ingredients-list',
+          path: '/ingredient-list',
           text: 'Ingredient deleted!'
         };
       }, (err) => {

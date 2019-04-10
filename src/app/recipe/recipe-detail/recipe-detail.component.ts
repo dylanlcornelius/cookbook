@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
-import { IngredientService} from '../../ingredients/ingredient.service';
+import { IngredientService} from '../../ingredient/ingredient.service';
 import { UserService } from '../../user/user.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
-  selector: 'app-recipes-detail',
-  templateUrl: './recipes-detail.component.html',
-  styleUrls: ['./recipes-detail.component.css']
+  selector: 'app-recipe-detail',
+  templateUrl: './recipe-detail.component.html',
+  styleUrls: ['./recipe-detail.component.css']
 })
-export class RecipesDetailComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit {
 
   loading = true;
   validationModalParams;
@@ -76,7 +76,7 @@ export class RecipesDetailComponent implements OnInit {
         self.notificationModalParams = {
           self: self,
           type: Notification.FAILURE,
-          path: '/recipes-list',
+          path: '/recipe-list',
           text: 'Recipe Deleted!'
         };
       }, (err) => {

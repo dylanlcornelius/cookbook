@@ -5,11 +5,11 @@ import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.ser
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
 
 @Component({
-  selector: 'app-recipes-list',
-  templateUrl: './recipes-list.component.html',
-  styleUrls: ['./recipes-list.component.css']
+  selector: 'app-recipe-list',
+  templateUrl: './recipe-list.component.html',
+  styleUrls: ['./recipe-list.component.css']
 })
-export class RecipesListComponent implements OnInit {
+export class RecipeListComponent implements OnInit {
 
   loading: Boolean = true;
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
