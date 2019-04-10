@@ -77,8 +77,9 @@
             </h3>
         
             <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
-                [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="drop($event)" style="margin-bottom: 20px;">
-              <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i=index" cdkDrag [formGroupName]="i">
+                [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
+              <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i=index"
+                  cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
                 <mat-label class="col-6">
                   {{ingredient.get('name')? ingredient.get('name').value : ''}}
                 </mat-label>
@@ -110,8 +111,8 @@
             </h3>
         
             <div class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
-                [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="drop($event)">
-              <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag>
+                [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="dropAvailable($event)">
+              <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag [cdkDragData]="ingredient">
                 <mat-label class="col-12">
                   {{ingredient.name}}
                 </mat-label>

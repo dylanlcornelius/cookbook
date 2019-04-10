@@ -66,9 +66,7 @@ export class RecipesUpdateComponent implements OnInit {
       'steps': this.formBuilder.array([
         this.initStep()
       ]),
-      'ingredients': this.formBuilder.array([
-        this.initIngredient()
-      ])
+      'ingredients': this.formBuilder.array([])
     });
 
     this.recipeService.getRecipe(this.route.snapshot.params['id'])
@@ -83,35 +81,32 @@ export class RecipesUpdateComponent implements OnInit {
         this.ingredientService.getIngredients()
           .subscribe(ingredients => {
             const added = [];
-            ingredients.forEach(ingredient => {
-              let found = false;
-              this.addedIngredients.forEach(addedIngredient => {
+            this.addedIngredients.forEach(addedIngredient => {
+              ingredients.forEach(ingredient => {
                 if (ingredient.id === addedIngredient.id) {
-                  found = true;
                   added.push({
                     id: ingredient.id,
                     name: ingredient.name,
-                    quantity: addedIngredient.quantity || 0,
+                    quantity: addedIngredient.quantity || '',
                     uom: addedIngredient.uom || '',
                   });
+                  ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
                 }
               });
-              if (!found) {
-                this.availableIngredients.push({
-                  id: ingredient.id,
-                  name: ingredient.name,
-                  quantity: '',
-                  uom: '',
-                });
-              }
             });
 
             if (added !== undefined) {
-              for (let i = 1; i < added.length; i++) {
-                this.addIngredient();
+              for (let i = 0; i < added.length; i++) {
+                this.addIngredient(i);
               }
             }
+            this.addedIngredients = added;
 
+            ingredients.forEach(ingredient => {
+              ingredient.quantity = '';
+              ingredient.uom = '';
+            });
+            this.availableIngredients = ingredients;
             this.recipesForm.setValue({
               name: data.name,
               description: data.description,
@@ -143,28 +138,47 @@ export class RecipesUpdateComponent implements OnInit {
     control.removeAt(i);
   }
 
-  // split drop events to convert data to and from control
-  // convert recipe to buyable amount
-  drop(event: CdkDragDrop<string[]>) {
+  dropAdded(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      this.removeIngredient(event.previousIndex);
+      this.addIngredient(event.currentIndex, event.item.data);
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      this.addIngredient(event.currentIndex, event.item.data);
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    }
+  }
+
+  dropAvailable(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.removeIngredient(event.previousIndex);
     }
   }
 
   initIngredient() {
     return this.formBuilder.group({
       id: [null],
-      quantity: ['', [Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      uom: [null],
+      quantity: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      uom: [null, [Validators.required]],
       name: [null],
     });
   }
 
-  addIngredient() {
+  addIngredient(index, data?) {
     const control = <FormArray>this.recipesForm.controls['ingredients'];
-    control.push(this.initIngredient());
+    const ingredientControl = this.initIngredient();
+    if (data) {
+      ingredientControl.setValue({
+        id: data.id,
+        name: data.name,
+        quantity: data.quantity,
+        uom: data.uom,
+      });
+    }
+    control.insert(index, ingredientControl);
   }
 
   removeIngredient(i: number) {
