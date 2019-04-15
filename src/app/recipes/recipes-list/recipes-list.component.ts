@@ -3,6 +3,8 @@ import { RecipeService } from '../recipe.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
+import { UOM, UOMConversion } from 'src/app/ingredients/uom.emun';
+import { IngredientService } from 'src/app/ingredients/ingredient.service';
 
 @Component({
   selector: 'app-recipes-list',
@@ -14,12 +16,14 @@ export class RecipesListComponent implements OnInit {
   loading: Boolean = true;
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource = [];
-  userIngredient: UserIngredient;
+  userIngredient;
 
   constructor(
     private cookieService: CookieService,
     private recipeService: RecipeService,
-    private userIngredientService: UserIngredientService
+    private userIngredientService: UserIngredientService,
+    private ingredientService: IngredientService,
+    private uomConversion: UOMConversion,
   ) { }
 
   ngOnInit() {
@@ -28,12 +32,24 @@ export class RecipesListComponent implements OnInit {
     this.recipeService.getRecipes().subscribe(recipes => {
       this.userIngredientService.getUserIngredients(uid).subscribe(userIngredient => {
         this.userIngredient = userIngredient;
-        this.dataSource = recipes;
-        recipes.forEach(recipe => {
-          recipe.count = this.getRecipeCount(recipe.id);
+        this.ingredientService.getIngredients().subscribe(ingredients => {
+          ingredients.forEach(ingredient => {
+            if (userIngredient.ingredients) {
+              userIngredient.ingredients.forEach(myIngredient => {
+                if (ingredient.id === myIngredient.id) {
+                  myIngredient.uom = ingredient.uom;
+                }
+              });
+            }
+          });
+          console.log(this.userIngredient);
+          this.dataSource = recipes;
+          recipes.forEach(recipe => {
+            recipe.count = this.getRecipeCount(recipe.id);
+          });
+          this.dataSource = recipes;
+          this.loading = false;
         });
-        this.dataSource = recipes;
-        this.loading = false;
       });
     });
   }
@@ -63,13 +79,18 @@ export class RecipesListComponent implements OnInit {
     return Math.floor(recipeCount);
   }
 
+  // do conversions to buyable amounts on add and remove
+  // how to tick up to buyable amount?
   removeIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
+    console.log(currentRecipe);
     if (currentRecipe.count > 0 && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         this.userIngredient.ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            ingredient.pantryQuantity -= Number(recipeIngredient.quantity);
+            console.log('here');
+            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+            ingredient.pantryQuantity -= value;
           }
         });
       });
@@ -88,7 +109,10 @@ export class RecipesListComponent implements OnInit {
         let hasIngredient = false;
         myIngredients.ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            ingredient.cartQuantity += Number(recipeIngredient.quantity);
+            console.log('hi');
+            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+            console.log(value);
+            ingredient.cartQuantity += value;
             hasIngredient = true;
           }
         });
