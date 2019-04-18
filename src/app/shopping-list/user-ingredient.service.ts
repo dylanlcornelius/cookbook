@@ -4,7 +4,7 @@ import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
 import { ActionService } from 'src/app/profile/action.service';
 import { Action } from '../profile/action.enum';
-import { UserIngredient } from './user-ingredient.modal';
+import { UserIngredient } from './user-ingredient.model';
 import { Observable } from 'rxjs';
 
 @Injectable({

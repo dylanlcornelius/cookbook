@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../recipe.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
-import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
-import { UOM, UOMConversion } from 'src/app/ingredients/uom.emun';
+import { UOMConversion } from 'src/app/ingredients/uom.emun';
 import { IngredientService } from 'src/app/ingredients/ingredient.service';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-recipes-list',
@@ -14,6 +14,8 @@ import { IngredientService } from 'src/app/ingredients/ingredient.service';
 export class RecipesListComponent implements OnInit {
 
   loading: Boolean = true;
+  notificationModalParams;
+
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource = [];
   userIngredient;
@@ -28,21 +30,26 @@ export class RecipesListComponent implements OnInit {
 
   ngOnInit() {
     const uid = this.cookieService.get('LoggedIn');
-    const myRecipes = [];
     this.recipeService.getRecipes().subscribe(recipes => {
       this.userIngredientService.getUserIngredients(uid).subscribe(userIngredient => {
         this.userIngredient = userIngredient;
         this.ingredientService.getIngredients().subscribe(ingredients => {
           ingredients.forEach(ingredient => {
-            if (userIngredient.ingredients) {
-              userIngredient.ingredients.forEach(myIngredient => {
-                if (ingredient.id === myIngredient.id) {
-                  myIngredient.uom = ingredient.uom;
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (ingredient.id === myIngredient.id) {
+                myIngredient.uom = ingredient.uom;
+                myIngredient.amount = ingredient.amount;
+              }
+            });
+
+            recipes.forEach(recipe => {
+              recipe.ingredients.forEach(recipeIngredient => {
+                if (ingredient.id === recipeIngredient.id) {
+                  recipeIngredient.amount = ingredient.amount;
                 }
               });
-            }
+            });
           });
-          console.log(this.userIngredient);
           this.dataSource = recipes;
           recipes.forEach(recipe => {
             recipe.count = this.getRecipeCount(recipe.id);
@@ -58,15 +65,24 @@ export class RecipesListComponent implements OnInit {
     let recipeCount: number;
     let ingredientCount = 0;
     const recipe = this.dataSource.find(x => x.id === id);
-    if (!recipe.ingredients || !(this.userIngredient && this.userIngredient.ingredients)) {
+    if (recipe.ingredients.length === 0 || this.userIngredient.ingredients.length === 0) {
       return 0;
     }
     recipe.ingredients.forEach(recipeIngredient => {
       this.userIngredient.ingredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
           ingredientCount++;
-          if (Number(ingredient.pantryQuantity) / Number(recipeIngredient.quantity) < recipeCount || recipeCount === undefined) {
-            recipeCount = Number(ingredient.pantryQuantity) / Number(recipeIngredient.quantity);
+          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+          if (value) {
+            if (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined) {
+              recipeCount = Number(ingredient.pantryQuantity) / Number(value);
+            }
+          } else {
+            this.notificationModalParams = {
+              self: self,
+              type: Notification.FAILURE,
+              text: 'Error calculating measurements!'
+            };
           }
         }
       });
@@ -79,18 +95,22 @@ export class RecipesListComponent implements OnInit {
     return Math.floor(recipeCount);
   }
 
-  // do conversions to buyable amounts on add and remove
-  // how to tick up to buyable amount?
   removeIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
-    console.log(currentRecipe);
     if (currentRecipe.count > 0 && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         this.userIngredient.ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            console.log('here');
             const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-            ingredient.pantryQuantity -= value;
+            if (value) {
+              ingredient.pantryQuantity -= Number(value);
+            } else {
+              this.notificationModalParams = {
+                self: self,
+                type: Notification.FAILURE,
+                text: 'Error calculating measurements!'
+              };
+            }
           }
         });
       });
@@ -104,23 +124,28 @@ export class RecipesListComponent implements OnInit {
   addIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
     if (currentRecipe.ingredients) {
-      const myIngredients = this.userIngredient;
       currentRecipe.ingredients.forEach(recipeIngredient => {
         let hasIngredient = false;
-        myIngredients.ingredients.forEach(ingredient => {
+        this.userIngredient.ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            console.log('hi');
             const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-            console.log(value);
-            ingredient.cartQuantity += value;
+            if (value) {
+              ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
+            } else {
+              this.notificationModalParams = {
+                self: self,
+                type: Notification.FAILURE,
+                text: 'Error calculating measurements!'
+              };
+            }
             hasIngredient = true;
           }
         });
         if (!hasIngredient) {
-          myIngredients.ingredients.push({
+          this.userIngredient.ingredients.push({
             id: String(recipeIngredient.id),
             pantryQuantity: 0,
-            cartQuantity: Number(recipeIngredient.quantity)
+            cartQuantity: Number(recipeIngredient.amount)
           });
         }
       });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IngredientService } from '../ingredient.service';
-import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
+import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
 

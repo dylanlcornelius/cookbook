@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserIngredientService } from '../../shopping-list/user-ingredient.service';
 import { IngredientService } from '../../ingredients/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { UserIngredient } from '../user-ingredient.modal';
+import { UserIngredient } from '../user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
