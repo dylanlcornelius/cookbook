@@ -18,7 +18,8 @@ import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: 'home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'recipe-list', component: RecipeListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'recipe-detail/:id', component: RecipeDetailComponent, canActivate: [LoginGuard, UserPendingGuard]},

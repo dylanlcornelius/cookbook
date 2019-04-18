@@ -70,7 +70,6 @@ import { ProfileComponent } from './profile/profile/profile.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,

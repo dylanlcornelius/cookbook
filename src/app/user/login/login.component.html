@@ -1,11 +1,16 @@
-<div class="d-flex justify-content-center">
-  <h4>Welcome to the Cookbook</h4>
-</div>
-<br/>
-<br/>
+<app-loading-modal *ngIf="redirect && isLoggedIn"></app-loading-modal>
 
-<div class="d-flex justify-content-center">
-  <div (click)="signIn()">
-    <img draggable="false" src="../../../assets/btn_google_signin_light_normal_web.png"/>
+<div *ngIf="!(redirect && isLoggedIn)">
+  <div class="d-flex justify-content-center">
+    <h4>Welcome to the Cookbook</h4>
+  </div>
+  <br/>
+  <br/>
+  
+  <div class="d-flex justify-content-center">
+    <div (click)="signIn()">
+      <img draggable="false" src="../../../assets/btn_google_signin_light_normal_web.png"/>
+    </div>
   </div>
 </div>
+

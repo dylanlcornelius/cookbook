@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center header">
   <div class="navbar">
-    <a routerLink="/" class="title"> {{title}} </a>
-    <span *ngIf="(isLoggedIn | async) && !(isPending | async)" class="title-bar">
+    <a routerLink="/home" class="title"> {{title}} </a>
+    <span *ngIf="(isLoggedIn | async) && !(isPending | async)" class="title-bar" [@fadeInAnimation]>
       <span *ngIf="isAdmin | async" class="title-btn">
           <label routerLink="/admin-dashboard">
             <mat-icon> apps </mat-icon>
@@ -11,9 +11,9 @@
 
     <div style="clear: both;"></div>
 
-    <div *ngIf="(isLoggedIn | async) && !(isPending | async)">
+    <div *ngIf="(isLoggedIn | async) && !(isPending | async)" [@fadeInAnimation]>
 
-      <a mat-button class="btn btn-dark" routerLink="/">Home</a>
+      <a mat-button class="btn btn-dark" routerLink="/home">Home</a>
       <a mat-button class="btn btn-dark" routerLink="/recipe-list">Recipes</a>
       <a mat-button class="btn btn-dark" routerLink="/ingredient-list">Ingredients</a>
       <a mat-button class="btn btn-dark" routerLink="/shopping-list">Shopping List</a>
