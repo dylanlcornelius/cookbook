@@ -27,6 +27,7 @@ export class UserService {
   }
 
   checkIsPending() {
+    console.log(this.currentUser);
     if (this.currentUser) {
       return this.currentUser.role === 'pending';
     }
@@ -78,6 +79,7 @@ export class UserService {
   // }
 
   postUser(data: User): Observable<User> {
+    console.log(data.getObject());
     return new Observable((observer) => {
       this.ref.add(data.getObject()).then((doc) => {
         observer.next(new User(doc.id, data.uid || '', data.firstName || '', data.lastName || '', data.role || ''));
