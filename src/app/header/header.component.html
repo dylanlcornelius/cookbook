@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center header">
-  <div class="navbar" >
-    <a routerLink="/" class="title"> {{title}} </a>
-    <span *ngIf="(isLoggedIn | async) && !(isPending | async)" class="title-bar">
+  <div class="navbar">
+    <a routerLink="/home" class="title"> {{title}} </a>
+    <span *ngIf="(isLoggedIn | async) && !(isPending | async)" class="title-bar" [@fadeInAnimation]>
       <span *ngIf="isAdmin | async" class="title-btn">
           <label routerLink="/admin-dashboard">
             <mat-icon> apps </mat-icon>
@@ -11,16 +11,16 @@
 
     <div style="clear: both;"></div>
 
-    <div *ngIf="(isLoggedIn | async) && !(isPending | async)">
+    <div *ngIf="(isLoggedIn | async) && !(isPending | async)" [@fadeInAnimation]>
 
-      <a routerLink="/" class="btn btn-dark">Home</a>
-      <a routerLink="/recipes-list" class="btn btn-dark">Recipes</a>
-      <a routerLink="/ingredients-list" class="btn btn-dark">Ingredients</a>
-      <a routerLink="/shopping-list" class="btn btn-dark">Shopping List</a>
-      <a routerLink="/about" class="btn btn-dark">About</a>
-      <!-- <a routerLink="/user-profile" class="btn btn-dark">My Profile</a> -->
+      <a mat-button class="btn btn-dark" routerLink="/home">Home</a>
+      <a mat-button class="btn btn-dark" routerLink="/recipe-list">Recipes</a>
+      <a mat-button class="btn btn-dark" routerLink="/ingredient-list">Ingredients</a>
+      <a mat-button class="btn btn-dark" routerLink="/shopping-list">Shopping List</a>
+      <a mat-button class="btn btn-dark" routerLink="/about">About</a>
+      <!-- <a mat-button routerLink="/user-profile" class="btn btn-dark">My Profile</a> -->
       
-      <button (click)="signOut()" class="btn btn-dark">Sign-out</button>
+      <button mat-button class="btn btn-dark" (click)="signOut()">Sign-out</button>
     </div>
   </div>
 </div>

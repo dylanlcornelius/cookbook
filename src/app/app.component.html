@@ -2,8 +2,8 @@
 	<app-header></app-header>
 
 	<div class="d-flex justify-content-center">
-		<section class="content">
-			<router-outlet></router-outlet>
+		<section class="content" [@fadeComponentAnimation]="routeTransition(outlet)">
+			<router-outlet #outlet="outlet"></router-outlet>
 		</section>
 	</div>
 

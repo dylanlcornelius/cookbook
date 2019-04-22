@@ -1,0 +1,77 @@
+<app-loading-modal *ngIf="loading"></app-loading-modal>
+<app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+<app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
+
+<div *ngIf="!loading">
+  <div class="button-row">
+    <a mat-fab color="primary" [routerLink]="['/recipe-list']"><mat-icon>list</mat-icon></a>
+  </div>
+
+  <mat-card class="detail-card">
+    <mat-card-header class="d-flex justify-content-center">
+      <mat-card-title class="d-flex justify-content-center">
+        <h2> {{recipe.name}} </h2>
+      </mat-card-title>
+      <mat-card-subtitle class="d-flex justify-content-center">
+        <dd> {{recipe.description}} </dd>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <div class="row">
+      <mat-card-content class="col-sm-4 d-flex justify-content-center">
+        <dl>
+          <!-- put in <mat-card-footer>?
+          <dt> User </dt>
+          <dd> by {{user.firstName}} {{ user.lastName }} </dd> -->
+
+          <dt> Preparation Time </dt>
+          <dd> {{recipe.time || "No Preparation Time"}} {{ recipe.time ? 'minutes' : ''}}  </dd>
+
+          <dt> Servings </dt>
+          <dd> {{recipe.servings || "No Servings"}} </dd>
+
+          <dt> Calories </dt>
+          <dd> {{recipe.calories || "No Calories"}} </dd>
+
+          <dt> Quantity </dt>
+          <dd> {{recipe.quantity || "No Quantity"}} </dd>
+        </dl>
+      </mat-card-content>
+
+      <mat-card-content class="col-sm-4 d-flex justify-content-center"> 
+        <dl>
+          <dt> Directions </dt>
+
+          <div *ngFor="let step of recipe.steps; let i = index">
+              <span class="step-header"> Step: {{i+1}} </span>
+              <dd> {{step.step || "No Steps"}} </dd>
+          </div>
+        </dl>
+      </mat-card-content>
+
+      <mat-card-content class="col-sm-4 d-flex justify-content-center">
+        <dl>
+          <dt> Ingredients </dt>
+
+          <div  class="list">
+            <div class="box" *ngFor="let ingredient of ingredients">
+                {{ingredient.quantity}}  {{ingredient.uom === 'other'? '' : ingredient.uom}} - {{ingredient.name}}
+            </div>
+            <div class="box" *ngIf="ingredients == null || ingredients.length == 0">
+              No Ingredients
+            </div>
+          </div>
+        </dl>
+      </mat-card-content>
+    </div>
+
+    <mat-card-actions class="d-flex justify-content-between">
+      <a mat-fab color="primary" [routerLink]="['/recipe-edit/', recipe.id]">
+        <mat-icon> edit </mat-icon>
+      </a>
+      <a mat-fab color="warn" (click)="deleteRecipe(recipe.id)">
+        <mat-icon> delete </mat-icon>
+      </a>
+    </mat-card-actions>
+  </mat-card>
+</div>

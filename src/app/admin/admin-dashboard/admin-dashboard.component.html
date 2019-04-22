@@ -1,14 +1,14 @@
 <app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
 <app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <h2>
     Configurations
   </h2>
 </div>
 <br/>
 <div class="table-container mat-elevation-z8">
-  <button class="btn btn-success btn-block" (click)="addConfig()">
+  <button mat-button class="btn btn-success btn-block" (click)="addConfig()">
     Add
   </button>
   <table mat-table #table [dataSource]="configsDataSource">
@@ -50,7 +50,7 @@
 </div>
 <br/>
 
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <h2>
     Users
   </h2>
@@ -110,17 +110,17 @@
 <br/>
 
 <div class="row" style="float: right;">
-  <button class="btn btn-warning" (click)="revert()" style="width: 100px;">
+  <button mat-button class="btn btn-warning" (click)="revert()" style="width: 100px;">
     Revert
   </button>
-  <button class="btn btn-primary" (click)="save()" style="width: 100px;">
+  <button mat-button class="btn btn-primary" (click)="save()" style="width: 100px;">
     Save
   </button>
 </div>
 
 
 
-<!-- <div class="row justify-content-center">
+<!-- <div class="d-flex justify-content-center">
   <h2>
     Users
   </h2>
@@ -151,7 +151,7 @@
 </div>
 <br/>
 
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <h2>
     Recipes
   </h2>
@@ -177,7 +177,7 @@
 </div>
 <br/>
 
-<div class="row justify-content-center">
+<div class="d-flex justify-content-center">
   <h2>
     Ingredients
   </h2>

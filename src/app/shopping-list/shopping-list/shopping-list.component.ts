@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserIngredientService } from '../../shopping-list/user-ingredient.service';
-import { IngredientService } from '../../ingredients/ingredient.service';
+import { IngredientService } from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../user-ingredient.modal';
 import { MatTableDataSource } from '@angular/material';
