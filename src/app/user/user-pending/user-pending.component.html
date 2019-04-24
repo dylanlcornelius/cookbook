@@ -1,3 +1,13 @@
-<div class="d-flex justify-content-center" *ngIf="isPending | async">
-  <span>Your new user account is pending and will be confirmed shortly!</span>
+<app-loading-modal *ngIf="!(isPending | async)"></app-loading-modal>
+
+<div *ngIf="isPending | async">
+  <div class="d-flex justify-content-center">
+    <span>Your new user account is pending and will be confirmed shortly!</span>
+  </div>
+  <br/>
+  <br/>
+
+  <div class="d-flex justify-content-center">
+    <button mat-button class="btn btn-dark" (click)="signOut()">Sign-out</button>
+  </div>
 </div>

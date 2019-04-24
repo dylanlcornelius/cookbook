@@ -23,6 +23,13 @@ export class AuthService {
   private pending = new BehaviorSubject<boolean>(true);
 
 
+  test: boolean;
+  get isTest() { return new BehaviorSubject<boolean>(this.test).asObservable; }
+
+  // pending guard is always routing because pending is true
+  // must be observables... so must be behaviorsubjects
+  // pending cookie?
+
   get User() { return this.user; }
   get isLoggedIn() { return this.loggedIn.asObservable(); }
   get isAdmin() { return this.admin.asObservable(); }
@@ -44,6 +51,7 @@ export class AuthService {
             this.userService.CurrentUser = current;
             this.admin.next(this.userService.isAdmin);
             this.pending.next(this.userService.isPending);
+            console.log(this.userService.isPending);
             if (this.redirectUrl) {
               this.router.navigate([this.redirectUrl]);
             }

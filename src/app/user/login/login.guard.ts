@@ -23,7 +23,10 @@ export class LoginGuard implements CanActivate {
           if (isLoggedIn) {
             return true;
           }
-          // this.authService.redirectUrl = state.url;
+          console.log(state.url);
+          if (state.url === '/user-pending') {
+            this.authService.redirectUrl = state.url;
+          }
 
           this.router.navigate(['/login']);
           return false;

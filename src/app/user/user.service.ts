@@ -39,7 +39,7 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(new User(doc.id, data.uid || '', data.firstName || '', data.lastName || '', data.role || ''));
+          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
         });
         observer.next(users);
       });
@@ -52,7 +52,7 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(new User(doc.id, data.uid || '', data.firstName || '', data.lastName || '', data.role || ''));
+          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
         });
         // return only the first user
         observer.next(users[0]);
@@ -82,7 +82,7 @@ export class UserService {
     console.log(data.getObject());
     return new Observable((observer) => {
       this.ref.add(data.getObject()).then((doc) => {
-        observer.next(new User(doc.id, data.uid || '', data.firstName || '', data.lastName || '', data.role || ''));
+        observer.next(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
       });
     });
   }
