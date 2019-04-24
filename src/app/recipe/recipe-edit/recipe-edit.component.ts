@@ -13,6 +13,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { IngredientService} from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ErrorStateMatcher } from '@angular/material';
+import { UOM } from 'src/app/ingredients/uom.emun';
 
 class ErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -42,6 +43,8 @@ export class RecipeEditComponent implements OnInit {
   addedIngredients = [];
   availableIngredients = [];
 
+  uoms: Array<UOM>;
+
   matcher = new ErrorMatcher();
 
   constructor(
@@ -51,7 +54,9 @@ export class RecipeEditComponent implements OnInit {
     private cookieService: CookieService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
-  ) { }
+  ) {
+    this.uoms = Object.values(UOM);
+  }
 
   ngOnInit() {
     this.recipesForm = this.formBuilder.group({
@@ -62,60 +67,63 @@ export class RecipeEditComponent implements OnInit {
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'steps': this.formBuilder.array([
         this.initStep()
-      ])
+      ]),
+      'ingredients': this.formBuilder.array([])
     });
 
     if (this.route.snapshot.params['id']) {
-    this.recipeService.getRecipe(this.route.snapshot.params['id'])
-      .subscribe(data => {
-        this.id = data.id;
-        if (data.steps !== undefined) {
-          for (let i = 1; i < data.steps.length; i++) {
-            this.addStep();
+      this.recipeService.getRecipe(this.route.snapshot.params['id'])
+        .subscribe(data => {
+          this.id = data.id;
+          if (data.steps !== undefined) {
+            for (let i = 1; i < data.steps.length; i++) {
+              this.addStep();
+            }
           }
-        }
-        this.addedIngredients = data.ingredients;
-        this.recipesForm.setValue({
-          name: data.name,
-          description: data.description,
-          time: data.time,
-          servings: data.servings,
-          calories: data.calories,
-          steps: data.steps
-        });
-
-        this.ingredientService.getIngredients()
-          .subscribe(ingredients => {
-            const added = [];
-            ingredients.forEach(ingredient => {
-              let found = false;
+          this.addedIngredients = data.ingredients;
+          this.ingredientService.getIngredients()
+            .subscribe(ingredients => {
+              const added = [];
               this.addedIngredients.forEach(addedIngredient => {
-                if (ingredient.id === addedIngredient.id) {
-                  found = true;
-                  added.push({
-                    id: ingredient.id,
-                    name: ingredient.name,
-                    amount: ingredient.amount,
-                    uom: ingredient.uom,
-                    quantity: addedIngredient.quantity
-                  });
-                }
-              });
-              if (!found) {
-                this.availableIngredients.push({
-                  id: ingredient.id,
-                  name: ingredient.name,
-                  amount: ingredient.amount,
-                  uom: ingredient.uom,
-                  quantity: 0
+                ingredients.forEach(ingredient => {
+                  if (ingredient.id === addedIngredient.id) {
+                    added.push({
+                      id: ingredient.id,
+                      name: ingredient.name,
+                      quantity: addedIngredient.quantity || '',
+                      uom: addedIngredient.uom || '',
+                    });
+                    ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
+                  }
                 });
+              });
+
+              if (added !== undefined) {
+                for (let i = 0; i < added.length; i++) {
+                  this.addIngredient(i);
+                }
               }
+              this.addedIngredients = added;
+              this.recipesForm.setValue({
+                name: data.name,
+                description: data.description,
+                time: data.time,
+                servings: data.servings,
+                calories: data.calories,
+                steps: data.steps,
+                ingredients: added,
+              });
+
+              ingredients.forEach(ingredient => {
+                ingredient.quantity = '';
+                ingredient.uom = '';
+              });
+              this.availableIngredients = ingredients;
+
+              this.title = 'Edit a Recipe';
+              this.loading = false;
             });
-            this.addedIngredients = added;
-            this.title = 'Edit a Recipe';
-            this.loading = false;
-          });
-      });
+        });
     } else {
       this.ingredientService.getIngredients()
         .subscribe(ingredients => {
@@ -128,10 +136,10 @@ export class RecipeEditComponent implements OnInit {
               quantity: 0
             });
           });
+
+          this.title = 'Add a new Recipe';
           this.loading = false;
         });
-      this.title = 'Add a new Recipe';
-      this.loading = false;
     }
   }
 
@@ -151,30 +159,58 @@ export class RecipeEditComponent implements OnInit {
     control.removeAt(i);
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  dropAdded(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
+      this.removeIngredient(event.previousIndex);
+      this.addIngredient(event.currentIndex, event.item.data);
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
+      this.addIngredient(event.currentIndex, event.item.data);
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
   }
 
-  removeIngredient(id) {
-    const data = this.addedIngredients.find(x => x.id === id);
-    if (data.quantity > 0) {
-      data.quantity = Number(data.quantity) - Number(data.amount);
+  dropAvailable(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.removeIngredient(event.previousIndex);
     }
   }
 
-  addIngredient(id) {
-    const data = this.addedIngredients.find(x => x.id === id);
-    data.quantity = Number(data.quantity) + Number(data.amount);
+  initIngredient() {
+    return this.formBuilder.group({
+      id: [null],
+      quantity: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      uom: [null, [Validators.required]],
+      name: [null],
+    });
+  }
+
+  addIngredient(index, data?) {
+    const control = <FormArray>this.recipesForm.controls['ingredients'];
+    const ingredientControl = this.initIngredient();
+    if (data) {
+      ingredientControl.setValue({
+        id: data.id,
+        name: data.name,
+        quantity: data.quantity,
+        uom: data.uom,
+      });
+    }
+    control.insert(index, ingredientControl);
+  }
+
+  removeIngredient(i: number) {
+    const control = <FormArray>this.recipesForm.controls['ingredients'];
+    control.removeAt(i);
   }
 
   submitForm() {
-    this.recipesForm.addControl(
-      'ingredients', new FormArray(this.addedIngredients.map(c => new FormControl({id: c.id, quantity: c.quantity})))
-    );
+    Object.values((<FormGroup> this.recipesForm.get('ingredients')).controls).forEach((ingredient: FormGroup) => {
+      ingredient.removeControl('name');
+    });
     this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
     this.onFormSubmit(this.recipesForm.value);
   }

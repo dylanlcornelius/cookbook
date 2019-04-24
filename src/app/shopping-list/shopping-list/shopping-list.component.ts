@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserIngredientService } from '../../shopping-list/user-ingredient.service';
 import { IngredientService } from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { UserIngredient } from '../user-ingredient.modal';
+import { UserIngredient } from '../user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
@@ -121,7 +121,7 @@ export class ShoppingListComponent implements OnInit {
     });
     self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length);
     self.applyFilter();
-    this.notificationModalParams = {
+    self.notificationModalParams = {
       self: self,
       type: Notification.SUCCESS,
       text: 'Ingredients added!'

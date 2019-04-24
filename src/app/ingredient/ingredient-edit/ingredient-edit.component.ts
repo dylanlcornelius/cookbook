@@ -33,7 +33,7 @@ export class IngredientEditComponent implements OnInit {
   name: string;
   category: string;
   amount: string;
-  uom: Array<UOM>;
+  uoms: Array<UOM>;
   calories: number;
 
   matcher = new ErrorMatcher();
@@ -43,7 +43,7 @@ export class IngredientEditComponent implements OnInit {
     private ingredientService: IngredientService,
     private formBuilder: FormBuilder
   ) {
-    this.uom = Object.values(UOM);
+    this.uoms = Object.values(UOM);
   }
 
   ngOnInit() {

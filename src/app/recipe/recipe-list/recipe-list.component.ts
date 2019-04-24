@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../recipe.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
-import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
+import { UOMConversion } from 'src/app/ingredients/uom.emun';
+import { IngredientService } from 'src/app/ingredients/ingredient.service';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
 
 @Component({
   selector: 'app-recipe-list',
@@ -12,28 +15,52 @@ import { UserIngredient } from 'src/app/shopping-list/user-ingredient.modal';
 export class RecipeListComponent implements OnInit {
 
   loading: Boolean = true;
+  notificationModalParams;
+
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource = [];
-  userIngredient: UserIngredient;
+  uid: string;
+  id: string;
+  userIngredients;
 
   constructor(
     private cookieService: CookieService,
     private recipeService: RecipeService,
-    private userIngredientService: UserIngredientService
+    private userIngredientService: UserIngredientService,
+    private ingredientService: IngredientService,
+    private uomConversion: UOMConversion,
   ) { }
 
   ngOnInit() {
-    const uid = this.cookieService.get('LoggedIn');
-    const myRecipes = [];
+    this.uid = this.cookieService.get('LoggedIn');
     this.recipeService.getRecipes().subscribe(recipes => {
-      this.userIngredientService.getUserIngredients(uid).subscribe(userIngredient => {
-        this.userIngredient = userIngredient;
-        this.dataSource = recipes;
-        recipes.forEach(recipe => {
-          recipe.count = this.getRecipeCount(recipe.id);
+      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+        this.id = userIngredient.id;
+        this.userIngredients = userIngredient.ingredients;
+        this.ingredientService.getIngredients().subscribe(ingredients => {
+          ingredients.forEach(ingredient => {
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (ingredient.id === myIngredient.id) {
+                myIngredient.uom = ingredient.uom;
+                myIngredient.amount = ingredient.amount;
+              }
+            });
+
+            recipes.forEach(recipe => {
+              recipe.ingredients.forEach(recipeIngredient => {
+                if (ingredient.id === recipeIngredient.id) {
+                  recipeIngredient.amount = ingredient.amount;
+                }
+              });
+            });
+          });
+          this.dataSource = recipes;
+          recipes.forEach(recipe => {
+            recipe.count = this.getRecipeCount(recipe.id);
+          });
+          this.dataSource = recipes;
+          this.loading = false;
         });
-        this.dataSource = recipes;
-        this.loading = false;
       });
     });
   }
@@ -42,15 +69,24 @@ export class RecipeListComponent implements OnInit {
     let recipeCount: number;
     let ingredientCount = 0;
     const recipe = this.dataSource.find(x => x.id === id);
-    if (!recipe.ingredients || !(this.userIngredient && this.userIngredient.ingredients)) {
+    if (recipe.ingredients.length === 0 || this.userIngredients.length === 0) {
       return 0;
     }
     recipe.ingredients.forEach(recipeIngredient => {
-      this.userIngredient.ingredients.forEach(ingredient => {
+      this.userIngredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
           ingredientCount++;
-          if (Number(ingredient.pantryQuantity) / Number(recipeIngredient.quantity) < recipeCount || recipeCount === undefined) {
-            recipeCount = Number(ingredient.pantryQuantity) / Number(recipeIngredient.quantity);
+          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+          if (value) {
+            if (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined) {
+              recipeCount = Number(ingredient.pantryQuantity) / Number(value);
+            }
+          } else {
+            this.notificationModalParams = {
+              self: self,
+              type: Notification.FAILURE,
+              text: 'Error calculating measurements!'
+            };
           }
         }
       });
@@ -63,17 +99,34 @@ export class RecipeListComponent implements OnInit {
     return Math.floor(recipeCount);
   }
 
+  packageData() {
+    const data = [];
+    this.userIngredients.forEach(d => {
+      data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
+    });
+    return new UserIngredient(this.uid, data, this.id);
+  }
+
   removeIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
     if (currentRecipe.count > 0 && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
-        this.userIngredient.ingredients.forEach(ingredient => {
+        this.userIngredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            ingredient.pantryQuantity -= Number(recipeIngredient.quantity);
+            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+            if (value) {
+              ingredient.pantryQuantity -= Number(value);
+            } else {
+              this.notificationModalParams = {
+                self: self,
+                type: Notification.FAILURE,
+                text: 'Error calculating measurements!'
+              };
+            }
           }
         });
       });
-      this.userIngredientService.putUserIngredient(this.userIngredient);
+      this.userIngredientService.putUserIngredient(this.packageData());
       this.dataSource.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
@@ -83,27 +136,40 @@ export class RecipeListComponent implements OnInit {
   addIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
     if (currentRecipe.ingredients) {
-      const myIngredients = this.userIngredient;
       currentRecipe.ingredients.forEach(recipeIngredient => {
         let hasIngredient = false;
-        myIngredients.ingredients.forEach(ingredient => {
+        this.userIngredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            ingredient.cartQuantity += Number(recipeIngredient.quantity);
+            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+            if (value) {
+              ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
+            } else {
+              this.notificationModalParams = {
+                self: self,
+                type: Notification.FAILURE,
+                text: 'Error calculating measurements!'
+              };
+            }
             hasIngredient = true;
           }
         });
         if (!hasIngredient) {
-          myIngredients.ingredients.push({
+          this.userIngredients.push({
             id: String(recipeIngredient.id),
             pantryQuantity: 0,
-            cartQuantity: Number(recipeIngredient.quantity)
+            cartQuantity: Number(recipeIngredient.amount)
           });
         }
       });
-      this.userIngredientService.putUserIngredient(this.userIngredient);
+      this.userIngredientService.putUserIngredient(this.packageData());
       this.dataSource.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
     }
+    this.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Ingredients added to cart'
+    };
   }
 }

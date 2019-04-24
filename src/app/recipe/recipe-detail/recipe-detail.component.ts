@@ -42,13 +42,13 @@ export class RecipeDetailComponent implements OnInit {
           }
           this.ingredientService.getIngredients()
           .subscribe(allIngredients => {
-            allIngredients.forEach(ingredient => {
-              data.ingredients.forEach(recipeIngredient => {
+            data.ingredients.forEach(recipeIngredient => {
+              allIngredients.forEach(ingredient => {
                 if (recipeIngredient.id === ingredient.id) {
                   this.ingredients.push({
                     id: ingredient.id,
                     name: ingredient.name,
-                    uom: ingredient.uom,
+                    uom: recipeIngredient.uom,
                     quantity: recipeIngredient.quantity
                   });
                 }
@@ -75,7 +75,7 @@ export class RecipeDetailComponent implements OnInit {
       .subscribe(res => {
         self.notificationModalParams = {
           self: self,
-          type: Notification.FAILURE,
+          type: Notification.SUCCESS,
           path: '/recipe-list',
           text: 'Recipe Deleted!'
         };
