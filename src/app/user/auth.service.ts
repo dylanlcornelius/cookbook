@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../admin/config.service';
 import { ActionService } from 'src/app/profile/action.service';
 import { Action } from '../profile/action.enum';
+import { User } from './user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,6 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
   private admin = new BehaviorSubject<boolean>(false);
   private pending = new BehaviorSubject<boolean>(true);
-
 
   get User() { return this.user; }
   get isLoggedIn() { return this.loggedIn.asObservable(); }
@@ -84,12 +84,13 @@ export class AuthService {
         self.userService.CurrentUser = currentUser;
         self.finishLogin(self, currentUser);
       } else {
-        self.userService.postUser({uid: self.user.uid, firstName: '', lastName: '', role: 'pending'})
+        self.userService.postUser(new User(self.user.uid, '', '', 'pending'))
         .subscribe(current => self.finishLogin(self, current));
       }
   }
 
   finishLogin(self, currentUser) {
+    this.userService.CurrentUser = currentUser;
     this.admin.next(this.userService.isAdmin);
     this.pending.next(this.userService.isPending);
 

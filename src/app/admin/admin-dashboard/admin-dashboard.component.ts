@@ -149,6 +149,7 @@ export class AdminDashboardComponent implements OnInit {
 
   saveEvent = function(self) {
     self.configService.putConfigs(self.configsDataSource);
+    // TODO: use model
     self.userService.putUsers(self.usersDataSource);
     self.notificationModalParams = {
       self: this,
