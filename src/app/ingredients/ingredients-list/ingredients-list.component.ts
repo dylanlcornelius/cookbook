@@ -12,6 +12,8 @@ import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.ser
 export class IngredientsListComponent implements OnInit {
 
   loading = true;
+  ingredientModalParams;
+
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
   dataSource = [];
   uid: string;
@@ -27,11 +29,11 @@ export class IngredientsListComponent implements OnInit {
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
     const myIngredients = [];
-    this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
-      this.id = userIngredients.id;
+    this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+      this.id = userIngredient.id;
       this.ingredientService.getIngredients().subscribe(ingredients => {
         ingredients.forEach(ingredient => {
-          userIngredients.ingredients.forEach(myIngredient => {
+          userIngredient.ingredients.forEach(myIngredient => {
             if (myIngredient.id === ingredient.id) {
               ingredient.pantryQuantity = myIngredient.pantryQuantity;
               ingredient.cartQuantity = myIngredient.cartQuantity;
@@ -51,12 +53,31 @@ export class IngredientsListComponent implements OnInit {
     });
   }
 
-  packageData() {
+  editIngredient(id) {
+    let data = this.userIngredients.find(x => x.id === id);
+    const ingredient = this.dataSource.find(x => x.id === id);
+    if (!data) {
+      this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: 0});
+      data = this.userIngredients.find(x => x.id === id);
+    }
+    this.ingredientModalParams = {
+      function: this.editIngredientEvent,
+      data: data,
+      self: this,
+      text: 'Edit pantry quantity for ' + ingredient.name
+    };
+  }
+
+  editIngredientEvent(self) {
+    self.userIngredientService.putUserIngredient(self.packageData(self));
+  }
+
+  packageData(self) {
     const data = [];
-    this.userIngredients.forEach(d => {
+    self.userIngredients.forEach(d => {
       data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
     });
-    return new UserIngredient(this.uid, data, this.id);
+    return new UserIngredient(self.uid, data, self.id);
   }
 
   removeIngredient(id) {
@@ -65,7 +86,7 @@ export class IngredientsListComponent implements OnInit {
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.putUserIngredient(this.packageData());
+      this.userIngredientService.putUserIngredient(this.packageData(this));
     }
   }
 
@@ -80,7 +101,7 @@ export class IngredientsListComponent implements OnInit {
         this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
         ingredient.cartQuantity = Number(ingredient.amount);
       }
-      this.userIngredientService.putUserIngredient(this.packageData());
+      this.userIngredientService.putUserIngredient(this.packageData(this));
     }
   }
 }

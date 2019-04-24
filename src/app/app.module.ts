@@ -44,6 +44,7 @@ import { ValidationModalComponent } from './modals/validation-modal/validation-m
 import { NotificationModalComponent } from './modals/notification-modal/notification-modal.component';
 import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredients/uom.emun';
+import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { UOMConversion } from 'src/app/ingredients/uom.emun';
     ValidationModalComponent,
     NotificationModalComponent,
     ProfileComponent,
+    IngredientModalComponent,
   ],
   imports: [
     BrowserModule,

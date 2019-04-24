@@ -8,7 +8,7 @@ validationModalParams;
 
 this.validationModalParams = {
   function: this.removeConfigEvent,
-  id: key,
+  id: id,
   self: this,
   text: 'Are you sure you want to delete config ' + name + '?'
 };

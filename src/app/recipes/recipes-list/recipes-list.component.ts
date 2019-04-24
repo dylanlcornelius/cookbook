@@ -5,6 +5,7 @@ import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.ser
 import { UOMConversion } from 'src/app/ingredients/uom.emun';
 import { IngredientService } from 'src/app/ingredients/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
 
 @Component({
   selector: 'app-recipes-list',
@@ -18,7 +19,9 @@ export class RecipesListComponent implements OnInit {
 
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource = [];
-  userIngredient;
+  uid: string;
+  id: string;
+  userIngredients;
 
   constructor(
     private cookieService: CookieService,
@@ -29,10 +32,11 @@ export class RecipesListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const uid = this.cookieService.get('LoggedIn');
+    this.uid = this.cookieService.get('LoggedIn');
     this.recipeService.getRecipes().subscribe(recipes => {
-      this.userIngredientService.getUserIngredients(uid).subscribe(userIngredient => {
-        this.userIngredient = userIngredient;
+      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+        this.id = userIngredient.id;
+        this.userIngredients = userIngredient.ingredients;
         this.ingredientService.getIngredients().subscribe(ingredients => {
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
@@ -65,11 +69,11 @@ export class RecipesListComponent implements OnInit {
     let recipeCount: number;
     let ingredientCount = 0;
     const recipe = this.dataSource.find(x => x.id === id);
-    if (recipe.ingredients.length === 0 || this.userIngredient.ingredients.length === 0) {
+    if (recipe.ingredients.length === 0 || this.userIngredients.length === 0) {
       return 0;
     }
     recipe.ingredients.forEach(recipeIngredient => {
-      this.userIngredient.ingredients.forEach(ingredient => {
+      this.userIngredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
           ingredientCount++;
           const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
@@ -95,11 +99,19 @@ export class RecipesListComponent implements OnInit {
     return Math.floor(recipeCount);
   }
 
+  packageData() {
+    const data = [];
+    this.userIngredients.forEach(d => {
+      data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
+    });
+    return new UserIngredient(this.uid, data, this.id);
+  }
+
   removeIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
     if (currentRecipe.count > 0 && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
-        this.userIngredient.ingredients.forEach(ingredient => {
+        this.userIngredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
             const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
             if (value) {
@@ -114,7 +126,7 @@ export class RecipesListComponent implements OnInit {
           }
         });
       });
-      this.userIngredientService.putUserIngredient(this.userIngredient);
+      this.userIngredientService.putUserIngredient(this.packageData());
       this.dataSource.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
@@ -126,7 +138,7 @@ export class RecipesListComponent implements OnInit {
     if (currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         let hasIngredient = false;
-        this.userIngredient.ingredients.forEach(ingredient => {
+        this.userIngredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
             const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
             if (value) {
@@ -142,17 +154,22 @@ export class RecipesListComponent implements OnInit {
           }
         });
         if (!hasIngredient) {
-          this.userIngredient.ingredients.push({
+          this.userIngredients.push({
             id: String(recipeIngredient.id),
             pantryQuantity: 0,
             cartQuantity: Number(recipeIngredient.amount)
           });
         }
       });
-      this.userIngredientService.putUserIngredient(this.userIngredient);
+      this.userIngredientService.putUserIngredient(this.packageData());
       this.dataSource.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
     }
+    this.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Ingredients added to cart'
+    };
   }
 }

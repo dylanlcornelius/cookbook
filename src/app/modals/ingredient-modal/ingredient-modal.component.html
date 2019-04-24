@@ -1,0 +1,31 @@
+<div *ngIf="ingredientModalParams"> 
+    <div class="modal-overlay"></div>
+    <div class="modal-center">
+      <div class="modal-container">
+        <div style="text-align: center;">
+          <span class="modal-text">
+            {{ingredientModalParams.text}}
+          </span>
+        </div>
+        <br/>
+        <form class="d-flex justify-content-center" [formGroup]="ingredientModalForm">
+          <mat-form-field>
+            <input matInput placeholder="Pantry Quantity" formControlName="pantryQuantity" [errorStateMatcher]="matcher"/>
+            <mat-error>
+              <span *ngIf="!ingredientModalForm.get('pantryQuantity').valid && ingredientModalForm.get('pantryQuantity').touched">Please enter a valid Pantry Quantity</span>
+            </mat-error>
+          </mat-form-field>
+        </form>
+        <br/>
+        <div class="d-flex justify-content-center">
+          <button [disabled]="!ingredientModalForm.valid" class="btn btn-primary" (click)="confirm()"  style="margin-right: 20px;">
+            Confirm
+          </button>
+          <button class="btn btn-warning" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

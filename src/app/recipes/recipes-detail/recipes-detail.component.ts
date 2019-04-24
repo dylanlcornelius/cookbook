@@ -75,7 +75,7 @@ export class RecipesDetailComponent implements OnInit {
       .subscribe(res => {
         self.notificationModalParams = {
           self: self,
-          type: Notification.FAILURE,
+          type: Notification.SUCCESS,
           path: '/recipes-list',
           text: 'Recipe Deleted!'
         };

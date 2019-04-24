@@ -121,7 +121,7 @@ export class ShoppingListComponent implements OnInit {
     });
     self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length);
     self.applyFilter();
-    this.notificationModalParams = {
+    self.notificationModalParams = {
       self: self,
       type: Notification.SUCCESS,
       text: 'Ingredients added!'
