@@ -27,7 +27,6 @@ export class UserService {
   }
 
   checkIsPending() {
-    console.log(this.currentUser);
     if (this.currentUser) {
       return this.currentUser.role === 'pending';
     }
@@ -60,26 +59,7 @@ export class UserService {
     });
   }
 
-  // getUser(id: string): Observable<User> {
-  //   return new Observable((observer) => {
-  //     this.ref.doc(id).get().then((doc) => {
-  //       const data = doc.data();
-  //       // if (!data) {
-  //       //   return;
-  //       // }
-  //       observer.next({
-  //         id: doc.id,
-  //         uid: data.uid,
-  //         firstName: data.firstName,
-  //         lastName: data.lastName,
-  //         role: data.role,
-  //       });
-  //     });
-  //   });
-  // }
-
   postUser(data: User): Observable<User> {
-    console.log(data.getObject());
     return new Observable((observer) => {
       this.ref.add(data.getObject()).then((doc) => {
         observer.next(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));

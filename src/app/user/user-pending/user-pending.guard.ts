@@ -25,11 +25,9 @@ export class UserPendingGuard implements CanActivate {
       .pipe(
         take(1),
         map((isPending: boolean) => {
-          console.log(isPending);
           if (!isPending) {
             return true;
           }
-          console.log(state.url);
           this.authService.redirectUrl = state.url;
 
           this.router.navigate(['/user-pending']);

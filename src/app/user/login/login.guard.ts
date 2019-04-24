@@ -13,6 +13,8 @@ import { map, take } from 'rxjs/operators';
 })
 export class LoginGuard implements CanActivate {
 
+  private pageLoad;
+
   constructor(private authService: AuthService, private router: Router) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
@@ -23,9 +25,13 @@ export class LoginGuard implements CanActivate {
           if (isLoggedIn) {
             return true;
           }
-          console.log(state.url);
-          if (state.url === '/user-pending') {
+
+          if (!this.pageLoad && state.url === '/user-pending') {
             this.authService.redirectUrl = state.url;
+          }
+
+          if (!this.pageLoad) {
+            this.pageLoad = state.url;
           }
 
           this.router.navigate(['/login']);
