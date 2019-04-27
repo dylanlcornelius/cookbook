@@ -9,7 +9,7 @@
 - utilized Google Sign-in
 - added a user pending role to prevent user flooding
 - used ngx-cookie-service to remember user
-- maded a configs table for auto-logout and implemented a session timeout
+- made a configs table for auto-logout and implemented a session timeout
 - added action tracking by week for profile analytics
 - created an about page with images of technologies used throughout the project
 
@@ -30,3 +30,4 @@
 - wired up ingredient quantities. change "quantity" to "your pantry". create UOM and increments
 - created a calculated field for recipe quantities. add ingredient amounts/UOM to ingredient boxes
 - specified recipes UOMs and UOM conversions for quick usage
+- added an import and export of the database for admins
