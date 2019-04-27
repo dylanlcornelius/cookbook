@@ -9,17 +9,18 @@
 
 
 #### Project:
-1. create environment folder and file:
+- create environment folder and file (export const environment json thingy):
 	- production flag
 	- configs
 		- firebase web api settings
-		- site title
+		- title string
 
 #### Modules:
-1. npm i
-2. npm i firebase
-3. npm i -g @angular/cli@"package version number"
-
+```
+npm i
+npm i firebase
+npm i -g @angular/cli@<package version number>
+```
 
 #### Extensions (Optionals for VSCode):
 1. GitHub (only for personal access token)
