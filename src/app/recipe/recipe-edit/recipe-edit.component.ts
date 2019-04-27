@@ -13,7 +13,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { IngredientService} from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ErrorStateMatcher } from '@angular/material';
-import { UOM } from 'src/app/ingredients/uom.emun';
+import { UOM, UOMConversion } from 'src/app/ingredient/uom.emun';
 
 class ErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -54,6 +54,7 @@ export class RecipeEditComponent implements OnInit {
     private cookieService: CookieService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
+    private uomConversion: UOMConversion,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -205,6 +206,12 @@ export class RecipeEditComponent implements OnInit {
   removeIngredient(i: number) {
     const control = <FormArray>this.recipesForm.controls['ingredients'];
     control.removeAt(i);
+  }
+
+  getUOMs(uom: UOM) {
+    if (uom) {
+      return this.uomConversion.relatedUOMs(uom);
+    }
   }
 
   submitForm() {

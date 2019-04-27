@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../recipe.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
-import { UOMConversion } from 'src/app/ingredients/uom.emun';
-import { IngredientService } from 'src/app/ingredients/ingredient.service';
+import { UOMConversion } from 'src/app/ingredient/uom.emun';
+import { IngredientService } from 'src/app/ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
 
@@ -66,7 +66,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   getRecipeCount(id) {
-    let recipeCount: number;
+    let recipeCount;
     let ingredientCount = 0;
     const recipe = this.dataSource.find(x => x.id === id);
     if (recipe.ingredients.length === 0 || this.userIngredients.length === 0) {
@@ -79,14 +79,10 @@ export class RecipeListComponent implements OnInit {
           const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
           if (value) {
             if (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined) {
-              recipeCount = Number(ingredient.pantryQuantity) / Number(value);
+              recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
             }
           } else {
-            this.notificationModalParams = {
-              self: self,
-              type: Notification.FAILURE,
-              text: 'Error calculating measurements!'
-            };
+            recipeCount = '-';
           }
         }
       });
@@ -96,7 +92,7 @@ export class RecipeListComponent implements OnInit {
       return 0;
     }
 
-    return Math.floor(recipeCount);
+    return recipeCount;
   }
 
   packageData() {
@@ -109,7 +105,7 @@ export class RecipeListComponent implements OnInit {
 
   removeIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
-    if (currentRecipe.count > 0 && currentRecipe.ingredients) {
+    if (!Number.isNaN(currentRecipe.count) && currentRecipe.count > 0 && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         this.userIngredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
@@ -130,12 +126,18 @@ export class RecipeListComponent implements OnInit {
       this.dataSource.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
+
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Ingredients removed from pantry'
+      };
     }
   }
 
   addIngredients(id) {
     const currentRecipe = this.dataSource.find(x => x.id === id);
-    if (currentRecipe.ingredients) {
+    if (!Number.isNaN(currentRecipe.count) && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         let hasIngredient = false;
         this.userIngredients.forEach(ingredient => {
@@ -165,11 +167,12 @@ export class RecipeListComponent implements OnInit {
       this.dataSource.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
+
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Ingredients added to cart'
+      };
     }
-    this.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Ingredients added to cart'
-    };
   }
 }
