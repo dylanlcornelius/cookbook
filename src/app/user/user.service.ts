@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase';
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { User } from './user.model';
 
@@ -37,13 +38,7 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push({
-            key: doc.id,
-            uid: data.uid,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            role: data.role,
-          });
+          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
         });
         observer.next(users);
       });
@@ -56,13 +51,7 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push({
-            key: doc.id,
-            uid: data.uid,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            role: data.role,
-          });
+          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
         });
         // return only the first user
         observer.next(users[0]);
@@ -70,49 +59,25 @@ export class UserService {
     });
   }
 
-  // getUser(id: string): Observable<User> {
-  //   return new Observable((observer) => {
-  //     this.ref.doc(id).get().then((doc) => {
-  //       const data = doc.data();
-  //       // if (!data) {
-  //       //   return;
-  //       // }
-  //       observer.next({
-  //         key: doc.id,
-  //         uid: data.uid,
-  //         firstName: data.firstName,
-  //         lastName: data.lastName,
-  //         role: data.role,
-  //       });
-  //     });
-  //   });
-  // }
-
-  postUser(data): Observable<User> {
+  postUser(data: User): Observable<User> {
     return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        observer.next({
-          key: doc.id,
-          uid: data.uid,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          role: data.role,
-        });
+      this.ref.add(data.getObject()).then((doc) => {
+        observer.next(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
       });
     });
   }
 
-  putUser(id: string, data): Observable<User> {
+  putUser(data: User): Observable<User> {
     return new Observable((observer) => {
-      this.ref.doc(id).set(data).then(() => {
+      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
         observer.next();
       });
     });
   }
 
-  putUsers(data) {
+  putUsers(data: Array<User>) {
     data.forEach(d => {
-      this.ref.doc(d.key).set(d);
+      this.ref.doc(d.getId()).set(d.getObject());
     });
   }
 

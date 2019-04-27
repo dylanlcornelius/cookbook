@@ -19,4 +19,7 @@ export class UserPendingComponent implements OnInit {
     this.isPending = this.authService.isPending;
   }
 
+  signOut() {
+    this.authService.logout();
+  }
 }

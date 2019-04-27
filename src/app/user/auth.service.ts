@@ -1,12 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import * as firebase from 'firebase/app';
+import { firebase } from '@firebase/app';
+import '@firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../admin/config.service';
-import { UserActionService } from '../user/user-action.service';
-import { Action } from '../user/action.enum';
+import { ActionService } from 'src/app/profile/action.service';
+import { Action } from '../profile/action.enum';
+import { User } from './user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +17,10 @@ export class AuthService {
 
   redirectUrl: string;
 
-  private user: firebase.User;
+  private user;
   private loggedIn = new BehaviorSubject<boolean>(false);
   private admin = new BehaviorSubject<boolean>(false);
   private pending = new BehaviorSubject<boolean>(true);
-
 
   get User() { return this.user; }
   get isLoggedIn() { return this.loggedIn.asObservable(); }
@@ -32,34 +33,32 @@ export class AuthService {
     private cookieService: CookieService,
     private userService: UserService,
     private configService: ConfigService,
-    private userActionService: UserActionService,
+    private actionService: ActionService,
     ) {
-      const self = this;
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          const loggedInCookie = self.cookieService.get('LoggedIn');
-          self.userService.getUser(loggedInCookie).subscribe(current => {
-            if (current) {
-              self.loggedIn.next(loggedInCookie !== '');
-              self.userService.CurrentUser = current;
-              self.admin.next(self.userService.isAdmin);
-              self.pending.next(self.userService.isPending);
-              if (self.redirectUrl) {
-                self.router.navigate([self.redirectUrl]);
-              }
-              self.configService.getConfig('auto-logout').subscribe(autoLogout => {
-                self.cookieService.delete('LoggedIn');
-                const expirationDate = new Date();
-                expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-                self.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
-                setTimeout(() => {
-                  self.logout();
-                }, Number(autoLogout.value) * 60000);
-              });
+      const loggedInCookie = this.cookieService.get('LoggedIn');
+      if (loggedInCookie) {
+        const self = this;
+        this.userService.getUser(loggedInCookie).subscribe(current => {
+          if (current) {
+            self.loggedIn.next(loggedInCookie !== '');
+            self.userService.CurrentUser = current;
+            self.admin.next(self.userService.isAdmin);
+            self.pending.next(self.userService.isPending);
+            if (self.redirectUrl) {
+              self.router.navigate([self.redirectUrl]);
             }
-          });
-        }
-      });
+            self.configService.getConfig('auto-logout').subscribe(autoLogout => {
+              self.cookieService.delete('LoggedIn');
+              const expirationDate = new Date();
+              expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
+              self.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
+              setTimeout(() => {
+                self.logout();
+              }, Number(autoLogout.value) * 60000);
+            });
+          }
+        });
+      }
   }
 
   googleLogin() {
@@ -86,21 +85,22 @@ export class AuthService {
         self.userService.CurrentUser = currentUser;
         self.finishLogin(self, currentUser);
       } else {
-        self.userService.postUser({uid: self.user.uid, firstName: '', lastName: '', role: 'pending'})
+        self.userService.postUser(new User(self.user.uid, '', '', 'pending'))
         .subscribe(current => self.finishLogin(self, current));
       }
   }
 
   finishLogin(self, currentUser) {
+    this.userService.CurrentUser = currentUser;
     this.admin.next(this.userService.isAdmin);
     this.pending.next(this.userService.isPending);
 
     this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-      // TODO: check google sign without prompting for account
+      // TODO: check google signing in without prompting for account
       const expirationDate = new Date();
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
       self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
-      this.userActionService.commitAction(self.user.uid, Action.LOGIN);
+      this.actionService.commitAction(self.user.uid, Action.LOGIN, 1);
 
       self.zone.run(() => self.router.navigate(['']));
 

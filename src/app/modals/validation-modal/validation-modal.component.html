@@ -1,0 +1,21 @@
+<div *ngIf="validationModalParams"> 
+  <div class="modal-overlay"></div>
+  <div class="modal-center">
+    <div class="modal-container">
+      <div style="text-align: center;">
+        <span class="modal-text">
+          {{validationModalParams.text}}
+        </span>
+      </div>
+      <br/>
+      <div class="d-flex justify-content-center">
+        <button mat-button class="btn btn-primary" (click)="confirm()"  style="margin-right: 20px;">
+          Confirm
+        </button>
+        <button mat-button class="btn btn-warning" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

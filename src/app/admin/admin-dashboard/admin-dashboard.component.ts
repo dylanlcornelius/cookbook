@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { IngredientService } from '../../ingredients/ingredient.service';
-import { RecipeService } from '../../recipes/recipe.service';
+import { IngredientService } from '../../ingredient/ingredient.service';
+import { RecipeService } from '../../recipe/recipe.service';
 import { UserService } from '../../user/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ConfigService } from '../config.service';
+import { Config } from '../config.model';
+import { User } from 'src/app/user/user.model';
+import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -12,24 +15,22 @@ import { ConfigService } from '../config.service';
 })
 export class AdminDashboardComponent implements OnInit {
 
-  // types: null, string, array droplist?
-  // probably just only null for new records
-
   loading: Boolean = true;
+  validationModalParams;
+  notificationModalParams;
 
-  configsDisplayedColumns = ['key', 'name', 'value', 'delete'];
-  configsDatasource = [];
+  configsDisplayedColumns = ['id', 'name', 'value', 'delete'];
+  configsDataSource: Array<Config>;
 
-  usersDisplayedColumns = ['key', 'firstName', 'lastName', 'roles', 'delete'];
+  usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'delete'];
   roleList = ['user', 'admin', 'pending'];
-  usersDatasource = [];
-  // usersForm: FormGroup;
+  usersDataSource: Array<User>;
   selectedRow: {};
 
   // ingredientsDisplayedColumns = ['name', 'type'];
-  // ingredientsDatasource = [];
+  // ingredientsDataSource = [];
   // recipesDisplayedColumns = ['name', 'type'];
-  // recipesDatasource = [];
+  // recipesDataSource = [];
 
   constructor(private formBuilder: FormBuilder,
     private configService: ConfigService,
@@ -39,17 +40,17 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.configService.getConfigs().subscribe((result) => {
-      this.configsDatasource = result;
-      this.loading = false;
+      this.configsDataSource = result;
     });
     this.userService.getUsers().subscribe((result) => {
-      this.usersDatasource = result;
+      this.usersDataSource = result;
+      this.loading = false;
     });
     // this.recipeService.getRecipes().subscribe((result) => {
-    //   this.recipesDatasource = this.getCollectionData(result);
+    //   this.recipesDataSource = this.getCollectionData(result);
     // });
     // this.ingredientService.getIngredients().subscribe((result) => {
-    //   this.ingredientsDatasource = this.getCollectionData(result);
+    //   this.ingredientsDataSource = this.getCollectionData(result);
     // });
   }
 
@@ -72,43 +73,88 @@ export class AdminDashboardComponent implements OnInit {
   // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
-    this.configService.postConfig({key: '', name: '', value: ''})
+    this.configService.postConfig(new Config('', '', ''))
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
   }
 
-  removeConfig(key) {
-    // add verification
-    this.configService.deleteConfig(key)
+  removeConfig(id, name) {
+    if (!name) {
+      name = 'NO NAME';
+    }
+    this.validationModalParams = {
+      function: this.removeConfigEvent,
+      id: id,
+      self: this,
+      text: 'Are you sure you want to delete config ' + name + '?'
+    };
+  }
+
+  removeConfigEvent = function(self, id) {
+    self.configService.deleteConfig(id)
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
+  };
+
+  removeUser(id, firstName, lastName) {
+    if (!firstName && !lastName) {
+      firstName = 'NO';
+      lastName = 'NAME';
+    }
+    this.validationModalParams = {
+      function: this.removeUserEvent,
+      id: id,
+      self: this,
+      text: 'Are you sure you want to delete user ' + firstName + ' ' + lastName + '?'
+    };
   }
 
-  removeUser(key) {
-    this.userService.deleteUser(key)
-      .subscribe(() => {},
-      (err) => {
-        console.log(err);
-      });
-  }
+  removeUserEvent = function(self, id) {
+    self.userService.deleteUser(id)
+    .subscribe(() => {},
+    (err) => {
+      console.log(err);
+    });
+  };
 
   revert() {
-    // add verification
-    this.configService.getConfigs().subscribe((result) => {
-      this.configsDatasource = result;
-    });
-    this.userService.getUsers().subscribe((result) => {
-      this.usersDatasource = result;
-    });
+    this.validationModalParams = {
+      function: this.revertEvent,
+      self: this,
+      text: 'Are you sure you want to revert your changes?'
+    };
   }
 
+  revertEvent = function(self) {
+    self.configService.getConfigs().subscribe((result) => {
+      self.configsDataSource = result;
+    });
+    self.userService.getUsers().subscribe((result) => {
+      self.usersDataSource = result;
+    });
+    self.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Changes reverted!'
+    };
+  };
+
   save() {
-    // add verification
-    this.configService.putConfigs(this.configsDatasource);
-    this.userService.putUsers(this.usersDatasource);
+    this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
   }
+
+  saveEvent = function(self) {
+    self.configService.putConfigs(self.configsDataSource);
+    // TODO: use model
+    self.userService.putUsers(self.usersDataSource);
+    self.notificationModalParams = {
+      self: this,
+      type: Notification.SUCCESS,
+      text: 'Changes saved!'
+    };
+  };
 }

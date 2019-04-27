@@ -1,19 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  constructor(private authService: AuthService) { }
+  redirect: string;
+  isLoggedIn: boolean;
 
-  ngOnInit() { }
+  constructor(
+    private authService: AuthService,
+    private cookieService: CookieService
+  ) {
+    this.redirect = this.authService.redirectUrl;
+    this.isLoggedIn = this.cookieService.get('LoggedIn') ? true : false;
+  }
 
   signIn() {
     this.authService.googleLogin();
   }
-
 }
