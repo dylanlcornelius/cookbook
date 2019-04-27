@@ -94,16 +94,20 @@ export class ShoppingListComponent implements OnInit {
   }
 
   addToPantry(id) {
-    const data = this.dataSource.data.find(x => x.id === id);
-    data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
-    data.cartQuantity = 0;
-    this.userIngredientService.buyUserIngredient(this.packageData(), 1);
     this.applyFilter();
-    this.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Ingredient added!'
-    };
+    const isCompleted = this.dataSource.data.filter(x => x.cartQuantity > 0).length === 1;
+    const data = this.dataSource.data.find(x => x.id === id);
+    if (Number(data.cartQuantity > 0)) {
+      data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
+      data.cartQuantity = 0;
+      this.userIngredientService.buyUserIngredient(this.packageData(), 1, isCompleted);
+      this.applyFilter();
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Ingredient added!'
+      };
+    }
   }
 
   addAllToPantry() {
@@ -116,10 +120,12 @@ export class ShoppingListComponent implements OnInit {
 
   addAllToPantryEvent = function(self) {
     self.dataSource.data.forEach(data => {
-      data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
-      data.cartQuantity = 0;
+      if (Number(data.cartQuantity) > 0) {
+        data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
+        data.cartQuantity = 0;
+      }
     });
-    self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length);
+    self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length, false);
     self.applyFilter();
     self.notificationModalParams = {
       self: self,

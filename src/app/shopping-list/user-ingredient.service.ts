@@ -58,10 +58,15 @@ export class UserIngredientService {
     });
   }
 
-  buyUserIngredient(data: UserIngredient, actions: Number) {
+  buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
+    const self = this;
+    const user = this.cookieService.get('LoggedIn');
     this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-      this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.BUY_INGREDIENT, actions);
-      this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.COMPLETE_SHOPPING_LIST, 1);
+      this.actionService.commitAction(user, Action.BUY_INGREDIENT, actions).then(function () {
+        if (isCompleted) {
+          self.actionService.commitAction(user, Action.COMPLETE_SHOPPING_LIST, 1);
+        }
+      });
     })
     .catch(function(error) {
       console.error('error: ', error);

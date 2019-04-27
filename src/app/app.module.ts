@@ -41,7 +41,7 @@ import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-li
 import { ValidationModalComponent } from './modals/validation-modal/validation-modal.component';
 import { NotificationModalComponent } from './modals/notification-modal/notification-modal.component';
 import { ProfileComponent } from './profile/profile/profile.component';
-import { UOMConversion } from 'src/app/ingredients/uom.emun';
+import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
 
 @NgModule({
