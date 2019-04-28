@@ -116,8 +116,7 @@ export class RecipeEditComponent implements OnInit {
               });
 
               ingredients.forEach(ingredient => {
-                ingredient.quantity = '';
-                ingredient.uom = '';
+                ingredient.quantity = 0;
               });
               this.availableIngredients = ingredients;
 
@@ -183,7 +182,7 @@ export class RecipeEditComponent implements OnInit {
   initIngredient() {
     return this.formBuilder.group({
       id: [null],
-      quantity: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      quantity: [null, [Validators.required, Validators.min(0.00001), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       uom: [null, [Validators.required]],
       name: [null],
     });
