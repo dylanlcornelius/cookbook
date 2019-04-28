@@ -12,6 +12,7 @@ export class IngredientDetailComponent implements OnInit {
 
   loading: Boolean = true;
   validationModalParams;
+  notificationModalParams;
   ingredient;
 
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }

@@ -40,7 +40,7 @@ export class IngredientModalComponent implements OnInit {
 
   matcher = new ErrorMatcher();
 
-  private ingredientModalParams;
+  ingredientModalParams;
 
   @Input()
   set IngredientModalParams(params) {
