@@ -5,7 +5,9 @@
     min-width: 500px;
     overflow: auto;
 }
-
 .button-row {
     margin: 10px 0;
+}
+.row-button {
+    margin: 10px;
 }

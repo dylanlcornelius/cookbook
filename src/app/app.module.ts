@@ -10,7 +10,8 @@ import {
   MatButtonModule,
   MatCardModule,
   MatFormFieldModule,
-  MatSelectModule } from '@angular/material';
+  MatSelectModule,
+  MatTooltipModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -83,6 +84,7 @@ import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-m
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
     DragDropModule,
   ],
   providers: [
