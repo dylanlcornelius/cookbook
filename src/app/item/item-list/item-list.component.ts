@@ -158,7 +158,7 @@ export class ItemListComponent implements OnInit {
             text: 'Item updated!'
           };
 
-          // this.accordion.closeAll();
+          // TODO: this.accordion.closeAll(); doesn't work
         }, (error) => {
           console.error(error);
         });
