@@ -1,0 +1,9 @@
+.content-wrapper {
+    background: rgba(255,255,255,1);
+}
+.tab-body {
+    padding: 5%;
+}
+.button-row {
+    margin: 10px 0;
+}

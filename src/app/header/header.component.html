@@ -2,11 +2,12 @@
   <div class="navbar">
     <a routerLink="/home" class="title"> {{title}} </a>
     <span *ngIf="(isLoggedIn | async) && !(isPending | async)" class="title-bar" [@fadeInAnimation]>
-      <span *ngIf="isAdmin | async" class="title-btn">
-          <label routerLink="/admin-dashboard">
-            <mat-icon> apps </mat-icon>
-          </label>
-        </span>
+      <a mat-button routerLink="profile">
+        <mat-icon>person</mat-icon>
+      </a>
+      <a mat-button routerLink="/admin-dashboard" *ngIf="isAdmin | async">
+        <mat-icon>apps</mat-icon>
+      </a>
     </span>
 
     <div style="clear: both;"></div>
@@ -18,7 +19,6 @@
       <a mat-button class="btn btn-dark" routerLink="/ingredient-list">Ingredients</a>
       <a mat-button class="btn btn-dark" routerLink="/shopping-list">Shopping List</a>
       <a mat-button class="btn btn-dark" routerLink="/about">About</a>
-      <!-- <a mat-button routerLink="/user-profile" class="btn btn-dark">My Profile</a> -->
       
       <button mat-button class="btn btn-dark" (click)="signOut()">Sign-out</button>
     </div>
