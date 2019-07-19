@@ -11,6 +11,7 @@ import {
   MatCardModule,
   MatFormFieldModule,
   MatSelectModule,
+  MatTooltipModule,
   MatExpansionModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
@@ -86,6 +87,7 @@ import { ItemListComponent } from './item/item-list/item-list.component';
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
     MatExpansionModule,
     DragDropModule,
   ],
