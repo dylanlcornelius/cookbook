@@ -4,13 +4,15 @@ export class User {
     firstName: string;
     lastName: string;
     role: string;
+    theme: string;
 
-    constructor(uid: string, firstName: string, lastName: string, role: string, id?: string) {
+    constructor(uid: string, firstName: string, lastName: string, role: string, theme: string, id?: string) {
         this.id = id;
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.theme = theme;
     }
 
     public getId() {
@@ -23,6 +25,7 @@ export class User {
             firstName: this.firstName,
             lastName: this.lastName,
             role: this.role,
+            theme: this.theme
         };
     }
 }

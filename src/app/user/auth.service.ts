@@ -85,7 +85,7 @@ export class AuthService {
         self.userService.CurrentUser = currentUser;
         self.finishLogin(self, currentUser);
       } else {
-        self.userService.postUser(new User(self.user.uid, '', '', 'pending'))
+        self.userService.postUser(new User(self.user.uid, '', '', 'pending', 'dark'))
         .subscribe(current => self.finishLogin(self, current));
       }
   }

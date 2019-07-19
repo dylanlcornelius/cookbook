@@ -22,8 +22,9 @@ export class AdminDashboardComponent implements OnInit {
   configsDisplayedColumns = ['id', 'name', 'value', 'delete'];
   configsDataSource: Array<Config>;
 
-  usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'delete'];
+  usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'themes', 'delete'];
   roleList = ['user', 'admin', 'pending'];
+  themeList = [true, false];
   usersDataSource: Array<User>;
   selectedRow: {};
 

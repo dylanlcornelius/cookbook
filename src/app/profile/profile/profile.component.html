@@ -28,6 +28,15 @@
               <mat-hint>Last Name</mat-hint>
             </mat-form-field>
           </div>
+
+          <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <mat-slide-toggle matInput formControlName="theme" [checked]="userForm.get('theme').value">
+                  <span *ngIf="!userForm.get('theme').value">Light theme</span>
+                  <span *ngIf="userForm.get('theme').value">Dark theme</span>
+                </mat-slide-toggle>
+              </div>
+            </div>
           
           <div class="button-row">
             <button mat-mini-fab type="submit" [disabled]="!userForm.valid" color="primary">

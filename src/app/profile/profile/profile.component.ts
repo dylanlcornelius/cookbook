@@ -54,6 +54,7 @@ export class ProfileComponent implements OnInit {
         firstName : [user.firstName, Validators.required],
         lastName : [user.lastName, Validators.required],
         role: [user.role],
+        theme: [user.theme],
         id: [user.id]
       });
 
@@ -67,6 +68,7 @@ export class ProfileComponent implements OnInit {
       form.firstName,
       form.lastName,
       form.role,
+      form.theme,
       form.id
     );
 

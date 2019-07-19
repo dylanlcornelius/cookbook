@@ -11,7 +11,8 @@ import {
   MatCardModule,
   MatFormFieldModule,
   MatSelectModule,
-  MatTabsModule } from '@angular/material';
+  MatTabsModule,
+  MatSlideToggleModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -85,6 +86,7 @@ import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-m
     MatFormFieldModule,
     MatSelectModule,
     MatTabsModule,
+    MatSlideToggleModule,
     DragDropModule,
   ],
   providers: [
