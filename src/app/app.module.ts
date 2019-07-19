@@ -11,7 +11,8 @@ import {
   MatCardModule,
   MatFormFieldModule,
   MatSelectModule,
-  MatTooltipModule } from '@angular/material';
+  MatTooltipModule,
+  MatExpansionModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -44,6 +45,7 @@ import { NotificationModalComponent } from './modals/notification-modal/notifica
 import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
+import { ItemListComponent } from './item/item-list/item-list.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +69,7 @@ import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-m
     NotificationModalComponent,
     ProfileComponent,
     IngredientModalComponent,
+    ItemListComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +88,7 @@ import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-m
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
+    MatExpansionModule,
     DragDropModule,
   ],
   providers: [

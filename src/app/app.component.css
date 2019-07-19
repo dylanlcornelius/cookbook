@@ -6,6 +6,7 @@
 }
 .content {
     padding: 5%;
+    /* TODO: padding: 2%; needs to work with transitions */
     width: 80%;
 }
 .clear-footer {
