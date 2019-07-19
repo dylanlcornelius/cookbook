@@ -22,6 +22,11 @@ npm i firebase
 npm i -g @angular/cli@<package version number>
 ```
 
+firewall issues
+```
+npm set strict-ssl false
+```
+
 #### Extensions (Optionals for VSCode):
 1. GitHub (only for personal access token)
 2. Git Graph
