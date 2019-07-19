@@ -16,6 +16,7 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
+import { ItemListComponent } from './item/item-list/item-list.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path: 'ingredient-detail/:id', component: IngredientDetailComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'ingredient-edit', redirectTo: 'ingredient-edit/', pathMatch: 'full'},
   {path: 'ingredient-edit/:id', component: IngredientEditComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: 'item-list', component: ItemListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'shopping-list', component: ShoppingListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'about', component: AboutComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},

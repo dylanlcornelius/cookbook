@@ -10,9 +10,16 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-fab color="primary" [routerLink]="['/recipe-edit']">
+    <a mat-mini-fab matTooltip="Add Recipe" matTooltip="Add Recipe" matTooltip="Add Recipe" color="primary" [routerLink]="['/recipe-edit']" class="row-button">
       <mat-icon> add </mat-icon>
     </a>
+
+    <button mat-mini-fab matTooltip="My Recipes" (click)="toggleAuthor(uid)" *ngIf="isAuthor" class="row-button">
+      <mat-icon>check_box</mat-icon>
+    </button>
+    <button mat-mini-fab matTooltip="All Recipes" (click)="toggleAuthor(uid)" *ngIf="!isAuthor" class="row-button">
+      <mat-icon>check_box_outline_blank</mat-icon>
+    </button>
   </div>
 
   <div class="table-container mat-elevation-z8"> 

@@ -4,7 +4,7 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-fab color="primary" [routerLink]="['/ingredient-list']"><mat-icon>list</mat-icon></a>
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient-list']"><mat-icon>list</mat-icon></a>
   </div>
 
   <mat-card class="detail-card">
@@ -45,10 +45,10 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-fab color="primary" [routerLink]="['/ingredient-edit/', ingredient.id]">
+      <a mat-mini-fab matTooltip="Edit Ingredient" color="primary" [routerLink]="['/ingredient-edit/', ingredient.id]">
         <mat-icon> edit </mat-icon>
       </a>
-      <a mat-fab color="warn" (click)="deleteIngredient(ingredient.id)">
+      <a mat-mini-fab matTooltip="Delete Ingredient" color="warn" (click)="deleteIngredient(ingredient.id)">
         <mat-icon> delete </mat-icon>
       </a>
     </mat-card-actions>
