@@ -66,7 +66,7 @@
         <mat-icon>edit</mat-icon>
       </a>
       <!-- TODO: update recipe-list with author id -->
-      <a mat-raised-button [routerLink]="['/recipe-list']" class="author-link">
+      <a mat-raised-button [routerLink]="['/recipe-list/', user.uid ]" class="author-link">
         by {{user.firstName}} {{ user.lastName }}
       </a>
       <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)">
