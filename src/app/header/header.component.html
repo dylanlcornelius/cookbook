@@ -13,10 +13,10 @@
     <div style="clear: both;"></div>
 
     <div *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" [@fadeInAnimation]>
-
       <a mat-raised-button color="primary" class="nav-button" routerLink="/home">Home</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe-list">Recipes</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient-list">Ingredients</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/item-list">Items</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping-list">Shopping List</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/about">About</a>
       

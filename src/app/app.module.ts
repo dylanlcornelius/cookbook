@@ -12,7 +12,9 @@ import {
   MatFormFieldModule,
   MatSelectModule,
   MatTabsModule,
-  MatSlideToggleModule } from '@angular/material';
+  MatSlideToggleModule,
+  MatTooltipModule,
+  MatExpansionModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,6 +47,7 @@ import { NotificationModalComponent } from './modals/notification-modal/notifica
 import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
+import { ItemListComponent } from './item/item-list/item-list.component';
 
 import { firebase } from '@firebase/app';
 import { environment } from '../environments/environment';
@@ -71,6 +74,7 @@ import { environment } from '../environments/environment';
     NotificationModalComponent,
     ProfileComponent,
     IngredientModalComponent,
+    ItemListComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +94,8 @@ import { environment } from '../environments/environment';
     MatSelectModule,
     MatTabsModule,
     MatSlideToggleModule,
+    MatTooltipModule,
+    MatExpansionModule,
     DragDropModule,
   ],
   providers: [

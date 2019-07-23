@@ -2,26 +2,21 @@ dt {
   font-size: 18px;
   margin-bottom: 5px;
 }
-
 dd {
   font-size: 16px;
   margin-bottom: 20px;
 }
-
 .detail-card {
   padding: 50px;
 }
-
 .button-row {
   margin: 10px 0;
 }
-
 .step-header {
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: bold;
 }
-
 .list {
   border: solid 1px #999;
   min-height: 40px;
@@ -32,7 +27,6 @@ dd {
               0 8px 10px 1px rgba(0, 0, 0, 0.14),
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
-
 .box {
   padding: 10px 10px;
   border-bottom: solid 1px #999;
@@ -43,7 +37,13 @@ dd {
   box-sizing: border-box;
   font-size: 14px;
 }
-
 .box:last-child {
   border: none;
+}
+.author-link {
+  color: inherit;
+  height: fit-content;
+}
+.author-link:hover {
+  text-decoration: none;
 }

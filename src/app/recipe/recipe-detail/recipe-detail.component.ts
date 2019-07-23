@@ -20,7 +20,8 @@ export class RecipeDetailComponent implements OnInit {
   ingredients = [];
   user = {};
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
