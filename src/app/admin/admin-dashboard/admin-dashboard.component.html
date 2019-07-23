@@ -8,7 +8,7 @@
 </div>
 <br/>
 <div class="table-container mat-elevation-z8">
-  <button mat-button class="btn btn-success btn-block" (click)="addConfig()">
+  <button mat-raised-button color="primary" (click)="addConfig()">
     Add
   </button>
   <table mat-table #table [dataSource]="configsDataSource">
@@ -38,7 +38,7 @@
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef> Delete </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-button class="btn btn-danger" (click)="removeConfig(element.id, element.name)">
+        <button mat-raised-button color="accent" (click)="removeConfig(element.id, element.name)">
           Delete
         </button>
       </td>
@@ -94,14 +94,27 @@
       </td>
     </ng-container>
 
-      <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef> Delete </th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-button class="btn btn-danger" (click)="removeUser(element.id, element.firstName, element.lastName)">
-              Delete
-            </button>
-          </td>
-        </ng-container>
+    <ng-container matColumnDef="themes">
+      <th mat-header-cell *matHeaderCellDef>Dark Theme</th>
+      <td *matCellDef="let element; let i = index;">
+        <mat-form-field>
+          <mat-select [(value)]="element.theme" placeholder="Theme">
+            <mat-option [value]="theme" *ngFor="let theme of themeList">
+              {{theme}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-raised-button color="accent" (click)="removeUser(element.id, element.firstName, element.lastName)">
+          Delete
+        </button>
+      </td>
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: usersDisplayedColumns;"></tr>
@@ -110,10 +123,10 @@
 <br/>
 
 <div class="row" style="float: right;">
-  <button mat-button class="btn btn-warning" (click)="revert()" style="width: 100px;">
+  <button mat-raised-button color="warn" (click)="revert()" style="width: 100px;">
     Revert
   </button>
-  <button mat-button class="btn btn-primary" (click)="save()" style="width: 100px;">
+  <button mat-raised-button color="primary" (click)="save()" style="width: 100px;">
     Save
   </button>
 </div>

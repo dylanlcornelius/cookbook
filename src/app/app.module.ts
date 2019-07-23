@@ -12,6 +12,7 @@ import {
   MatFormFieldModule,
   MatSelectModule,
   MatTabsModule,
+  MatSlideToggleModule,
   MatTooltipModule,
   MatExpansionModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -47,6 +48,9 @@ import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
 import { ItemListComponent } from './item/item-list/item-list.component';
+
+import { firebase } from '@firebase/app';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -89,6 +93,7 @@ import { ItemListComponent } from './item/item-list/item-list.component';
     MatFormFieldModule,
     MatSelectModule,
     MatTabsModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MatExpansionModule,
     DragDropModule,
@@ -103,4 +108,9 @@ import { ItemListComponent } from './item/item-list/item-list.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    // TODO: attempt to export const app instead of assuming this will come first
+    firebase.initializeApp(environment.config);
+  }
+}

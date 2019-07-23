@@ -28,8 +28,7 @@ td {
 
 .list {
   min-height: 40px;
-  border: solid 1px #ccc;
-  background: white;
+  border: solid 1px #999;
   border-radius: 4px;
   overflow: hidden;
   display: block;
@@ -44,12 +43,11 @@ h3 {
 }
 
 .box {
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px #999;
   flex-direction: row;
   text-align: center;
   box-sizing: border-box;
   cursor: move;
-  background: white;
   font-size: 14px;
   min-height: 40px;
   padding-top: 17.5px;

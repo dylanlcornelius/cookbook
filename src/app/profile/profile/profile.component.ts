@@ -20,7 +20,7 @@ class ErrorMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
 
@@ -54,6 +54,7 @@ export class ProfileComponent implements OnInit {
         firstName : [user.firstName, Validators.required],
         lastName : [user.lastName, Validators.required],
         role: [user.role],
+        theme: [user.theme],
         id: [user.id]
       });
 
@@ -67,10 +68,13 @@ export class ProfileComponent implements OnInit {
       form.firstName,
       form.lastName,
       form.role,
+      form.theme,
       form.id
     );
 
     this.userService.putUser(user).subscribe(() => {
+      this.userService.setCurrentUser(user);
+
       this.notificationModalParams = {
         self: self,
         type: Notification.SUCCESS,

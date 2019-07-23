@@ -7,20 +7,26 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from '../user/auth.service';
 import { map, take } from 'rxjs/operators';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService,
+  ) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      return this.authService.isAdmin
+      return this.userService.getCurrentUser()
         .pipe(
           take(1),
-          map((isAdmin: boolean) => {
-            if (!isAdmin) {
+          map((user: User) => {
+            if (!user.isAdmin()) {
               return false;
             }
             return true;
