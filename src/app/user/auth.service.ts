@@ -21,11 +21,14 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
   private admin = new BehaviorSubject<boolean>(false);
   private pending = new BehaviorSubject<boolean>(true);
+  private darkTheme = new BehaviorSubject<boolean>(false);
 
+  // TODO: move these to userService, set current user from here, and update everything to use userService
   get User() { return this.user; }
   get isLoggedIn() { return this.loggedIn.asObservable(); }
   get isAdmin() { return this.admin.asObservable(); }
   get isPending() { return this.pending.asObservable(); }
+  get isDarkTheme() { return this.darkTheme.asObservable(); }
 
   constructor(
     private router: Router,
@@ -44,6 +47,8 @@ export class AuthService {
             self.userService.CurrentUser = current;
             self.admin.next(self.userService.isAdmin);
             self.pending.next(self.userService.isPending);
+            self.darkTheme.next(self.userService.isDarkTheme);
+
             if (self.redirectUrl) {
               self.router.navigate([self.redirectUrl]);
             }
@@ -85,7 +90,7 @@ export class AuthService {
         self.userService.CurrentUser = currentUser;
         self.finishLogin(self, currentUser);
       } else {
-        self.userService.postUser(new User(self.user.uid, '', '', 'pending', 'dark'))
+        self.userService.postUser(new User(self.user.uid, '', '', 'pending', false))
         .subscribe(current => self.finishLogin(self, current));
       }
   }
@@ -94,6 +99,7 @@ export class AuthService {
     this.userService.CurrentUser = currentUser;
     this.admin.next(this.userService.isAdmin);
     this.pending.next(this.userService.isPending);
+    this.darkTheme.next(self.userService.isDarkTheme);
 
     this.configService.getConfig('auto-logout').subscribe(autoLogout => {
       // TODO: check google signing in without prompting for account

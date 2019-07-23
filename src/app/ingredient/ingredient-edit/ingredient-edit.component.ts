@@ -21,7 +21,7 @@ class ErrorMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-ingredient-edit',
   templateUrl: './ingredient-edit.component.html',
-  styleUrls: ['./ingredient-edit.component.css']
+  styleUrls: ['./ingredient-edit.component.scss']
 })
 export class IngredientEditComponent implements OnInit {
 

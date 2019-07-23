@@ -14,13 +14,13 @@
 
     <div *ngIf="(isLoggedIn | async) && !(isPending | async)" [@fadeInAnimation]>
 
-      <a mat-button class="btn btn-dark" routerLink="/home">Home</a>
-      <a mat-button class="btn btn-dark" routerLink="/recipe-list">Recipes</a>
-      <a mat-button class="btn btn-dark" routerLink="/ingredient-list">Ingredients</a>
-      <a mat-button class="btn btn-dark" routerLink="/shopping-list">Shopping List</a>
-      <a mat-button class="btn btn-dark" routerLink="/about">About</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/home">Home</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe-list">Recipes</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient-list">Ingredients</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping-list">Shopping List</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/about">About</a>
       
-      <button mat-button class="btn btn-dark" (click)="signOut()">Sign-out</button>
+      <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
     </div>
   </div>
 </div>

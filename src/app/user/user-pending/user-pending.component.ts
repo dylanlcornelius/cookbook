@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-user-pending',
   templateUrl: './user-pending.component.html',
-  styleUrls: ['./user-pending.component.css']
+  styleUrls: ['./user-pending.component.scss']
 })
 export class UserPendingComponent implements OnInit {
 

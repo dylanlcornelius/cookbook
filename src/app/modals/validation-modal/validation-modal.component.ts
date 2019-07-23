@@ -19,7 +19,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-validation-modal',
   templateUrl: './validation-modal.component.html',
-  styleUrls: ['./validation-modal.component.css']
+  styleUrls: ['./validation-modal.component.scss']
 })
 export class ValidationModalComponent {
 

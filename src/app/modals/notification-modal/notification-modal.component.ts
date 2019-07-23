@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-notification-modal',
   templateUrl: './notification-modal.component.html',
-  styleUrls: ['./notification-modal.component.css']
+  styleUrls: ['./notification-modal.component.scss']
 })
 export class NotificationModalComponent implements OnChanges {
 

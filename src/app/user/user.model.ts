@@ -4,9 +4,9 @@ export class User {
     firstName: string;
     lastName: string;
     role: string;
-    theme: string;
+    theme: boolean;
 
-    constructor(uid: string, firstName: string, lastName: string, role: string, theme: string, id?: string) {
+    constructor(uid: string, firstName: string, lastName: string, role: string, theme: boolean, id?: string) {
         this.id = id;
         this.uid = uid;
         this.firstName = firstName;

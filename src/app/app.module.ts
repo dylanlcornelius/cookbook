@@ -46,6 +46,9 @@ import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
 
+import { firebase } from '@firebase/app';
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -99,4 +102,9 @@ import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-m
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    // TODO: attempt to export const app instead of assuming this will come first
+    firebase.initializeApp(environment.config);
+  }
+}

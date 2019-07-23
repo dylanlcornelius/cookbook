@@ -1,5 +1,10 @@
+@import './theme/theme';
+
+.app {
+    height: 100%;
+    position: relative;
+}
 .page {
-    background-color: lightgray;
     min-height: 100%;
     margin-bottom: -50px;
     position: relative;
