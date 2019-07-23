@@ -1,4 +1,4 @@
-<div class="app" [ngClass]="{'dark': (isDarkTheme | async)}">
+<div class="app" [ngClass]="{'dark': (user | async)?.theme}" [hidden]="!(isLoggedIn | async) && !(isGuest | async)">
 	<div class="page">
 		<app-header></app-header>
 

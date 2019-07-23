@@ -2,7 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { firebase } from '@firebase/app';
 import '@firebase/auth';
-import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../admin/config.service';
@@ -17,19 +16,6 @@ export class AuthService {
 
   redirectUrl: string;
 
-  private user;
-  private loggedIn = new BehaviorSubject<boolean>(false);
-  private admin = new BehaviorSubject<boolean>(false);
-  private pending = new BehaviorSubject<boolean>(true);
-  private darkTheme = new BehaviorSubject<boolean>(false);
-
-  // TODO: move these to userService, set current user from here, and update everything to use userService
-  get User() { return this.user; }
-  get isLoggedIn() { return this.loggedIn.asObservable(); }
-  get isAdmin() { return this.admin.asObservable(); }
-  get isPending() { return this.pending.asObservable(); }
-  get isDarkTheme() { return this.darkTheme.asObservable(); }
-
   constructor(
     private router: Router,
     private zone: NgZone,
@@ -37,44 +23,50 @@ export class AuthService {
     private userService: UserService,
     private configService: ConfigService,
     private actionService: ActionService,
-    ) {
-      const loggedInCookie = this.cookieService.get('LoggedIn');
-      if (loggedInCookie) {
-        const self = this;
-        this.userService.getUser(loggedInCookie).subscribe(current => {
-          if (current) {
-            self.loggedIn.next(loggedInCookie !== '');
-            self.userService.CurrentUser = current;
-            self.admin.next(self.userService.isAdmin);
-            self.pending.next(self.userService.isPending);
-            self.darkTheme.next(self.userService.isDarkTheme);
+  ) {
+    const loggedInCookie = this.cookieService.get('LoggedIn');
+    if (loggedInCookie) {
+      // TODO: use firebase auth token, as cookie can last longer than auth session
+      this.userService.getUser(loggedInCookie).subscribe(current => {
+        if (current) {
+          this.userService.setCurrentUser(current);
+          this.userService.setIsLoggedIn(true);
 
-            if (self.redirectUrl) {
-              self.router.navigate([self.redirectUrl]);
-            }
-            self.configService.getConfig('auto-logout').subscribe(autoLogout => {
-              self.cookieService.delete('LoggedIn');
-              const expirationDate = new Date();
-              expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-              self.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
-              setTimeout(() => {
-                self.logout();
-              }, Number(autoLogout.value) * 60000);
-            });
+          if (this.redirectUrl) {
+            this.router.navigate([this.redirectUrl]);
           }
-        });
-      }
+          this.configService.getConfig('auto-logout').subscribe(autoLogout => {
+            this.cookieService.delete('LoggedIn');
+            const expirationDate = new Date();
+            expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
+            this.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
+            setTimeout(() => {
+              this.logout();
+            }, Number(autoLogout.value) * 60000);
+          });
+        }
+      });
+    } else {
+      this.userService.setIsGuest(true);
+    }
   }
 
   googleLogin() {
-    const self = this;
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).then(function(result) {
+    firebase.auth().signInWithPopup(provider).then(result => {
       // let token = result.credential.accessToken;
-      self.user = result.user;
-      self.loggedIn.next(true);
-      self.userService.getUser(self.user.uid).subscribe(current => self.login(self, current));
-    }).catch(function(error) {
+      if (result && result.user && result.user.uid) {
+        const uid = result.user.uid;
+
+        this.userService.getUser(result.user.uid).subscribe(currentUser => {
+          if (currentUser) {
+            this.finishLogin(currentUser, uid);
+          } else {
+            this.userService.postUser(new User(uid, '', '', 'pending', false)).subscribe(current => this.finishLogin(current, uid));
+          }
+        });
+      }
+    }).catch(error => {
       const errorCode = error.code;
       const errorMessage = error.message;
       const email = error.email;
@@ -85,46 +77,35 @@ export class AuthService {
     });
   }
 
-  login(self, currentUser) {
-      if (currentUser) {
-        self.userService.CurrentUser = currentUser;
-        self.finishLogin(self, currentUser);
-      } else {
-        self.userService.postUser(new User(self.user.uid, '', '', 'pending', false))
-        .subscribe(current => self.finishLogin(self, current));
-      }
-  }
-
-  finishLogin(self, currentUser) {
-    this.userService.CurrentUser = currentUser;
-    this.admin.next(this.userService.isAdmin);
-    this.pending.next(this.userService.isPending);
-    this.darkTheme.next(self.userService.isDarkTheme);
+  finishLogin(currentUser, uid) {
+    this.userService.setCurrentUser(currentUser);
+    this.userService.setIsLoggedIn(true);
+    this.userService.setIsGuest(false);
 
     this.configService.getConfig('auto-logout').subscribe(autoLogout => {
       // TODO: check google signing in without prompting for account
       const expirationDate = new Date();
       expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-      self.cookieService.set('LoggedIn', self.user.uid, expirationDate);
-      this.actionService.commitAction(self.user.uid, Action.LOGIN, 1);
+      this.cookieService.set('LoggedIn', uid, expirationDate);
+      this.actionService.commitAction(uid, Action.LOGIN, 1);
 
-      self.zone.run(() => self.router.navigate(['']));
+      // TODO: research zone.run()
+      this.zone.run(() => this.router.navigate(['/home']));
 
       setTimeout(() => {
-        self.logout();
+        this.logout();
       }, Number(autoLogout.value) * 60000);
     });
   }
 
   logout() {
-    const self = this;
-    firebase.auth().signOut().then(function() {
-      self.cookieService.delete('LoggedIn');
-      self.user = undefined;
-      self.userService.CurrentUser = undefined;
-      self.loggedIn.next(false);
-      self.router.navigate(['/login']);
-    }).catch(function(error) {
+    firebase.auth().signOut().then(() => {
+      this.cookieService.delete('LoggedIn');
+      this.userService.setCurrentUser(new User('', '', '', '', false, ''));
+      this.userService.setIsLoggedIn(false);
+      this.userService.setIsGuest(true);
+      this.router.navigate(['/login']);
+    }).catch(error => {
       console.log(error.message);
     });
   }

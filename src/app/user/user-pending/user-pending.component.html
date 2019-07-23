@@ -1,6 +1,6 @@
-<app-loading-modal *ngIf="!(isPending | async)"></app-loading-modal>
+<app-loading-modal *ngIf="!(user | async)?.isPending()"></app-loading-modal>
 
-<div *ngIf="isPending | async">
+<div *ngIf="(user | async)?.isPending()">
   <div class="d-flex justify-content-center">
     <span>Your new user account is pending and will be confirmed shortly!</span>
   </div>

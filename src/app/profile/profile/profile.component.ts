@@ -73,6 +73,8 @@ export class ProfileComponent implements OnInit {
     );
 
     this.userService.putUser(user).subscribe(() => {
+      this.userService.setCurrentUser(user);
+
       this.notificationModalParams = {
         self: self,
         type: Notification.SUCCESS,

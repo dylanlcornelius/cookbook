@@ -11,34 +11,20 @@ export class UserService {
 
   ref = firebase.firestore().collection('users');
 
-  private currentUser: User;
+  private currentUser = new BehaviorSubject<User>(new User('', '', '', '', false, ''));
+  private isloggedIn = new BehaviorSubject<boolean>(false);
+  private isGuest = new BehaviorSubject<boolean>(false);
 
-  get CurrentUser() { return this.currentUser; }
-  set CurrentUser(currentUser: User) { this.currentUser = currentUser; }
-  get isAdmin() { return this.checkIsAdmin(); }
-  get isPending() { return this.checkIsPending(); }
-  get isDarkTheme() { return this.checkIsDarkTheme(); }
+  getCurrentUser(): Observable<User> { return this.currentUser.asObservable(); }
+  setCurrentUser(currentUser: User) { this.currentUser.next(currentUser); }
+
+  getIsLoggedIn() { return this.isloggedIn.asObservable(); }
+  setIsLoggedIn(isloggedIn: boolean) { this.isloggedIn.next(isloggedIn); }
+
+  getIsGuest() { return this.isGuest.asObservable(); }
+  setIsGuest(isGuest: boolean) { this.isGuest.next(isGuest); }
 
   constructor() {}
-
-  checkIsAdmin() {
-    if (this.currentUser) {
-      return this.currentUser.role === 'admin';
-    }
-  }
-
-  checkIsPending() {
-    if (this.currentUser) {
-      return this.currentUser.role === 'pending';
-    }
-  }
-
-  checkIsDarkTheme() {
-    if (this.currentUser) {
-      console.log(this.currentUser.theme);
-      return this.currentUser.theme;
-    }
-  }
 
   getUsers(): Observable<User[]> {
     return new Observable((observer) => {

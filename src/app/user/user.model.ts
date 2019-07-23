@@ -28,4 +28,7 @@ export class User {
             theme: this.theme
         };
     }
+
+    public isAdmin() { return this.role === 'admin'; }
+    public isPending() { return this.role === 'pending'; }
 }

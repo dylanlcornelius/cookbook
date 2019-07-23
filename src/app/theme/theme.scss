@@ -4,6 +4,7 @@
 @mixin theme($theme) {
     .header {
         background-image: map-get($theme, "header-background");
+        box-shadow: map-get($theme, 'shadow');
     }
     .page {
         background-color: map-get($theme, "page-background");
@@ -17,6 +18,7 @@
     }
     .footer {
         background-image: map-get($theme, "footer-background");
+        box-shadow: map-get($theme, 'shadow');
     }
 }
 
@@ -44,15 +46,25 @@ $dark-accent: mat-palette($mat-amber);
 $dark-warn: mat-palette($mat-red);
 $dark-mat-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
-// TODO: make colors auto refresh, think about using cookies to keep up with theme for default
 $dark-theme: (
-    header-background: linear-gradient(-45deg, #04469c, #02258d),
+    header-background: linear-gradient(60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
     page-background: #444444,
     text-color: #dddddd,
     block-background: #444444,
-    highlight-background: #04469c,
-    footer-background: linear-gradient(45deg, #04469c, #02258d)
+    highlight-background: rgba(2,158,245,1),
+    footer-background: linear-gradient(-60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
+    shadow: 0px 0px 40px 10px rgba(0,0,0,0.40)
 );
+
+// $dark-theme: (
+//     header-background: linear-gradient(90deg, rgba(0,37,142,1) -30%, rgba(179,89,37,1) 110%),
+//     page-background: #444444,
+//     text-color: #dddddd,
+//     block-background: #444444,
+//     highlight-background: #3b366b,
+//     footer-background: linear-gradient(-90deg, rgba(0,37,142,1) -30%, rgba(179,89,37,1) 110%),
+//     shadow: 0px 0px 40px 10px rgba(0,0,0,0.40)
+// );
 
 .dark {
     @include angular-material-theme($dark-mat-theme);

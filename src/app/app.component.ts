@@ -4,7 +4,8 @@ import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
 import { fadeComponentAnimation } from 'src/app/animations';
 import { Observable } from 'rxjs';
-import { AuthService } from './user/auth.service';
+import { UserService } from './user/user.service';
+import { User } from './user/user.model';
 
 @Component({
   selector: 'app-root',
@@ -15,17 +16,21 @@ import { AuthService } from './user/auth.service';
 })
 
 export class AppComponent implements OnInit {
-  isDarkTheme: Observable<boolean>;
+  user: Observable<User>;
+  isLoggedIn: Observable<boolean>;
+  isGuest: Observable<boolean>;
 
   constructor(
     private title: Title,
-    private authService: AuthService
+    private userService: UserService
   ) {
     this.title.setTitle(environment.config.title);
   }
 
   ngOnInit() {
-    this.isDarkTheme = this.authService.isDarkTheme;
+    this.user = this.userService.getCurrentUser();
+    this.isLoggedIn = this.userService.getIsLoggedIn();
+    this.isGuest = this.userService.getIsGuest();
   }
 
   routeTransition(outlet) {
