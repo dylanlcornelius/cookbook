@@ -7,6 +7,7 @@ import { IngredientService } from 'src/app/ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-list',
@@ -26,12 +27,16 @@ export class RecipeListComponent implements OnInit {
   isAuthor = false;
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private cookieService: CookieService,
     private recipeService: RecipeService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
-  ) { }
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
@@ -61,6 +66,13 @@ export class RecipeListComponent implements OnInit {
             recipe.count = this.getRecipeCount(recipe.id);
           });
           this.dataSource = new MatTableDataSource(recipes);
+
+          const searchUid = this.route.snapshot.params['id'];
+          if (searchUid) {
+            this.dataSource.filterPredicate = (data, filter) => data.user === filter;
+            this.dataSource.filter = searchUid;
+          }
+
           this.loading = false;
         });
       });
@@ -184,15 +196,9 @@ export class RecipeListComponent implements OnInit {
       this.dataSource.filterPredicate = (data, filter) => data.user == filter;
     } else {
       // tslint:disable-next-line:triple-equals
-      this.dataSource.filterPredicate = (data, filter) => true;
+      this.dataSource.filterPredicate = () => true;
     }
-    this.applyAuthorFilter(uid);
-    console.log(uid, this.isAuthor);
-    console.log(this.dataSource.data);
-    this.isAuthor = !this.isAuthor;
-  }
-
-  applyAuthorFilter(uid) {
     this.dataSource.filter = uid;
+    this.isAuthor = !this.isAuthor;
   }
 }
