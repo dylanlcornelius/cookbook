@@ -49,6 +49,10 @@ export class ActionService {
     });
   }
 
+  getActions(uid) {
+    return this.getAction(this, uid);
+  }
+
   private getAction(self, uid: string) {
     return self.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
       const action = [];

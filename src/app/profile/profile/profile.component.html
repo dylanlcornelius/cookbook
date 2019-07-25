@@ -43,8 +43,29 @@
           <h2>Your Analytics</h2>
         </div>
         <br/>
-  
-        <span>test</span>
+
+        <mat-paginator [length]="actionsLength" [pageSize]="1" (page)="week = $event"></mat-paginator>
+        <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
+        <canvas baseChart
+          [data]="actions[week.pageIndex]?.data || []"
+          [labels]="actions[week.pageIndex]?.labels || []"
+          [chartType]="'pie'"
+          [colors]="actions[week.pageIndex]?.colors || []">
+        </canvas>
+
+        <!-- <canvas baseChart
+          [datasets]="totalActionsData"
+          [labels]="totalActionsLabels"
+          [chartType]="'bar'">
+        </canvas> -->
+        <mat-paginator [length]="actionsLength" [pageSize]="1" (page)="month = $event"></mat-paginator>
+        <h4>{{actions[month.pageIndex]?.date || ''}}</h4>
+        <canvas baseChart
+          [datasets]="[{data: actions[month.pageIndex]?.data || [], label: actions[month.pageIndex]?.date}]"
+          [labels]="actions[month.pageIndex]?.labels"
+          [chartType]="'bar'"
+          [options]="{scales: {yAxes: [{ticks: {beginAtZero: true}}]}}">
+        </canvas>
       </div>
     </mat-tab>
   </mat-tab-group>

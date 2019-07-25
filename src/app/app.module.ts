@@ -47,6 +47,7 @@ import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
 import { ItemListComponent } from './item/item-list/item-list.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { ItemListComponent } from './item/item-list/item-list.component';
     MatTooltipModule,
     MatExpansionModule,
     DragDropModule,
+    ChartsModule,
   ],
   providers: [
     CookieService,
