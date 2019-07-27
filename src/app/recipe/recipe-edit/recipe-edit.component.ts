@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import {
@@ -12,7 +13,7 @@ import {
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher, MatChipInputEvent } from '@angular/material';
 import { UOM, UOMConversion } from 'src/app/ingredient/uom.emun';
 
 class ErrorMatcher implements ErrorStateMatcher {
@@ -33,12 +34,8 @@ export class RecipeEditComponent implements OnInit {
 
   recipesForm: FormGroup;
   id: string;
-  name: string;
-  description: string;
-  time: number;
-  servings: number;
-  calories: number;
-  steps: Array<{step: string}>;
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   addedIngredients = [];
   availableIngredients = [];
@@ -66,6 +63,7 @@ export class RecipeEditComponent implements OnInit {
       'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      'categories': this.formBuilder.array([]),
       'steps': this.formBuilder.array([
         this.initStep()
       ]),
@@ -76,6 +74,11 @@ export class RecipeEditComponent implements OnInit {
       this.recipeService.getRecipe(this.route.snapshot.params['id'])
         .subscribe(data => {
           this.id = data.id;
+          if (data.categories !== undefined) {
+            for (let i = 0; i < data.categories.length; i++) {
+              this.addCategory();
+            }
+          }
           if (data.steps !== undefined) {
             for (let i = 1; i < data.steps.length; i++) {
               this.addStep();
@@ -111,6 +114,7 @@ export class RecipeEditComponent implements OnInit {
                 time: data.time,
                 servings: data.servings,
                 calories: data.calories,
+                categories: data.categories,
                 steps: data.steps,
                 ingredients: added,
               });
@@ -141,6 +145,35 @@ export class RecipeEditComponent implements OnInit {
           this.loading = false;
         });
     }
+  }
+
+  initCategory(category: string) {
+    return this.formBuilder.group({
+      category: category
+    });
+  }
+
+  addCategory(category?: string) {
+    const control = <FormArray>this.recipesForm.controls['categories'];
+    control.push(this.initCategory(category));
+  }
+
+  addCategoryEvent(event: MatChipInputEvent) {
+    const input = event.input;
+    const value = event.value;
+
+    if ((value || '').trim()) {
+      this.addCategory(value.trim());
+    }
+
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  removeCategory(i: number) {
+    const control = <FormArray>this.recipesForm.controls['categories'];
+    control.removeAt(i);
   }
 
   initStep() {

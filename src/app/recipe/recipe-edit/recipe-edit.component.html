@@ -50,8 +50,22 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-form-field class="form-field">
+      <mat-chip-list #categoryList>
+        <mat-chip *ngFor="let category of recipesForm.controls.categories.controls; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">
+          {{category.value.category}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Categories"
+               [matChipInputFor]="categoryList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="addCategoryEvent($event)">
+      </mat-chip-list>
+    </mat-form-field>
+
     <div formArrayName="steps">
-      <div class="row" *ngFor="let step of recipesForm.controls.steps.controls; let i=index">
+      <div class="row" *ngFor="let step of recipesForm.controls.steps.controls; let i = index">
         <div class="col-2">
           <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()" *ngIf="i == 0">
             <mat-icon> add </mat-icon>
@@ -79,7 +93,7 @@
     
         <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
         [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
-          <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i=index"
+          <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i = index"
               cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
             <mat-label class="col-6">
               {{ingredient.get('name')? ingredient.get('name').value : ''}}
