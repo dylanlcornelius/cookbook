@@ -31,6 +31,16 @@
 
           <dt>Quantity</dt>
           <dd>{{recipe.quantity || "No Quantity"}}</dd>
+
+          <dt>Categories</dt>
+          <dd>
+            <mat-chip-list>
+              <mat-chip *ngFor="let category of recipe.categories; let i = index">
+                {{category.category}}
+              </mat-chip>
+            </mat-chip-list>
+            <span *ngIf="recipe.categories.length == 0">No Categories</span>
+          </dd>
         </dl>
       </mat-card-content>
 

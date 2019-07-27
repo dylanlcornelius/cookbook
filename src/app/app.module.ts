@@ -14,7 +14,8 @@ import {
   MatTabsModule,
   MatSlideToggleModule,
   MatTooltipModule,
-  MatExpansionModule } from '@angular/material';
+  MatExpansionModule,
+  MatChipsModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -96,6 +97,7 @@ import { environment } from '../environments/environment';
     MatSlideToggleModule,
     MatTooltipModule,
     MatExpansionModule,
+    MatChipsModule,
     DragDropModule,
   ],
   providers: [
