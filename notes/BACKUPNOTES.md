@@ -2,16 +2,17 @@
 ---
 
 #### Setup:
+Must be installed globally
 ```
 npm i -g node-firestore-import-export
 ```
 
 #### Export:
 ```
-firestore-export -a credientials/file.json -b backups/name.json
+firestore-export -a backups/credentials.json -b backups/<name>.json
 ```
 
 #### Import:
 ```
-firestore-import -a credientials/file.json -b backups/name.json
+firestore-import -a backups/credentials.json -b backups/<name>.json
 ```

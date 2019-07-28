@@ -44,25 +44,20 @@
         </div>
         <br/>
 
-        <mat-paginator [length]="actionsLength" [pageSize]="1" (page)="week = $event"></mat-paginator>
+        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
         <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
         <canvas baseChart
           [data]="actions[week.pageIndex]?.data || []"
-          [labels]="actions[week.pageIndex]?.labels || []"
+          [labels]="actionsLabels"
           [chartType]="'pie'"
-          [colors]="actions[week.pageIndex]?.colors || []">
+          [colors]="[{ backgroundColor: actionsColors }] || []">
         </canvas>
 
-        <!-- <canvas baseChart
-          [datasets]="totalActionsData"
-          [labels]="totalActionsLabels"
-          [chartType]="'bar'">
-        </canvas> -->
-        <mat-paginator [length]="actionsLength" [pageSize]="1" (page)="month = $event"></mat-paginator>
-        <h4>{{actions[month.pageIndex]?.date || ''}}</h4>
+        <mat-paginator [length]="monthActionsLength" [pageSize]="1" [hidePageSize]="true" (page)="month = $event"></mat-paginator>
+        <h4>{{monthActions[month.pageIndex]?.date || ''}}</h4>
         <canvas baseChart
-          [datasets]="[{data: actions[month.pageIndex]?.data || [], label: actions[month.pageIndex]?.date}]"
-          [labels]="actions[month.pageIndex]?.labels"
+          [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"
+          [labels]="actionsLabels"
           [chartType]="'bar'"
           [options]="{scales: {yAxes: [{ticks: {beginAtZero: true}}]}}">
         </canvas>

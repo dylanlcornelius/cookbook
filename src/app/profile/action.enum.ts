@@ -35,22 +35,3 @@ export enum ActionLabel {
     BUY_INGREDIENT = 'Buy Ingredient',
     COMPLETE_SHOPPING_LIST = 'Complete Shopping List',
 }
-
-export enum ActionColor {
-    LOGIN = '#CCCCCC',
-
-    CREATE_RECIPE = '#9ef533',
-    UPDATE_RECIPE = '#de33f5',
-    DELETE_RECIPE = '#f73434',
-
-    CREATE_INGREDIENT = '#57f533',
-    UPDATE_INGREDIENT = '#f533d5',
-    DELETE_INGREDIENT = '#f76f34',
-
-    CREATE_ITEM = '#33f57a',
-    UPDATE_ITEM = '#f53397',
-    DELETE_ITEM = '#f7a634',
-
-    BUY_INGREDIENT = '#3394f5',
-    COMPLETE_SHOPPING_LIST = '#5733f5',
-}

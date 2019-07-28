@@ -11,7 +11,7 @@ import { ErrorStateMatcher } from '@angular/material';
 import { UserService } from '../../user/user.service';
 import { User } from 'src/app/user/user.model';
 import { ActionService } from '../action.service';
-import { ActionLabel, ActionColor } from '../action.enum';
+import { ActionLabel } from '../action.enum';
 
 class ErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -41,38 +41,20 @@ export class ProfileComponent implements OnInit {
   monthActionsLength = 0;
   month = {pageIndex: 0};
 
-  // totalActionsLabels = [];
-  // totalActionsData = [{data: [], label: '', backgroundColor: ''}];
-  // totalActionsLabels = [
-  //   'Login',
-  //   'Create Recipe',
-  //   'Update Recipe',
-  //   'Delete Recipe',
-  //   'Create Ingredient',
-  //   'Update Ingredient',
-  //   'Delete Ingredient',
-  //   'Create Item',
-  //   'Update Item',
-  //   'Delete Item',
-  //   'Buy Ingredient',
-  //   'Complete Shopping List',
-  // ];
-  // // totalActionsData = [{data: [], label: '', backgroundColor: ''}];
-  // totalActionsData = [{data: [], label: '', backgroundColor: ''}];
-  // totalActionsColors = [
-  //   '#CCCCCC',
-  //   '#9ef533',
-  //   '#de33f5',
-  //   '#f73434',
-  //   '#57f533',
-  //   '#f533d5',
-  //   '#f76f34',
-  //   '#33f57a',
-  //   '#f53397',
-  //   '#f7a634',
-  //   '#3394f5',
-  //   '#5733f5',
-  // ];
+  actionsLabels = [
+    'Login',
+    'Create Recipe', 'Update Recipe', 'Delete Recipe',
+    'Create Ingredient', 'Update Ingredient', 'Delete Ingredient',
+    'Create Item', 'Update Item', 'Delete Item',
+    'Buy Ingredient', 'Complete Shopping List',
+  ];
+  actionsColors = [
+    '#CCCCCC',
+    '#9ef533', '#de33f5', '#f73434',
+    '#57f533', '#f533d5', '#f76f34',
+    '#33f57a', '#f53397', '#f7a634',
+    '#3394f5', '#5733f5',
+  ];
 
   matcher = new ErrorMatcher();
 
@@ -89,67 +71,76 @@ export class ProfileComponent implements OnInit {
     this.initializeUserForm();
 
     this.actionService.getActions(this.uid).then((userAction) => {
-      console.log(userAction);
+      const actions = this.sortActions(userAction.actions);
 
-      const actions = {};
-      // Object.keys(userAction.actions).forEach(a => {
-      //   Object.keys(actions).forEach(action => {
-      //     if (action.split('/')[1] < a.split('/')[1]) {
+      let index = 0;
+      let monthIndex = 0;
+      let currentMonth = -1;
+      let monthActionArray = [];
+      actions.forEach((action, i) => {
+        const actionData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-      //     }
-      //   });
-      // });
-
-      let i = 0;
-      Object.keys(userAction.actions).forEach(action => {
-        const actionLabels = [];
-        // const actionData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        const actionData = [];
-        const actionColors = [];
-
-        Object.keys(userAction.actions[action]).forEach(actionKey => {
-          // actionLabels.push(actionKey);
-          actionLabels.push(ActionLabel[actionKey]);
-          // actionData[this.totalActionsLabels.indexOf(ActionLabel[actionKey])] = userAction.actions[action][actionKey];
-          actionData.push(userAction.actions[action][actionKey]);
-          actionColors.push(ActionColor[actionKey]);
-          // actionColors.push(this.stringToColor(actionKey));
-
-          // if (this.totalActionsLabels.indexOf(actionKey) === -1) {
-          //   this.totalActionsLabels.push(actionKey);
-          // }
+        Object.keys(action.data).forEach(actionKey => {
+          actionData[this.actionsLabels.indexOf(ActionLabel[actionKey])] = action.data[actionKey];
         });
 
-        this.actions[i] = {
-          labels: actionLabels,
+        this.actions[index] = {
           data: actionData,
-          colors: [{ backgroundColor: actionColors }],
-          date: action,
+          date: action.month + '/' + action.day + '/' + action.year,
         };
 
-        console.log(actionData, action);
-        // if (i === 0) {
-        //   this.totalActionsData = [{
-        //     data: actionData,
-        //     label: action,
-        //     backgroundColor: this.totalActionsColors[i]
-        //   }];
-        // } else {
-        //   this.totalActionsData.push({
-        //     data: actionData,
-        //     label: action,
-        //     backgroundColor: this.totalActionsColors[i]
-        //   });
-        // }
+        if ((currentMonth !== action.month) || actions.length - 1 === i) {
+          const date = new Date().setMonth(currentMonth - 1);
+          const monthName = new Date(date).toLocaleString('default', {month: 'long'});
 
-        i++;
+          if (i !== 0) {
+            if (actions.length - 1 === i ) {
+              monthActionArray.push({
+                data: actionData,
+                label: action.month + '/' + action.day + '/' + action.year
+              });
+            }
+            this.monthActions[monthIndex] = {
+              data: monthActionArray,
+              date: monthName
+            };
+
+            monthActionArray = [];
+            monthIndex++;
+          }
+
+          currentMonth = action.month;
+        }
+
+        monthActionArray.push({
+          data: actionData,
+          label: action.month + '/' + action.day + '/' + action.year
+        });
+
+        index++;
       });
-      this.actionsLength = Object.keys(userAction.actions).length;
 
-      // console.log(this.totalActionsData);
-      // console.log(this.totalActionsLabels);
+      this.actionsLength = Object.keys(this.actions).length;
+      this.monthActionsLength = Object.keys(this.monthActions).length;
+    });
+  }
 
-      console.log(this.actions);
+  sortActions(userActions) {
+    const dateArray = Object.keys(userActions).map(key => {
+      return key.split('/').map(Number);
+    });
+
+    dateArray.sort((a, b) => a[0] - b[0]);
+    dateArray.sort((a, b) => a[1] - b[1]);
+    dateArray.sort((a, b) => a[2] - b[2]);
+
+    return dateArray.map(date => {
+      return {
+        day: date[0],
+        month: date[1],
+        year: date[2],
+        data: userActions[date[0] + '/' + date[1] + '/' + date[2]]
+      };
     });
   }
 
