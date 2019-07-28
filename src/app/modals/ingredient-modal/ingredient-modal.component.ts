@@ -31,7 +31,7 @@ class ErrorMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-ingredient-modal',
   templateUrl: './ingredient-modal.component.html',
-  styleUrls: ['./ingredient-modal.component.css']
+  styleUrls: ['./ingredient-modal.component.scss']
 })
 export class IngredientModalComponent implements OnInit {
 

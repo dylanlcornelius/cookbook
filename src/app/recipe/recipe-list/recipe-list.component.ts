@@ -6,11 +6,13 @@ import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientService } from 'src/app/ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
+import { MatTableDataSource } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
-  styleUrls: ['./recipe-list.component.css']
+  styleUrls: ['./recipe-list.component.scss']
 })
 export class RecipeListComponent implements OnInit {
 
@@ -18,18 +20,23 @@ export class RecipeListComponent implements OnInit {
   notificationModalParams;
 
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
-  dataSource = [];
+  dataSource;
   uid: string;
   id: string;
   userIngredients;
+  isAuthor = false;
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private cookieService: CookieService,
     private recipeService: RecipeService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
-  ) { }
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
@@ -54,11 +61,18 @@ export class RecipeListComponent implements OnInit {
               });
             });
           });
-          this.dataSource = recipes;
+          this.dataSource = new MatTableDataSource(recipes);
           recipes.forEach(recipe => {
             recipe.count = this.getRecipeCount(recipe.id);
           });
-          this.dataSource = recipes;
+          this.dataSource = new MatTableDataSource(recipes);
+
+          const searchUid = this.route.snapshot.params['id'];
+          if (searchUid) {
+            this.dataSource.filterPredicate = (data, filter) => data.user === filter;
+            this.dataSource.filter = searchUid;
+          }
+
           this.loading = false;
         });
       });
@@ -68,7 +82,7 @@ export class RecipeListComponent implements OnInit {
   getRecipeCount(id) {
     let recipeCount;
     let ingredientCount = 0;
-    const recipe = this.dataSource.find(x => x.id === id);
+    const recipe = this.dataSource.data.find(x => x.id === id);
     if (recipe.ingredients.length === 0 || this.userIngredients.length === 0) {
       return 0;
     }
@@ -104,7 +118,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   removeIngredients(id) {
-    const currentRecipe = this.dataSource.find(x => x.id === id);
+    const currentRecipe = this.dataSource.data.find(x => x.id === id);
     if (!Number.isNaN(currentRecipe.count) && currentRecipe.count > 0 && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         this.userIngredients.forEach(ingredient => {
@@ -123,7 +137,7 @@ export class RecipeListComponent implements OnInit {
         });
       });
       this.userIngredientService.putUserIngredient(this.packageData());
-      this.dataSource.forEach(recipe => {
+      this.dataSource.data.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
 
@@ -136,7 +150,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   addIngredients(id) {
-    const currentRecipe = this.dataSource.find(x => x.id === id);
+    const currentRecipe = this.dataSource.data.find(x => x.id === id);
     if (!Number.isNaN(currentRecipe.count) && currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         let hasIngredient = false;
@@ -164,7 +178,7 @@ export class RecipeListComponent implements OnInit {
         }
       });
       this.userIngredientService.putUserIngredient(this.packageData());
-      this.dataSource.forEach(recipe => {
+      this.dataSource.data.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
 
@@ -174,5 +188,17 @@ export class RecipeListComponent implements OnInit {
         text: 'Ingredients added to cart'
       };
     }
+  }
+
+  toggleAuthor(uid: string) {
+    if (this.isAuthor) {
+      // tslint:disable-next-line:triple-equals
+      this.dataSource.filterPredicate = (data, filter) => data.user == filter;
+    } else {
+      // tslint:disable-next-line:triple-equals
+      this.dataSource.filterPredicate = () => true;
+    }
+    this.dataSource.filter = uid;
+    this.isAuthor = !this.isAuthor;
   }
 }

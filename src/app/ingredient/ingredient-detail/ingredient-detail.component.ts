@@ -6,7 +6,7 @@ import { Notification } from 'src/app/modals/notification-modal/notification.enu
 @Component({
   selector: 'app-ingredient-detail',
   templateUrl: './ingredient-detail.component.html',
-  styleUrls: ['./ingredient-detail.component.css']
+  styleUrls: ['./ingredient-detail.component.scss']
 })
 export class IngredientDetailComponent implements OnInit {
 

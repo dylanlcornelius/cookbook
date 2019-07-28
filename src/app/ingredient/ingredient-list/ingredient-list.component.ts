@@ -7,7 +7,7 @@ import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.ser
 @Component({
   selector: 'app-ingredient-list',
   templateUrl: './ingredient-list.component.html',
-  styleUrls: ['./ingredient-list.component.css']
+  styleUrls: ['./ingredient-list.component.scss']
 })
 export class IngredientListComponent implements OnInit {
 

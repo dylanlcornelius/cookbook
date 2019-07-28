@@ -1,22 +1,36 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
 import { environment } from '../environments/environment';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
 import { fadeComponentAnimation } from 'src/app/animations';
+import { Observable } from 'rxjs';
+import { UserService } from './user/user.service';
+import { User } from './user/user.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: [fadeComponentAnimation]
 })
 
-export class AppComponent {
-  constructor(private title: Title) {
-    firebase.initializeApp(environment.config);
+export class AppComponent implements OnInit {
+  user: Observable<User>;
+  isLoggedIn: Observable<boolean>;
+  isGuest: Observable<boolean>;
+
+  constructor(
+    private title: Title,
+    private userService: UserService
+  ) {
     this.title.setTitle(environment.config.title);
+  }
+
+  ngOnInit() {
+    this.user = this.userService.getCurrentUser();
+    this.isLoggedIn = this.userService.getIsLoggedIn();
+    this.isGuest = this.userService.getIsGuest();
   }
 
   routeTransition(outlet) {

@@ -9,10 +9,10 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-fab color="primary" (click)="recipesDetail()" *ngIf="route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Back" color="primary" (click)="recipesDetail()" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
-    <a mat-fab color="primary" [routerLink]="['/recipe-list']" *ngIf="!route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe-list']" *ngIf="!route.snapshot.params['id']">
       <mat-icon> list </mat-icon>
     </a>
   </div>
@@ -50,10 +50,24 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-form-field class="form-field">
+      <mat-chip-list #categoryList>
+        <mat-chip *ngFor="let category of recipesForm.controls.categories.controls; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">
+          {{category.value.category}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Categories"
+               [matChipInputFor]="categoryList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="addCategoryEvent($event)">
+      </mat-chip-list>
+    </mat-form-field>
+
     <div formArrayName="steps">
-      <div class="row" *ngFor="let step of recipesForm.controls.steps.controls; let i=index">
+      <div class="row" *ngFor="let step of recipesForm.controls.steps.controls; let i = index">
         <div class="col-2">
-          <button mat-mini-fab color="secondary" type="button" (click)="addStep()" *ngIf="i == 0">
+          <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()" *ngIf="i == 0">
             <mat-icon> add </mat-icon>
           </button>
           <div style="padding: 20px;" *ngIf="i > 0"></div>
@@ -63,7 +77,7 @@
           <mat-form-field style="width: 80%;">
               <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
           </mat-form-field>
-          <button mat-mini-fab style="margin-left: 20px;" color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
+          <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
             <mat-icon> close </mat-icon>
           </button>
           <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length == 1"></div>
@@ -79,7 +93,7 @@
     
         <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
         [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
-          <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i=index"
+          <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i = index"
               cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
             <mat-label class="col-6">
               {{ingredient.get('name')? ingredient.get('name').value : ''}}
@@ -128,7 +142,7 @@
     </div>
 
     <div class="button-row">
-      <button mat-fab type="button" [disabled]="!recipesForm.valid" color="primary" (click)="submitForm()">
+      <button mat-mini-fab matTooltip="Save Recipe" type="button" [disabled]="!recipesForm.valid" color="primary" (click)="submitForm()">
         <mat-icon> save </mat-icon>
       </button>
     </div>

@@ -1,3 +1,76 @@
-<p>
-  profile works!
-</p>
+<app-loading-modal *ngIf="loading"></app-loading-modal>
+<app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
+
+<div *ngIf="!loading">
+  <mat-tab-group class="box mat-elevation-z4" dynamicHeight="true" animationDuration="1000ms">
+    <mat-tab label="Profile">
+      <div class="tab-body">
+        <div class="d-flex justify-content-center">
+          <h2>Your Profile</h2>
+        </div>
+        <br/>
+  
+        <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)" class="container">
+          <div class="row">
+            <mat-form-field class="col-md-6 col-sm-12" appearance="outline">
+              <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher"/>
+              <mat-error>
+                <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
+              </mat-error>
+              <mat-hint>First Name</mat-hint>
+            </mat-form-field>
+        
+            <mat-form-field class="col-md-6 col-sm-12"  appearance="outline">
+              <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher"/>
+              <mat-error>
+                <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
+              </mat-error>
+              <mat-hint>Last Name</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <mat-slide-toggle matInput formControlName="theme" [checked]="userForm.get('theme').value">
+                  <span *ngIf="!userForm.get('theme').value">Light theme</span>
+                  <span *ngIf="userForm.get('theme').value">Dark theme</span>
+                </mat-slide-toggle>
+              </div>
+            </div>
+          
+          <div class="button-row">
+            <button mat-mini-fab type="submit" [disabled]="!userForm.valid" color="primary">
+              <mat-icon>save</mat-icon>
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Analytics">
+      <div class="tab-body">
+        <div class="d-flex justify-content-center">
+          <h2>Your Analytics</h2>
+        </div>
+        <br/>
+
+        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
+        <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
+        <canvas baseChart
+          [data]="actions[week.pageIndex]?.data || []"
+          [labels]="actionsLabels"
+          [chartType]="'pie'"
+          [colors]="[{ backgroundColor: actionsColors }] || []">
+        </canvas>
+
+        <mat-paginator [length]="monthActionsLength" [pageSize]="1" [hidePageSize]="true" (page)="month = $event"></mat-paginator>
+        <h4>{{monthActions[month.pageIndex]?.date || ''}}</h4>
+        <canvas baseChart
+          [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"
+          [labels]="actionsLabels"
+          [chartType]="'bar'"
+          [options]="{scales: {yAxes: [{ticks: {beginAtZero: true}}]}}">
+        </canvas>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

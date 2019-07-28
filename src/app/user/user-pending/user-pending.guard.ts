@@ -5,9 +5,9 @@ import {
   RouterStateSnapshot,
   Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '.././auth.service';
+import { UserService } from '.././user.service';
 import { map, take } from 'rxjs/operators';
-import { CookieService } from 'ngx-cookie-service';
+import { User } from '../user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +16,17 @@ export class UserPendingGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private cookieService: CookieService,
-    private authService: AuthService
+    private userService: UserService
   ) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.authService.isPending
+    return this.userService.getCurrentUser()
       .pipe(
         take(1),
-        map((isPending: boolean) => {
-          if (!isPending) {
+        map((user: User) => {
+          if (!user.isPending()) {
             return true;
           }
-          this.authService.redirectUrl = state.url;
 
           this.router.navigate(['/user-pending']);
           return false;

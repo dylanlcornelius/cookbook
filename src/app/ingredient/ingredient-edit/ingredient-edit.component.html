@@ -9,10 +9,10 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-fab color="primary" (click)="ingredientsDetail()" *ngIf="route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Back" color="primary" (click)="ingredientsDetail()" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
-    <a mat-fab color="primary" [routerLink]="['/ingredient-list']" *ngIf="!route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient-list']" *ngIf="!route.snapshot.params['id']">
       <mat-icon> list </mat-icon>
     </a>
   </div>
@@ -61,7 +61,7 @@
     </mat-form-field>
 
     <div class="button-row">
-      <button mat-fab type="submit" [disabled]="!ingredientsForm.valid" color="primary">
+      <button mat-mini-fab matTooltip="Save Ingredient" type="submit" [disabled]="!ingredientsForm.valid" color="primary">
         <mat-icon> save </mat-icon>
       </button>
     </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from './user.model';
 
 @Injectable({
@@ -11,26 +11,20 @@ export class UserService {
 
   ref = firebase.firestore().collection('users');
 
-  private currentUser: User;
+  private currentUser = new BehaviorSubject<User>(new User('', '', '', '', false, ''));
+  private isloggedIn = new BehaviorSubject<boolean>(false);
+  private isGuest = new BehaviorSubject<boolean>(false);
 
-  get CurrentUser() { return this.currentUser; }
-  set CurrentUser(currentUser: User) { this.currentUser = currentUser; }
-  get isAdmin() { return this.checkIsAdmin(); }
-  get isPending() { return this.checkIsPending(); }
+  getCurrentUser(): Observable<User> { return this.currentUser.asObservable(); }
+  setCurrentUser(currentUser: User) { this.currentUser.next(currentUser); }
+
+  getIsLoggedIn() { return this.isloggedIn.asObservable(); }
+  setIsLoggedIn(isloggedIn: boolean) { this.isloggedIn.next(isloggedIn); }
+
+  getIsGuest() { return this.isGuest.asObservable(); }
+  setIsGuest(isGuest: boolean) { this.isGuest.next(isGuest); }
 
   constructor() {}
-
-  checkIsAdmin() {
-    if (this.currentUser) {
-      return this.currentUser.role === 'admin';
-    }
-  }
-
-  checkIsPending() {
-    if (this.currentUser) {
-      return this.currentUser.role === 'pending';
-    }
-  }
 
   getUsers(): Observable<User[]> {
     return new Observable((observer) => {
@@ -38,7 +32,7 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
+          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', data.theme || false, doc.id));
         });
         observer.next(users);
       });
@@ -51,7 +45,7 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
+          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', data.theme || false, doc.id));
         });
         // return only the first user
         observer.next(users[0]);
@@ -62,7 +56,7 @@ export class UserService {
   postUser(data: User): Observable<User> {
     return new Observable((observer) => {
       this.ref.add(data.getObject()).then((doc) => {
-        observer.next(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', doc.id));
+        observer.next(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', data.theme || false, doc.id));
       });
     });
   }

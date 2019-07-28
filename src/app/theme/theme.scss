@@ -1,0 +1,73 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+@mixin theme($theme) {
+    .header {
+        background-image: map-get($theme, "header-background");
+        box-shadow: map-get($theme, 'shadow');
+    }
+    .page {
+        background-color: map-get($theme, "page-background");
+        color: map-get($theme, "text-color");
+    }
+    .list, .box {
+        background-color: map-get($theme, "block-background");
+    }
+    .highlight-box {
+        background-color: map-get($theme, "highlight-background");
+    }
+    .footer {
+        background-image: map-get($theme, "footer-background");
+        box-shadow: map-get($theme, 'shadow');
+    }
+}
+
+//light theme
+$light-primary: mat-palette($mat-indigo);
+$light-accent: mat-palette($mat-pink);
+$light-mat-theme: mat-light-theme($light-primary, $light-accent);
+
+$light-theme: (
+    header-background: linear-gradient(-45deg, #373BA6, #212463),
+    page-background: lightgray,
+    text-color: black,
+    block-background: #eeeeee,
+    highlight-background: #373BA6,
+    footer-background: linear-gradient(45deg, #373BA6, #212463)
+);
+
+@include angular-material-theme($light-mat-theme);
+@include mat-button-theme($light-mat-theme);
+@include theme($light-theme);
+
+// dark theme
+$dark-primary: mat-palette($mat-blue);
+$dark-accent: mat-palette($mat-amber);
+$dark-warn: mat-palette($mat-red);
+$dark-mat-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+$dark-theme: (
+    header-background: linear-gradient(60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
+    page-background: #444444,
+    text-color: #dddddd,
+    block-background: #444444,
+    highlight-background: rgba(2,158,245,1),
+    footer-background: linear-gradient(-60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
+    shadow: 0px 0px 40px 10px rgba(0,0,0,0.40)
+);
+
+// $dark-theme: (
+//     header-background: linear-gradient(90deg, rgba(0,37,142,1) -30%, rgba(179,89,37,1) 110%),
+//     page-background: #444444,
+//     text-color: #dddddd,
+//     block-background: #444444,
+//     highlight-background: #3b366b,
+//     footer-background: linear-gradient(-90deg, rgba(0,37,142,1) -30%, rgba(179,89,37,1) 110%),
+//     shadow: 0px 0px 40px 10px rgba(0,0,0,0.40)
+// );
+
+.dark {
+    @include angular-material-theme($dark-mat-theme);
+    @include mat-button-theme($dark-mat-theme);
+    @include theme($dark-theme);
+}

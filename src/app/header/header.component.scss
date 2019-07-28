@@ -1,5 +1,4 @@
 .header {
-    background-image: linear-gradient(-45deg, #373BA6, #212463);
     padding: 10px 15px;
     position: relative;
     top: 0;
@@ -30,22 +29,23 @@ a:hover {
     text-decoration: none;
 }
 
-.btn {
+.nav-button {
     border-radius: 0;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.btn:first-child {
+.nav-button:first-child {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
 
-.btn:last-child {
+.nav-button:last-child {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
-.btn:active, .btn:focus {
+// TODO: make this more obvious now
+.nav-button:active, .nav-button:focus {
     box-shadow: none !important;
 }

@@ -11,7 +11,6 @@ import { Ingredient } from './ingredient.model';
   providedIn: 'root'
 })
 export class IngredientService {
-
   ref = firebase.firestore().collection('ingredients');
 
   constructor(

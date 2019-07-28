@@ -16,12 +16,14 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminGuard } from './admin/admin.guard';
 import { UserPendingGuard } from './user/user-pending/user-pending.guard';
 import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
+import { ItemListComponent } from './item/item-list/item-list.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'login', component: LoginComponent},
-  {path: 'recipe-list', component: RecipeListComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: 'recipe-list', redirectTo: 'recipe-list/', pathMatch: 'full'},
+  {path: 'recipe-list/:id', component: RecipeListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'recipe-detail/:id', component: RecipeDetailComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'recipe-edit', redirectTo: 'recipe-edit/', pathMatch: 'full'},
   {path: 'recipe-edit/:id', component: RecipeEditComponent, canActivate: [LoginGuard, UserPendingGuard]},
@@ -29,6 +31,7 @@ const routes: Routes = [
   {path: 'ingredient-detail/:id', component: IngredientDetailComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'ingredient-edit', redirectTo: 'ingredient-edit/', pathMatch: 'full'},
   {path: 'ingredient-edit/:id', component: IngredientEditComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: 'item-list', component: ItemListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'shopping-list', component: ShoppingListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'about', component: AboutComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},

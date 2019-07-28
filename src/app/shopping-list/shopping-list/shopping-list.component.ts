@@ -5,6 +5,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { UserItemService } from '../user-item.service';
+import { ItemService } from 'src/app/item/item.service';
+import { UserItem } from '../user-item.model';
 
 
 // TODO: Update all imports with @ and absolute paths
@@ -12,7 +15,7 @@ import { Notification } from 'src/app/modals/notification-modal/notification.enu
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
-  styleUrls: ['./shopping-list.component.css']
+  styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit {
 
@@ -23,18 +26,25 @@ export class ShoppingListComponent implements OnInit {
   uid: string;
   id: string;
   displayedColumns = ['name', 'pantryQuantity', 'cartQuantity', 'buy'];
-  dataSource;
+  ingredientsDataSource;
   ingredients;
+
+  itemsDisplayedColumns = ['name', 'cartQuantity', 'buy'];
+  itemsDataSource;
+  itemsId: string;
 
   constructor(
     private cookieService: CookieService,
     private userIngredientService: UserIngredientService,
-    private ingredientService: IngredientService
+    private ingredientService: IngredientService,
+    private userItemService: UserItemService,
+    private itemService: ItemService
   ) { }
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
     const myIngredients = [];
+    const myItems = [];
     this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
       this.id = userIngredients.id;
       this.ingredientService.getIngredients().subscribe(ingredients => {
@@ -53,54 +63,77 @@ export class ShoppingListComponent implements OnInit {
             });
           }
         });
-        this.dataSource = new MatTableDataSource(myIngredients);
+        this.ingredientsDataSource = new MatTableDataSource(myIngredients);
         // tslint:disable-next-line:triple-equals
-        this.dataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-        this.applyFilter();
+        this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
         this.ingredients = ingredients;
-        this.loading = false;
+
+        this.userItemService.getUserItems(this.uid).subscribe(userItems => {
+          this.itemsId = userItems.id;
+          this.itemService.getItems().subscribe(items => {
+            items.forEach(item => {
+              if (userItems && userItems.items) {
+                userItems.items.forEach(myItem => {
+                  if (myItem.id === item.id) {
+                    myItems.push({
+                      id: myItem.id,
+                      name: item.name,
+                      cartQuantity: myItem.cartQuantity
+                    });
+                  }
+                });
+              }
+            });
+            this.itemsDataSource = new MatTableDataSource(myItems);
+            // tslint:disable-next-line: triple-equals
+            this.itemsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+            this.applyFilter();
+            this.loading = false;
+          });
+        });
       });
     });
   }
 
   applyFilter() {
-    this.dataSource.filter = '0';
+    this.ingredientsDataSource.filter = '0';
+    this.itemsDataSource.filter = '0';
   }
 
-  packageData() {
+  packageIngredientData() {
     const userIngredients = [];
-    this.dataSource.data.forEach(data => {
+    this.ingredientsDataSource.data.forEach(data => {
       userIngredients.push({id: data.id, pantryQuantity: data.pantryQuantity, cartQuantity: data.cartQuantity});
     });
     return new UserIngredient(this.uid, userIngredients, this.id);
   }
 
   removeIngredient(id) {
-    const data = this.dataSource.data.find(x => x.id === id);
+    const data = this.ingredientsDataSource.data.find(x => x.id === id);
     const ingredient = this.ingredients.find(x => x.id === id);
     if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.putUserIngredient(this.packageData());
+      this.userIngredientService.putUserIngredient(this.packageIngredientData());
     }
   }
 
   addIngredient(id) {
-    const data = this.dataSource.data.find(x => x.id === id);
+    const data = this.ingredientsDataSource.data.find(x => x.id === id);
     const ingredient = this.ingredients.find(x => x.id === id);
     if (ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
-      this.userIngredientService.putUserIngredient(this.packageData());
+      this.userIngredientService.putUserIngredient(this.packageIngredientData());
     }
   }
 
-  addToPantry(id) {
+  addIngredientToPantry(id) {
     this.applyFilter();
-    const isCompleted = this.dataSource.data.filter(x => x.cartQuantity > 0).length === 1;
-    const data = this.dataSource.data.find(x => x.id === id);
+    const isCompleted = this.ingredientsDataSource.data.filter(x => x.cartQuantity > 0).length === 1;
+    const data = this.ingredientsDataSource.data.find(x => x.id === id);
     if (Number(data.cartQuantity > 0)) {
       data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
       data.cartQuantity = 0;
-      this.userIngredientService.buyUserIngredient(this.packageData(), 1, isCompleted);
+      this.userIngredientService.buyUserIngredient(this.packageIngredientData(), 1, isCompleted);
       this.applyFilter();
       this.notificationModalParams = {
         self: self,
@@ -110,27 +143,73 @@ export class ShoppingListComponent implements OnInit {
     }
   }
 
+  packageItemData() {
+    const userItems = [];
+    this.itemsDataSource.data.forEach(data => {
+      userItems.push({id: data.id, cartQuantity: data.cartQuantity});
+    });
+    return new UserItem(this.uid, userItems, this.itemsId);
+  }
+
+  removeItem(id) {
+    const data = this.itemsDataSource.data.find(x => x.id === id);
+    if (Number(data.cartQuantity) > 0) {
+      data.cartQuantity = Number(data.cartQuantity) - 1;
+      this.userItemService.putUserItem(this.packageItemData());
+    }
+  }
+
+  addItem(id) {
+    const data = this.itemsDataSource.data.find(x => x.id === id);
+    data.cartQuantity = Number(data.cartQuantity) + 1;
+    this.userItemService.putUserItem(this.packageItemData());
+  }
+
+  removeItemFromCart(id) {
+    this.applyFilter();
+    const isCompleted = this.itemsDataSource.data.filter(x => x.cartQuantity > 0).length === 1;
+    const data = this.itemsDataSource.data.find(x => x.id === id);
+    if (Number(data.cartQuantity > 0)) {
+      data.cartQuantity = 0;
+      this.userItemService.buyUserItem(this.packageItemData(), 1, isCompleted);
+      this.applyFilter();
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Item removed!'
+      };
+    }
+  }
+
   addAllToPantry() {
     this.validationModalParams = {
       function: this.addAllToPantryEvent,
       self: this,
-      text: 'Are you sure you want to buy all ingredients?'
+      text: 'Complete shopping list?'
     };
   }
 
   addAllToPantryEvent = function(self) {
-    self.dataSource.data.forEach(data => {
-      if (Number(data.cartQuantity) > 0) {
-        data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
-        data.cartQuantity = 0;
+    self.ingredientsDataSource.data.forEach(ingredient => {
+      if (Number(ingredient.cartQuantity) > 0) {
+        ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
+        ingredient.cartQuantity = 0;
       }
     });
-    self.userIngredientService.buyUserIngredient(self.packageData(), self.dataSource.filteredData.length, false);
+    self.userIngredientService.buyUserIngredient(self.packageIngredientData(), self.ingredientsDataSource.filteredData.length, false);
+
+    self.itemsDataSource.data.forEach(item => {
+      if (Number(item.cartQuantity) > 0) {
+        item.cartQuantity = 0;
+      }
+    });
+    self.userItemService.buyUserItem(self.packageItemData(), self.itemsDataSource.filteredData.length, false);
+
     self.applyFilter();
     self.notificationModalParams = {
       self: self,
       type: Notification.SUCCESS,
-      text: 'Ingredients added!'
+      text: 'Shopping list completed!'
     };
   };
 }

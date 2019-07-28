@@ -1,31 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../user/auth.service';
+import { UserService } from '../user/user.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { fadeInAnimation } from '../animations';
+import { User } from '../user/user.model';
+import { AuthService } from '../user/auth.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
+  styleUrls: ['./header.component.scss'],
   animations: [fadeInAnimation]
 })
 export class HeaderComponent implements OnInit {
 
   title: string;
+  user: Observable<User>;
   isLoggedIn: Observable<boolean>;
-  isAdmin: Observable<boolean>;
-  isPending: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
     this.title = environment.config.title;
-    this.isLoggedIn = this.authService.isLoggedIn;
-    this.isAdmin = this.authService.isAdmin;
-    this.isPending = this.authService.isPending;
+    this.user = this.userService.getCurrentUser();
+    this.isLoggedIn = this.userService.getIsLoggedIn();
   }
 
   signOut() {

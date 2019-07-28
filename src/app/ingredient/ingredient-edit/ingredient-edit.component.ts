@@ -21,7 +21,7 @@ class ErrorMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-ingredient-edit',
   templateUrl: './ingredient-edit.component.html',
-  styleUrls: ['./ingredient-edit.component.css']
+  styleUrls: ['./ingredient-edit.component.scss']
 })
 export class IngredientEditComponent implements OnInit {
 
@@ -40,8 +40,8 @@ export class IngredientEditComponent implements OnInit {
 
   constructor(private router: Router,
     private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
-    private formBuilder: FormBuilder
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -50,7 +50,6 @@ export class IngredientEditComponent implements OnInit {
     this.ingredientsForm = this.formBuilder.group({
       'name': [null, Validators.required],
       'category': [null],
-      // TODO: make this better
       'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]{1})+(.[0-9]{0,2})?$')]],
       'uom': [null, Validators.required],
       'calories': [null, [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
