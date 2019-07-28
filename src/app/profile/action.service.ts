@@ -12,6 +12,7 @@ export class ActionService {
 
   constructor() {}
 
+  // TODO: rework action data model
   commitAction(uid: string, action: Action, number: Number): Promise<void> {
     const self = this;
     return new Promise<void>( resolve => {
@@ -19,27 +20,27 @@ export class ActionService {
         self.getAction(self, uid).then(function(userAction) {
           const weekStart = new Date();
           weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-          const week = weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear();
+          const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
           if (userAction) {
-            if (userAction.actions[week.toString()]) {
+            if (userAction.actions[week]) {
               let exists = false;
-              Object.keys(userAction.actions[week.toString()]).forEach(id => {
+              Object.keys(userAction.actions[week]).forEach(id => {
                 if (id === action) {
-                  userAction.actions[week.toString()][action] += number;
+                  userAction.actions[week][action] += number;
                   exists = true;
                 }
               });
               if (!exists) {
-                userAction.actions[week.toString()][action] = number;
+                userAction.actions[week][action] = number;
               }
             } else {
-              userAction.actions[week.toString()] = {[action]: number};
+              userAction.actions[week] = {[action]: number};
             }
             self.putAction(self, userAction).then(function() {
               resolve();
             });
           } else {
-            userAction = {'uid': uid, 'actions': {[week.toString()]: {[action]: number}}};
+            userAction = {'uid': uid, 'actions': {[week]: {[action]: number}}};
             self.postAction(self, userAction).then(function() {
               resolve();
             });
@@ -47,6 +48,10 @@ export class ActionService {
         });
       }
     });
+  }
+
+  getActions(uid) {
+    return this.getAction(this, uid);
   }
 
   private getAction(self, uid: string) {
