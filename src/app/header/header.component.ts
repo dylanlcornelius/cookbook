@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { fadeInAnimation } from '../animations';
 import { User } from '../user/user.model';
 import { AuthService } from '../user/auth.service';
+import { Router, RouterEvent } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -17,11 +18,19 @@ export class HeaderComponent implements OnInit {
   title: string;
   user: Observable<User>;
   isLoggedIn: Observable<boolean>;
+  route: string;
 
   constructor(
+    private router: Router,
     private authService: AuthService,
     private userService: UserService,
-  ) {}
+  ) {
+    this.router.events.subscribe((event: RouterEvent) => {
+      if (event.url) {
+        this.route = event.url;
+      }
+    });
+  }
 
   ngOnInit() {
     this.title = environment.config.title;
