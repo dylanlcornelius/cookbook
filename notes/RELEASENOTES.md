@@ -31,3 +31,14 @@
 - created a calculated field for recipe quantities. add ingredient amounts/UOM to ingredient boxes
 - specified recipes UOMs and UOM conversions for quick usage
 - added an import and export of the database for admins
+
+#### Version 1.2 - Your Profile
+- created an item page for non-recipe related things
+- re-added author to recipe detail page
+- added option for filtering recipes by author
+- added route to recipe list for recipe author
+- created a profile page
+- added dark theme
+- created initial page loading animation
+- added categories to recipes
+- created an analytics tab on profile page to display user actions
