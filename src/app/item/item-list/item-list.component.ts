@@ -6,13 +6,12 @@ import { UserItemService } from 'src/app/shopping-list/user-item.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
   FormControl,
-  FormGroupDirective,
   FormBuilder,
   FormGroup,
   NgForm,
   Validators
 } from '@angular/forms';
-import { ErrorStateMatcher, MatSort, MatAccordion } from '@angular/material';
+import { ErrorStateMatcher, MatAccordion } from '@angular/material';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { Item } from '../item.model';
 

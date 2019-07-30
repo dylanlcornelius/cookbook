@@ -1,23 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import {
-  FormControl,
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { ErrorStateMatcher } from '@angular/material';
 import { UserService } from '../../user/user.service';
 import { User } from 'src/app/user/user.model';
 import { ActionService } from '../action.service';
 import { ActionLabel } from '../action.enum';
-
-class ErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return (control && control.invalid && (control.dirty || control.touched));
-  }
-}
+import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-profile',
