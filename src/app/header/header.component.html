@@ -2,7 +2,7 @@
   <div class="navbar">
     <a routerLink="/home" class="title"> {{title}} </a>
     <span *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" class="title-bar" [@fadeInAnimation]>
-      <a mat-button routerLink="profile">
+      <a mat-button routerLink="/profile">
         <mat-icon>person</mat-icon>
       </a>
       <a mat-button routerLink="/admin-dashboard" *ngIf="(user | async)?.isAdmin()">
