@@ -1,28 +1,26 @@
 .header {
-    padding: 10px 15px;
+    padding: calc(5px + 1vh) calc(10px + 1vw);
     position: relative;
     top: 0;
 }
 
-.navbar {
+.nav-bar {
     display: inline-block;
 }
-
+@media screen and (max-width: 767px) {
+    .nav-bar {
+        min-width: 80%;
+    }
+}
 
 .title {
     color: white;
-    font-size: 30px;
-    margin-top: 10px;
+    font-size: calc(18px + 1vmin);
 }
 
-.title-bar {
-    float: right;
-}
-
-.title-bar label {
-    margin: 0;
-    position: relative;
-    padding-top: 10px;
+.title-button {
+    padding: 0;
+    min-width: calc(30px + 1vmin);
 }
 
 a:hover {
@@ -48,4 +46,33 @@ a:hover {
 // TODO: make this more obvious now
 .nav-button:active, .nav-button:focus {
     box-shadow: none !important;
+}
+.mobile-nav-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background-color: #00000079;
+}
+.mobile-nav {
+    position: relative;
+    width: fit-content;
+    height: 100%;
+    border-right: 2px solid grey;
+    box-shadow: 10px 5px 30px 0px rgba(0,0,0,0.60);
+    padding: 10px 20px;
+}
+.mobile-nav-button {
+    width: 100%;
+    font-size: 16px;
+    border-bottom: 1px solid #5a5a5a;
+    border-radius: 0;
+}
+.mobile-nav-bottom {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
 }
