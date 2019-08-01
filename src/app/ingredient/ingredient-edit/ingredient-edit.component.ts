@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IngredientService } from '../ingredient.service';
 import {
-  FormControl,
   FormGroupDirective,
   FormBuilder,
   FormGroup,
@@ -10,13 +9,7 @@ import {
   Validators
 } from '@angular/forms';
 import { UOM } from '../uom.emun';
-import { ErrorStateMatcher } from '@angular/material';
-
-class ErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return (control && control.invalid && (control.dirty || control.touched));
-  }
-}
+import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-ingredient-edit',
