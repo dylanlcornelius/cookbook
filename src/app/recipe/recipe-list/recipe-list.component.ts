@@ -191,6 +191,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   toggleAuthor(uid: string) {
+    this.isAuthor = !this.isAuthor;
     if (this.isAuthor) {
       // tslint:disable-next-line:triple-equals
       this.dataSource.filterPredicate = (data, filter) => data.user == filter;
@@ -199,6 +200,5 @@ export class RecipeListComponent implements OnInit {
       this.dataSource.filterPredicate = () => true;
     }
     this.dataSource.filter = uid;
-    this.isAuthor = !this.isAuthor;
   }
 }
