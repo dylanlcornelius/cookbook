@@ -6,6 +6,9 @@
         background-image: map-get($theme, "header-background");
         box-shadow: map-get($theme, 'shadow');
     }
+    .nav-button.selected {
+        background-color: map-get($theme, "selected-background");
+    }
     .page {
         background-color: map-get($theme, "page-background");
         color: map-get($theme, "text-color");
@@ -29,6 +32,7 @@ $light-mat-theme: mat-light-theme($light-primary, $light-accent);
 
 $light-theme: (
     header-background: linear-gradient(-45deg, #373BA6, #212463),
+    selected-background: rgb(47, 60, 136),
     page-background: lightgray,
     text-color: black,
     block-background: #eeeeee,
@@ -48,6 +52,7 @@ $dark-mat-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 $dark-theme: (
     header-background: linear-gradient(60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
+    selected-background: #075da3,
     page-background: #444444,
     text-color: #dddddd,
     block-background: #444444,
@@ -55,16 +60,6 @@ $dark-theme: (
     footer-background: linear-gradient(-60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
     shadow: 0px 0px 40px 10px rgba(0,0,0,0.40)
 );
-
-// $dark-theme: (
-//     header-background: linear-gradient(90deg, rgba(0,37,142,1) -30%, rgba(179,89,37,1) 110%),
-//     page-background: #444444,
-//     text-color: #dddddd,
-//     block-background: #444444,
-//     highlight-background: #3b366b,
-//     footer-background: linear-gradient(-90deg, rgba(0,37,142,1) -30%, rgba(179,89,37,1) 110%),
-//     shadow: 0px 0px 40px 10px rgba(0,0,0,0.40)
-// );
 
 .dark {
     @include angular-material-theme($dark-mat-theme);
