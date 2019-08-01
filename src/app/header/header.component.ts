@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { fadeInAnimation } from '../animations';
+import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../animations';
 import { User } from '../user/user.model';
 import { AuthService } from '../user/auth.service';
 import { Router, RouterEvent } from '@angular/router';
@@ -11,7 +11,7 @@ import { Router, RouterEvent } from '@angular/router';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  animations: [fadeInAnimation]
+  animations: [fadeInAnimation, fadeInFastAnimation, slideInOutAnimation]
 })
 export class HeaderComponent implements OnInit {
 
@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   user: Observable<User>;
   isLoggedIn: Observable<boolean>;
   route: string;
+  showNav = false;
 
   constructor(
     private router: Router,
@@ -36,6 +37,10 @@ export class HeaderComponent implements OnInit {
     this.title = environment.config.title;
     this.user = this.userService.getCurrentUser();
     this.isLoggedIn = this.userService.getIsLoggedIn();
+  }
+
+  toggleNav() {
+    this.showNav = !this.showNav;
   }
 
   signOut() {

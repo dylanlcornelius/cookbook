@@ -3,7 +3,9 @@ import {
     transition,
     animate,
     style,
-    query
+    query,
+    animateChild,
+    group
 } from '@angular/animations';
 
 export const fadeComponentAnimation = trigger('fadeComponentAnimation', [
@@ -19,5 +21,25 @@ export const fadeInAnimation = trigger('fadeInAnimation', [
     transition(':enter', [
         style({opacity: 0}),
         animate('1s', style({opacity: 1}))
+    ])
+]);
+
+export const fadeInFastAnimation = trigger('fadeInFastAnimation', [
+    transition(':enter', [
+        group([
+            query('@*', animateChild(), {optional: true}),
+            style({opacity: 0}),
+            animate('100ms', style({opacity: 1}))
+        ])
+    ])
+]);
+
+export const slideInOutAnimation = trigger('slideInOutAnimation', [
+    transition(':enter', [
+        style({transform: 'translateX(-100%)'}),
+        animate('400ms ease', style({transform: 'translateX(0%)'}))
+    ]),
+    transition(':leave', [
+        animate('400ms ease', style({transform: 'translateX(-100%)'}))
     ])
 ]);
