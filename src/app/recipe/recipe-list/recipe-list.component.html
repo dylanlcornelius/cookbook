@@ -14,11 +14,11 @@
       <mat-icon> add </mat-icon>
     </a>
 
-    <button mat-mini-fab matTooltip="All Recipes" (click)="toggleAuthor(uid)" *ngIf="isAuthor" class="row-button">
-      <mat-icon>check_box</mat-icon>
-    </button>
-    <button mat-mini-fab matTooltip="My Recipes" (click)="toggleAuthor(uid)" *ngIf="!isAuthor" class="row-button">
+    <button mat-mini-fab matTooltip="All Recipes" (click)="toggleAuthor(uid)" *ngIf="!isAuthor" class="row-button">
       <mat-icon>check_box_outline_blank</mat-icon>
+    </button>
+    <button mat-mini-fab matTooltip="My Recipes" (click)="toggleAuthor(uid)" *ngIf="isAuthor" class="row-button">
+      <mat-icon>check_box</mat-icon>
     </button>
   </div>
 

@@ -43,8 +43,7 @@ a:hover {
     border-bottom-right-radius: 5px;
 }
 
-// TODO: make this more obvious now
-.nav-button:active, .nav-button:focus {
+.nav-button.selected {
     box-shadow: none !important;
 }
 .mobile-nav-container {
