@@ -1,3 +1,6 @@
+.mat-form-field {
+    width: 100%;
+}
 .table-container {
     display: flex;
     flex-direction: column;
@@ -5,7 +8,6 @@
     min-width: 500px;
     overflow: auto;
 }
-
 .buy-icon {
     vertical-align: middle;
     font-size: 25px;
@@ -18,4 +20,7 @@
 
 .button-row {
     margin: 10px 0;
+}
+.mat-paginator {
+    background: inherit;
 }

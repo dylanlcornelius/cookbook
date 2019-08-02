@@ -62,7 +62,7 @@ export class IngredientModalComponent implements OnInit {
   confirm() {
     this.ingredientModalParams.self.userIngredients.find(x => x.id === this.ingredientModalParams.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.ingredientModalParams.self.dataSource.find(x => x.id === this.ingredientModalParams.data.id)
+    this.ingredientModalParams.self.dataSource.data.find(x => x.id === this.ingredientModalParams.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
     this.ingredientModalParams.function(this.ingredientModalParams.self);
     this.ingredientModalParams = undefined;
