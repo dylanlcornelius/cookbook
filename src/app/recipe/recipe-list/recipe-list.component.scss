@@ -1,13 +1,12 @@
-.table-container {
-    display: flex;
-    flex-direction: column;
-    max-height: 500px;
-    min-width: 500px;
-    overflow: auto;
-}
 .button-row {
     margin: 10px 0;
 }
 .row-button {
     margin: 10px;
+}
+.recipe-card {
+    min-width: 200px;
+    max-width: 300px;
+    margin: 1%;
+    text-align: center;
 }

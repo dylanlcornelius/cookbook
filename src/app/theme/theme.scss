@@ -13,6 +13,9 @@
         background-color: map-get($theme, "page-background");
         color: map-get($theme, "text-color");
     }
+    .primary-text-color {
+        color: map-get($theme, "text-color");
+    }
     .list, .box, .mobile-nav {
         background-color: map-get($theme, "block-background");
     }

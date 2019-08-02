@@ -3,7 +3,7 @@
     <div class="d-flex">
       <a routerLink="/home" class="title">{{title}}</a>
       <span *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" class="ml-auto" [@fadeInAnimation]>
-        <a mat-button class="title-button" routerLink="profile">
+        <a mat-button class="title-button" routerLink="/profile">
           <mat-icon>person</mat-icon>
         </a>
         <a mat-button class="title-button" routerLink="/admin-dashboard" *ngIf="(user | async)?.isAdmin()">
