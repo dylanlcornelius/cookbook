@@ -6,7 +6,7 @@ import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientService } from 'src/app/ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatCard } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -200,5 +200,9 @@ export class RecipeListComponent implements OnInit {
       this.dataSource.filterPredicate = () => true;
     }
     this.dataSource.filter = uid;
+  }
+
+  indentify(index, item) {
+    return item.id;
   }
 }

@@ -7,7 +7,7 @@
     <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe-list']"><mat-icon>list</mat-icon></a>
   </div>
 
-  <mat-card class="detail-card">
+  <mat-card class="detail-card primary-text-color">
     <mat-card-header class="d-flex justify-content-center">
       <mat-card-title class="d-flex justify-content-center">
         <h2>{{recipe.name}}</h2>
@@ -75,7 +75,6 @@
       <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe-edit/', recipe.id]">
         <mat-icon>edit</mat-icon>
       </a>
-      <!-- TODO: update recipe-list with author id -->
       <a mat-raised-button [routerLink]="['/recipe-list/', user.uid ]" class="author-link">
         by {{user.firstName}} {{ user.lastName }}
       </a>
