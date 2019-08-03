@@ -3,15 +3,26 @@
     <div class="d-flex">
       <a routerLink="/home" class="title">{{title}}</a>
       <span *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" class="ml-auto" [@fadeInAnimation]>
-        <a mat-button class="title-button" routerLink="/profile">
+        <button mat-button class="title-button" [matMenuTriggerFor]="profileMenu">
           <mat-icon>person</mat-icon>
-        </a>
+        </button>
+        <mat-menu #profileMenu="matMenu" style="width: fit-content">
+          <a mat-menu-item routerLink="/profile">
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </a>
+          <a mat-menu-item routerLink="/analytics">
+            <mat-icon>bar_chart</mat-icon>
+            <span>Analytics</span>
+          </a>
+        </mat-menu>
+        
         <a mat-button class="title-button" routerLink="/admin-dashboard" *ngIf="(user | async)?.isAdmin()">
           <mat-icon>apps</mat-icon>
         </a>
   
         <button mat-button class="d-md-none title-button float-right" (click)="toggleNav()" *ngIf="(isLoggedIn | async)">
-          <mat-icon>dehaze</mat-icon>
+          <mat-icon>menu</mat-icon>
         </button>
       </span>
     </div>
@@ -31,15 +42,36 @@
 
     <div class="mobile-nav-container d-md-none" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending() && showNav" (click)="toggleNav()" [@fadeInFastAnimation]>
       <div class="mobile-nav" [@slideInOutAnimation]>
-        <a mat-button class="mobile-nav-button" routerLink="/home">Home</a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/recipe-list">Recipes</a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/ingredient-list">Ingredients</a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/item-list">Items</a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/shopping-list">Shopping List</a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/about">About</a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/home">
+          <mat-icon>home</mat-icon>
+          <span class="mobile-nav-text">Home</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/recipe-list">
+          <mat-icon>restaurant</mat-icon>
+          <span class="mobile-nav-text">Recipes</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/ingredient-list">
+          <mat-icon>kitchen</mat-icon>
+          <span class="mobile-nav-text">Ingredients</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/item-list">
+          <mat-icon>local_offer</mat-icon>
+          <span class="mobile-nav-text">Items</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/shopping-list">
+          <mat-icon>shopping_cart</mat-icon>
+          <span class="mobile-nav-text">Shopping List</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/about">
+          <mat-icon>info</mat-icon>
+          <span class="mobile-nav-text">About</span>
+        </a><br/>
         
         <div class="mobile-nav-bottom">
-            <button mat-button class="mobile-nav-button" style="border: none" (click)="signOut()">Sign-out</button>
+            <button mat-button class="mobile-nav-button" style="border: none" (click)="signOut()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span class="mobile-nav-text">Sign-out</span>
+            </button>
         </div>
       </div>
     </div>

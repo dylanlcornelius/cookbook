@@ -43,12 +43,11 @@
         <th mat-header-cell *matHeaderCellDef>Add to Pantry</th>
         <td mat-cell *matCellDef="let element">
           <button mat-raised-button color="primary" (click)="addIngredientToPantry(element.id)">
-            Buy
+            <mat-icon>done</mat-icon>
           </button>
         </td>
       </ng-container>
 
-      <!-- TODO: checkboxes? -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
@@ -83,19 +82,18 @@
         <th mat-header-cell *matHeaderCellDef>Remove from Cart</th>
         <td mat-cell *matCellDef="let element">
           <button mat-raised-button color="primary" (click)="removeItemFromCart(element.id)">
-            Buy
+            <mat-icon>done</mat-icon>
           </button>
         </td>
       </ng-container>
       
-      <!-- TODO: checkboxes? -->
       <tr mat-header-row *matHeaderRowDef="itemsDisplayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: itemsDisplayedColumns;"></tr>
     </table>
   </div>
   <div class="button-row" *ngIf="ingredientsDataSource.filteredData.length > 0 || itemsDataSource.filteredData.length > 0">
     <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">
-      Buy All
+      Add All
     </button>
   </div>
 </div>
