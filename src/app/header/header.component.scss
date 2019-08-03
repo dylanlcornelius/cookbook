@@ -65,13 +65,20 @@ a:hover {
 }
 .mobile-nav-button {
     width: 100%;
-    font-size: 16px;
+    font-size: 20px;
     border-bottom: 1px solid #5a5a5a;
     border-radius: 0;
+    text-align: start;
+}
+.mobile-nav-text {
+    margin-left: 20px;
 }
 .mobile-nav-bottom {
     bottom: 0;
     left: 0;
     position: absolute;
     width: 100%;
+}
+.mobile-nav-bottom .mobile-nav-button {
+    text-align: center;
 }

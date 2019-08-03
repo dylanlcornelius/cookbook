@@ -2,7 +2,7 @@
 <app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
 <div *ngIf="!loading">
-  <mat-tab-group class="box mat-elevation-z4" dynamicHeight="true" animationDuration="1000ms">
+  <mat-tab-group class="box mat-elevation-z4" dynamicHeight="true" animationDuration="1000ms" [selectedIndex]="selectedIndex">
     <mat-tab label="Profile">
       <div class="tab-body">
         <div class="d-flex justify-content-center">
@@ -28,19 +28,24 @@
               <mat-hint>Last Name</mat-hint>
             </mat-form-field>
           </div>
+          <br/>
 
           <div class="row">
               <div class="col-md-6 col-sm-12">
                 <mat-slide-toggle matInput formControlName="theme" [checked]="userForm.get('theme').value">
-                  <span *ngIf="!userForm.get('theme').value">Light theme</span>
-                  <span *ngIf="userForm.get('theme').value">Dark theme</span>
                 </mat-slide-toggle>
+                <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
+                  <mat-icon>brightness_5</mat-icon>
+                </span>
+                <span *ngIf="userForm.get('theme').value" class="theme-icon" matTooltip="Dark Theme">
+                  <mat-icon>brightness_3</mat-icon>
+                </span>
               </div>
             </div>
           
           <div class="button-row">
-            <button mat-mini-fab type="submit" [disabled]="!userForm.valid" color="primary">
-              <mat-icon>save</mat-icon>
+            <button mat-mini-fab type="submit" matTooltip="Save Settings" [disabled]="!userForm.valid" color="primary">
+              <mat-icon>done</mat-icon>
             </button>
           </div>
         </form>

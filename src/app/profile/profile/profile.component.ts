@@ -11,6 +11,7 @@ import { User } from 'src/app/user/user.model';
 import { ActionService } from '../action.service';
 import { ActionLabel } from '../action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -21,6 +22,8 @@ export class ProfileComponent implements OnInit {
 
   loading: Boolean = true;
   notificationModalParams;
+
+  selectedIndex = 0;
 
   userForm: FormGroup;
   uid: string;
@@ -52,11 +55,14 @@ export class ProfileComponent implements OnInit {
   matcher = new ErrorMatcher();
 
   constructor(
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
     private userService: UserService,
     private actionService: ActionService
-  ) { }
+  ) {
+    this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
+  }
 
   ngOnInit() {
     // TODO: make uid global; handle loggedIn cookie in userService

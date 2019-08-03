@@ -35,7 +35,8 @@ const routes: Routes = [
   {path: 'shopping-list', component: ShoppingListComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'about', component: AboutComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
-  {path: 'profile', component: ProfileComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [LoginGuard, UserPendingGuard], data: {selectedTabIndex: 0}},
+  {path: 'analytics', component: ProfileComponent, canActivate: [LoginGuard, UserPendingGuard], data: {selectedTabIndex: 1}},
   {path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [LoginGuard, UserPendingGuard, AdminGuard]},
 ];
 
