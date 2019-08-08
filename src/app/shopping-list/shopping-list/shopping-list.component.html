@@ -11,87 +11,105 @@
 
 <div *ngIf="!loading">
   <div class="table-container mat-elevation-z8" *ngIf="ingredientsDataSource.filteredData.length > 0">
-    <table mat-table #table [dataSource]="ingredientsDataSource">
+    <mat-table #table [dataSource]="ingredientsDataSource">
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Ingredient Name</th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <mat-header-cell *matHeaderCellDef>Ingredient Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">Name:</span>
+          <span class="mobile-value">{{element.name}}</span>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="pantryQuantity">
-        <th mat-header-cell *matHeaderCellDef>Ingredients in Pantry</th>
-        <td mat-cell *matCellDef="let element">{{element.pantryQuantity}} {{element.uom === 'other'? '' : element.uom}}</td>
+        <mat-header-cell *matHeaderCellDef>Ingredients in Pantry</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">Pantry Quantity:&nbsp;</span>
+          <span class="mobile-value">{{element.pantryQuantity}} {{element.uom === 'other'? '' : element.uom}}</span>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="cartQuantity">
-        <th mat-header-cell *matHeaderCellDef>Ingredients Needed</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-raised-button (click)="removeIngredient(element.id)">
-            <mat-icon class="buy-icon"> arrow_left </mat-icon>
-          </button>
-          <span style="margin: 0 10px;">
-            <label class="table-col">
+        <mat-header-cell *matHeaderCellDef>Ingredients Needed</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">List Quantity:&nbsp;&nbsp;</span>
+
+          <span class="mobile-value">
+            <button mat-button (click)="removeIngredient(element.id)">
+              <mat-icon class="buy-icon"> arrow_left </mat-icon>
+            </button>
+            <span style="margin: 0 10px;">
               {{element.cartQuantity}} {{element.uom === 'other'? '' : element.uom}}
-            </label>
+            </span>
+            <button mat-button (click)="addIngredient(element.id)">
+              <mat-icon class="buy-icon">arrow_right</mat-icon>
+            </button>
           </span>
-          <button mat-raised-button (click)="addIngredient(element.id)">
-            <mat-icon class="buy-icon">arrow_right</mat-icon>
-          </button>
-        </td>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="buy">
-        <th mat-header-cell *matHeaderCellDef>Add to Pantry</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="primary" (click)="addIngredientToPantry(element.id)">
-            Buy
-          </button>
-        </td>
+        <mat-header-cell *matHeaderCellDef>Add to Pantry</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">Add to Pantry:&nbsp;&nbsp;</span>
+          <span class="mobile-value">
+            <button mat-raised-button color="primary" (click)="addIngredientToPantry(element.id)">
+              Buy
+            </button>
+          </span>
+        </mat-cell>
       </ng-container>
 
       <!-- TODO: checkboxes? -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
   </div>
   <br>
 
   <div class="table-container mat-elevation-z8" *ngIf="itemsDataSource.filteredData.length > 0">
-    <table mat-table #table [dataSource]="itemsDataSource">
+    <mat-table #table [dataSource]="itemsDataSource">
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Item Name</th>
-        <td mat-cell *matCellDef="let element">{{element.name}}</td>
+        <mat-header-cell *matHeaderCellDef>Item Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">Name:</span>
+          <span class="mobile-value">{{element.name}}</span>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="cartQuantity">
-        <th mat-header-cell *matHeaderCellDef>Items Needed</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-raised-button (click)="removeItem(element.id)">
-            <mat-icon class="buy-icon">arrow_left</mat-icon>
-          </button>
-          <span style="margin: 0 10px;">
-            <label class="table-col">
+        <mat-header-cell *matHeaderCellDef>Items Needed</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">List Quantity:</span>
+
+          <span class="mobile-value">
+            <button mat-button (click)="removeItem(element.id)">
+              <mat-icon class="buy-icon">arrow_left</mat-icon>
+            </button>
+            <span style="margin: 0 10px;">
               {{element.cartQuantity}}
-            </label>
+            </span>
+            <button mat-button (click)="addItem(element.id)">
+              <mat-icon class="buy-icon">arrow_right</mat-icon>
+            </button>
           </span>
-          <button mat-raised-button (click)="addItem(element.id)">
-            <mat-icon class="buy-icon">arrow_right</mat-icon>
-          </button>
-        </td>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="buy">
-        <th mat-header-cell *matHeaderCellDef>Remove from Cart</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="primary" (click)="removeItemFromCart(element.id)">
-            Buy
-          </button>
-        </td>
+        <mat-header-cell *matHeaderCellDef>Remove from Cart</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span class="mobile-label">Remove from Cart:</span>
+          <span class="mobile-value">
+            <button mat-raised-button color="primary" (click)="removeItemFromCart(element.id)">
+              Buy
+            </button>
+          </span>
+        </mat-cell>
       </ng-container>
       
-      <!-- TODO: checkboxes? -->
-      <tr mat-header-row *matHeaderRowDef="itemsDisplayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: itemsDisplayedColumns;"></tr>
-    </table>
+      <mat-header-row *matHeaderRowDef="itemsDisplayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: itemsDisplayedColumns;"></mat-row>
+    </mat-table>
   </div>
   <div class="button-row" *ngIf="ingredientsDataSource.filteredData.length > 0 || itemsDataSource.filteredData.length > 0">
     <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">
@@ -102,7 +120,10 @@
 
 <div *ngIf="!loading && ingredientsDataSource.filteredData.length == 0 && itemsDataSource.filteredData.length == 0" style="text-align: center;">
   <br/>
-  <h4>
+  <h4 [hidden]="isCompleted">
     No ingredients or items have been added to your shopping list
+  </h4>
+  <h4 [hidden]="!isCompleted">
+    Shopping list completed!
   </h4>
 </div>

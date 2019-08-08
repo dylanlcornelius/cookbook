@@ -8,17 +8,17 @@
   </div>
 
   <mat-card class="detail-card">
-    <mat-card-header class="d-flex justify-content-center">
-      <mat-card-title class="d-flex justify-content-center">
+    <mat-card-header class="d-flex justify-content-center center-text">
+      <mat-card-title>
         <h2>{{recipe.name}}</h2>
       </mat-card-title>
-      <mat-card-subtitle class="d-flex justify-content-center">
+      <mat-card-subtitle>
         <dd> {{recipe.description}} </dd>
       </mat-card-subtitle>
     </mat-card-header>
 
     <div class="row">
-      <mat-card-content class="col-sm-4 d-flex justify-content-center">
+      <mat-card-content class="col-sm-4 center-text">
         <dl>
           <dt>Preparation Time</dt>
           <dd>{{recipe.time || "No Preparation Time"}} {{ recipe.time ? 'minutes' : ''}}</dd>
@@ -34,7 +34,7 @@
 
           <dt>Categories</dt>
           <dd>
-            <mat-chip-list>
+            <mat-chip-list class="d-flex justify-content-center">
               <mat-chip *ngFor="let category of recipe.categories; let i = index">
                 {{category.category}}
               </mat-chip>
@@ -44,7 +44,7 @@
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-sm-4 d-flex justify-content-center"> 
+      <mat-card-content class="col-sm-4 center-text"> 
         <dl>
           <dt>Directions</dt>
 
@@ -55,7 +55,7 @@
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-sm-4 d-flex justify-content-center">
+      <mat-card-content class="col-sm-4 center-text">
         <dl>
           <dt>Ingredients</dt>
 
