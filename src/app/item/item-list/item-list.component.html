@@ -9,7 +9,14 @@
 </div>
 <br/>
 
-<div *ngIf="!loading">
+<div [hidden]="loading">
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)"/>
+    <mat-placeholder>
+      <mat-icon>search</mat-icon>
+    </mat-placeholder>
+  </mat-form-field>
+
   <div class="table-container mat-elevation-z8"> 
     <mat-accordion #accordion="matAccordion" multi>
       <mat-table #table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;" matSort>
@@ -23,7 +30,7 @@
         </ng-container>
 
         <ng-container matColumnDef="cartQuantity">
-          <mat-header-cell *matHeaderCellDef>Cart Quantity</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>List Quantity</mat-header-cell>
           <mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
             <span class="mobile-label">List Quantity:</span>
             <span class="mobile-value">
@@ -44,7 +51,7 @@
         </ng-container>
 
         <ng-container matColumnDef="remove">
-          <mat-header-cell *matHeaderCellDef>Remove</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
           <mat-cell *matCellDef="let element">
             <span class="mobile-label">Remove:</span>
             <span class="mobile-value">
@@ -75,8 +82,8 @@
                   </mat-form-field>
 
                   <div class="button-row">
-                    <button mat-fab type="submit" [disabled]="!element.form.valid" color="primary">
-                      <mat-icon>save</mat-icon>
+                    <button mat-mini-fab matTooltip="Save Item" type="submit" [disabled]="!element.form.valid" color="primary">
+                      <mat-icon>done</mat-icon>
                     </button>
                   </div>
                 </form>
@@ -99,8 +106,8 @@
                 </mat-form-field>
 
                 <div class="button-row">
-                  <button mat-fab type="submit" [disabled]="!itemForm.valid" color="primary">
-                    <mat-icon>save</mat-icon>
+                  <button mat-mini-fab matTooltip="Save Item" type="submit" [disabled]="!itemForm.valid" color="primary">
+                    <mat-icon>done</mat-icon>
                   </button>
                 </div>
               </form>
@@ -114,5 +121,7 @@
       </mat-table>
     </mat-accordion>
   </div>
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
 </div>
   

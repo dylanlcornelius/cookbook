@@ -8,18 +8,25 @@
   </div>
   <br/>
   
-  <div *ngIf="!loading">
+  <div [hidden]="loading">
     <div class="button-row">
       <a mat-mini-fab matTooltip="Add Ingredient" color="primary" [routerLink]="['/ingredient-edit']">
         <mat-icon> add </mat-icon>
       </a>
     </div>
+
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)"/>
+      <mat-placeholder>
+        <mat-icon>search</mat-icon>
+      </mat-placeholder>
+    </mat-form-field>
   
     <div class="table-container mat-elevation-z8"> 
-      <mat-table #table [dataSource]="dataSource">
+      <mat-table #table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" mat-sort-header>
             <span class="mobile-label">Name:</span>
             <span class="mobile-value">{{element.name}}</span>
           </mat-cell>
@@ -27,7 +34,7 @@
   
         <ng-container matColumnDef="category">
           <mat-header-cell *matHeaderCellDef> Category </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" mat-sort-header>
             <span class="mobile-label">Category:</span>
             <span class="mobile-value">{{element.category}}</span>
           </mat-cell>
@@ -35,7 +42,7 @@
 
         <ng-container matColumnDef="amount">
           <mat-header-cell *matHeaderCellDef> Amount </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" mat-sort-header>
             <span class="mobile-label">Amount:</span>
             <span class="mobile-value">{{element.amount}} {{element.uom === 'other'? '' : element.uom}}</span>
           </mat-cell>
@@ -43,14 +50,14 @@
   
         <ng-container matColumnDef="calories">
           <mat-header-cell *matHeaderCellDef> Calories </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" mat-sort-header>
             <span class="mobile-label">Calories:</span>
             <span class="mobile-value">{{element.calories}}</span>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="pantryQuantity">
-          <mat-header-cell *matHeaderCellDef> Pantry Quantity </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Pantry Quantity </mat-header-cell>
           <mat-cell *matCellDef="let element" (click)="$event.stopPropagation()" style="min-width: 150px">
             <span class="mobile-label">Pantry Quantity:</span>
             <span class="mobile-value">
@@ -67,7 +74,7 @@
         </ng-container>
   
         <ng-container matColumnDef="cartQuantity">
-          <mat-header-cell *matHeaderCellDef> Cart Quantity </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> List Quantity </mat-header-cell>
           <mat-cell *matCellDef="let element" (click)="$event.stopPropagation()" style="min-width: 140px;">
             <span class="mobile-label">List Quantity:</span>
             
@@ -91,5 +98,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/ingredient-detail/', row.id]"></mat-row>
       </mat-table>
     </div>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
   </div>
   

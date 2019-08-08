@@ -6,13 +6,12 @@ import { UserItemService } from 'src/app/shopping-list/user-item.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
   FormControl,
-  FormGroupDirective,
   FormBuilder,
   FormGroup,
   NgForm,
   Validators
 } from '@angular/forms';
-import { ErrorStateMatcher, MatSort, MatAccordion } from '@angular/material';
+import { ErrorStateMatcher, MatAccordion, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { Item } from '../item.model';
 
@@ -40,7 +39,7 @@ export class ItemListComponent implements OnInit {
   notificationModalParams;
 
   displayedColumns = ['name', 'cartQuantity', 'remove', 'edit'];
-  dataSource = [];
+  dataSource;
   uid: string;
   id: string;
   userItems = [];
@@ -50,6 +49,8 @@ export class ItemListComponent implements OnInit {
   matcher = new ErrorMatcher();
 
   @ViewChild('accordion') accordion: MatAccordion;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private cookieService: CookieService,
@@ -59,11 +60,17 @@ export class ItemListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.uid = this.cookieService.get('LoggedIn');
+    this.loadData();
+  }
+
+  loadData() {
+    this.loading = true;
+
     this.itemForm = this.formBuilder.group({
       'name': [null, Validators.required],
     });
 
-    this.uid = this.cookieService.get('LoggedIn');
     const myItems = [];
     this.userItemService.getUserItems(this.uid).subscribe(userItem => {
       this.id = userItem.id;
@@ -80,20 +87,28 @@ export class ItemListComponent implements OnInit {
             }
           });
         });
-        this.dataSource = items;
+        this.dataSource = new MatTableDataSource(items);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
         this.userItems = myItems;
 
-        this.dataSource.forEach(item => {
+        this.dataSource.data.forEach(item => {
           item.form = this.formBuilder.group({
             'name': [null, Validators.required],
           });
         });
 
-        this.dataSource.sort((a, b) => a.name.localeCompare(b.name));
-
         this.loading = false;
       });
     });
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   packageData(self) {
@@ -106,7 +121,7 @@ export class ItemListComponent implements OnInit {
 
   removeItem(id) {
     const data = this.userItems.find(x => x.id === id);
-    const item = this.dataSource.find(x => x.id === id);
+    const item = this.dataSource.data.find(x => x.id === id);
     if (data && Number(data.cartQuantity) > 0) {
       data.cartQuantity = Number(data.cartQuantity) - 1;
       item.cartQuantity = Number(item.cartQuantity) - 1;
@@ -116,7 +131,7 @@ export class ItemListComponent implements OnInit {
 
   addItem(id) {
     const data = this.userItems.find(x => x.id === id);
-    const item = this.dataSource.find(x => x.id === id);
+    const item = this.dataSource.data.find(x => x.id === id);
     if (data) {
       data.cartQuantity = Number(data.cartQuantity) + 1;
       item.cartQuantity = Number(item.cartQuantity) + 1;
@@ -143,6 +158,8 @@ export class ItemListComponent implements OnInit {
         type: Notification.SUCCESS,
         text: 'Item deleted!'
       };
+
+      self.loadData();
     }, (error) => {
       console.error(error);
     });
@@ -164,7 +181,7 @@ export class ItemListComponent implements OnInit {
         });
     } else {
       this.itemService.postItem(form)
-        .subscribe((response: Item) => {
+        .subscribe(() => {
           this.notificationModalParams = {
             self: self,
             type: Notification.SUCCESS,
@@ -172,10 +189,7 @@ export class ItemListComponent implements OnInit {
           };
 
           this.accordion.closeAll();
-          this.dataSource.push(response);
-          this.itemForm = this.formBuilder.group({
-            'name': [null, Validators.required],
-          });
+          this.loadData();
         }, (error) => {
           console.error(error);
         });

@@ -13,14 +13,9 @@ import {
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredient/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ErrorStateMatcher, MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material';
 import { UOM, UOMConversion } from 'src/app/ingredient/uom.emun';
-
-class ErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return (control && control.invalid && (control.dirty || control.touched));
-  }
-}
+import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -60,7 +55,7 @@ export class RecipeEditComponent implements OnInit {
     this.recipesForm = this.formBuilder.group({
       'name' : [null, Validators.required],
       'description' : [null],
-      'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.required]],
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'categories': this.formBuilder.array([]),

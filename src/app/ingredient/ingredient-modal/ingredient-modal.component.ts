@@ -15,18 +15,11 @@ this.ingredientModalParams = {
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  FormControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material';
-
-class ErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return (control && control.invalid && (control.dirty || control.touched));
-  }
-}
+import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-ingredient-modal',
@@ -69,7 +62,7 @@ export class IngredientModalComponent implements OnInit {
   confirm() {
     this.ingredientModalParams.self.userIngredients.find(x => x.id === this.ingredientModalParams.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.ingredientModalParams.self.dataSource.find(x => x.id === this.ingredientModalParams.data.id)
+    this.ingredientModalParams.self.dataSource.data.find(x => x.id === this.ingredientModalParams.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
     this.ingredientModalParams.function(this.ingredientModalParams.self);
     this.ingredientModalParams = undefined;

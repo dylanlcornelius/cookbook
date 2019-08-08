@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecipeService } from '../recipe.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
@@ -6,7 +6,7 @@ import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientService } from 'src/app/ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatCard, MatPaginator } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -20,11 +20,13 @@ export class RecipeListComponent implements OnInit {
   notificationModalParams;
 
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
-  dataSource;
+  dataSource: MatTableDataSource<any>;
   uid: string;
   id: string;
   userIngredients;
   isAuthor = false;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
@@ -69,9 +71,10 @@ export class RecipeListComponent implements OnInit {
 
           const searchUid = this.route.snapshot.params['id'];
           if (searchUid) {
-            this.dataSource.filterPredicate = (data, filter) => data.user === filter;
             this.dataSource.filter = searchUid;
           }
+
+          this.dataSource.paginator = this.paginator;
 
           this.loading = false;
         });
@@ -107,6 +110,27 @@ export class RecipeListComponent implements OnInit {
     }
 
     return recipeCount;
+  }
+
+  toggleAuthor(uid: string) {
+    this.isAuthor = !this.isAuthor;
+    if (this.isAuthor) {
+      this.dataSource.filter = uid;
+    } else {
+      this.dataSource.filter = '';
+    }
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  indentify(index, item) {
+    return item.id;
   }
 
   packageData() {
@@ -188,17 +212,5 @@ export class RecipeListComponent implements OnInit {
         text: 'Ingredients added to cart'
       };
     }
-  }
-
-  toggleAuthor(uid: string) {
-    if (this.isAuthor) {
-      // tslint:disable-next-line:triple-equals
-      this.dataSource.filterPredicate = (data, filter) => data.user == filter;
-    } else {
-      // tslint:disable-next-line:triple-equals
-      this.dataSource.filterPredicate = () => true;
-    }
-    this.dataSource.filter = uid;
-    this.isAuthor = !this.isAuthor;
   }
 }

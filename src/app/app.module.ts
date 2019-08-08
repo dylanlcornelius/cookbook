@@ -15,7 +15,8 @@ import {
   MatSlideToggleModule,
   MatTooltipModule,
   MatExpansionModule,
-  MatChipsModule } from '@angular/material';
+  MatChipsModule,
+  MatMenuModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -47,7 +48,7 @@ import { ValidationModalComponent } from './modals/validation-modal/validation-m
 import { NotificationModalComponent } from './modals/notification-modal/notification-modal.component';
 import { ProfileComponent } from './profile/profile/profile.component';
 import { UOMConversion } from 'src/app/ingredient/uom.emun';
-import { IngredientModalComponent } from './modals/ingredient-modal/ingredient-modal.component';
+import { IngredientModalComponent } from './ingredient/ingredient-modal/ingredient-modal.component';
 import { ItemListComponent } from './item/item-list/item-list.component';
 import { ChartsModule } from 'ng2-charts';
 
@@ -99,6 +100,7 @@ import { environment } from '../environments/environment';
     MatTooltipModule,
     MatExpansionModule,
     MatChipsModule,
+    MatMenuModule,
     DragDropModule,
     ChartsModule,
   ],

@@ -53,13 +53,12 @@
           <span class="mobile-label">Add to Pantry:&nbsp;&nbsp;</span>
           <span class="mobile-value">
             <button mat-raised-button color="primary" (click)="addIngredientToPantry(element.id)">
-              Buy
+              <mat-icon>done</mat-icon>
             </button>
           </span>
         </mat-cell>
       </ng-container>
 
-      <!-- TODO: checkboxes? -->
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
@@ -101,7 +100,7 @@
           <span class="mobile-label">Remove from Cart:</span>
           <span class="mobile-value">
             <button mat-raised-button color="primary" (click)="removeItemFromCart(element.id)">
-              Buy
+              <mat-icon>done</mat-icon>
             </button>
           </span>
         </mat-cell>
@@ -113,7 +112,7 @@
   </div>
   <div class="button-row" *ngIf="ingredientsDataSource.filteredData.length > 0 || itemsDataSource.filteredData.length > 0">
     <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">
-      Buy All
+      Add All
     </button>
   </div>
 </div>
