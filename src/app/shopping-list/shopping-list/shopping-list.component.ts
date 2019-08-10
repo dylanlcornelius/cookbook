@@ -22,6 +22,7 @@ export class ShoppingListComponent implements OnInit {
   loading = true;
   validationModalParams;
   notificationModalParams;
+  isCompleted = false;
 
   uid: string;
   id: string;
@@ -140,6 +141,9 @@ export class ShoppingListComponent implements OnInit {
         type: Notification.SUCCESS,
         text: 'Ingredient added!'
       };
+      if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.filteredData.length === 0) {
+        this.isCompleted = true;
+      }
     }
   }
 
@@ -178,6 +182,9 @@ export class ShoppingListComponent implements OnInit {
         type: Notification.SUCCESS,
         text: 'Item removed!'
       };
+      if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.filteredData.length === 0) {
+        this.isCompleted = true;
+      }
     }
   }
 
@@ -211,5 +218,6 @@ export class ShoppingListComponent implements OnInit {
       type: Notification.SUCCESS,
       text: 'Shopping list completed!'
     };
+    self.isCompleted = true;
   }
 }
