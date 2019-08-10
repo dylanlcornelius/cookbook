@@ -189,7 +189,7 @@ export class ShoppingListComponent implements OnInit {
     };
   }
 
-  addAllToPantryEvent = function(self) {
+  addAllToPantryEvent(self) {
     self.ingredientsDataSource.data.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
         ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
@@ -211,5 +211,5 @@ export class ShoppingListComponent implements OnInit {
       type: Notification.SUCCESS,
       text: 'Shopping list completed!'
     };
-  };
+  }
 }

@@ -13,11 +13,17 @@ export class RecipeService {
 
   ref = firebase.firestore().collection('recipes');
 
+  private filters = [];
+
+  get selectedFilters(): Array<String> { return this.filters; }
+  set selectedFilters(filters: Array<String>) { this.filters = filters; }
+
   constructor(
     private cookieService: CookieService,
     private actionService: ActionService,
   ) { }
 
+  // TODO: create recipe model
   getRecipes(): Observable<any> {
     return new Observable((observer) => {
       this.ref.onSnapshot((querySnapshot) => {
@@ -35,7 +41,8 @@ export class RecipeService {
             categories: data.categories || [],
             steps: data.steps || [],
             ingredients: data.ingredients || [],
-            user: data.user || '',
+            uid: data.uid || '',
+            author: data.author || '',
           });
         });
         observer.next(recipes);
@@ -58,7 +65,8 @@ export class RecipeService {
           categories: data.categories || [],
           steps: data.steps || [],
           ingredients: data.ingredients || [],
-          user: data.user || '',
+          uid: data.uid || '',
+          author: data.author || '',
         });
       });
     });

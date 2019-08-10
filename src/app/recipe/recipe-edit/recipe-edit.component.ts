@@ -16,6 +16,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { MatChipInputEvent } from '@angular/material';
 import { UOM, UOMConversion } from 'src/app/ingredient/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -44,6 +45,7 @@ export class RecipeEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
+    private userService: UserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
@@ -245,8 +247,12 @@ export class RecipeEditComponent implements OnInit {
     Object.values((<FormGroup> this.recipesForm.get('ingredients')).controls).forEach((ingredient: FormGroup) => {
       ingredient.removeControl('name');
     });
-    this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
-    this.onFormSubmit(this.recipesForm.value);
+    const userId = this.cookieService.get('LoggedIn');
+    this.recipesForm.addControl('uid', new FormControl(userId));
+    this.userService.getUser(userId).subscribe(user => {
+      this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
+      this.onFormSubmit(this.recipesForm.value);
+    });
   }
 
   onFormSubmit(form: NgForm) {

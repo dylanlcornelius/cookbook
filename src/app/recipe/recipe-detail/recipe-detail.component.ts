@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { IngredientService} from '../../ingredient/ingredient.service';
-import { UserService } from '../../user/user.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 
 @Component({
@@ -18,14 +17,12 @@ export class RecipeDetailComponent implements OnInit {
 
   recipe;
   ingredients = [];
-  user = {};
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
-    private userService: UserService,
   ) { }
 
   ngOnInit() {
@@ -33,32 +30,24 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   getRecipeDetails(id) {
-    this.recipeService.getRecipe(id)
-      .subscribe(data => {
-        this.recipe = data;
-        this.userService.getUser(data.user).subscribe(user => {
-          this.user = user;
-          if (!this.user) {
-            this.user = { firstName: '', lastName: ''};
-          }
-          this.ingredientService.getIngredients()
-          .subscribe(allIngredients => {
-            data.ingredients.forEach(recipeIngredient => {
-              allIngredients.forEach(ingredient => {
-                if (recipeIngredient.id === ingredient.id) {
-                  this.ingredients.push({
-                    id: ingredient.id,
-                    name: ingredient.name,
-                    uom: recipeIngredient.uom,
-                    quantity: recipeIngredient.quantity
-                  });
-                }
+    this.recipeService.getRecipe(id).subscribe(data => {
+      this.recipe = data;
+      this.ingredientService.getIngredients().subscribe(allIngredients => {
+        data.ingredients.forEach(recipeIngredient => {
+          allIngredients.forEach(ingredient => {
+            if (recipeIngredient.id === ingredient.id) {
+              this.ingredients.push({
+                id: ingredient.id,
+                name: ingredient.name,
+                uom: recipeIngredient.uom,
+                quantity: recipeIngredient.quantity
               });
-            });
-            this.loading = false;
+            }
           });
         });
+        this.loading = false;
       });
+    });
   }
 
   deleteRecipe(id) {
@@ -70,10 +59,9 @@ export class RecipeDetailComponent implements OnInit {
     };
   }
 
-  deleteEvent = function(self, id) {
+  deleteEvent(self, id) {
     if (id) {
-      self.recipeService.deleteRecipes(id)
-      .subscribe(res => {
+      self.recipeService.deleteRecipes(id).subscribe(() => {
         self.notificationModalParams = {
           self: self,
           type: Notification.SUCCESS,
@@ -84,5 +72,10 @@ export class RecipeDetailComponent implements OnInit {
         console.error(err);
       });
     }
-  };
+  }
+
+  setListFilter(filter) {
+    this.recipeService.selectedFilters = [filter];
+    this.router.navigate(['/recipe-list']);
+  }
 }
