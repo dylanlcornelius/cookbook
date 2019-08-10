@@ -38,7 +38,7 @@ export class IngredientDetailComponent implements OnInit {
     };
   }
 
-  deleteEvent = function(self, id) {
+  deleteEvent(self, id) {
     if (id) {
       self.ingredientService.deleteIngredients(id)
       .subscribe(res => {
@@ -52,5 +52,5 @@ export class IngredientDetailComponent implements OnInit {
         console.error(err);
       });
     }
-  };
+  }
 }

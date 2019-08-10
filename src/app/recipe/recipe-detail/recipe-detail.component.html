@@ -35,7 +35,7 @@
           <dt>Categories</dt>
           <dd>
             <mat-chip-list class="d-flex justify-content-center">
-              <mat-chip *ngFor="let category of recipe.categories; let i = index">
+              <mat-chip *ngFor="let category of recipe.categories; let i = index" (click)="setListFilter(category.category)">
                 {{category.category}}
               </mat-chip>
             </mat-chip-list>
@@ -75,9 +75,9 @@
       <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe-edit/', recipe.id]">
         <mat-icon>edit</mat-icon>
       </a>
-      <a mat-raised-button [routerLink]="['/recipe-list/', user.uid ]" class="author-link">
-        by {{user.firstName}} {{ user.lastName }}
-      </a>
+      <button mat-raised-button (click)="setListFilter(recipe.author)" class="author-link" *ngIf="recipe.author">
+        by {{recipe.author}}
+      </button>
       <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)">
         <mat-icon>delete</mat-icon>
       </a>

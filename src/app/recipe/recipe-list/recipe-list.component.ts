@@ -19,12 +19,14 @@ export class RecipeListComponent implements OnInit {
   loading: Boolean = true;
   notificationModalParams;
 
+  filtersList = [];
+  searchFilter = '';
+
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource: MatTableDataSource<any>;
   uid: string;
   id: string;
   userIngredients;
-  isAuthor = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -63,17 +65,34 @@ export class RecipeListComponent implements OnInit {
               });
             });
           });
+
+          const filters = this.recipeService.selectedFilters.slice();
+
           this.dataSource = new MatTableDataSource(recipes);
+          const categories = [];
+          const authors = [];
           recipes.forEach(recipe => {
             recipe.count = this.getRecipeCount(recipe.id);
+
+            recipe.categories.forEach(category => {
+              if (categories.find(c => c.name === category.category) === undefined) {
+                const checked = filters.find(f => f === category.category) !== undefined;
+                categories.push({name: category.category, checked: checked});
+              }
+            });
+
+            if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
+              const checked = filters.find(f => f === recipe.author) !== undefined;
+              authors.push({name: recipe.author, checked: checked});
+            }
           });
           this.dataSource = new MatTableDataSource(recipes);
+          this.dataSource.filterPredicate = this.recipeFilterPredicate;
 
-          const searchUid = this.route.snapshot.params['id'];
-          if (searchUid) {
-            this.dataSource.filter = searchUid;
-          }
-
+          this.filtersList.push({displayName: 'Authors', name: 'author', values: authors});
+          this.filtersList.push({displayName: 'Categories', name: 'categories', values: categories});
+          this.setSelectedFilterCount();
+          this.dataSource.filter = JSON.stringify(filters);
           this.dataSource.paginator = this.paginator;
 
           this.loading = false;
@@ -112,17 +131,40 @@ export class RecipeListComponent implements OnInit {
     return recipeCount;
   }
 
-  toggleAuthor(uid: string) {
-    this.isAuthor = !this.isAuthor;
-    if (this.isAuthor) {
-      this.dataSource.filter = uid;
-    } else {
-      this.dataSource.filter = '';
+  setSelectedFilterCount() {
+    this.filtersList.forEach(filterList => {
+      let i = 0;
+      filterList.values.forEach(filter => {
+        if (filter.checked) {
+          i++;
+        }
+      });
+      filterList['numberOfSelected'] = i;
+    });
+  }
+
+  setFilters() {
+    const filters = this.recipeService.selectedFilters.slice();
+    if (this.searchFilter) {
+      filters.push(this.searchFilter);
     }
+    this.dataSource.filter = JSON.stringify(filters);
+  }
+
+  filterSelected(filterValue) {
+    if (filterValue.checked) {
+      this.recipeService.selectedFilters.push(filterValue.name);
+    } else {
+      this.recipeService.selectedFilters = this.recipeService.selectedFilters.filter(x => x !== filterValue.name);
+    }
+
+    this.setSelectedFilterCount();
+    this.setFilters();
   }
 
   applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.searchFilter = filterValue.trim().toLowerCase();
+    this.setFilters();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
@@ -212,5 +254,29 @@ export class RecipeListComponent implements OnInit {
         text: 'Ingredients added to cart'
       };
     }
+  }
+
+  recipeFilterPredicate(data, filterList) {
+    let hasAll = true;
+
+    JSON.parse(filterList).forEach(filter => {
+      let hasFilter = false;
+
+      Object.keys(data).forEach(property => {
+        if (data[property] instanceof Array) {
+          data[property].forEach(value => {
+            if (value.category && value.category.toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
+              hasFilter = true;
+            }
+          });
+        } else if (typeof data[property] === 'string' && data[property].toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
+          hasFilter = true;
+        }
+      });
+
+      hasAll = hasAll && hasFilter;
+    });
+
+    return hasAll;
   }
 }
