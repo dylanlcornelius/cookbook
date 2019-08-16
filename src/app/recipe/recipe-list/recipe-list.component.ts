@@ -6,8 +6,9 @@ import { UOMConversion } from 'src/app/ingredient/uom.emun';
 import { IngredientService } from 'src/app/ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
 import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
-import { MatTableDataSource, MatCard, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ImageService } from 'src/app/util/image.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -38,6 +39,7 @@ export class RecipeListComponent implements OnInit {
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
+    private imageService: ImageService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -73,6 +75,11 @@ export class RecipeListComponent implements OnInit {
           const authors = [];
           recipes.forEach(recipe => {
             recipe.count = this.getRecipeCount(recipe.id);
+            this.imageService.downloadFile(recipe.id).then(url => {
+              if (url) {
+                recipe.image = url;
+              }
+            });
 
             recipe.categories.forEach(category => {
               if (categories.find(c => c.name === category.category) === undefined) {
