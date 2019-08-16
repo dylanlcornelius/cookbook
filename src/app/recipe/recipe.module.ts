@@ -1,5 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  MatProgressBarModule,
+  MatBadgeModule,
+  MatCheckboxModule,
+} from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { RecipeRoutingModule } from './recipe-routing.module';
@@ -18,6 +23,9 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     CommonModule,
     RecipeRoutingModule,
+    MatProgressBarModule,
+    MatBadgeModule,
+    MatCheckboxModule,
     DragDropModule,
     SharedModule,
   ]

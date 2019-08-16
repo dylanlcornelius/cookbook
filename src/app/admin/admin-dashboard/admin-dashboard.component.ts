@@ -93,13 +93,13 @@ export class AdminDashboardComponent implements OnInit {
     };
   }
 
-  removeConfigEvent = function(self, id) {
+  removeConfigEvent(self, id) {
     self.configService.deleteConfig(id)
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
-  };
+  }
 
   removeUser(id, firstName, lastName) {
     if (!firstName && !lastName) {
@@ -114,13 +114,13 @@ export class AdminDashboardComponent implements OnInit {
     };
   }
 
-  removeUserEvent = function(self, id) {
+  removeUserEvent(self, id) {
     self.userService.deleteUser(id)
     .subscribe(() => {},
     (err) => {
       console.log(err);
     });
-  };
+  }
 
   revert() {
     this.validationModalParams = {
@@ -130,7 +130,7 @@ export class AdminDashboardComponent implements OnInit {
     };
   }
 
-  revertEvent = function(self) {
+  revertEvent(self) {
     self.configService.getConfigs().subscribe((result) => {
       self.configsDataSource = result;
     });
@@ -142,13 +142,13 @@ export class AdminDashboardComponent implements OnInit {
       type: Notification.SUCCESS,
       text: 'Changes reverted!'
     };
-  };
+  }
 
   save() {
     this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
   }
 
-  saveEvent = function(self) {
+  saveEvent(self) {
     self.configService.putConfigs(self.configsDataSource);
     // TODO: use model
     self.userService.putUsers(self.usersDataSource);
@@ -157,5 +157,5 @@ export class AdminDashboardComponent implements OnInit {
       type: Notification.SUCCESS,
       text: 'Changes saved!'
     };
-  };
+  }
 }
