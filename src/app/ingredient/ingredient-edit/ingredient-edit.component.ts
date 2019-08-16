@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IngredientService } from '../ingredient.service';
+import { IngredientService } from '../shared/ingredient.service';
 import {
   FormGroupDirective,
   FormBuilder,
@@ -8,7 +8,7 @@ import {
   NgForm,
   Validators
 } from '@angular/forms';
-import { UOM } from '../uom.emun';
+import { UOM } from '../shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
@@ -72,7 +72,7 @@ export class IngredientEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.ingredientService.putIngredient(this.id, form)
         .subscribe(() => {
-          this.router.navigate(['/ingredient-detail/', this.id]);
+          this.router.navigate(['/ingredient/detail/', this.id]);
         }, (err) => {
           console.error(err);
         });
@@ -80,7 +80,7 @@ export class IngredientEditComponent implements OnInit {
       this.ingredientService.postIngredient(form)
         .subscribe(res => {
           const id = res['id'];
-          this.router.navigate(['/ingredient-detail/', id]);
+          this.router.navigate(['/ingredient/detail/', id]);
         }, (err) => {
           console.error(err);
         });
@@ -88,6 +88,6 @@ export class IngredientEditComponent implements OnInit {
   }
 
   ingredientsDetail() {
-    this.router.navigate(['/ingredient-detail/', this.id]);
+    this.router.navigate(['/ingredient/detail/', this.id]);
   }
 }

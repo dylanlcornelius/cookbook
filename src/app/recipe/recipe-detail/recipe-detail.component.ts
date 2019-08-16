@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecipeService } from '../recipe.service';
-import { IngredientService} from '../../ingredient/ingredient.service';
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { RecipeService } from '../shared/recipe.service';
+import { IngredientService} from '../../ingredient/shared/ingredient.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.enum';
 import { ImageService } from 'src/app/util/image.service';
 
 @Component({
@@ -91,10 +91,11 @@ export class RecipeDetailComponent implements OnInit {
   deleteEvent(self, id) {
     if (id) {
       self.recipeService.deleteRecipes(id).subscribe(() => {
+        self.deleteFile(id);
         self.notificationModalParams = {
           self: self,
           type: Notification.SUCCESS,
-          path: '/recipe-list',
+          path: '/recipe/list',
           text: 'Recipe Deleted!'
         };
       }, (err) => {
@@ -105,6 +106,6 @@ export class RecipeDetailComponent implements OnInit {
 
   setListFilter(filter) {
     this.recipeService.selectedFilters = [filter];
-    this.router.navigate(['/recipe-list']);
+    this.router.navigate(['/recipe/list']);
   }
 }
