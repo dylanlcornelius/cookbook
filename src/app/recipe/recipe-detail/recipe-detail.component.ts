@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { IngredientService} from '../../ingredient/ingredient.service';
 import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { ImageService } from 'src/app/util/image.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -17,12 +18,15 @@ export class RecipeDetailComponent implements OnInit {
 
   recipe;
   ingredients = [];
+  recipeImage: string;
+  recipeImageProgress;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
+    private imageService: ImageService,
   ) { }
 
   ngOnInit() {
@@ -45,8 +49,33 @@ export class RecipeDetailComponent implements OnInit {
             }
           });
         });
+
+        this.imageService.downloadFile(this.recipe.id).then(url => {
+          if (url) {
+            this.recipeImage = url;
+          }
+        });
         this.loading = false;
       });
+    });
+  }
+
+  readFile(event) {
+    if (event && event.target && event.target.files[0]) {
+      this.imageService.uploadFile(this.recipe.id, event.target.files[0]).subscribe(progress => {
+        if (typeof progress === 'string') {
+          this.recipeImage = progress;
+          this.recipeImageProgress = undefined;
+        } else {
+          this.recipeImageProgress = progress;
+        }
+      });
+    }
+  }
+
+  deleteFile(path) {
+    this.imageService.deleteFile(path).then(() => {
+      this.recipeImage = undefined;
     });
   }
 

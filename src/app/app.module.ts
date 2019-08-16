@@ -18,7 +18,8 @@ import {
   MatChipsModule,
   MatMenuModule,
   MatCheckboxModule,
-  MatBadgeModule } from '@angular/material';
+  MatBadgeModule,
+  MatProgressBarModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -105,6 +106,7 @@ import { environment } from '../environments/environment';
     MatMenuModule,
     MatCheckboxModule,
     MatBadgeModule,
+    MatProgressBarModule,
     DragDropModule,
     ChartsModule,
   ],
