@@ -4,8 +4,8 @@ import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
 import { fadeComponentAnimation } from 'src/app/util/animations';
 import { Observable } from 'rxjs';
-import { UserService } from './user/user.service';
-import { User } from './user/user.model';
+import { UserService } from './user/shared/user.service';
+import { User } from './user/shared/user.model';
 
 @Component({
   selector: 'app-root',

@@ -3,23 +3,25 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router } from '@angular/router';
+  Router,
+  CanActivateChild,
+} from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserService } from '.././user.service';
+import { UserService } from '../shared/user.service';
 import { map, take } from 'rxjs/operators';
-import { User } from '../user.model';
+import { User } from '../shared/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserPendingGuard implements CanActivate {
+export class UserPendingGuard implements CanActivate, CanActivateChild {
 
   constructor(
     private router: Router,
     private userService: UserService
   ) { }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.userService.getCurrentUser()
       .pipe(
         take(1),
@@ -32,5 +34,9 @@ export class UserPendingGuard implements CanActivate {
           return false;
         })
       );
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(route, state);
   }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IngredientService } from '../ingredient.service';
-import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
+import { IngredientService } from '../shared/ingredient.service';
+import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { CookieService } from 'ngx-cookie-service';
-import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
+import { UserIngredientService } from 'src/app/shopping/shared/user-ingredient.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material';

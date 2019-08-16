@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from 'src/app/profile/action.service';
-import { Action } from '../profile/action.enum';
+import { ActionService } from 'src/app/profile/shared/action.service';
+import { Action } from '../../profile/shared/action.enum';
 
 @Injectable({
   providedIn: 'root'

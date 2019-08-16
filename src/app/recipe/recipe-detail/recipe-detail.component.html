@@ -4,7 +4,7 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe-list']"><mat-icon>list</mat-icon></a>
+    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']"><mat-icon>list</mat-icon></a>
   </div>
 
   <mat-card class="detail-card primary-text-color">
@@ -72,10 +72,10 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe-edit/', recipe.id]">
+      <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe/edit/', recipe.id]">
         <mat-icon>edit</mat-icon>
       </a>
-      <a mat-raised-button [routerLink]="['/recipe-list/', user.uid ]" class="author-link">
+      <a mat-raised-button [routerLink]="['/recipe/list/', user.uid ]" class="author-link">
         by {{user.firstName}} {{ user.lastName }}
       </a>
       <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)">

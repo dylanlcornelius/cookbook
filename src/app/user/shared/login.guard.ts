@@ -3,16 +3,18 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router } from '@angular/router';
+  Router,
+  CanActivateChild,
+} from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../shared/auth.service';
 import { map, take } from 'rxjs/operators';
-import { UserService } from '../user.service';
+import { UserService } from '../shared/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginGuard implements CanActivate {
+export class LoginGuard implements CanActivate, CanActivateChild {
 
   private pageLoad;
 
@@ -22,7 +24,7 @@ export class LoginGuard implements CanActivate {
     private userService: UserService,
   ) { }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.userService.getIsLoggedIn()
       .pipe(
         take(1),
@@ -40,5 +42,9 @@ export class LoginGuard implements CanActivate {
           return false;
         })
       );
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(route, state);
   }
 }

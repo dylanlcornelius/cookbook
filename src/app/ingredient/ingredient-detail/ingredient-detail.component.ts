@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IngredientService } from '../ingredient.service';
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { IngredientService } from '../shared/ingredient.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -45,7 +45,7 @@ export class IngredientDetailComponent implements OnInit {
         self.notificationModalParams = {
           self: self,
           type: Notification.SUCCESS,
-          path: '/ingredient-list',
+          path: '/ingredient/list',
           text: 'Ingredient deleted!'
         };
       }, (err) => {

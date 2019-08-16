@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user/user.service';
+import { UserService } from '../user/shared/user.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../util/animations';
-import { User } from '../user/user.model';
-import { AuthService } from '../user/auth.service';
+import { User } from '../user/shared/user.model';
+import { AuthService } from '../user/shared/auth.service';
 import { Router, RouterEvent } from '@angular/router';
 
 @Component({

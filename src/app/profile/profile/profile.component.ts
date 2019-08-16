@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { Notification } from 'src/app/shared/notification-modal/notification.enum';
 import {
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { UserService } from '../../user/user.service';
-import { User } from 'src/app/user/user.model';
-import { ActionService } from '../action.service';
-import { ActionLabel } from '../action.enum';
+import { UserService } from '../../user/shared/user.service';
+import { User } from 'src/app/user/shared/user.model';
+import { ActionService } from '../shared/action.service';
+import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { ActivatedRoute } from '@angular/router';
 

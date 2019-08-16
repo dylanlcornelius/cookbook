@@ -12,7 +12,7 @@
     <a mat-mini-fab matTooltip="Back" color="primary" (click)="ingredientsDetail()" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
-    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient-list']" *ngIf="!route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient/list']" *ngIf="!route.snapshot.params['id']">
       <mat-icon> list </mat-icon>
     </a>
   </div>

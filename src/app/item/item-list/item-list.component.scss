@@ -1,12 +1,9 @@
-.mat-form-field {
-    width: 100%;
-}
 .table-container {
     display: flex;
     flex-direction: column;
-    max-height: 600px;
-    min-width: 500px;
-    overflow-y: scroll;
+}
+.mobile-label {
+    display: none;
 }
 .detail-form {
     width: 50%;
@@ -23,9 +20,41 @@
     width: 60px;
     text-align: center;
 }
+.mat-button {
+    padding: 0;
+    min-width: 30px;
+}
 .button-row {
     margin: 10px 0;
 }
-.mat-paginator {
-    background: inherit;
+
+@media screen and (max-width: 767px) {
+    .mat-cell, .mat-footer-cell {
+        width: 100%;
+        display: block;
+        min-height: 0;
+    }
+    .mat-cell:first-of-type, .mat-cell:last-of-type, .mat-footer-cell:first-of-type, .mat-footer-cell:last-of-type {
+        padding: 0;
+    }
+    .mat-row:after, .mat-footer-row:after {
+        min-height: 0;
+    }
+    .mobile-label {
+        display: inline;
+    }
+    .mobile-value {
+        float: right;
+    }
+    .mat-header-row {
+        display: none;
+    }
+    .mat-row, .mat-footer-row {
+        flex-direction: column;
+        align-items: start;
+        padding: 10px 20px;
+    }
+    .mat-row:last-child, .mat-footer-row:last-child {
+        border: none;
+    }
 }

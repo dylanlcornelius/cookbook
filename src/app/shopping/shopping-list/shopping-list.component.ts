@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { UserIngredientService } from '../../shopping-list/user-ingredient.service';
-import { IngredientService } from '../../ingredient/ingredient.service';
+import { UserIngredientService } from '../../shopping/shared/user-ingredient.service';
+import { IngredientService } from '../../ingredient/shared/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { UserIngredient } from '../user-ingredient.model';
+import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
-import { UserItemService } from '../user-item.service';
-import { ItemService } from 'src/app/item/item.service';
-import { UserItem } from '../user-item.model';
+import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { UserItemService } from '../shared/user-item.service';
+import { ItemService } from 'src/app/item/shared/item.service';
+import { UserItem } from '../shared/user-item.model';
 
 
 // TODO: Update all imports with @ and absolute paths

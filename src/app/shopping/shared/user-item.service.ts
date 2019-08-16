@@ -2,63 +2,63 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from 'src/app/profile/action.service';
-import { Action } from '../profile/action.enum';
-import { UserIngredient } from './user-ingredient.model';
+import { ActionService } from 'src/app/profile/shared/action.service';
+import { Action } from '../../profile/shared/action.enum';
+import { UserItem } from './user-item.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserIngredientService {
+export class UserItemService {
 
-  ref = firebase.firestore().collection('user-ingredients');
+  ref = firebase.firestore().collection('user-items');
 
   constructor(
     private cookieService: CookieService,
     private actionService: ActionService
   ) { }
 
-  getUserIngredients(uid: string): Observable<any> {
+  getUserItems(uid: string): Observable<any> {
     const self = this;
     return new Observable((observer) => {
       this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
         if (querySnapshot.size > 0) {
-          let userIngredient;
+          let userItem;
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            userIngredient = new UserIngredient(data.uid, data.ingredients, doc.id);
+            userItem = new UserItem(data.uid, data.items, doc.id);
           });
-          observer.next(userIngredient);
+          observer.next(userItem);
         } else {
-          self.postUserIngredient({uid: uid, ingredients: []}).subscribe(userIngredient => {
-            observer.next(userIngredient);
+          self.postUserItem({uid: uid, items: []}).subscribe(userItem => {
+            observer.next(userItem);
           });
         }
       });
     });
   }
 
-  postUserIngredient(data): Observable<any> {
+  postUserItem(data): Observable<any> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         observer.next({
           id: doc.id,
           uid: data.uid,
-          ingredients: data.ingredients,
+          items: data.items,
         });
       });
     });
   }
 
-  putUserIngredient(data: UserIngredient) {
+  putUserItem(data: UserItem) {
     this.ref.doc(data.getId()).set(data.getObject())
     .catch(function(error) {
       console.error('error: ', error);
     });
   }
 
-  buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
+  buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
     const self = this;
     const user = this.cookieService.get('LoggedIn');
     this.ref.doc(data.getId()).set(data.getObject()).then(() => {

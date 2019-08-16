@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RecipeService } from '../recipe.service';
+import { RecipeService } from '../shared/recipe.service';
 import { CookieService } from 'ngx-cookie-service';
-import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
-import { UOMConversion } from 'src/app/ingredient/uom.emun';
-import { IngredientService } from 'src/app/ingredient/ingredient.service';
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
-import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
+import { UserIngredientService } from 'src/app/shopping/shared/user-ingredient.service';
+import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { IngredientService } from 'src/app/ingredient/shared/ingredient.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { MatTableDataSource, MatCard, MatPaginator } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 

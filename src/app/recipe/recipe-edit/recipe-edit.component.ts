@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipeService } from '../recipe.service';
+import { RecipeService } from '../shared/recipe.service';
 import {
   FormControl,
   FormBuilder,
@@ -11,10 +11,10 @@ import {
   FormArray
 } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientService} from '../../ingredient/ingredient.service';
+import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
 import { MatChipInputEvent } from '@angular/material';
-import { UOM, UOMConversion } from 'src/app/ingredient/uom.emun';
+import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
@@ -253,14 +253,14 @@ export class RecipeEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.recipeService.putRecipes(this.id, form)
         .subscribe(() => {
-          this.router.navigate(['/recipe-detail/', this.id]);
+          this.router.navigate(['/recipe/detail/', this.id]);
         }, (err) => {
           console.error(err);
         });
     } else {
       this.recipeService.postRecipe(form)
         .subscribe(res => {
-          this.router.navigate(['/recipe-detail/', res.id]);
+          this.router.navigate(['/recipe/detail/', res.id]);
         }, (err) => {
           console.error(err);
         });
@@ -268,6 +268,6 @@ export class RecipeEditComponent implements OnInit {
   }
 
   recipesDetail() {
-    this.router.navigate(['/recipe-detail/', this.id]);
+    this.router.navigate(['/recipe/detail/', this.id]);
   }
 }

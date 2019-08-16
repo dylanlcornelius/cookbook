@@ -7,17 +7,17 @@
           <mat-icon>person</mat-icon>
         </button>
         <mat-menu #profileMenu="matMenu" style="width: fit-content">
-          <a mat-menu-item routerLink="/profile">
+          <a mat-menu-item routerLink="/profile/settings">
             <mat-icon>settings</mat-icon>
             <span>Settings</span>
           </a>
-          <a mat-menu-item routerLink="/analytics">
+          <a mat-menu-item routerLink="/profile/analytics">
             <mat-icon>bar_chart</mat-icon>
             <span>Analytics</span>
           </a>
         </mat-menu>
         
-        <a mat-button class="title-button" routerLink="/admin-dashboard" *ngIf="(user | async)?.isAdmin()">
+        <a mat-button class="title-button" routerLink="/admin/dashboard" *ngIf="(user | async)?.isAdmin()">
           <mat-icon>apps</mat-icon>
         </a>
   
@@ -31,10 +31,10 @@
 
     <div class="d-none d-md-block" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" [@fadeInAnimation]>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/home" [ngClass]="{'selected': route === '/home'}">Home</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe-list" [ngClass]="{'selected': route === '/recipe-list'}">Recipes</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient-list" [ngClass]="{'selected': route === '/ingredient-list'}">Ingredients</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/item-list" [ngClass]="{'selected': route === '/item-list'}">Items</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping-list" [ngClass]="{'selected': route === '/shopping-list'}">Shopping List</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe/list" [ngClass]="{'selected': route === '/recipe/list'}">Recipes</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient/list" [ngClass]="{'selected': route === '/ingredient/list'}">Ingredients</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/item/list" [ngClass]="{'selected': route === '/item/list'}">Items</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping/list" [ngClass]="{'selected': route === '/shopping/list'}">Shopping List</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/about" [ngClass]="{'selected': route === '/about'}">About</a>
       
       <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
@@ -46,19 +46,19 @@
           <mat-icon>home</mat-icon>
           <span class="mobile-nav-text">Home</span>
         </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/recipe-list">
+        <a mat-button class="mobile-nav-button" routerLink="/recipe/list">
           <mat-icon>restaurant</mat-icon>
           <span class="mobile-nav-text">Recipes</span>
         </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/ingredient-list">
+        <a mat-button class="mobile-nav-button" routerLink="/ingredient/list">
           <mat-icon>kitchen</mat-icon>
           <span class="mobile-nav-text">Ingredients</span>
         </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/item-list">
+        <a mat-button class="mobile-nav-button" routerLink="/item/list">
           <mat-icon>local_offer</mat-icon>
           <span class="mobile-nav-text">Items</span>
         </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/shopping-list">
+        <a mat-button class="mobile-nav-button" routerLink="/shopping/list">
           <mat-icon>shopping_cart</mat-icon>
           <span class="mobile-nav-text">Shopping List</span>
         </a><br/>
