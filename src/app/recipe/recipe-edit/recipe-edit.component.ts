@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipeService } from '../recipe.service';
+import { RecipeService } from '../shared/recipe.service';
 import {
   FormControl,
   FormBuilder,
@@ -11,16 +11,12 @@ import {
   FormArray
 } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientService} from '../../ingredient/ingredient.service';
+import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ErrorStateMatcher, MatChipInputEvent } from '@angular/material';
-import { UOM, UOMConversion } from 'src/app/ingredient/uom.emun';
-
-class ErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return (control && control.invalid && (control.dirty || control.touched));
-  }
-}
+import { MatChipInputEvent } from '@angular/material';
+import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { ErrorMatcher } from '../../util/error-matcher';
+import { UserService } from 'src/app/user/shared/user.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -49,6 +45,7 @@ export class RecipeEditComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
+    private userService: UserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
@@ -60,7 +57,7 @@ export class RecipeEditComponent implements OnInit {
     this.recipesForm = this.formBuilder.group({
       'name' : [null, Validators.required],
       'description' : [null],
-      'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.required]],
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'categories': this.formBuilder.array([]),
@@ -250,22 +247,26 @@ export class RecipeEditComponent implements OnInit {
     Object.values((<FormGroup> this.recipesForm.get('ingredients')).controls).forEach((ingredient: FormGroup) => {
       ingredient.removeControl('name');
     });
-    this.recipesForm.addControl('user', new FormControl(this.cookieService.get('LoggedIn')));
-    this.onFormSubmit(this.recipesForm.value);
+    const userId = this.cookieService.get('LoggedIn');
+    this.recipesForm.addControl('uid', new FormControl(userId));
+    this.userService.getUser(userId).subscribe(user => {
+      this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
+      this.onFormSubmit(this.recipesForm.value);
+    });
   }
 
   onFormSubmit(form: NgForm) {
     if (this.route.snapshot.params['id']) {
       this.recipeService.putRecipes(this.id, form)
         .subscribe(() => {
-          this.router.navigate(['/recipe-detail/', this.id]);
+          this.router.navigate(['/recipe/detail/', this.id]);
         }, (err) => {
           console.error(err);
         });
     } else {
       this.recipeService.postRecipe(form)
         .subscribe(res => {
-          this.router.navigate(['/recipe-detail/', res.id]);
+          this.router.navigate(['/recipe/detail/', res.id]);
         }, (err) => {
           console.error(err);
         });
@@ -273,6 +274,6 @@ export class RecipeEditComponent implements OnInit {
   }
 
   recipesDetail() {
-    this.router.navigate(['/recipe-detail/', this.id]);
+    this.router.navigate(['/recipe/detail/', this.id]);
   }
 }

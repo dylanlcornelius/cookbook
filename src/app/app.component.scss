@@ -10,9 +10,8 @@
     position: relative;
 }
 .content {
-    padding: 5%;
-    /* TODO: padding: 2%; needs to work with transitions */
-    width: 80%;
+    padding: 5% 0;
+    width: 90%;
 }
 .clear-footer {
     height: 50px;
@@ -45,6 +44,9 @@
     animation: dash 1s ease-in-out infinite;
     stroke-linecap: round;
     stroke: #fff;
+}
+.mat-button, .mat-raised-button, .mat-mini-fab {
+    outline: none !important;
 }
 @keyframes rotate {
     100% {

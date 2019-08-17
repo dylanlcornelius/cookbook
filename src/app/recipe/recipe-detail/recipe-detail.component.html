@@ -4,21 +4,30 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe-list']"><mat-icon>list</mat-icon></a>
+    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']"><mat-icon>list</mat-icon></a>
   </div>
 
-  <mat-card class="detail-card">
-    <mat-card-header class="d-flex justify-content-center">
-      <mat-card-title class="d-flex justify-content-center">
+  <mat-card class="detail-card primary-text-color">
+    <mat-progress-bar class="image-progress" mode="determinate" [value]="recipeImageProgress" [hidden]="!recipeImageProgress"></mat-progress-bar>
+
+    <mat-card-header class="d-flex justify-content-center center-text">
+      <div class="image-buttons">
+        <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
+        <button mat-button matTooltip="Add Image" (click)="uploadFile.click()"><mat-icon style="font-size: 20px">add</mat-icon></button>
+        <button mat-button matTooltip="Delete Image" (click)="deleteFile(recipe.id)" [hidden]="!recipeImage"><mat-icon style="font-size: 20px">close</mat-icon></button>
+      </div>
+      <mat-card-title>
         <h2>{{recipe.name}}</h2>
       </mat-card-title>
-      <mat-card-subtitle class="d-flex justify-content-center">
+      <mat-card-subtitle>
         <dd> {{recipe.description}} </dd>
       </mat-card-subtitle>
     </mat-card-header>
+    
+    <img mat-card-image *ngIf="recipeImage" [src]="recipeImage" alt=""/>
 
     <div class="row">
-      <mat-card-content class="col-sm-4 d-flex justify-content-center">
+      <mat-card-content class="col-sm-4 center-text">
         <dl>
           <dt>Preparation Time</dt>
           <dd>{{recipe.time || "No Preparation Time"}} {{ recipe.time ? 'minutes' : ''}}</dd>
@@ -34,8 +43,8 @@
 
           <dt>Categories</dt>
           <dd>
-            <mat-chip-list>
-              <mat-chip *ngFor="let category of recipe.categories; let i = index">
+            <mat-chip-list class="d-flex justify-content-center">
+              <mat-chip *ngFor="let category of recipe.categories; let i = index" (click)="setListFilter(category.category)">
                 {{category.category}}
               </mat-chip>
             </mat-chip-list>
@@ -44,7 +53,7 @@
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-sm-4 d-flex justify-content-center"> 
+      <mat-card-content class="col-sm-4 center-text"> 
         <dl>
           <dt>Directions</dt>
 
@@ -55,7 +64,7 @@
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-sm-4 d-flex justify-content-center">
+      <mat-card-content class="col-sm-4 center-text">
         <dl>
           <dt>Ingredients</dt>
 
@@ -72,13 +81,13 @@
     </div>
 
     <mat-card-actions class="d-flex justify-content-between">
-      <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe-edit/', recipe.id]">
+      <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe/edit/', recipe.id]">
         <mat-icon>edit</mat-icon>
       </a>
-      <!-- TODO: update recipe-list with author id -->
-      <a mat-raised-button [routerLink]="['/recipe-list/', user.uid ]" class="author-link">
-        by {{user.firstName}} {{ user.lastName }}
-      </a>
+
+      <button mat-raised-button (click)="setListFilter(recipe.author)" class="author-link" *ngIf="recipe.author">
+        by {{recipe.author}}
+      </button>
       <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)">
         <mat-icon>delete</mat-icon>
       </a>

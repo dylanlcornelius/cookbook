@@ -16,6 +16,12 @@ SPA: Yes
 ```
 
 ##### Build application
+TEST:
+```
+ng build
+```
+
+PRODUCTION: 
 ```
 ng build --prod
 ```

@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { IngredientService } from '../ingredient.service';
-import { UserIngredient } from 'src/app/shopping-list/user-ingredient.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IngredientService } from '../shared/ingredient.service';
+import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { CookieService } from 'ngx-cookie-service';
-import { UserIngredientService } from 'src/app/shopping-list/user-ingredient.service';
+import { UserIngredientService } from 'src/app/shopping/shared/user-ingredient.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -15,10 +18,13 @@ export class IngredientListComponent implements OnInit {
   ingredientModalParams;
 
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
-  dataSource = [];
+  dataSource;
   uid: string;
   id: string;
   userIngredients = [];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private cookieService: CookieService,
@@ -46,16 +52,27 @@ export class IngredientListComponent implements OnInit {
             }
           });
         });
-        this.dataSource = ingredients;
+
+        this.dataSource = new MatTableDataSource(ingredients);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
         this.userIngredients = myIngredients;
         this.loading = false;
       });
     });
   }
 
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   editIngredient(id) {
     let data = this.userIngredients.find(x => x.id === id);
-    const ingredient = this.dataSource.find(x => x.id === id);
+    const ingredient = this.dataSource.data.find(x => x.id === id);
     if (!data) {
       this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: 0});
       data = this.userIngredients.find(x => x.id === id);
@@ -82,7 +99,7 @@ export class IngredientListComponent implements OnInit {
 
   removeIngredient(id) {
     const data = this.userIngredients.find(x => x.id === id);
-    const ingredient = this.dataSource.find(x => x.id === id);
+    const ingredient = this.dataSource.data.find(x => x.id === id);
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
@@ -92,7 +109,7 @@ export class IngredientListComponent implements OnInit {
 
   addIngredient(id) {
     const data = this.userIngredients.find(x => x.id === id);
-    const ingredient = this.dataSource.find(x => x.id === id);
+    const ingredient = this.dataSource.data.find(x => x.id === id);
     if (ingredient.amount) {
       if (data) {
         data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);

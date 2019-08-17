@@ -1,9 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/dist/css/bootstrap.css";
-
 html, body {
     height: 100%;
 }
 body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.mat-progress-bar,
+.mat-progress-bar .mat-progress-bar-fill {
+  transition: transform 100ms ease !important;
 }

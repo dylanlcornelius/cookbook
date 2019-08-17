@@ -12,7 +12,7 @@
     <a mat-mini-fab matTooltip="Back" color="primary" (click)="ingredientsDetail()" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
-    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient-list']" *ngIf="!route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient/list']" *ngIf="!route.snapshot.params['id']">
       <mat-icon> list </mat-icon>
     </a>
   </div>
@@ -33,14 +33,14 @@
     </mat-form-field>
 
     <div class="row">
-      <mat-form-field class="col-8">
+      <mat-form-field class="col-12 col-md-8">
         <input matInput placeholder="Amount" formControlName="amount" [errorStateMatcher]="matcher">
         <mat-error>
           <span *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched">Please enter a valid number for Ingredient Amount</span>
         </mat-error>
       </mat-form-field>
     
-      <mat-form-field class="col-4" style="min-width: 200px;">
+      <mat-form-field class="col-12 col-md-4">
         <mat-label> Unit of Measurement </mat-label>
         <mat-select formControlName="uom">
           <mat-option *ngFor="let uom of uoms" [value]="uom">
@@ -62,7 +62,7 @@
 
     <div class="button-row">
       <button mat-mini-fab matTooltip="Save Ingredient" type="submit" [disabled]="!ingredientsForm.valid" color="primary">
-        <mat-icon> save </mat-icon>
+        <mat-icon>done</mat-icon>
       </button>
     </div>
   </form>

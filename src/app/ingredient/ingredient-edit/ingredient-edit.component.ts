@@ -1,22 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IngredientService } from '../ingredient.service';
+import { IngredientService } from '../shared/ingredient.service';
 import {
-  FormControl,
   FormGroupDirective,
   FormBuilder,
   FormGroup,
   NgForm,
   Validators
 } from '@angular/forms';
-import { UOM } from '../uom.emun';
-import { ErrorStateMatcher } from '@angular/material';
-
-class ErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return (control && control.invalid && (control.dirty || control.touched));
-  }
-}
+import { UOM } from '../shared/uom.emun';
+import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -52,7 +45,7 @@ export class IngredientEditComponent implements OnInit {
       'category': [null],
       'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]{1})+(.[0-9]{0,2})?$')]],
       'uom': [null, Validators.required],
-      'calories': [null, [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
     });
 
     if (this.route.snapshot.params['id']) {
@@ -79,7 +72,7 @@ export class IngredientEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.ingredientService.putIngredient(this.id, form)
         .subscribe(() => {
-          this.router.navigate(['/ingredient-detail/', this.id]);
+          this.router.navigate(['/ingredient/detail/', this.id]);
         }, (err) => {
           console.error(err);
         });
@@ -87,7 +80,7 @@ export class IngredientEditComponent implements OnInit {
       this.ingredientService.postIngredient(form)
         .subscribe(res => {
           const id = res['id'];
-          this.router.navigate(['/ingredient-detail/', id]);
+          this.router.navigate(['/ingredient/detail/', id]);
         }, (err) => {
           console.error(err);
         });
@@ -95,6 +88,6 @@ export class IngredientEditComponent implements OnInit {
   }
 
   ingredientsDetail() {
-    this.router.navigate(['/ingredient-detail/', this.id]);
+    this.router.navigate(['/ingredient/detail/', this.id]);
   }
 }

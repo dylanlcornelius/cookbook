@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { IngredientService } from '../../ingredient/ingredient.service';
-import { RecipeService } from '../../recipe/recipe.service';
-import { UserService } from '../../user/user.service';
+import { IngredientService } from '../../ingredient/shared/ingredient.service';
+import { RecipeService } from '../../recipe/shared/recipe.service';
+import { UserService } from '../../user/shared/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { ConfigService } from '../config.service';
-import { Config } from '../config.model';
-import { User } from 'src/app/user/user.model';
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { ConfigService } from '../shared/config.service';
+import { Config } from '../shared/config.model';
+import { User } from 'src/app/user/shared/user.model';
+import { Notification } from 'src/app/shared/notification-modal/notification.enum';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -93,13 +93,13 @@ export class AdminDashboardComponent implements OnInit {
     };
   }
 
-  removeConfigEvent = function(self, id) {
+  removeConfigEvent(self, id) {
     self.configService.deleteConfig(id)
       .subscribe(() => {},
       (err) => {
         console.error(err);
       });
-  };
+  }
 
   removeUser(id, firstName, lastName) {
     if (!firstName && !lastName) {
@@ -114,13 +114,13 @@ export class AdminDashboardComponent implements OnInit {
     };
   }
 
-  removeUserEvent = function(self, id) {
+  removeUserEvent(self, id) {
     self.userService.deleteUser(id)
     .subscribe(() => {},
     (err) => {
       console.log(err);
     });
-  };
+  }
 
   revert() {
     this.validationModalParams = {
@@ -130,7 +130,7 @@ export class AdminDashboardComponent implements OnInit {
     };
   }
 
-  revertEvent = function(self) {
+  revertEvent(self) {
     self.configService.getConfigs().subscribe((result) => {
       self.configsDataSource = result;
     });
@@ -142,13 +142,13 @@ export class AdminDashboardComponent implements OnInit {
       type: Notification.SUCCESS,
       text: 'Changes reverted!'
     };
-  };
+  }
 
   save() {
     this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
   }
 
-  saveEvent = function(self) {
+  saveEvent(self) {
     self.configService.putConfigs(self.configsDataSource);
     // TODO: use model
     self.userService.putUsers(self.usersDataSource);
@@ -157,5 +157,5 @@ export class AdminDashboardComponent implements OnInit {
       type: Notification.SUCCESS,
       text: 'Changes saved!'
     };
-  };
+  }
 }

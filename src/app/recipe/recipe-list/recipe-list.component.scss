@@ -1,13 +1,41 @@
-.table-container {
-    display: flex;
-    flex-direction: column;
-    max-height: 500px;
-    min-width: 500px;
-    overflow: auto;
+.mat-form-field {
+    width: 60%;
 }
 .button-row {
     margin: 10px 0;
 }
 .row-button {
     margin: 10px;
+}
+.recipe-card {
+    min-width: 200px;
+    max-width: 300px;
+    margin: 1%;
+    text-align: center;
+}
+.mat-card {
+    display: flex;
+    flex-direction: column;
+}
+.mat-card-header {
+    // flex-shrink: 0;
+    flex-grow: 1;
+    overflow: auto;
+}
+// .mat-card-content {
+//     flex-grow: 1;
+//     overflow: auto;
+// }
+.mat-card-image {
+    height: 100px;
+    object-fit: cover;
+}
+.mat-card-actions {
+    margin: 0;
+}
+.mat-paginator {
+    background: inherit;
+}
+.full-width {
+    width: 100%;
 }

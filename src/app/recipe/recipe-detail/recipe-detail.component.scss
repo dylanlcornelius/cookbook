@@ -6,11 +6,35 @@ dd {
   font-size: 16px;
   margin-bottom: 20px;
 }
+.center-text {
+  text-align: center;
+}
+.image-progress {
+  width: calc(100% + 32px);
+  margin: 0 -16px;
+  top: -16px;
+}
+.image-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.image-buttons .mat-button {
+  padding: 0;
+  min-width: 30px;
+}
 .detail-card {
-  padding: 50px;
+  margin: 0 15%;
+}
+.mat-card-title {
+  margin-top: 5px;
 }
 .button-row {
   margin: 10px 0;
+}
+.mat-card-image {
+  height: 350px;
+  object-fit: cover;
 }
 .step-header {
   font-size: 14px;
@@ -46,4 +70,10 @@ dd {
 }
 .author-link:hover {
   text-decoration: none;
+}
+
+@media screen and (max-width: 767px) {
+  .detail-card {
+    margin: 0;
+  }
 }

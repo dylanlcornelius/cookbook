@@ -3,4 +3,12 @@
     position: relative;
     height: 50px;
     width: 100%;
+    padding: 10px;
+}
+.author-text, .author-text a {
+    color: darkgray;
+    text-decoration: none;
+}
+.author-text a:hover {
+    color: grey;
 }
