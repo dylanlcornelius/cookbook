@@ -42,3 +42,16 @@
 - created initial page loading animation
 - added categories to recipes
 - created an analytics tab on profile page to display user actions
+
+#### Version 1.3 - Now for your Phone
+- Switched bootstrap to use CDN
+- abstracted custom error matcher to its own file
+- highlighted navbar button for current page
+- added popout navbar for mobile
+- changed recipe list to use mat-cards instead of mat-table
+- added table enhancements: filtering, pagination, and sorting
+- added quick navigation on the home page
+- reworked pages to be response and mobile friendly
+- made dropdown menu for author and category filtering on recipe list page
+- added images to recipes
+- created modules of each route and lazy loaded them
