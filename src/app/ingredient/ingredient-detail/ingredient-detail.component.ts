@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IngredientService } from '../shared/ingredient.service';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { IngredientService } from '@ingredientService';
+import { Notification } from '@notifications';
 
 @Component({
   selector: 'app-ingredient-detail',

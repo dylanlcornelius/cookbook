@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { IngredientService } from '../../ingredient/shared/ingredient.service';
-import { RecipeService } from '../../recipe/shared/recipe.service';
+import { IngredientService } from '@ingredientService';
+import { RecipeService } from '@recipeService';
 import { UserService } from '../../user/shared/user.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ConfigService } from '../shared/config.service';
 import { Config } from '../shared/config.model';
 import { User } from 'src/app/user/shared/user.model';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { Notification } from '@notifications';
 
 @Component({
   selector: 'app-admin-dashboard',

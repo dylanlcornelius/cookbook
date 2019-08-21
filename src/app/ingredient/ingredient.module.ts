@@ -7,7 +7,7 @@ import { IngredientDetailComponent } from './ingredient-detail/ingredient-detail
 import { IngredientEditComponent } from './ingredient-edit/ingredient-edit.component';
 import { IngredientModalComponent } from './ingredient-modal/ingredient-modal.component';
 
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@sharedModule';
 
 @NgModule({
   declarations: [
