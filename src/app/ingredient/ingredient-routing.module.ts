@@ -8,7 +8,7 @@ import { IngredientEditComponent } from './ingredient-edit/ingredient-edit.compo
 const routes: Routes = [
   {path: 'list', component: IngredientListComponent},
   {path: 'detail/:id', component: IngredientDetailComponent},
-  {path: 'edit', redirectTo: 'ingredient-edit/', pathMatch: 'full'},
+  {path: 'edit', redirectTo: 'edit/', pathMatch: 'full'},
   {path: 'edit/:id', component: IngredientEditComponent},
 ];
 
