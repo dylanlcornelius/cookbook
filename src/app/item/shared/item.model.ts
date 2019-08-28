@@ -3,6 +3,8 @@ export class Item {
     uid: string;
     name: string;
 
+    cartQuantity: Number;
+
     constructor(
         uid: string,
         name: string,
