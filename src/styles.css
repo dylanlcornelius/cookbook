@@ -2,7 +2,7 @@ html, body {
     height: 100%;
 }
 body {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
 }
 .mat-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
