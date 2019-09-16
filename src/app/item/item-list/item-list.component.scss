@@ -20,6 +20,9 @@
 .button-row {
     margin: 10px 0;
 }
+.mat-row:last-child, .mat-footer-row:last-child {
+    border: none;
+}
 
 @media screen and (max-width: 767px) {
     .mat-cell, .mat-footer-cell {
@@ -46,8 +49,5 @@
         flex-direction: column;
         align-items: start;
         padding: 10px 20px;
-    }
-    .mat-row:last-child, .mat-footer-row:last-child {
-        border: none;
     }
 }
