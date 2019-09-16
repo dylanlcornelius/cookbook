@@ -2,9 +2,12 @@ export class UserIngredient {
     id: string;
     uid: string;
     ingredients: Array<{
-        id: string;
-        pantryQuantity: number;
-        cartQuantity: number;
+        id: string,
+        pantryQuantity: number,
+        cartQuantity: number,
+
+        uom: string,
+        amount: string,
     }>;
 
     constructor(
@@ -13,6 +16,8 @@ export class UserIngredient {
             id: string,
             pantryQuantity: number,
             cartQuantity: number,
+            uom: string,
+            amount: string,
         }>,
         id?: string,
     ) {

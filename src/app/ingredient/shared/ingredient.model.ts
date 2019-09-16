@@ -8,7 +8,11 @@ export class Ingredient {
     uom: UOM;
     calories: string;
 
-    constructor (id: string, name: string, category: string, amount: string, uom: UOM, calories: string) {
+    quantity: Number;
+    pantryQuantity: Number;
+    cartQuantity: Number;
+
+    constructor (name: string, category: string, amount: string, uom: UOM, calories: string, id?: string) {
         this.id = id;
         this.name = name;
         this.category = category;

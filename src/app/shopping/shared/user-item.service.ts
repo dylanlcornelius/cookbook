@@ -19,7 +19,7 @@ export class UserItemService {
     private actionService: ActionService
   ) { }
 
-  getUserItems(uid: string): Observable<any> {
+  getUserItems(uid: string): Observable<UserItem> {
     const self = this;
     return new Observable((observer) => {
       this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
@@ -31,7 +31,7 @@ export class UserItemService {
           });
           observer.next(userItem);
         } else {
-          self.postUserItem({uid: uid, items: []}).subscribe(userItem => {
+          self.postUserItem(new UserItem(uid, [])).subscribe(userItem => {
             observer.next(userItem);
           });
         }
@@ -39,14 +39,11 @@ export class UserItemService {
     });
   }
 
-  postUserItem(data): Observable<any> {
+  postUserItem(userItem: UserItem): Observable<UserItem> {
     return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        observer.next({
-          id: doc.id,
-          uid: data.uid,
-          items: data.items,
-        });
+      this.ref.add(userItem).then((doc) => {
+        userItem.id = doc.id;
+        observer.next(userItem);
       });
     });
   }

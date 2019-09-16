@@ -18,51 +18,40 @@ export class ItemService {
     private actionService: ActionService,
   ) { }
 
-  getItems(): Observable<any> {
+  getItems(): Observable<Item[]> {
     return new Observable((observer) => {
       this.ref.onSnapshot((querySnapshot) => {
         const ingredients = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          ingredients.push({
-            id: doc.id,
-            uid: data.uid || '',
-            name: data.name || '',
-          });
+          ingredients.push(new Item(data.uid || '', data.name || '', doc.id));
         });
         observer.next(ingredients);
       });
     });
   }
 
-  getItem(id: string): Observable<any> {
+  getItem(id: string): Observable<Item> {
     return new Observable((observer) => {
       this.ref.doc(id).get().then((doc) => {
         const data = doc.data();
-        observer.next({
-          id: doc.id,
-          uid: data.uid || '',
-          name: data.name || '',
-        });
+        observer.next(new Item(data.uid || '', data.name || '', doc.id));
       });
     });
   }
 
-  postItem(data): Observable<any> {
+  postItem(data): Observable<Item> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_ITEM, 1);
-        // observer.next({
-        //   id: doc.id
-        // });
-        observer.next(new Item(data.uid, data.name, doc.id));
+        observer.next(new Item(data.uid || '', data.name || '', doc.id));
       });
     });
   }
 
-  putItem(id, data): Observable<any> {
+  putItem(id: string, data): Observable<Item> {
     return new Observable((observer) => {
-      this.ref.doc(id).set(data).then(() => {
+      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
         this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_ITEM, 1);
         observer.next();
       });
