@@ -48,6 +48,10 @@
 .mat-button, .mat-raised-button, .mat-mini-fab {
     outline: none !important;
 }
+.mat-paginator {
+    background: inherit !important;
+}
+
 @keyframes rotate {
     100% {
     transform: rotate(360deg);
