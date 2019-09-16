@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Notification } from '@notifications';
 import {
   FormBuilder,
@@ -12,6 +12,7 @@ import { ActionService } from '@actionService';
 import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { ActivatedRoute } from '@angular/router';
+import { MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-profile',
@@ -53,6 +54,9 @@ export class ProfileComponent implements OnInit {
   ];
 
   matcher = new ErrorMatcher();
+
+  @ViewChild('weekPaginator') weekPaginator: MatPaginator;
+  @ViewChild('monthPaginator') monthPaginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
@@ -121,6 +125,11 @@ export class ProfileComponent implements OnInit {
 
       this.actionsLength = Object.keys(this.actions).length;
       this.monthActionsLength = Object.keys(this.monthActions).length;
+
+      this.week.pageIndex = this.actionsLength - 1;
+      this.month.pageIndex = this.monthActionsLength - 1;
+      this.weekPaginator.pageIndex = this.actionsLength - 1;
+      this.monthPaginator.pageIndex = this.monthActionsLength - 1;
     });
   }
 
