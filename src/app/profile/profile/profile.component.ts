@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { Notification } from '@notifications';
 import {
   FormBuilder,
   FormGroup,
@@ -8,7 +8,7 @@ import {
 import { CookieService } from 'ngx-cookie-service';
 import { UserService } from '../../user/shared/user.service';
 import { User } from 'src/app/user/shared/user.model';
-import { ActionService } from '../shared/action.service';
+import { ActionService } from '@actionService';
 import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { ActivatedRoute } from '@angular/router';

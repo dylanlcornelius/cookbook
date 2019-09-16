@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ItemService } from '../shared/item.service';
+import { ItemService } from '@itemService';
 import { UserItem } from 'src/app/shopping/shared/user-item.model';
 import { CookieService } from 'ngx-cookie-service';
-import { UserItemService } from 'src/app/shopping/shared/user-item.service';
+import { UserItemService } from '@userItemService';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
   FormControl,
@@ -12,7 +12,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ErrorStateMatcher, MatAccordion, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { Notification } from '@notifications';
 import { Item } from '../shared/item.model';
 
 class ErrorMatcher implements ErrorStateMatcher {

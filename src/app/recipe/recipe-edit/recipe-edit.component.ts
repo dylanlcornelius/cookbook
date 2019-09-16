@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipeService } from '../shared/recipe.service';
+import { RecipeService } from '@recipeService';
 import {
   FormControl,
   FormBuilder,

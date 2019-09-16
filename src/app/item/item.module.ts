@@ -7,7 +7,7 @@ import {
 import { ItemRoutingModule } from './item-routing.module';
 import { ItemListComponent } from './item-list/item-list.component';
 
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@sharedModule';
 
 @NgModule({
   declarations: [

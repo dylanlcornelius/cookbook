@@ -4,7 +4,7 @@
 
 ** DROP THIS IN TYPESCRIPT **
 -- path is optional --
-import { Notification } from 'src/app/modals/notification-modal/notification.enum';
+import { Notification } from '@notifications';
 notificationModalParams;
 
 this.notificationModalParams = {
