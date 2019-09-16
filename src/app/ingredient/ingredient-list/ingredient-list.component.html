@@ -63,7 +63,7 @@
             <span class="mobile-value">
               <span style="margin: 0 10px;">
                 <label class="table-col">
-                  {{element.pantryQuantity || 0}} {{element.uom === 'other'? '' : element.uom}}
+                  {{element.pantryQuantity || 0 | number: '1.0-2'}} {{element.uom === 'other'? '' : element.uom}}
                 </label>
               </span>
               <button mat-button color="primary" (click)="editIngredient(element.id)">
