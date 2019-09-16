@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecipeService } from '../shared/recipe.service';
+import { RecipeService } from '@recipeService';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
+import { Notification } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
 
 @Component({

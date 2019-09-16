@@ -9,7 +9,7 @@ import { ChartsModule } from 'ng2-charts';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@sharedModule';
 
 @NgModule({
   declarations: [

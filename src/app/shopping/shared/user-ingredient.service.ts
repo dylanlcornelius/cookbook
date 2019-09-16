@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from 'src/app/profile/shared/action.service';
-import { Action } from '../../profile/shared/action.enum';
+import { ActionService } from '@actionService';
+import { Action } from '@actions';
 import { UserIngredient } from './user-ingredient.model';
 import { Observable } from 'rxjs';
 

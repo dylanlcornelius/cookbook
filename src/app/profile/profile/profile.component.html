@@ -58,7 +58,7 @@
         </div>
         <br/>
 
-        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
+        <mat-paginator #weekPaginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
         <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
         <canvas baseChart class="d-none d-sm-block"
           [data]="actions[week.pageIndex]?.data || []"
@@ -74,7 +74,7 @@
           [options]="{legend: false}">
         </canvas>
 
-        <mat-paginator [length]="monthActionsLength" [pageSize]="1" [hidePageSize]="true" (page)="month = $event"></mat-paginator>
+        <mat-paginator #monthPaginator [length]="monthActionsLength" [pageSize]="1" [hidePageSize]="true" (page)="month = $event"></mat-paginator>
         <h4>{{monthActions[month.pageIndex]?.date || ''}}</h4>
         <canvas baseChart class="d-none d-sm-block"
           [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"

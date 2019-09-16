@@ -5,8 +5,8 @@ import '@firebase/auth';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../../admin/shared/config.service';
-import { ActionService } from 'src/app/profile/shared/action.service';
-import { Action } from '../../profile/shared/action.enum';
+import { ActionService } from '@actionService';
+import { Action } from '@actions';
 import { User } from './user.model';
 
 @Injectable({

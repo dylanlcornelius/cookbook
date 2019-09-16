@@ -12,7 +12,7 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@sharedModule';
 
 @NgModule({
   declarations: [

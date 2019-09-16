@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UserIngredientService } from '../../shopping/shared/user-ingredient.service';
-import { IngredientService } from '../../ingredient/shared/ingredient.service';
+import { UserIngredientService } from '@userIngredientService';
+import { IngredientService } from '@ingredientService';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
-import { UserItemService } from '../shared/user-item.service';
-import { ItemService } from 'src/app/item/shared/item.service';
+import { Notification } from '@notifications';
+import { UserItemService } from '@userItemService';
+import { ItemService } from '@itemService';
 import { UserItem } from '../shared/user-item.model';
 
 
