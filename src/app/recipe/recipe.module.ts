@@ -4,6 +4,7 @@ import {
   MatProgressBarModule,
   MatBadgeModule,
   MatCheckboxModule,
+  MatStepperModule,
 } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -26,6 +27,7 @@ import { SharedModule } from '@sharedModule';
     MatProgressBarModule,
     MatBadgeModule,
     MatCheckboxModule,
+    MatStepperModule,
     DragDropModule,
     SharedModule,
   ]
