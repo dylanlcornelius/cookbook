@@ -162,6 +162,7 @@ export class ProfileComponent implements OnInit {
         lastName : [user.lastName, Validators.required],
         role: [user.role],
         theme: [user.theme],
+        simplifiedView: [user.simplifiedView],
         id: [user.id]
       });
 
@@ -176,6 +177,7 @@ export class ProfileComponent implements OnInit {
       form.lastName,
       form.role,
       form.theme,
+      form.simplifiedView,
       form.id
     );
 

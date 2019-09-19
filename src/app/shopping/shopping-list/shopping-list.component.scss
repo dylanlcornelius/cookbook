@@ -16,8 +16,26 @@
 .button-row {
     margin: 10px 0;
 }
-.mat-row:last-child {
-    border: none;
+
+.simplified {
+    flex-grow: 1;
+    max-width: 450px;
+}
+.simplified .mat-row {
+    flex-direction: unset;
+    align-items: center;
+    padding: 5px 10px;
+}
+.simplified .mat-cell {
+    width: 100%;
+    display: block;
+    min-height: 0;
+}
+.simplified .mat-cell:first-of-type, .mat-cell:last-of-type {
+    padding: 0;
+}
+.simplified .mat-cell:last-of-type {
+    text-align: end;
 }
 
 @media screen and (max-width: 767px) {

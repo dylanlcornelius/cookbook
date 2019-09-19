@@ -5,14 +5,16 @@ export class User {
     lastName: string;
     role: string;
     theme: boolean;
+    simplifiedView: boolean;
 
-    constructor(uid: string, firstName: string, lastName: string, role: string, theme: boolean, id?: string) {
+    constructor(uid: string, firstName: string, lastName: string, role: string, theme: boolean, simplifiedView: boolean, id?: string) {
         this.id = id;
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.theme = theme;
+        this.simplifiedView = simplifiedView;
     }
 
     public getId() {
@@ -25,7 +27,8 @@ export class User {
             firstName: this.firstName,
             lastName: this.lastName,
             role: this.role,
-            theme: this.theme
+            theme: this.theme,
+            simplifiedView: this.simplifiedView,
         };
     }
 
