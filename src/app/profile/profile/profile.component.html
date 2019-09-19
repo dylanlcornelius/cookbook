@@ -31,17 +31,28 @@
           <br/>
 
           <div class="row">
-              <div class="col-md-6 col-sm-12">
-                <mat-slide-toggle matInput formControlName="theme" [checked]="userForm.get('theme').value">
-                </mat-slide-toggle>
-                <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
-                  <mat-icon>brightness_5</mat-icon>
-                </span>
-                <span *ngIf="userForm.get('theme').value" class="theme-icon" matTooltip="Dark Theme">
-                  <mat-icon>brightness_3</mat-icon>
-                </span>
-              </div>
+            <div class="col-md-6 col-sm-12">
+              <mat-slide-toggle matInput formControlName="theme" [checked]="userForm.get('theme').value">
+              </mat-slide-toggle>
+              <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
+                <mat-icon>brightness_5</mat-icon>
+              </span>
+              <span *ngIf="userForm.get('theme').value" class="theme-icon" matTooltip="Dark Theme">
+                <mat-icon>brightness_3</mat-icon>
+              </span>
             </div>
+
+            <div class="col-md-6 col-sm-12">
+              <mat-slide-toggle matInput formControlName="simplifiedView" [checked]="userForm.get('simplifiedView').value">
+              </mat-slide-toggle>
+              <span *ngIf="!userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Expanded View">
+                <mat-icon>view_compact</mat-icon>
+              </span>
+              <span *ngIf="userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Simplified View">
+                <mat-icon>view_comfy</mat-icon>
+              </span>
+            </div>
+          </div>
           
           <div class="button-row">
             <button mat-mini-fab type="submit" matTooltip="Save Settings" [disabled]="!userForm.valid" color="primary">

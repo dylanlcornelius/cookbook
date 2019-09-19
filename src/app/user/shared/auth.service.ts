@@ -62,7 +62,7 @@ export class AuthService {
           if (currentUser) {
             this.finishLogin(currentUser, uid);
           } else {
-            this.userService.postUser(new User(uid, '', '', 'pending', false)).subscribe(current => this.finishLogin(current, uid));
+            this.userService.postUser(new User(uid, '', '', 'pending', false, false)).subscribe(current => this.finishLogin(current, uid));
           }
         });
       }
@@ -101,7 +101,7 @@ export class AuthService {
   logout() {
     firebase.auth().signOut().then(() => {
       this.cookieService.delete('LoggedIn');
-      this.userService.setCurrentUser(new User('', '', '', '', false, ''));
+      this.userService.setCurrentUser(new User('', '', '', '', false, false, ''));
       this.userService.setIsLoggedIn(false);
       this.userService.setIsGuest(true);
       this.router.navigate(['/login']);
