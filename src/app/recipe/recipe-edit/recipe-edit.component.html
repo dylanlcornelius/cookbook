@@ -211,13 +211,13 @@
         </mat-form-field>
 
         <mat-form-field class="form-field">
-          <mat-chip-list #categoryList>
+          <mat-chip-list #categoryMobileList>
             <mat-chip *ngFor="let category of recipesForm.controls.categories.controls; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">
               {{category.value.category}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input placeholder="Categories"
-                  [matChipInputFor]="categoryList"
+                  [matChipInputFor]="categoryMobileList"
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   [matChipInputAddOnBlur]="true"
                   (matChipInputTokenEnd)="addCategoryEvent($event)">
