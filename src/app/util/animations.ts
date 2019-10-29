@@ -36,10 +36,10 @@ export const fadeInFastAnimation = trigger('fadeInFastAnimation', [
 
 export const slideInOutAnimation = trigger('slideInOutAnimation', [
     transition(':enter', [
-        style({transform: 'translateX(-100%)'}),
+        style({transform: 'translateX(100%)'}),
         animate('400ms ease', style({transform: 'translateX(0%)'}))
     ]),
     transition(':leave', [
-        animate('400ms ease', style({transform: 'translateX(-100%)'}))
+        animate('400ms ease', style({transform: 'translateX(100%)'}))
     ])
 ]);

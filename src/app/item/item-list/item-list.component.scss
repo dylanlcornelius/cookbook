@@ -5,13 +5,6 @@
 .mobile-label {
     display: none;
 }
-.detail-form {
-    width: 50%;
-    margin: 25px auto;
-}
-.form-field {
-    width: 100%;
-}
 .buy-icon {
     vertical-align: middle;
     font-size: 25px;
@@ -26,6 +19,9 @@
 }
 .button-row {
     margin: 10px 0;
+}
+.mat-row:last-child, .mat-footer-row:last-child {
+    border: none;
 }
 
 @media screen and (max-width: 767px) {
@@ -53,8 +49,5 @@
         flex-direction: column;
         align-items: start;
         padding: 10px 20px;
-    }
-    .mat-row:last-child, .mat-footer-row:last-child {
-        border: none;
     }
 }

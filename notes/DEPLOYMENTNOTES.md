@@ -18,7 +18,7 @@ SPA: Yes
 ##### Build application
 TEST:
 ```
-ng build
+ng build --aot
 ```
 
 PRODUCTION: 

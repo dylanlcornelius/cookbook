@@ -44,7 +44,7 @@
 - created an analytics tab on profile page to display user actions
 
 #### Version 1.3 - Now for your Phone
-- Switched bootstrap to use CDN
+- switched bootstrap to use CDN
 - abstracted custom error matcher to its own file
 - highlighted navbar button for current page
 - added popout navbar for mobile
@@ -55,3 +55,15 @@
 - made dropdown menu for author and category filtering on recipe list page
 - added images to recipes
 - created modules of each route and lazy loaded them
+
+#### Version 1.4 - Recipe Wizardry
+- fixed whitespace on the bottom of pages when navigating
+- ordered analytics by most recent
+- simplified file path imports
+- created data models for every component
+- made item name input larger
+- created a bash deploy script
+- changed recipe create/update page to use a stepper
+- fixed the bottom border on mat-tables
+- limited quantities to two decimal places
+- made a simplified view option for users

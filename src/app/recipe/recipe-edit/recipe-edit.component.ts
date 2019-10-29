@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipeService } from '../shared/recipe.service';
+import { RecipeService } from '@recipeService';
 import {
   FormControl,
   FormBuilder,
@@ -34,6 +34,7 @@ export class RecipeEditComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   addedIngredients = [];
+  allAvailableIngredients = [];
   availableIngredients = [];
 
   uoms: Array<UOM>;
@@ -119,7 +120,8 @@ export class RecipeEditComponent implements OnInit {
               ingredients.forEach(ingredient => {
                 ingredient.quantity = 0;
               });
-              this.availableIngredients = ingredients;
+              this.allAvailableIngredients = ingredients;
+              this.availableIngredients = this.allAvailableIngredients;
 
               this.title = 'Edit a Recipe';
               this.loading = false;
@@ -129,7 +131,7 @@ export class RecipeEditComponent implements OnInit {
       this.ingredientService.getIngredients()
         .subscribe(ingredients => {
           ingredients.forEach(ingredient => {
-            this.availableIngredients.push({
+            this.allAvailableIngredients.push({
               id: ingredient.id,
               name: ingredient.name,
               amount: ingredient.amount,
@@ -137,6 +139,8 @@ export class RecipeEditComponent implements OnInit {
               quantity: 0
             });
           });
+
+          this.availableIngredients = this.allAvailableIngredients;
 
           this.title = 'Add a new Recipe';
           this.loading = false;
@@ -241,6 +245,16 @@ export class RecipeEditComponent implements OnInit {
     if (uom) {
       return this.uomConversion.relatedUOMs(uom);
     }
+  }
+
+  applyIngredientFilter(filterValue: string) {
+    const filter = filterValue.trim().toLowerCase();
+
+    this.availableIngredients = this.allAvailableIngredients.filter(ingredient => {
+      return ingredient.name.toLowerCase().includes(filter) && !this.addedIngredients.find(addedIngredient => {
+          return ingredient.id === addedIngredient.id;
+      });
+    });
   }
 
   submitForm() {

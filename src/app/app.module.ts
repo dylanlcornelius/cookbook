@@ -13,7 +13,7 @@ import { LoginComponent } from './user/login/login.component';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from '@sharedModule';
 
 import { firebase } from '@firebase/app';
 import { environment } from '../environments/environment';

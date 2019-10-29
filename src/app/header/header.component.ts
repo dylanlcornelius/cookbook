@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../util/animations';
 import { User } from '../user/shared/user.model';
 import { AuthService } from '../user/shared/auth.service';
-import { Router, RouterEvent } from '@angular/router';
+import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +30,11 @@ export class HeaderComponent implements OnInit {
       if (event.url) {
         this.route = event.url;
       }
+
+      if (!(event instanceof NavigationEnd)) {
+        return;
+      }
+      window.scrollTo(0, 0);
     });
   }
 

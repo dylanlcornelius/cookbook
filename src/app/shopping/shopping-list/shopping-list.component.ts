@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { UserIngredientService } from '../../shopping/shared/user-ingredient.service';
-import { IngredientService } from '../../ingredient/shared/ingredient.service';
+import { UserIngredientService } from '@userIngredientService';
+import { IngredientService } from '@ingredientService';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material';
-import { Notification } from 'src/app/shared/notification-modal/notification.enum';
-import { UserItemService } from '../shared/user-item.service';
-import { ItemService } from 'src/app/item/shared/item.service';
+import { Notification } from '@notifications';
+import { UserItemService } from '@userItemService';
+import { ItemService } from '@itemService';
 import { UserItem } from '../shared/user-item.model';
+import { UserService } from 'src/app/user/shared/user.service';
 
-
-// TODO: Update all imports with @ and absolute paths
 // TODO: icons for notification modal
 @Component({
   selector: 'app-shopping-list',
@@ -25,6 +24,8 @@ export class ShoppingListComponent implements OnInit {
   isCompleted = false;
 
   uid: string;
+  simplifiedView: boolean;
+
   id: string;
   displayedColumns = ['name', 'pantryQuantity', 'cartQuantity', 'buy'];
   ingredientsDataSource;
@@ -36,6 +37,7 @@ export class ShoppingListComponent implements OnInit {
 
   constructor(
     private cookieService: CookieService,
+    private userService: UserService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
@@ -44,6 +46,9 @@ export class ShoppingListComponent implements OnInit {
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
+    this.userService.getCurrentUser().subscribe(user => {
+      this.simplifiedView = user.simplifiedView;
+    });
     const myIngredients = [];
     const myItems = [];
     this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {

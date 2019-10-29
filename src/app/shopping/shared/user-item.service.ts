@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from 'src/app/profile/shared/action.service';
-import { Action } from '../../profile/shared/action.enum';
+import { ActionService } from '@actionService';
+import { Action } from '@actions';
 import { UserItem } from './user-item.model';
 import { Observable } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class UserItemService {
     private actionService: ActionService
   ) { }
 
-  getUserItems(uid: string): Observable<any> {
+  getUserItems(uid: string): Observable<UserItem> {
     const self = this;
     return new Observable((observer) => {
       this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
@@ -31,7 +31,7 @@ export class UserItemService {
           });
           observer.next(userItem);
         } else {
-          self.postUserItem({uid: uid, items: []}).subscribe(userItem => {
+          self.postUserItem(new UserItem(uid, [])).subscribe(userItem => {
             observer.next(userItem);
           });
         }
@@ -39,14 +39,11 @@ export class UserItemService {
     });
   }
 
-  postUserItem(data): Observable<any> {
+  postUserItem(userItem: UserItem): Observable<UserItem> {
     return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        observer.next({
-          id: doc.id,
-          uid: data.uid,
-          items: data.items,
-        });
+      this.ref.add(userItem).then((doc) => {
+        userItem.id = doc.id;
+        observer.next(userItem);
       });
     });
   }

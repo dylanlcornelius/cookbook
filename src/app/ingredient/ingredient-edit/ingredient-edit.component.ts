@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IngredientService } from '../shared/ingredient.service';
+import { IngredientService } from '@ingredientService';
 import {
   FormGroupDirective,
   FormBuilder,

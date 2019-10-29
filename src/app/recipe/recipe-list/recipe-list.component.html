@@ -43,7 +43,7 @@
       <mat-card-content>
         <!-- Servings: {{data.servings}}<br/> -->
         <!-- Calories: {{data.calories}}<br/> -->
-        Quantity: {{data.count}}
+        Quantity: {{data.count | number: '1.0-2'}}
       </mat-card-content>
       <mat-card-actions (click)="$event.stopPropagation()">
           <button mat-button color="warn" (click)="removeIngredients(data.id)">Cook</button>

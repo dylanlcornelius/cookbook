@@ -11,7 +11,7 @@ export class UserService {
 
   ref = firebase.firestore().collection('users');
 
-  private currentUser = new BehaviorSubject<User>(new User('', '', '', '', false, ''));
+  private currentUser = new BehaviorSubject<User>(new User('', '', '', '', false, false, ''));
   private isloggedIn = new BehaviorSubject<boolean>(false);
   private isGuest = new BehaviorSubject<boolean>(false);
 
@@ -32,7 +32,15 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', data.theme || false, doc.id));
+          users.push(new User(
+            data.uid || '',
+            data.firstName || '',
+            data.lastName || '',
+            data.role || '',
+            data.theme || false,
+            data.simplifiedView || false,
+            doc.id
+          ));
         });
         observer.next(users);
       });
@@ -45,7 +53,15 @@ export class UserService {
         const users = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', data.theme || false, doc.id));
+          users.push(new User(
+            data.uid || '',
+            data.firstName || '',
+            data.lastName || '',
+            data.role || '',
+            data.theme || false,
+            data.simplifiedView || false,
+            doc.id
+          ));
         });
         // return only the first user
         observer.next(users[0]);
@@ -56,7 +72,15 @@ export class UserService {
   postUser(data: User): Observable<User> {
     return new Observable((observer) => {
       this.ref.add(data.getObject()).then((doc) => {
-        observer.next(new User(data.uid || '', data.firstName || '', data.lastName || '', data.role || '', data.theme || false, doc.id));
+        observer.next(new User(
+          data.uid || '',
+          data.firstName || '',
+          data.lastName || '',
+          data.role || '',
+          data.theme || false,
+          data.simplifiedView || false,
+          doc.id
+        ));
       });
     });
   }

@@ -3,8 +3,9 @@ import { Observable } from 'rxjs';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from 'src/app/profile/shared/action.service';
-import { Action } from '../../profile/shared/action.enum';
+import { ActionService } from '@actionService';
+import { Action } from '@actions';
+import { Recipe } from './recipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,69 +24,79 @@ export class RecipeService {
     private actionService: ActionService,
   ) { }
 
-  // TODO: create recipe model
-  getRecipes(): Observable<any> {
+  getRecipes(): Observable<Recipe[]> {
     return new Observable((observer) => {
       this.ref.onSnapshot((querySnapshot) => {
         const recipes = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          recipes.push({
-            id: doc.id,
-            name: data.name || '',
-            description: data.description || '',
-            time: data.time || '',
-            calories: data.calories || '',
-            servings: data.servings || '',
-            quantity: data.quantity || '',
-            categories: data.categories || [],
-            steps: data.steps || [],
-            ingredients: data.ingredients || [],
-            uid: data.uid || '',
-            author: data.author || '',
-          });
+          recipes.push(new Recipe(
+            data.name || '',
+            data.description || '',
+            data.time || '',
+            data.calories || '',
+            data.servings || '',
+            data.quantity || '',
+            data.categories || [],
+            data.steps || [],
+            data.ingredients || [],
+            data.uid || '',
+            data.author || '',
+            doc.id,
+          ));
         });
         observer.next(recipes);
       });
     });
   }
 
-  getRecipe(id: string): Observable<any> {
+  getRecipe(id: string): Observable<Recipe> {
     return new Observable((observer) => {
       this.ref.doc(id).get().then((doc) => {
         const data = doc.data();
-        observer.next({
-          id: doc.id,
-          name: data.name || '',
-          description: data.description || '',
-          time: data.time || '',
-          calories: data.calories || '',
-          servings: data.servings || '',
-          quantity: data.quantity || '',
-          categories: data.categories || [],
-          steps: data.steps || [],
-          ingredients: data.ingredients || [],
-          uid: data.uid || '',
-          author: data.author || '',
-        });
+        observer.next(new Recipe(
+          data.name || '',
+          data.description || '',
+          data.time || '',
+          data.calories || '',
+          data.servings || '',
+          data.quantity || '',
+          data.categories || [],
+          data.steps || [],
+          data.ingredients || [],
+          data.uid || '',
+          data.author || '',
+          doc.id,
+        ));
       });
     });
   }
 
-  postRecipe(data): Observable<any> {
+  postRecipe(data): Observable<Recipe> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
         this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE, 1);
-        observer.next({
-          id: doc.id
-        });
+        observer.next(new Recipe(
+          data.name || '',
+          data.description || '',
+          data.time || '',
+          data.calories || '',
+          data.servings || '',
+          data.quantity || '',
+          data.categories || [],
+          data.steps || [],
+          data.ingredients || [],
+          data.uid || '',
+          data.author || '',
+          doc.id,
+        ));
       });
     });
   }
 
-  putRecipes(id: string, data): Observable<any> {
+  putRecipes(id: string, data): Observable<Recipe> {
     return new Observable((observer) => {
-      this.ref.doc(id).set(data).then(() => {
+      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
         this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE, 1);
         observer.next();
       });

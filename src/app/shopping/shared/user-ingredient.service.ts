@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from 'src/app/profile/shared/action.service';
-import { Action } from '../../profile/shared/action.enum';
+import { ActionService } from '@actionService';
+import { Action } from '@actions';
 import { UserIngredient } from './user-ingredient.model';
 import { Observable } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class UserIngredientService {
     private actionService: ActionService
   ) { }
 
-  getUserIngredients(uid: string): Observable<any> {
+  getUserIngredients(uid: string): Observable<UserIngredient> {
     const self = this;
     return new Observable((observer) => {
       this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
@@ -31,7 +31,7 @@ export class UserIngredientService {
           });
           observer.next(userIngredient);
         } else {
-          self.postUserIngredient({uid: uid, ingredients: []}).subscribe(userIngredient => {
+          self.postUserIngredient(new UserIngredient(uid, [])).subscribe(userIngredient => {
             observer.next(userIngredient);
           });
         }
@@ -39,14 +39,10 @@ export class UserIngredientService {
     });
   }
 
-  postUserIngredient(data): Observable<any> {
+  postUserIngredient(userIngredient: UserIngredient): Observable<UserIngredient> {
     return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        observer.next({
-          id: doc.id,
-          uid: data.uid,
-          ingredients: data.ingredients,
-        });
+      this.ref.add(userIngredient).then((doc) => {
+        observer.next();
       });
     });
   }
