@@ -169,7 +169,7 @@
 
         <div class="stepper-button-row button-row">
           <button mat-button matStepperPrevious type="button">Back</button>
-          <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Create Recipe</button>
+          <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>
@@ -266,8 +266,8 @@
               Added Ingredients
             </h3>
         
-            <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
-            [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
+            <div formArrayName="ingredients" class="list" cdkDropList #addedListMobile="cdkDropList" [cdkDropListData]="addedIngredients"
+            [cdkDropListConnectedTo]="[availableListMobile]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
               <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i = index"
                   cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
                 <mat-label class="col-6">
@@ -307,8 +307,8 @@
               </mat-placeholder>
             </mat-form-field>
 
-            <div class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
-                [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="dropAvailable($event)">
+            <div class="list" cdkDropList #availableListMobile="cdkDropList" [cdkDropListData]="availableIngredients"
+                [cdkDropListConnectedTo]="addedListMobile" (cdkDropListDropped)="dropAvailable($event)">
               <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag [cdkDragData]="ingredient">
                 <mat-label class="col-12">
                   {{ingredient.name}}
@@ -325,7 +325,7 @@
 
         <div class="stepper-button-row button-row">
           <button mat-button matStepperPrevious type="button">Back</button>
-          <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Create Recipe</button>
+          <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
         </div>
       </mat-step>
     </mat-vertical-stepper>
