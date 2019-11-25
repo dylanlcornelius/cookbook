@@ -70,9 +70,9 @@ export class IngredientService {
     });
   }
 
-  putIngredient(id: String, data): Observable<Ingredient> {
+  putIngredient(id: string, data): Observable<Ingredient> {
     return new Observable((observer) => {
-      this.ref.doc(data.getId()).set(data.getObject).then(() => {
+      this.ref.doc(id).set(data).then(() => {
         this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT, 1);
         observer.next();
       });

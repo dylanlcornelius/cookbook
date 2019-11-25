@@ -83,68 +83,66 @@ export class RecipeEditComponent implements OnInit {
             }
           }
           this.addedIngredients = data.ingredients;
-          this.ingredientService.getIngredients()
-            .subscribe(ingredients => {
-              const added = [];
-              this.addedIngredients.forEach(addedIngredient => {
-                ingredients.forEach(ingredient => {
-                  if (ingredient.id === addedIngredient.id) {
-                    added.push({
-                      id: ingredient.id,
-                      name: ingredient.name,
-                      quantity: addedIngredient.quantity || '',
-                      uom: addedIngredient.uom || '',
-                    });
-                    ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
-                  }
-                });
-              });
-
-              if (added !== undefined) {
-                for (let i = 0; i < added.length; i++) {
-                  this.addIngredient(i);
-                }
-              }
-              this.addedIngredients = added;
-              this.recipesForm.setValue({
-                name: data.name,
-                description: data.description,
-                time: data.time,
-                servings: data.servings,
-                calories: data.calories,
-                categories: data.categories,
-                steps: data.steps,
-                ingredients: added,
-              });
-
+          this.ingredientService.getIngredients().subscribe(ingredients => {
+            const added = [];
+            this.addedIngredients.forEach(addedIngredient => {
               ingredients.forEach(ingredient => {
-                ingredient.quantity = 0;
+                if (ingredient.id === addedIngredient.id) {
+                  added.push({
+                    id: ingredient.id,
+                    name: ingredient.name,
+                    quantity: addedIngredient.quantity || '',
+                    uom: addedIngredient.uom || '',
+                  });
+                  ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
+                }
               });
-              this.allAvailableIngredients = ingredients;
-              this.availableIngredients = this.allAvailableIngredients;
-
-              this.title = 'Edit a Recipe';
-              this.loading = false;
             });
+
+            if (added !== undefined) {
+              for (let i = 0; i < added.length; i++) {
+                this.addIngredient(i);
+              }
+            }
+            this.addedIngredients = added;
+            this.recipesForm.setValue({
+              name: data.name,
+              description: data.description,
+              time: data.time,
+              servings: data.servings,
+              calories: data.calories,
+              categories: data.categories,
+              steps: data.steps,
+              ingredients: added,
+            });
+
+            ingredients.forEach(ingredient => {
+              ingredient.quantity = 0;
+            });
+            this.allAvailableIngredients = ingredients;
+            this.availableIngredients = this.allAvailableIngredients;
+
+            this.title = 'Edit a Recipe';
+            this.loading = false;
+          });
         });
     } else {
-      this.ingredientService.getIngredients()
-        .subscribe(ingredients => {
-          ingredients.forEach(ingredient => {
-            this.allAvailableIngredients.push({
-              id: ingredient.id,
-              name: ingredient.name,
-              amount: ingredient.amount,
-              uom: ingredient.uom,
-              quantity: 0
-            });
+      this.ingredientService.getIngredients().subscribe(ingredients => {
+        ingredients.forEach(ingredient => {
+          this.allAvailableIngredients.push({
+            id: ingredient.id,
+            name: ingredient.name,
+            amount: ingredient.amount,
+            uom: ingredient.uom,
+            quantity: 0
           });
-
-          this.availableIngredients = this.allAvailableIngredients;
-
-          this.title = 'Add a new Recipe';
-          this.loading = false;
         });
+
+        this.availableIngredients = this.allAvailableIngredients;
+
+        this.title = 'Add a new Recipe';
+        this.loading = false;
+      });
     }
   }
 
