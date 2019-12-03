@@ -96,7 +96,7 @@ export class RecipeService {
 
   putRecipes(id: string, data): Observable<Recipe> {
     return new Observable((observer) => {
-      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
+      this.ref.doc(id).set(data).then(() => {
         this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE, 1);
         observer.next();
       });

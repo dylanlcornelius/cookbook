@@ -12,3 +12,16 @@ body {
 .mat-vertical-content {
   padding: 10px 24px !important;
 }
+@media screen and (max-width: 767px) {
+  .mat-vertical-stepper-header {
+    padding: 5px !important;
+  }
+  .mat-vertical-content-container {
+    margin-left: 17px !important;
+  }
+  .mat-horizontal-content-container,
+  .mat-vertical-content {
+    padding: 10px 10px 0 !important;
+  }
+}
+
