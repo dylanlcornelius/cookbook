@@ -1,37 +1,37 @@
 # Deployement Notes
-#### For Firebase Hosting
+## For Firebase Hosting
 ---
 
-##### Initialize Firebase
+#### Initialize Firebase
 ```
 firebase login
 firebase init
 ```
 
-##### Choose options:
+#### Choose options:
 ```
 Hosting: Configure and deploy Firebase Hosting Sites
 Set public directory: dist/Cookbook
 SPA: Yes
 ```
 
-##### Build application
-TEST:
+#### Build application
+##### TEST:
 ```
 ng build --aot
 ```
 
-PRODUCTION: 
+##### PRODUCTION: 
 ```
 ng build --prod
 ```
 
-##### Deploy build
+#### Deploy build
 ```
 firebase deploy
 ```
 
-##### Change current Firebase project
+#### Change current Firebase project
 ```
 firebase list
 firebase use <project_id>
