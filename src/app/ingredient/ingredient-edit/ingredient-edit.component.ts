@@ -43,7 +43,7 @@ export class IngredientEditComponent implements OnInit {
     this.ingredientsForm = this.formBuilder.group({
       'name': [null, Validators.required],
       'category': [null],
-      'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]{1})+(.[0-9]{0,2})?$')]],
+      'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
       'uom': [null, Validators.required],
       'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
     });
