@@ -58,7 +58,7 @@ export class RecipeEditComponent implements OnInit {
     this.recipesForm = this.formBuilder.group({
       'name' : [null, Validators.required],
       'description' : [null],
-      'time' : ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.required]],
+      'time' : ['', Validators.required],
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'categories': this.formBuilder.array([]),
