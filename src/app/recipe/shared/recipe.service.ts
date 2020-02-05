@@ -11,7 +11,6 @@ import { Recipe } from './recipe.model';
   providedIn: 'root'
 })
 export class RecipeService {
-
   ref = firebase.firestore().collection('recipes');
 
   private filters = [];

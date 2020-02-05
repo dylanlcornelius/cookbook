@@ -7,7 +7,6 @@ import { Action } from './action.enum';
   providedIn: 'root'
 })
 export class ActionService {
-
   ref = firebase.firestore().collection('user-actions');
 
   constructor() {}
@@ -73,9 +72,7 @@ export class ActionService {
     return new Promise<void>(resolve => {
       self.ref.add(data).then(function() {
         resolve();
-      }, function(error) {
-        console.error('error: ', error);
-      });
+      }, function(error) { console.error('error: ', error); });
     });
   }
 
@@ -83,9 +80,7 @@ export class ActionService {
     return new Promise<void>(resolve => {
       self.ref.doc(data.id).set(data).then(function() {
         resolve();
-      }, function(error) {
-        console.error('error: ', error);
-      });
+      }, function(error) { console.error('error: ', error); });
     });
   }
 }

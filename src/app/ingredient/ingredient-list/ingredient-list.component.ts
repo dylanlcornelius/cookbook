@@ -13,7 +13,6 @@ import { MatTableDataSource } from '@angular/material';
   styleUrls: ['./ingredient-list.component.scss']
 })
 export class IngredientListComponent implements OnInit {
-
   loading = true;
   ingredientModalParams;
 
@@ -30,7 +29,7 @@ export class IngredientListComponent implements OnInit {
     private cookieService: CookieService,
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
@@ -78,15 +77,13 @@ export class IngredientListComponent implements OnInit {
       data = this.userIngredients.find(x => x.id === id);
     }
     this.ingredientModalParams = {
-      function: this.editIngredientEvent,
       data: data,
       self: this,
-      text: 'Edit pantry quantity for ' + ingredient.name
+      text: 'Edit pantry quantity for ' + ingredient.name,
+      function: (self) => {
+        self.userIngredientService.putUserIngredient(self.packageData(self));
+      },
     };
-  }
-
-  editIngredientEvent(self) {
-    self.userIngredientService.putUserIngredient(self.packageData(self));
   }
 
   packageData(self) {

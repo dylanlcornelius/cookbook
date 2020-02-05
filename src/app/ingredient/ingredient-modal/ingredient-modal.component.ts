@@ -27,7 +27,6 @@ import { ErrorMatcher } from '../../util/error-matcher';
   styleUrls: ['./ingredient-modal.component.scss']
 })
 export class IngredientModalComponent implements OnInit {
-
   ingredientModalForm: FormGroup;
   pantryQuantity: number;
 
@@ -47,7 +46,7 @@ export class IngredientModalComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.ingredientModalForm = this.formBuilder.group({

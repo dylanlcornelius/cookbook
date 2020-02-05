@@ -15,8 +15,4 @@ import { Component } from '@angular/core';
   templateUrl: './loading-modal.component.html',
   styleUrls: ['./loading-modal.component.scss']
 })
-export class LoadingModalComponent {
-
-  constructor() { }
-
-}
+export class LoadingModalComponent {}

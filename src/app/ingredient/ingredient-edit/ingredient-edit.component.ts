@@ -17,7 +17,6 @@ import { ErrorMatcher } from '../../util/error-matcher';
   styleUrls: ['./ingredient-edit.component.scss']
 })
 export class IngredientEditComponent implements OnInit {
-
   loading = true;
   title: string;
 
@@ -81,13 +80,7 @@ export class IngredientEditComponent implements OnInit {
         .subscribe(res => {
           const id = res['id'];
           this.router.navigate(['/ingredient/detail/', id]);
-        }, (err) => {
-          console.error(err);
-        });
+        }, (err) => { console.error(err); });
     }
-  }
-
-  ingredientsDetail() {
-    this.router.navigate(['/ingredient/detail/', this.id]);
   }
 }

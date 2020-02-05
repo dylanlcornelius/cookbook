@@ -57,7 +57,7 @@ export class ItemListComponent implements OnInit {
     private formBuilder: FormBuilder,
     private itemService: ItemService,
     private userItemService: UserItemService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');
@@ -144,55 +144,47 @@ export class ItemListComponent implements OnInit {
 
   deleteItem(id: string, name: string) {
     this.validationModalParams = {
-      function: this.deleteItemEvent,
       id: id,
       self: this,
-      text: 'Are you sure you want to delete item ' + name + '?'
+      text: 'Are you sure you want to delete item ' + name + '?',
+      function: (self, id) => {
+        self.itemService.deleteItem(id).subscribe(() => {
+          self.notificationModalParams = {
+            self: self,
+            type: Notification.SUCCESS,
+            text: 'Item deleted!'
+          };
+    
+          self.loadData();
+        }, (error) => { console.error(error); });
+      },
     };
-  }
-
-  deleteItemEvent(self, id) {
-    self.itemService.deleteItem(id).subscribe(() => {
-      self.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        text: 'Item deleted!'
-      };
-
-      self.loadData();
-    }, (error) => {
-      console.error(error);
-    });
   }
 
   onFormSubmit(form: NgForm, id: string) {
     if (id) {
       this.itemService.putItem(id, form)
-        .subscribe(() => {
-          this.notificationModalParams = {
-            self: self,
-            type: Notification.SUCCESS,
-            text: 'Item updated!'
-          };
+      .subscribe(() => {
+        this.notificationModalParams = {
+          self: self,
+          type: Notification.SUCCESS,
+          text: 'Item updated!'
+        };
 
-          // TODO: this.accordion.closeAll(); doesn't work
-        }, (error) => {
-          console.error(error);
-        });
+        // TODO: this.accordion.closeAll(); doesn't work
+      }, (error) => { console.error(error); });
     } else {
       this.itemService.postItem(form)
-        .subscribe(() => {
-          this.notificationModalParams = {
-            self: self,
-            type: Notification.SUCCESS,
-            text: 'Item added!'
-          };
+      .subscribe(() => {
+        this.notificationModalParams = {
+          self: self,
+          type: Notification.SUCCESS,
+          text: 'Item added!'
+        };
 
-          this.accordion.closeAll();
-          this.loadData();
-        }, (error) => {
-          console.error(error);
-        });
+        this.accordion.closeAll();
+        this.loadData();
+      }, (error) => { console.error(error); });
     }
   }
 }
