@@ -1,8 +1,6 @@
 <div class="app-loading" *ngIf="!(isLoggedIn | async) && !(isGuest | async)">
-	<svg class="spinner" viewBox="25 25 50 50">
-		<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-	</svg>
-	<span style="color: white">Loading user settings</span>
+	<div class="spinner"></div>
+	<div class="loading-message">Loading user settings</div>
 </div>
 <div class="app" [ngClass]="{'dark': (user | async)?.theme}" [hidden]="!(isLoggedIn | async) && !(isGuest | async)"> 
 	<div class="page">
@@ -14,9 +12,7 @@
 			</section>
 		</div>
 
-		<!-- TODO: create footer -->
 		<div class="clear-footer"></div>
-
 	</div>
 	<app-footer></app-footer>
 </div>
