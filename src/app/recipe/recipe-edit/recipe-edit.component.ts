@@ -24,7 +24,6 @@ import { UserService } from 'src/app/user/shared/user.service';
   styleUrls: ['./recipe-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit {
-
   loading: Boolean = true;
   title: string;
 
@@ -263,29 +262,18 @@ export class RecipeEditComponent implements OnInit {
     this.recipesForm.addControl('uid', new FormControl(userId));
     this.userService.getUser(userId).subscribe(user => {
       this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
-      this.onFormSubmit(this.recipesForm.value);
+
+      if (this.route.snapshot.params['id']) {
+        this.recipeService.putRecipes(this.id, this.recipesForm.value)
+          .subscribe(() => {
+            this.router.navigate(['/recipe/detail/', this.id]);
+          }, (err) => { console.error(err); });
+      } else {
+        this.recipeService.postRecipe(this.recipesForm.value)
+          .subscribe(res => {
+            this.router.navigate(['/recipe/detail/', res.id]);
+          }, (err) => { console.error(err); });
+      }
     });
-  }
-
-  onFormSubmit(form: NgForm) {
-    if (this.route.snapshot.params['id']) {
-      this.recipeService.putRecipes(this.id, form)
-        .subscribe(() => {
-          this.router.navigate(['/recipe/detail/', this.id]);
-        }, (err) => {
-          console.error(err);
-        });
-    } else {
-      this.recipeService.postRecipe(form)
-        .subscribe(res => {
-          this.router.navigate(['/recipe/detail/', res.id]);
-        }, (err) => {
-          console.error(err);
-        });
-    }
-  }
-
-  recipesDetail() {
-    this.router.navigate(['/recipe/detail/', this.id]);
   }
 }

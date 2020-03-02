@@ -8,7 +8,6 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-
   redirect: string;
   isLoggedIn: boolean;
 

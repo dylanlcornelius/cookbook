@@ -16,7 +16,7 @@ export class ItemService {
   constructor(
     private cookieService: CookieService,
     private actionService: ActionService,
-  ) { }
+  ) {}
 
   getItems(): Observable<Item[]> {
     return new Observable((observer) => {

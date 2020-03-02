@@ -13,7 +13,6 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class AuthService {
-
   redirectUrl: string;
 
   constructor(
@@ -66,15 +65,7 @@ export class AuthService {
           }
         });
       }
-    }).catch(error => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = error.credential;
-      console.log(errorCode);
-      console.log(errorMessage);
-      // console.log(email);
-    });
+    }).catch(error => { console.log(error); });
   }
 
   finishLogin(currentUser, uid) {
@@ -105,8 +96,6 @@ export class AuthService {
       this.userService.setIsLoggedIn(false);
       this.userService.setIsGuest(true);
       this.router.navigate(['/login']);
-    }).catch(error => {
-      console.log(error.message);
-    });
+    }).catch(error => { console.log(error.message); });
   }
 }

@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-pending.component.scss']
 })
 export class UserPendingComponent implements OnInit {
-
   user: Observable<User>;
 
   constructor(

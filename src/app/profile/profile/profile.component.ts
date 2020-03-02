@@ -20,7 +20,6 @@ import { MatPaginator } from '@angular/material';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-
   loading: Boolean = true;
   notificationModalParams;
 
