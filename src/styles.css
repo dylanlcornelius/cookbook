@@ -12,6 +12,10 @@ body {
 .mat-vertical-content {
   padding: 10px 24px !important;
 }
+.mat-card-header-text {
+  margin: 0 !important;
+  width: 100%;
+}
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {
     padding: 5px !important;
