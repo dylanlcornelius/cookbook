@@ -34,7 +34,7 @@
         </mat-form-field>
   
         <mat-form-field class="form-field">
-          <input matInput placeholder="Preparation Time*" formControlName="time" [errorStateMatcher]="matcher"/>
+          <input matInput placeholder="Preparation Time" formControlName="time" [errorStateMatcher]="matcher"/>
           <mat-error>
             <span *ngIf="!recipesForm.get('time').valid && recipesForm.get('time').touched">Please enter a Recipe Preparation Time</span>
           </mat-error>
