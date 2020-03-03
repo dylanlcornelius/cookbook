@@ -11,13 +11,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserIngredientService {
-
   ref = firebase.firestore().collection('user-ingredients');
 
   constructor(
     private cookieService: CookieService,
     private actionService: ActionService
-  ) { }
+  ) {}
 
   getUserIngredients(uid: string): Observable<UserIngredient> {
     const self = this;
@@ -49,9 +48,7 @@ export class UserIngredientService {
 
   putUserIngredient(data: UserIngredient) {
     this.ref.doc(data.getId()).set(data.getObject())
-    .catch(function(error) {
-      console.error('error: ', error);
-    });
+    .catch(function(error) { console.error('error: ', error); });
   }
 
   buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
@@ -64,8 +61,6 @@ export class UserIngredientService {
         }
       });
     })
-    .catch(function(error) {
-      console.error('error: ', error);
-    });
+    .catch(function(error) { console.error('error: ', error); });
   }
 }

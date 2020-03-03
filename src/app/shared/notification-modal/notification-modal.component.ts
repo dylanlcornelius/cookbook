@@ -24,24 +24,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./notification-modal.component.scss']
 })
 export class NotificationModalComponent implements OnChanges {
-
   @Input()
   notificationModalParams;
 
   constructor(
     private router: Router
-  ) { }
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.notificationModalParams) {
-      if (changes.notificationModalParams) {
-        setTimeout(() => {
-          if (changes.notificationModalParams.currentValue.path) {
-            this.router.navigate([changes.notificationModalParams.currentValue.path]);
-          }
-          this.notificationModalParams = undefined;
-        }, 2000);
-      }
+    if (this.notificationModalParams && changes.notificationModalParams) {
+      setTimeout(() => {
+        if (changes.notificationModalParams.currentValue.path) {
+          this.router.navigate([changes.notificationModalParams.currentValue.path]);
+        }
+        this.notificationModalParams = undefined;
+      }, 2000);
     }
   }
 }

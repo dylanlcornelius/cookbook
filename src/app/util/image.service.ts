@@ -7,10 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImageService {
-
   storageRef = firebase.storage().ref();
 
-  constructor() { }
+  constructor() {}
 
   uploadFile(path: string, file: File): Observable<Number | String | void> {
     const uploadTask = this.storageRef.child(path).put(file);

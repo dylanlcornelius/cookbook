@@ -17,7 +17,6 @@ import { ErrorMatcher } from '../../util/error-matcher';
   styleUrls: ['./ingredient-edit.component.scss']
 })
 export class IngredientEditComponent implements OnInit {
-
   loading = true;
   title: string;
 
@@ -43,7 +42,7 @@ export class IngredientEditComponent implements OnInit {
     this.ingredientsForm = this.formBuilder.group({
       'name': [null, Validators.required],
       'category': [null],
-      'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]{1})+(.[0-9]{0,2})?$')]],
+      'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
       'uom': [null, Validators.required],
       'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
     });
@@ -81,13 +80,7 @@ export class IngredientEditComponent implements OnInit {
         .subscribe(res => {
           const id = res['id'];
           this.router.navigate(['/ingredient/detail/', id]);
-        }, (err) => {
-          console.error(err);
-        });
+        }, (err) => { console.error(err); });
     }
-  }
-
-  ingredientsDetail() {
-    this.router.navigate(['/ingredient/detail/', this.id]);
   }
 }

@@ -9,7 +9,6 @@ import { Notification } from '@notifications';
   styleUrls: ['./ingredient-detail.component.scss']
 })
 export class IngredientDetailComponent implements OnInit {
-
   loading: Boolean = true;
   validationModalParams;
   notificationModalParams;
@@ -18,39 +17,31 @@ export class IngredientDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }
 
   ngOnInit() {
-    this.getIngredientDetails(this.route.snapshot.params['id']);
-  }
-
-  getIngredientDetails(id) {
-    this.ingredientService.getIngredient(id)
-      .subscribe(data => {
-        this.ingredient = data;
-        this.loading = false;
-      });
+    this.ingredientService.getIngredient(this.route.snapshot.params['id'])
+    .subscribe(data => {
+      this.ingredient = data;
+      this.loading = false;
+    });
   }
 
   deleteIngredient(id) {
     this.validationModalParams = {
-      function: this.deleteEvent,
       id: id,
       self: this,
-      text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?'
+      text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
+      function: (self, id) => {
+        if (id) {
+          self.ingredientService.deleteIngredients(id)
+          .subscribe(() => {
+            self.notificationModalParams = {
+              self: self,
+              type: Notification.SUCCESS,
+              path: '/ingredient/list',
+              text: 'Ingredient deleted!'
+            };
+          }, (err) => { console.error(err); });
+        }
+      },
     };
-  }
-
-  deleteEvent(self, id) {
-    if (id) {
-      self.ingredientService.deleteIngredients(id)
-      .subscribe(res => {
-        self.notificationModalParams = {
-          self: self,
-          type: Notification.SUCCESS,
-          path: '/ingredient/list',
-          text: 'Ingredient deleted!'
-        };
-      }, (err) => {
-        console.error(err);
-      });
-    }
   }
 }

@@ -22,11 +22,10 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./validation-modal.component.scss']
 })
 export class ValidationModalComponent {
-
   @Input()
   validationModalParams;
 
-  constructor() { }
+  constructor() {}
 
   cancel() {
     this.validationModalParams = undefined;

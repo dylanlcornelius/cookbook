@@ -22,43 +22,33 @@
       height: 100%;
       background-color: #555;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .app-loading .spinner {
-      height: 200px;
-      width: 200px;
-      animation: rotate 4s linear infinite;
-      transform-origin: center center;
+    .spinner {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: auto;
+      display: inline-block;
+      width: 80px;
+      height: 80px;
     }
-    .app-loading .spinner .path {
-      stroke-dasharray: 1, 200;
-      stroke-dashoffset: 0;
-      animation: dash 2s ease-in-out infinite;
-      stroke-linecap: round;
-      stroke: #fff;
+    .spinner:after {
+      content: " ";
+      display: block;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      border-color: #fff transparent #fff transparent;
+      animation: spinner 1.2s linear infinite;
     }
-    @keyframes rotate {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-    @keyframes dash {
+    @keyframes spinner {
       0% {
-        stroke-dasharray: 1, 200;
-        stroke-dashoffset: 0;
-      }
-      50% {
-        stroke-dasharray: 89, 200;
-        stroke-dashoffset: -35px;
+          transform: rotate(0deg);
       }
       100% {
-        stroke-dasharray: 89, 200;
-        stroke-dashoffset: -124px;
+          transform: rotate(360deg);
       }
     }
   </style>
@@ -66,9 +56,7 @@
 <body>
   <app-root>
     <div class="app-loading">
-      <svg class="spinner" viewBox="25 25 50 50">
-        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-      </svg>
+      <div class="spinner"></div>
     </div>
   </app-root>
 </body>

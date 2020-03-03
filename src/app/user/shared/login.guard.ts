@@ -15,14 +15,13 @@ import { UserService } from '../shared/user.service';
   providedIn: 'root'
 })
 export class LoginGuard implements CanActivate, CanActivateChild {
-
   private pageLoad;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
-  ) { }
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.userService.getIsLoggedIn()

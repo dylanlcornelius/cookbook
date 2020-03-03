@@ -11,7 +11,6 @@ import { ImageService } from 'src/app/util/image.service';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
-
   loading = true;
   validationModalParams;
   notificationModalParams;
@@ -30,12 +29,15 @@ export class RecipeDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getRecipeDetails(this.route.snapshot.params['id']);
-  }
-
-  getRecipeDetails(id) {
-    this.recipeService.getRecipe(id).subscribe(data => {
+    this.recipeService.getRecipe(this.route.snapshot.params['id']).subscribe(data => {
       this.recipe = data;
+
+      this.imageService.downloadFile(this.recipe.id).then(url => {
+        if (url) {
+          this.recipeImage = url;
+        }
+      });
+
       this.ingredientService.getIngredients().subscribe(allIngredients => {
         data.ingredients.forEach(recipeIngredient => {
           allIngredients.forEach(ingredient => {
@@ -50,11 +52,6 @@ export class RecipeDetailComponent implements OnInit {
           });
         });
 
-        this.imageService.downloadFile(this.recipe.id).then(url => {
-          if (url) {
-            this.recipeImage = url;
-          }
-        });
         this.loading = false;
       });
     });
@@ -81,27 +78,23 @@ export class RecipeDetailComponent implements OnInit {
 
   deleteRecipe(id) {
     this.validationModalParams = {
-      function: this.deleteEvent,
       id: id,
       self: this,
-      text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?'
+      text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?',
+      function: (self, id) => {
+        if (id) {
+          self.recipeService.deleteRecipes(id).subscribe(() => {
+            self.deleteFile(id);
+            self.notificationModalParams = {
+              self: self,
+              type: Notification.SUCCESS,
+              path: '/recipe/list',
+              text: 'Recipe Deleted!'
+            };
+          }, (err) => { console.error(err); });
+        }
+      }
     };
-  }
-
-  deleteEvent(self, id) {
-    if (id) {
-      self.recipeService.deleteRecipes(id).subscribe(() => {
-        self.deleteFile(id);
-        self.notificationModalParams = {
-          self: self,
-          type: Notification.SUCCESS,
-          path: '/recipe/list',
-          text: 'Recipe Deleted!'
-        };
-      }, (err) => {
-        console.error(err);
-      });
-    }
   }
 
   setListFilter(filter) {

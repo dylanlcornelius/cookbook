@@ -8,7 +8,6 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class UserService {
-
   ref = firebase.firestore().collection('users');
 
   private currentUser = new BehaviorSubject<User>(new User('', '', '', '', false, false, ''));

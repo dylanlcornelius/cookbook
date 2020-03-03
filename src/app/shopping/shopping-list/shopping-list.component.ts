@@ -17,7 +17,6 @@ import { UserService } from 'src/app/user/shared/user.service';
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit {
-
   loading = true;
   validationModalParams;
   notificationModalParams;
@@ -42,7 +41,7 @@ export class ShoppingListComponent implements OnInit {
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
     private itemService: ItemService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.uid = this.cookieService.get('LoggedIn');

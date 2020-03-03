@@ -16,7 +16,6 @@ import { ImageService } from 'src/app/util/image.service';
   styleUrls: ['./recipe-list.component.scss']
 })
 export class RecipeListComponent implements OnInit {
-
   loading: Boolean = true;
   notificationModalParams;
 
@@ -178,7 +177,7 @@ export class RecipeListComponent implements OnInit {
     }
   }
 
-  indentify(index, item) {
+  indentify(_index, item) {
     return item.id;
   }
 
