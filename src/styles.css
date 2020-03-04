@@ -15,6 +15,7 @@ body {
 .mat-card-header-text {
   margin: 0 !important;
   width: 100%;
+  overflow: hidden;
 }
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {
