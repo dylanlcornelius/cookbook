@@ -11,7 +11,11 @@ import {
   NgForm,
   Validators
 } from '@angular/forms';
-import { ErrorStateMatcher, MatAccordion, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { MatAccordion } from '@angular/material/expansion';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { Notification } from '@notifications';
 import { Item } from '../shared/item.model';
 

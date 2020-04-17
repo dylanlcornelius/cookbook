@@ -3,12 +3,12 @@ import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../shared/user-ingredient.model';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { Notification } from '@notifications';
 import { UserItemService } from '@userItemService';
 import { ItemService } from '@itemService';
 import { UserItem } from '../shared/user-item.model';
-import { UserService } from 'src/app/user/shared/user.service';
+import { UserService } from '@userService';
 
 // TODO: icons for notification modal
 @Component({
@@ -44,10 +44,11 @@ export class ShoppingListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.uid = this.cookieService.get('LoggedIn');
     this.userService.getCurrentUser().subscribe(user => {
       this.simplifiedView = user.simplifiedView;
     });
+
+    this.uid = this.cookieService.get('LoggedIn');
     const myIngredients = [];
     const myItems = [];
     this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {

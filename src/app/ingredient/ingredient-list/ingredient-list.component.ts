@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from '@userIngredientService';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-ingredient-list',

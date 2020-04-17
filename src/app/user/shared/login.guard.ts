@@ -7,9 +7,10 @@ import {
   CanActivateChild,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../shared/auth.service';
 import { map, take } from 'rxjs/operators';
-import { UserService } from '../shared/user.service';
+
+import { AuthService } from '../shared/auth.service';
+import { UserService } from '@userService';
 
 @Injectable({
   providedIn: 'root'

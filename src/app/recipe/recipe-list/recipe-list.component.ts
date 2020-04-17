@@ -6,9 +6,11 @@ import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { IngredientService } from '@ingredientService';
 import { Notification } from '@notifications';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImageService } from 'src/app/util/image.service';
+import { UserService } from '@userService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -19,12 +21,14 @@ export class RecipeListComponent implements OnInit {
   loading: Boolean = true;
   notificationModalParams;
 
+  uid: string;
+  simplifiedView: boolean;
+
   filtersList = [];
   searchFilter = '';
 
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource: MatTableDataSource<any>;
-  uid: string;
   id: string;
   userIngredients;
 
@@ -39,11 +43,16 @@ export class RecipeListComponent implements OnInit {
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
     private imageService: ImageService,
+    private userService: UserService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   ngOnInit() {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.simplifiedView = user.simplifiedView;
+    });
+
     this.uid = this.cookieService.get('LoggedIn');
     this.recipeService.getRecipes().subscribe(recipes => {
       this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {

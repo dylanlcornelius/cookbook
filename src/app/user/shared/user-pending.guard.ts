@@ -7,8 +7,9 @@ import {
   CanActivateChild,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserService } from '../shared/user.service';
 import { map, take } from 'rxjs/operators';
+
+import { UserService } from '@userService';
 import { User } from '../shared/user.model';
 
 @Injectable({
