@@ -1,4 +1,4 @@
-<app-loading-modal *ngIf="redirect && isLoggedIn"></app-loading-modal>
+<app-loading-modal *ngIf="redirect && (isLoggedIn | async)"></app-loading-modal>
 
 <div *ngIf="!(redirect && isLoggedIn)">
   <div class="d-flex justify-content-center title-text">

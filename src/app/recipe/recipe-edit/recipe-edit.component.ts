@@ -12,7 +12,6 @@ import {
 } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
-import { CookieService } from 'ngx-cookie-service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
@@ -44,7 +43,6 @@ export class RecipeEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private cookieService: CookieService,
     private userService: UserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
@@ -258,9 +256,8 @@ export class RecipeEditComponent implements OnInit {
     Object.values((<FormGroup> this.recipesForm.get('ingredients')).controls).forEach((ingredient: FormGroup) => {
       ingredient.removeControl('name');
     });
-    const userId = this.cookieService.get('LoggedIn');
-    this.recipesForm.addControl('uid', new FormControl(userId));
-    this.userService.getUser(userId).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.recipesForm.addControl('uid', new FormControl(user.uid));
       this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
 
       if (this.route.snapshot.params['id']) {

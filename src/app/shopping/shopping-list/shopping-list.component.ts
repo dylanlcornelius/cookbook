@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
-import { CookieService } from 'ngx-cookie-service';
 import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { Notification } from '@notifications';
@@ -35,7 +34,6 @@ export class ShoppingListComponent implements OnInit {
   itemsId: string;
 
   constructor(
-    private cookieService: CookieService,
     private userService: UserService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
@@ -48,53 +46,55 @@ export class ShoppingListComponent implements OnInit {
       this.simplifiedView = user.simplifiedView;
     });
 
-    this.uid = this.cookieService.get('LoggedIn');
-    const myIngredients = [];
-    const myItems = [];
-    this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
-      this.id = userIngredients.id;
-      this.ingredientService.getIngredients().subscribe(ingredients => {
-        ingredients.forEach(ingredient => {
-          if (userIngredients && userIngredients.ingredients) {
-            userIngredients.ingredients.forEach(myIngredient => {
-              if (myIngredient.id === ingredient.id) {
-                myIngredients.push({
-                  id: myIngredient.id,
-                  name: ingredient.name,
-                  uom: ingredient.uom,
-                  pantryQuantity: myIngredient.pantryQuantity,
-                  cartQuantity: myIngredient.cartQuantity
-                });
-              }
-            });
-          }
-        });
-        this.ingredientsDataSource = new MatTableDataSource(myIngredients);
-        // tslint:disable-next-line:triple-equals
-        this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-        this.ingredients = ingredients;
+    this.userService.getCurrentUser().subscribe(user => {
+      this.uid = user.uid;
+      const myIngredients = [];
+      const myItems = [];
+      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
+        this.id = userIngredients.id;
+        this.ingredientService.getIngredients().subscribe(ingredients => {
+          ingredients.forEach(ingredient => {
+            if (userIngredients && userIngredients.ingredients) {
+              userIngredients.ingredients.forEach(myIngredient => {
+                if (myIngredient.id === ingredient.id) {
+                  myIngredients.push({
+                    id: myIngredient.id,
+                    name: ingredient.name,
+                    uom: ingredient.uom,
+                    pantryQuantity: myIngredient.pantryQuantity,
+                    cartQuantity: myIngredient.cartQuantity
+                  });
+                }
+              });
+            }
+          });
+          this.ingredientsDataSource = new MatTableDataSource(myIngredients);
+          // tslint:disable-next-line:triple-equals
+          this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+          this.ingredients = ingredients;
 
-        this.userItemService.getUserItems(this.uid).subscribe(userItems => {
-          this.itemsId = userItems.id;
-          this.itemService.getItems().subscribe(items => {
-            items.forEach(item => {
-              if (userItems && userItems.items) {
-                userItems.items.forEach(myItem => {
-                  if (myItem.id === item.id) {
-                    myItems.push({
-                      id: myItem.id,
-                      name: item.name,
-                      cartQuantity: myItem.cartQuantity
-                    });
-                  }
-                });
-              }
+          this.userItemService.getUserItems(this.uid).subscribe(userItems => {
+            this.itemsId = userItems.id;
+            this.itemService.getItems().subscribe(items => {
+              items.forEach(item => {
+                if (userItems && userItems.items) {
+                  userItems.items.forEach(myItem => {
+                    if (myItem.id === item.id) {
+                      myItems.push({
+                        id: myItem.id,
+                        name: item.name,
+                        cartQuantity: myItem.cartQuantity
+                      });
+                    }
+                  });
+                }
+              });
+              this.itemsDataSource = new MatTableDataSource(myItems);
+              // tslint:disable-next-line: triple-equals
+              this.itemsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+              this.applyFilter();
+              this.loading = false;
             });
-            this.itemsDataSource = new MatTableDataSource(myItems);
-            // tslint:disable-next-line: triple-equals
-            this.itemsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-            this.applyFilter();
-            this.loading = false;
           });
         });
       });

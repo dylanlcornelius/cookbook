@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { CookieService } from 'ngx-cookie-service';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { Recipe } from './recipe.model';
+import { UserService } from '@userService';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class RecipeService {
   set selectedFilters(filters: Array<String>) { this.filters = filters; }
 
   constructor(
-    private cookieService: CookieService,
+    private userService: UserService,
     private actionService: ActionService,
   ) { }
 
@@ -74,7 +74,9 @@ export class RecipeService {
   postRecipe(data): Observable<Recipe> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_RECIPE, 1);
+        this.userService.getCurrentUser().subscribe(user => {
+          this.actionService.commitAction(user.uid, Action.CREATE_RECIPE, 1);
+        });
         observer.next(new Recipe(
           data.name || '',
           data.description || '',
@@ -96,7 +98,9 @@ export class RecipeService {
   putRecipes(id: string, data): Observable<Recipe> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_RECIPE, 1);
+        this.userService.getCurrentUser().subscribe(user => {
+          this.actionService.commitAction(user.uid, Action.UPDATE_RECIPE, 1);
+        });
         observer.next();
       });
     });
@@ -105,7 +109,9 @@ export class RecipeService {
   deleteRecipes(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_RECIPE, 1);
+        this.userService.getCurrentUser().subscribe(user => {
+          this.actionService.commitAction(user.uid, Action.DELETE_RECIPE, 1);
+        });
         observer.next();
       });
     });

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -6,7 +6,6 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
 
 import { UserService } from '@userService';
 import { ActionService } from '@actionService';
@@ -20,7 +19,7 @@ import { ErrorMatcher } from '../../util/error-matcher';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements AfterViewInit {
   loading: Boolean = true;
   notificationModalParams;
 
@@ -61,75 +60,76 @@ export class ProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private cookieService: CookieService,
     private userService: UserService,
     private actionService: ActionService
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
   }
 
-  ngOnInit() {
-    // TODO: make uid global; handle loggedIn cookie in userService
-    this.uid = this.cookieService.get('LoggedIn');
-    this.initializeUserForm();
+  ngAfterViewInit() {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.uid = user.uid;
+      this.initializeUserForm();
 
-    this.actionService.getActions(this.uid).then((userAction) => {
-      const actions = this.sortActions(userAction.actions);
+      this.actionService.getActions(this.uid).then((userAction) => {
+        const actions = this.sortActions(userAction.actions);
 
-      let index = 0;
-      let monthIndex = 0;
-      let currentMonth = -1;
-      let monthActionArray = [];
-      actions.forEach((action, i) => {
-        const actionData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let index = 0;
+        let monthIndex = 0;
+        let currentMonth = -1;
+        let monthActionArray = [];
+        actions.forEach((action, i) => {
+          const actionData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        Object.keys(action.data).forEach(actionKey => {
-          actionData[this.actionsLabels.indexOf(ActionLabel[actionKey])] = action.data[actionKey];
-        });
+          Object.keys(action.data).forEach(actionKey => {
+            actionData[this.actionsLabels.indexOf(ActionLabel[actionKey])] = action.data[actionKey];
+          });
 
-        this.actions[index] = {
-          data: actionData,
-          date: action.month + '/' + action.day + '/' + action.year,
-        };
+          this.actions[index] = {
+            data: actionData,
+            date: action.month + '/' + action.day + '/' + action.year,
+          };
 
-        if ((currentMonth !== action.month) || actions.length - 1 === i) {
-          const date = new Date().setMonth(currentMonth - 1);
-          const monthName = new Date(date).toLocaleString('default', {month: 'long'});
+          if ((currentMonth !== action.month) || actions.length - 1 === i) {
+            const date = new Date().setMonth(currentMonth - 1);
+            const monthName = new Date(date).toLocaleString('default', {month: 'long'});
 
-          if (i !== 0) {
-            if (actions.length - 1 === i ) {
-              monthActionArray.push({
-                data: actionData,
-                label: action.month + '/' + action.day + '/' + action.year
-              });
+            if (i !== 0) {
+              if (actions.length - 1 === i ) {
+                monthActionArray.push({
+                  data: actionData,
+                  label: action.month + '/' + action.day + '/' + action.year
+                });
+              }
+              this.monthActions[monthIndex] = {
+                data: monthActionArray,
+                date: monthName
+              };
+
+              monthActionArray = [];
+              monthIndex++;
             }
-            this.monthActions[monthIndex] = {
-              data: monthActionArray,
-              date: monthName
-            };
 
-            monthActionArray = [];
-            monthIndex++;
+            currentMonth = action.month;
           }
 
-          currentMonth = action.month;
-        }
+          monthActionArray.push({
+            data: actionData,
+            label: action.month + '/' + action.day + '/' + action.year
+          });
 
-        monthActionArray.push({
-          data: actionData,
-          label: action.month + '/' + action.day + '/' + action.year
+          index++;
         });
 
-        index++;
+        this.actionsLength = Object.keys(this.actions).length;
+        this.monthActionsLength = Object.keys(this.monthActions).length;
+
+        this.week.pageIndex = this.actionsLength - 1;
+        this.month.pageIndex = this.monthActionsLength - 1;
+        // TODO: weekPaginator is undefined
+        this.weekPaginator.pageIndex = this.actionsLength - 1;
+        this.monthPaginator.pageIndex = this.monthActionsLength - 1;
       });
-
-      this.actionsLength = Object.keys(this.actions).length;
-      this.monthActionsLength = Object.keys(this.monthActions).length;
-
-      this.week.pageIndex = this.actionsLength - 1;
-      this.month.pageIndex = this.monthActionsLength - 1;
-      this.weekPaginator.pageIndex = this.actionsLength - 1;
-      this.monthPaginator.pageIndex = this.monthActionsLength - 1;
     });
   }
 
