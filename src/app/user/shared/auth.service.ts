@@ -23,70 +23,39 @@ export class AuthService {
     private configService: ConfigService,
     private actionService: ActionService,
   ) {
-    const loggedInCookie = this.cookieService.get('LoggedIn');
-    if (loggedInCookie) {
-      // TODO: use firebase auth token, as cookie can last longer than auth session
-      this.userService.getUser(loggedInCookie).subscribe(current => {
-        if (current) {
-          this.userService.setCurrentUser(current);
-          this.userService.setIsLoggedIn(true);
-
-          if (this.redirectUrl) {
-            this.router.navigate([this.redirectUrl]);
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setCurrentUser(user);
+      } else {
+        firebase.auth().getRedirectResult().then(result => {
+          if (result.credential) {
+            this.setCurrentUser(result.user);
+            this.actionService.commitAction(result.user.uid, Action.LOGIN, 1);
+          } else {
+            this.userService.setIsGuest(true);
           }
-          this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-            this.cookieService.delete('LoggedIn');
-            const expirationDate = new Date();
-            expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-            this.cookieService.set('LoggedIn', loggedInCookie, expirationDate);
-            setTimeout(() => {
-              this.logout();
-            }, Number(autoLogout.value) * 60000);
-          });
-        }
-      });
-    } else {
-      this.userService.setIsGuest(true);
-    }
+        }, () => {
+          this.userService.setIsGuest(true);
+        });
+      }
+    });
+  }
+
+  setCurrentUser(user) {
+    this.userService.getUser(user.uid).subscribe(current => {
+      this.userService.setCurrentUser(current);
+      this.userService.setIsLoggedIn(true);
+      this.userService.setIsGuest(false);
+
+      if (this.redirectUrl) {
+        this.router.navigate([this.redirectUrl]);
+      }
+    });
   }
 
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).then(result => {
-      // let token = result.credential.accessToken;
-      if (result && result.user && result.user.uid) {
-        const uid = result.user.uid;
-
-        this.userService.getUser(result.user.uid).subscribe(currentUser => {
-          if (currentUser) {
-            this.finishLogin(currentUser, uid);
-          } else {
-            this.userService.postUser(new User(uid, '', '', 'pending', false, false)).subscribe(current => this.finishLogin(current, uid));
-          }
-        });
-      }
-    }).catch(error => { console.log(error); });
-  }
-
-  finishLogin(currentUser, uid) {
-    this.userService.setCurrentUser(currentUser);
-    this.userService.setIsLoggedIn(true);
-    this.userService.setIsGuest(false);
-
-    this.configService.getConfig('auto-logout').subscribe(autoLogout => {
-      // TODO: check google signing in without prompting for account
-      const expirationDate = new Date();
-      expirationDate.setMinutes(expirationDate.getMinutes() + Number(autoLogout.value));
-      this.cookieService.set('LoggedIn', uid, expirationDate);
-      this.actionService.commitAction(uid, Action.LOGIN, 1);
-
-      // TODO: research zone.run()
-      this.zone.run(() => this.router.navigate(['/home']));
-
-      setTimeout(() => {
-        this.logout();
-      }, Number(autoLogout.value) * 60000);
-    });
+    firebase.auth().signInWithRedirect(provider);
   }
 
   logout() {
