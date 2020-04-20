@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  MatTabsModule,
-  MatSlideToggleModule,
-} from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ChartsModule } from 'ng2-charts';
 
 import { ProfileRoutingModule } from './profile-routing.module';

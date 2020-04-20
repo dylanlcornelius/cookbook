@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+
 import { IngredientService } from '@ingredientService';
 import { RecipeService } from '@recipeService';
-import { UserService } from '../../user/shared/user.service';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { UserService } from '@userService';
 import { ConfigService } from '../shared/config.service';
 import { Config } from '../shared/config.model';
 import { User } from 'src/app/user/shared/user.model';

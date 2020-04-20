@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../shared/auth.service';
-import { Observable } from 'rxjs';
-import { UserService } from '../shared/user.service';
-import { User } from '../shared/user.model';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { AuthService } from '../shared/auth.service';
+import { UserService } from '@userService';
+import { User } from '../shared/user.model';
 
 @Component({
   selector: 'app-user-pending',

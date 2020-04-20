@@ -1,18 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Notification } from '@notifications';
+import { MatPaginator } from '@angular/material/paginator';
+import { ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { UserService } from '../../user/shared/user.service';
-import { User } from 'src/app/user/shared/user.model';
+
+import { UserService } from '@userService';
 import { ActionService } from '@actionService';
+import { User } from 'src/app/user/shared/user.model';
+import { Notification } from '@notifications';
 import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { ActivatedRoute } from '@angular/router';
-import { MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-profile',

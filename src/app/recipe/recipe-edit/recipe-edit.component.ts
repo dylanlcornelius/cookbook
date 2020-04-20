@@ -13,10 +13,10 @@ import {
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { CookieService } from 'ngx-cookie-service';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { UserService } from 'src/app/user/shared/user.service';
+import { UserService } from '@userService';
 
 @Component({
   selector: 'app-recipe-edit',
