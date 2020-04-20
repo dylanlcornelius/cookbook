@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ChartsModule } from 'ng2-charts';
 
 import { ProfileRoutingModule } from './profile-routing.module';
@@ -18,6 +19,7 @@ import { SharedModule } from '@sharedModule';
     ProfileRoutingModule,
     MatTabsModule,
     MatSlideToggleModule,
+    MatPaginatorModule,
     ChartsModule,
     SharedModule,
   ]

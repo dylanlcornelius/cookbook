@@ -1,9 +1,8 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { firebase } from '@firebase/app';
 import '@firebase/auth';
 import { UserService } from './user.service';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../../admin/shared/config.service';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
@@ -17,10 +16,7 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private zone: NgZone,
-    private cookieService: CookieService,
     private userService: UserService,
-    private configService: ConfigService,
     private actionService: ActionService,
   ) {
     firebase.auth().onAuthStateChanged(user => {
@@ -30,7 +26,6 @@ export class AuthService {
         firebase.auth().getRedirectResult().then(result => {
           if (result.credential) {
             this.setCurrentUser(result.user);
-            this.actionService.commitAction(result.user.uid, Action.LOGIN, 1);
           } else {
             this.userService.setIsGuest(true);
           }
@@ -47,8 +42,12 @@ export class AuthService {
       this.userService.setIsLoggedIn(true);
       this.userService.setIsGuest(false);
 
+      this.actionService.commitAction(user.uid, Action.LOGIN, 1);
+
       if (this.redirectUrl) {
         this.router.navigate([this.redirectUrl]);
+      } else {
+        this.router.navigate(['/home']);
       }
     });
   }
@@ -60,10 +59,10 @@ export class AuthService {
 
   logout() {
     firebase.auth().signOut().then(() => {
-      this.cookieService.delete('LoggedIn');
       this.userService.setCurrentUser(new User('', '', '', '', false, false, ''));
       this.userService.setIsLoggedIn(false);
       this.userService.setIsGuest(true);
+      this.redirectUrl = null;
       this.router.navigate(['/login']);
     }).catch(error => { console.log(error.message); });
   }

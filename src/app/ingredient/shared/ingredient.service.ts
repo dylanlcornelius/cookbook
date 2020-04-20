@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { CookieService } from 'ngx-cookie-service';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { Ingredient } from './ingredient.model';
+import { UserService } from '@userService';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class IngredientService {
   ref = firebase.firestore().collection('ingredients');
 
   constructor(
-    private cookieService: CookieService,
+    private userService: UserService,
     private actionService: ActionService,
   ) { }
 
@@ -57,7 +57,9 @@ export class IngredientService {
   postIngredient(data): Observable<Ingredient> {
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_INGREDIENT, 1);
+        this.userService.getCurrentUser().subscribe(user => {
+          this.actionService.commitAction(user.uid, Action.CREATE_INGREDIENT, 1);
+        });
         observer.next(new Ingredient(
           data.name || '',
           data.category || '',
@@ -68,12 +70,15 @@ export class IngredientService {
         ));
       });
     });
+  
   }
 
   putIngredient(id: string, data): Observable<Ingredient> {
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT, 1);
+        this.userService.getCurrentUser().subscribe(user => {
+          this.actionService.commitAction(user.uid, Action.UPDATE_INGREDIENT, 1);
+        });
         observer.next();
       });
     });
@@ -82,7 +87,9 @@ export class IngredientService {
   deleteIngredients(id: string): Observable<{}> {
     return new Observable((observer) => {
       this.ref.doc(id).delete().then(() => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT, 1);
+        this.userService.getCurrentUser().subscribe(user => {
+          this.actionService.commitAction(user.uid, Action.DELETE_INGREDIENT, 1);
+        });
         observer.next();
       });
     });

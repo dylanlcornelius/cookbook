@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ItemService } from '@itemService';
 import { UserItem } from 'src/app/shopping/shared/user-item.model';
-import { CookieService } from 'ngx-cookie-service';
 import { UserItemService } from '@userItemService';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
@@ -18,6 +17,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Notification } from '@notifications';
 import { Item } from '../shared/item.model';
+import { UserService } from '@userService';
 
 class ErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -57,15 +57,17 @@ export class ItemListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private cookieService: CookieService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private itemService: ItemService,
     private userItemService: UserItemService,
   ) {}
 
   ngOnInit() {
-    this.uid = this.cookieService.get('LoggedIn');
-    this.loadData();
+    this.userService.getCurrentUser().subscribe(user => {
+      this.uid = user.uid;
+      this.loadData();
+    });
   }
 
   loadData() {
