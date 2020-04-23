@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import 'hammerjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -15,8 +16,8 @@ import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { SharedModule } from '@sharedModule';
 
 import { firebase } from '@firebase/app';
+import '@firebase/firestore';
 import { environment } from '../environments/environment';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -43,5 +44,6 @@ export class AppModule {
   constructor() {
     // TODO: attempt to export const app instead of assuming this will come first
     firebase.initializeApp(environment.config);
+    firebase.firestore().enablePersistence();
   }
 }
