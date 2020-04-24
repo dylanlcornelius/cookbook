@@ -155,7 +155,7 @@ export class ProfileComponent implements AfterViewInit {
   initializeUserForm() {
     this.loading = true;
 
-    this.userService.getUser(this.uid).subscribe((user: User) => {
+    this.userService.getUser(this.uid).then((user: User) => {
       this.userForm = this.formBuilder.group({
         uid: [this.uid],
         firstName : [user.firstName, Validators.required],
@@ -171,18 +171,10 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   onFormSubmit(form) {
-    const user = new User(
-      form.uid,
-      form.firstName,
-      form.lastName,
-      form.role,
-      form.theme,
-      form.simplifiedView,
-      form.id
-    );
+    const user = new User(form);
 
-    this.userService.putUser(user).subscribe(() => {
-      this.userService.setCurrentUser(user);
+    this.userService.putUser(user);
+    this.userService.setCurrentUser(user);
 
       this.notificationModalParams = {
         self: self,
@@ -191,10 +183,5 @@ export class ProfileComponent implements AfterViewInit {
       };
 
       this.initializeUserForm();
-    }, (err) => {
-      console.error(err);
-
-      this.initializeUserForm();
-    });
   }
 }

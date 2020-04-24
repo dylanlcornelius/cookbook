@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { ActionService } from '@actionService';
+import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Item } from './item.model';
-import { UserService } from '@userService';
+import { FirestoreService } from '@firestoreService';
 
 @Injectable({
   providedIn: 'root'
@@ -14,62 +13,36 @@ export class ItemService {
   ref = firebase.firestore().collection('items');
 
   constructor(
-    private userService: UserService,
-    private actionService: ActionService,
+    private firestoreService: FirestoreService
   ) {}
 
   getItems(): Observable<Item[]> {
-    return new Observable((observer) => {
-      this.ref.onSnapshot((querySnapshot) => {
-        const ingredients = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          ingredients.push(new Item(data.uid || '', data.name || '', doc.id));
-        });
-        observer.next(ingredients);
+    return new Observable(observable => {
+      this.firestoreService.get(this.ref).subscribe(docs => {
+        observable.next(docs.map(doc => {
+          return new Item(doc);
+        }));
       });
     });
   }
 
-  getItem(id: string): Observable<Item> {
-    return new Observable((observer) => {
-      this.ref.doc(id).get().then((doc) => {
-        const data = doc.data();
-        observer.next(new Item(data.uid || '', data.name || '', doc.id));
+  getItem(id: string): Promise<Item> {
+    return new Promise(resolve => {
+      this.firestoreService.get(this.ref, id).subscribe(doc => {
+        resolve(new Item(doc));
       });
     });
   }
 
-  postItem(data): Observable<Item> {
-    return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        this.userService.getCurrentUser().subscribe(user => {
-          this.actionService.commitAction(user.uid, Action.CREATE_ITEM, 1);
-        });
-        observer.next(new Item(data.uid || '', data.name || '', doc.id));
-      });
-    });
+  postItem(data): String {
+    return this.firestoreService.post(this.ref, data, Action.CREATE_ITEM);
   }
 
-  putItem(id: string, data): Observable<Item> {
-    return new Observable((observer) => {
-      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-        this.userService.getCurrentUser().subscribe(user => {
-          this.actionService.commitAction(user.uid, Action.UPDATE_ITEM, 1);
-        });
-        observer.next();
-      });
-    });
+  putItem(id: string, data) {
+    this.firestoreService.put(this.ref, id, data, Action.UPDATE_ITEM);
   }
 
-  deleteItem(id: string): Observable<{}> {
-    return new Observable((observer) => {
-      this.ref.doc(id).delete().then(() => {
-        this.userService.getCurrentUser().subscribe(user => {
-          this.actionService.commitAction(user.uid, Action.DELETE_ITEM, 1);
-        });
-        observer.next();
-      });
-    });
+  deleteItem(id: string) {
+    this.firestoreService.delete(this.ref, id, Action.DELETE_ITEM);
   }
 }

@@ -141,5 +141,8 @@
       }
     }
   },
-  "defaultProject": "Cookbook"
+  "defaultProject": "Cookbook",
+  "cli": {
+    "analytics": false
+  }
 }

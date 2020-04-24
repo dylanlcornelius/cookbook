@@ -5,10 +5,10 @@ export class Item {
 
     cartQuantity: Number;
 
-    constructor(uid: string, name: string, id?: string) {
-        this.id = id;
-        this.uid = uid;
-        this.name = name;
+    constructor(data) {
+        this.id = data.id || '';
+        this.uid = data.uid || '';
+        this.name = data.name || '';
     }
 
     public getId() {
