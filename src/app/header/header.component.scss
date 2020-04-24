@@ -75,11 +75,11 @@ a:hover {
     margin-left: 20px;
 }
 .mobile-nav-bottom {
-    bottom: 0;
-    left: 0;
+    bottom: 10px;
+    left: 20px;
+    right: 20px;
     position: absolute;
-    width: 100%;
 }
 .mobile-nav-bottom .mobile-nav-button {
-    text-align: center;
+    text-align: start;
 }

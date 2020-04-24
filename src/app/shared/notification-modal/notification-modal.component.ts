@@ -33,6 +33,7 @@ export class NotificationModalComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.notificationModalParams && changes.notificationModalParams) {
+      // TODO: change this to be global to allow navigating before timeout
       setTimeout(() => {
         if (changes.notificationModalParams.currentValue.path) {
           this.router.navigate([changes.notificationModalParams.currentValue.path]);

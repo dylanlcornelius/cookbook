@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { CookieService } from 'ngx-cookie-service';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserIngredient } from './user-ingredient.model';
 import { Observable } from 'rxjs';
+import { UserService } from '@userService';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class UserIngredientService {
   ref = firebase.firestore().collection('user-ingredients');
 
   constructor(
-    private cookieService: CookieService,
+    private userService: UserService,
     private actionService: ActionService
   ) {}
 
@@ -53,14 +53,15 @@ export class UserIngredientService {
 
   buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
     const self = this;
-    const user = this.cookieService.get('LoggedIn');
-    this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-      this.actionService.commitAction(user, Action.BUY_INGREDIENT, actions).then(function () {
-        if (isCompleted) {
-          self.actionService.commitAction(user, Action.COMPLETE_SHOPPING_LIST, 1);
-        }
-      });
-    })
-    .catch(function(error) { console.error('error: ', error); });
+    this.userService.getCurrentUser().subscribe(user => {
+      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
+        this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions).then(function () {
+          if (isCompleted) {
+            self.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
+          }
+        });
+      })
+      .catch(function(error) { console.error('error: ', error); });
+    });
   }
 }

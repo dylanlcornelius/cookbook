@@ -4,6 +4,14 @@ html, body {
 body {
     font-family: "Helvetica Neue", sans-serif;
 }
+.button-row {
+  margin: 10px auto;
+  width: 90%;
+}
+.search-bar {
+  width: 100% !important;
+  padding: 0 5%;
+}
 .mat-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
   transition: transform 100ms ease !important;
@@ -15,6 +23,18 @@ body {
 .mat-card-header-text {
   margin: 0 !important;
   width: 100%;
+  overflow: hidden;
+}
+.mat-card-header .mat-card-title {
+  margin-bottom: 5px !important;
+  font-size: 18px !important;
+}
+.mat-card-image {
+  margin: 0 -16px 5px !important;
+}
+.mat-card-actions {
+  display: flex !important;
+  justify-content: center;
 }
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {

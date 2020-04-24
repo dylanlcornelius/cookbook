@@ -12,13 +12,13 @@ export class Ingredient {
     pantryQuantity: Number;
     cartQuantity: Number;
 
-    constructor (name: string, category: string, amount: string, uom: UOM, calories: string, id?: string) {
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.amount = amount;
-        this.uom = uom;
-        this.calories = calories;
+    constructor (data) {
+        this.id = data.id || '';
+        this.name = data.name || '';
+        this.category = data.category || '';
+        this.amount = data.amount || '';
+        this.uom = data.uom || '';
+        this.calories = data.calories || '';
     }
 
     public getId() {

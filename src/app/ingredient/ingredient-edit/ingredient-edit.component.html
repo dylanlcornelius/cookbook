@@ -19,29 +19,22 @@
 
   <form [formGroup]="ingredientsForm" (ngSubmit)="onFormSubmit(ingredientsForm.value)">
     <mat-form-field class="form-field">
-      <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher">
+      <input matInput placeholder="Name*" formControlName="name" [errorStateMatcher]="matcher">
       <mat-error>
         <span *ngIf="!ingredientsForm.get('name').valid && ingredientsForm.get('name').touched">Please enter Ingredient Name</span>
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="form-field">
-      <input matInput placeholder="Category" formControlName="category" [errorStateMatcher]="matcher">
-      <mat-error>
-        <span *ngIf="!ingredientsForm.get('category').valid">Please enter a valid number for Ingredient Servings</span>
-      </mat-error>
-    </mat-form-field>
-
     <div class="row">
       <mat-form-field class="col-12 col-md-8">
-        <input matInput placeholder="Amount" formControlName="amount" [errorStateMatcher]="matcher">
+        <input matInput placeholder="Amount*" formControlName="amount" [errorStateMatcher]="matcher">
         <mat-error>
           <span *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched">Please enter a valid number for Ingredient Amount</span>
         </mat-error>
       </mat-form-field>
     
       <mat-form-field class="col-12 col-md-4">
-        <mat-label> Unit of Measurement </mat-label>
+        <mat-label> Unit of Measurement* </mat-label>
         <mat-select formControlName="uom">
           <mat-option *ngFor="let uom of uoms" [value]="uom">
             {{uom}}
@@ -52,6 +45,13 @@
         </mat-error>
       </mat-form-field>
     </div>
+
+    <mat-form-field class="form-field">
+      <input matInput placeholder="Category" formControlName="category" [errorStateMatcher]="matcher">
+      <mat-error>
+        <span *ngIf="!ingredientsForm.get('category').valid">Please enter a valid number for Ingredient Servings</span>
+      </mat-error>
+    </mat-form-field>
 
     <mat-form-field class="form-field">
       <input matInput placeholder="Calories" formControlName="calories" [errorStateMatcher]="matcher">

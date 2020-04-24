@@ -17,8 +17,7 @@ export class IngredientDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }
 
   ngOnInit() {
-    this.ingredientService.getIngredient(this.route.snapshot.params['id'])
-    .subscribe(data => {
+    this.ingredientService.getIngredient(this.route.snapshot.params['id']).then(data => {
       this.ingredient = data;
       this.loading = false;
     });
@@ -31,15 +30,13 @@ export class IngredientDetailComponent implements OnInit {
       text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
       function: (self, id) => {
         if (id) {
-          self.ingredientService.deleteIngredients(id)
-          .subscribe(() => {
-            self.notificationModalParams = {
-              self: self,
-              type: Notification.SUCCESS,
-              path: '/ingredient/list',
-              text: 'Ingredient deleted!'
-            };
-          }, (err) => { console.error(err); });
+          self.ingredientService.deleteIngredients(id);
+          self.notificationModalParams = {
+            self: self,
+            type: Notification.SUCCESS,
+            path: '/ingredient/list',
+            text: 'Ingredient deleted!'
+          };
         }
       },
     };

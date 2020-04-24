@@ -1,6 +1,6 @@
-<app-loading-modal *ngIf="redirect && isLoggedIn"></app-loading-modal>
+<app-loading-modal *ngIf="redirect && (isLoggedIn | async)"></app-loading-modal>
 
-<div *ngIf="!(redirect && isLoggedIn)">
+<div *ngIf="!(redirect && (isLoggedIn | async))">
   <div class="d-flex justify-content-center title-text">
     <h4>Welcome to the Cookbook</h4>
   </div>
@@ -9,7 +9,7 @@
   
   <div class="d-flex justify-content-center">
     <div (click)="signIn()" class="google-button">
-      <img draggable="false" src="../../../assets/btn_google_signin_light_normal_web.png"/>
+      <img draggable="false" src="../../../assets/btn_google_signin_light_normal_web.png" alt="Google Login"/>
     </div>
   </div>
 </div>

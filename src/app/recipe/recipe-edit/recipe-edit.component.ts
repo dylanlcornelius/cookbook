@@ -12,11 +12,10 @@ import {
 } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
-import { CookieService } from 'ngx-cookie-service';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { UserService } from 'src/app/user/shared/user.service';
+import { UserService } from '@userService';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -44,7 +43,6 @@ export class RecipeEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private cookieService: CookieService,
     private userService: UserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
@@ -68,8 +66,7 @@ export class RecipeEditComponent implements OnInit {
     });
 
     if (this.route.snapshot.params['id']) {
-      this.recipeService.getRecipe(this.route.snapshot.params['id'])
-        .subscribe(data => {
+      this.recipeService.getRecipe(this.route.snapshot.params['id']).then(data => {
           this.id = data.id;
           if (data.categories !== undefined) {
             for (let i = 0; i < data.categories.length; i++) {
@@ -258,21 +255,16 @@ export class RecipeEditComponent implements OnInit {
     Object.values((<FormGroup> this.recipesForm.get('ingredients')).controls).forEach((ingredient: FormGroup) => {
       ingredient.removeControl('name');
     });
-    const userId = this.cookieService.get('LoggedIn');
-    this.recipesForm.addControl('uid', new FormControl(userId));
-    this.userService.getUser(userId).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.recipesForm.addControl('uid', new FormControl(user.uid));
       this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
 
       if (this.route.snapshot.params['id']) {
-        this.recipeService.putRecipes(this.id, this.recipesForm.value)
-          .subscribe(() => {
-            this.router.navigate(['/recipe/detail/', this.id]);
-          }, (err) => { console.error(err); });
+        this.recipeService.putRecipes(this.id, this.recipesForm.value);
+        this.router.navigate(['/recipe/detail/', this.id]);
       } else {
-        this.recipeService.postRecipe(this.recipesForm.value)
-          .subscribe(res => {
-            this.router.navigate(['/recipe/detail/', res.id]);
-          }, (err) => { console.error(err); });
+        const id = this.recipeService.postRecipe(this.recipesForm.value);
+        this.router.navigate(['/recipe/detail/', id]);
       }
     });
   }

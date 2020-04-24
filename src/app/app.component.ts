@@ -2,9 +2,10 @@ import { environment } from '../environments/environment';
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
-import { fadeComponentAnimation } from 'src/app/theme/animations';
 import { Observable } from 'rxjs';
-import { UserService } from './user/shared/user.service';
+
+import { fadeComponentAnimation } from 'src/app/theme/animations';
+import { UserService } from '@userService';
 import { User } from './user/shared/user.model';
 
 @Component({

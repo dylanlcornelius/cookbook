@@ -3,10 +3,10 @@ export class Config {
     name: string;
     value: string;
 
-    constructor(id: string, name: string, value: string) {
-        this.id = id;
-        this.name = name;
-        this.value = value;
+    constructor(data) {
+        this.id = data.id || '';
+        this.name = data.name || '';
+        this.value = data.value || '';
     }
 
     public getId() {

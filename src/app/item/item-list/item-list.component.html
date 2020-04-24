@@ -10,7 +10,7 @@
 <br/>
 
 <div [hidden]="loading">
-  <mat-form-field>
+  <mat-form-field class="search-bar">
     <input matInput (keyup)="applyFilter($event.target.value)"/>
     <mat-placeholder>
       <mat-icon>search</mat-icon>
@@ -122,6 +122,6 @@
     </mat-accordion>
   </div>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[100, 200, 500]"></mat-paginator>
 </div>
   

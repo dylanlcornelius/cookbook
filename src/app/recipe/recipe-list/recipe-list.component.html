@@ -22,35 +22,37 @@
     </span>
   </div>
 
-  <div class="full-width d-flex justify-content-center">
-    <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)"/>
-      <mat-placeholder>
-        <mat-icon>search</mat-icon>
-      </mat-placeholder>
-    </mat-form-field>
-  </div>
+  <mat-form-field class="search-bar">
+    <input matInput (keyup)="applyFilter($event.target.value)"/>
+    <mat-placeholder>
+      <mat-icon>search</mat-icon>
+    </mat-placeholder>
+  </mat-form-field>
 
   <div *ngIf="!loading" class="row justify-content-center">
-    <mat-card *ngFor="let data of dataSource.connect().value; trackBy: indentify" class="recipe-card col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mat-elevation-z4" [routerLink]="['/recipe/detail/', data.id]">
+    <mat-card *ngFor="let recipe of dataSource.connect().value; trackBy: indentify" class="recipe-card col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mat-elevation-z4" [routerLink]="['/recipe/detail/', recipe.id]">
       <mat-card-header>
-        <mat-card-title>{{data.name}}</mat-card-title>
-        <mat-card-subtitle>{{data.time}}</mat-card-subtitle>
+        <mat-card-title>{{recipe.name}}</mat-card-title>
+        <mat-card-subtitle *ngIf="!simplifiedView">{{recipe.time}}</mat-card-subtitle>
       </mat-card-header>
 
-      <img mat-card-image *ngIf="data.image" [src]="data.image" alt=""/>
+      <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt=""/>
 
-      <mat-card-content>
-        <!-- Servings: {{data.servings}}<br/> -->
-        <!-- Calories: {{data.calories}}<br/> -->
-        Quantity: {{data.count | number: '1.0-2'}}
+      <mat-card-content *ngIf="!simplifiedView">
+        Servings: {{recipe.servings}}<br/>
+        Calories: {{recipe.calories}}<br/>
       </mat-card-content>
       <mat-card-actions (click)="$event.stopPropagation()">
-          <button mat-button color="warn" (click)="removeIngredients(data.id)">Cook</button>
-          <button mat-button color="primary" (click)="addIngredients(data.id)">Add to List</button>
+          <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
+          <button mat-button color="warn" (click)="removeIngredients(recipe.id)" *ngIf="recipe.count && recipe.count > 0">
+            <span>Cook</span>
+            <span>
+              ({{recipe.count | number: '1.0-2'}})
+            </span>
+          </button>
       </mat-card-actions>
     </mat-card>
   </div>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" class="full-width"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[100, 200, 500]" class="full-width"></mat-paginator>
 </div>

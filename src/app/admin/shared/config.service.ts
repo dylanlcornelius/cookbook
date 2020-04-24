@@ -3,6 +3,7 @@ import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { Config } from './config.model';
+import { FirestoreService } from '@firestoreService';
 
 @Injectable({
   providedIn: 'root'
@@ -11,48 +12,39 @@ export class ConfigService {
 
   ref = firebase.firestore().collection('configs');
 
-  constructor() {}
+  constructor(private firestoreService: FirestoreService) {}
 
   getConfigs(): Observable<Config[]> {
-    return new Observable((observer) => {
-      this.ref.onSnapshot((querySnapshot) => {
-        const configs = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          configs.push(new Config(doc.id, data.name || '', data.value || ''));
-        });
-        observer.next(configs);
+    return new Observable(observable => {
+      this.firestoreService.get(this.ref).subscribe(docs => {
+        observable.next(docs.map(doc => {
+          return new Config(doc);
+        }));
       });
     });
   }
 
-  getConfig(name: string): Observable<Config> {
-    return new Observable((observer) => {
+  getConfig(name: string): Promise<Config> {
+    return new Promise(resolve => {
       this.ref.where('name', '==', name).get().then(function(querySnapshot) {
         const configs = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          configs.push(new Config(doc.id, data.name || '', data.value || ''));
+          configs.push(new Config({
+            ...doc.data(),
+            id: doc.id
+          }));
         });
-        observer.next(configs[0]);
+        resolve(configs[0]);
       });
     });
   }
 
-  postConfig(data: Config): Observable<Config> {
-    return new Observable((observer) => {
-      this.ref.add(data.getObject()).then((doc) => {
-        observer.next(new Config(doc.id, data.name || '', data.value || ''));
-      });
-    });
+  postConfig(data: Config): String {
+    return this.firestoreService.post(this.ref, data);
   }
 
-  putConfig(data: Config): Observable<Config> {
-    return new Observable((observer) => {
-      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-        observer.next();
-      });
-    });
+  putConfig(data: Config) {
+    this.firestoreService.put(this.ref, data.getId(), data.getObject());
   }
 
   putConfigs(data: Array<Config>) {
@@ -61,11 +53,7 @@ export class ConfigService {
     });
   }
 
-  deleteConfig(id: string): Observable<{}> {
-    return new Observable((observer) => {
-      this.ref.doc(id).delete().then(() => {
-        observer.next();
-      });
-    });
+  deleteConfig(id: string) {
+    this.ref.doc(id).delete();
   }
 }

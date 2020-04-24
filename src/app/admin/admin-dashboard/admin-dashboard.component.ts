@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+
 import { IngredientService } from '@ingredientService';
 import { RecipeService } from '@recipeService';
-import { UserService } from '../../user/shared/user.service';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { UserService } from '@userService';
 import { ConfigService } from '../shared/config.service';
 import { Config } from '../shared/config.model';
 import { User } from 'src/app/user/shared/user.model';
@@ -40,7 +41,7 @@ export class AdminDashboardComponent implements OnInit {
     private recipeService: RecipeService) {}
 
   ngOnInit() {
-    this.configService.getConfigs().subscribe((result) => {
+    this.configService.getConfigs().subscribe(result => {
       this.configsDataSource = result;
     });
     this.userService.getUsers().subscribe((result) => {
@@ -74,11 +75,7 @@ export class AdminDashboardComponent implements OnInit {
   // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
-    this.configService.postConfig(new Config('', '', ''))
-      .subscribe(() => {},
-      (err) => {
-        console.error(err);
-      });
+    this.configService.postConfig(new Config({}));
   }
 
   removeConfig(id, name) {
@@ -94,11 +91,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   removeConfigEvent(self, id) {
-    self.configService.deleteConfig(id)
-      .subscribe(() => {},
-      (err) => {
-        console.error(err);
-      });
+    self.configService.deleteConfig(id);
   }
 
   removeUser(id, firstName, lastName) {
@@ -115,11 +108,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   removeUserEvent(self, id) {
-    self.userService.deleteUser(id)
-    .subscribe(() => {},
-    (err) => {
-      console.log(err);
-    });
+    self.userService.deleteUser(id);
   }
 
   revert() {
@@ -131,7 +120,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent(self) {
-    self.configService.getConfigs().subscribe((result) => {
+    self.configService.getConfigs().then((result) => {
       self.configsDataSource = result;
     });
     self.userService.getUsers().subscribe((result) => {

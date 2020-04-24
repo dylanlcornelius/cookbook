@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { CookieService } from 'ngx-cookie-service';
-import { ActionService } from '@actionService';
+import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Ingredient } from './ingredient.model';
+import { FirestoreService } from '@firestoreService';
 
 @Injectable({
   providedIn: 'root'
@@ -14,77 +13,36 @@ export class IngredientService {
   ref = firebase.firestore().collection('ingredients');
 
   constructor(
-    private cookieService: CookieService,
-    private actionService: ActionService,
-  ) { }
+    private firestoreService: FirestoreService
+  ) {}
 
   getIngredients(): Observable<Ingredient[]> {
-    return new Observable((observer) => {
-      this.ref.onSnapshot((querySnapshot) => {
-        const ingredients = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          ingredients.push(new Ingredient(
-            data.name || '',
-            data.category || '',
-            data.amount,
-            data.uom,
-            data.calories || '',
-            doc.id,
-          ));
-        });
-        observer.next(ingredients);
+    return new Observable(observable => {
+      this.firestoreService.get(this.ref).subscribe(docs => {
+        observable.next(docs.map(doc => {
+          return new Ingredient(doc);
+        }));
       });
     });
   }
 
-  getIngredient(id: string): Observable<Ingredient> {
-    return new Observable((observer) => {
-      this.ref.doc(id).get().then((doc) => {
-        const data = doc.data();
-        observer.next(new Ingredient(
-          data.name || '',
-          data.category || '',
-          data.amount,
-          data.uom,
-          data.calories || '',
-          doc.id,
-        ));
-      });
+  getIngredient(id: string): Promise<Ingredient> {
+    return new Promise(resolve => {
+      this.firestoreService.get(this.ref, id).subscribe(doc => {
+        resolve(new Ingredient(doc));
+      })
     });
   }
 
-  postIngredient(data): Observable<Ingredient> {
-    return new Observable((observer) => {
-      this.ref.add(data).then((doc) => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.CREATE_INGREDIENT, 1);
-        observer.next(new Ingredient(
-          data.name || '',
-          data.category || '',
-          data.amount,
-          data.uom,
-          data.calories || '',
-          doc.id,
-        ));
-      });
-    });
+  postIngredient(data): String {
+    return this.firestoreService.post(this.ref, data, Action.CREATE_INGREDIENT);
   }
 
-  putIngredient(id: string, data): Observable<Ingredient> {
-    return new Observable((observer) => {
-      this.ref.doc(id).set(data).then(() => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.UPDATE_INGREDIENT, 1);
-        observer.next();
-      });
-    });
+  putIngredient(id: string, data) {
+    this.firestoreService.put(this.ref, id, data, Action.UPDATE_INGREDIENT);
   }
 
-  deleteIngredients(id: string): Observable<{}> {
-    return new Observable((observer) => {
-      this.ref.doc(id).delete().then(() => {
-        this.actionService.commitAction(this.cookieService.get('LoggedIn'), Action.DELETE_INGREDIENT, 1);
-        observer.next();
-      });
-    });
+  deleteIngredients(id: string) {
+    this.firestoreService.delete(this.ref, id, Action.DELETE_INGREDIENT);
   }
 }

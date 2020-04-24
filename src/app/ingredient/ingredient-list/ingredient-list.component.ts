@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IngredientService } from '@ingredientService';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
-import { CookieService } from 'ngx-cookie-service';
 import { UserIngredientService } from '@userIngredientService';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { UserService } from '@userService';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -26,37 +26,40 @@ export class IngredientListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private cookieService: CookieService,
+    private userService: UserService,
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
   ) {}
 
   ngOnInit() {
-    this.uid = this.cookieService.get('LoggedIn');
-    const myIngredients = [];
-    this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
-      this.id = userIngredient.id;
-      this.ingredientService.getIngredients().subscribe(ingredients => {
-        ingredients.forEach(ingredient => {
-          userIngredient.ingredients.forEach(myIngredient => {
-            if (myIngredient.id === ingredient.id) {
-              ingredient.pantryQuantity = myIngredient.pantryQuantity;
-              ingredient.cartQuantity = myIngredient.cartQuantity;
+    this.userService.getCurrentUser().subscribe(user => {
+      this.uid = user.uid;
 
-              myIngredients.push({
-                id: myIngredient.id,
-                pantryQuantity: myIngredient.pantryQuantity,
-                cartQuantity: myIngredient.cartQuantity
-              });
-            }
+      const myIngredients = [];
+      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+        this.id = userIngredient.id;
+        this.ingredientService.getIngredients().subscribe(ingredients => {
+          ingredients.forEach(ingredient => {
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (myIngredient.id === ingredient.id) {
+                ingredient.pantryQuantity = myIngredient.pantryQuantity;
+                ingredient.cartQuantity = myIngredient.cartQuantity;
+
+                myIngredients.push({
+                  id: myIngredient.id,
+                  pantryQuantity: myIngredient.pantryQuantity,
+                  cartQuantity: myIngredient.cartQuantity
+                });
+              }
+            });
           });
-        });
 
-        this.dataSource = new MatTableDataSource(ingredients);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.userIngredients = myIngredients;
-        this.loading = false;
+          this.dataSource = new MatTableDataSource(ingredients);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.userIngredients = myIngredients;
+          this.loading = false;
+        });
       });
     });
   }

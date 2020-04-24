@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
-import { CookieService } from 'ngx-cookie-service';
+import { UserService } from '@userService';
 
 @Component({
   selector: 'app-login',
@@ -9,14 +10,14 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class LoginComponent {
   redirect: string;
-  isLoggedIn: boolean;
+  isLoggedIn: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
-    private cookieService: CookieService
+    private userService: UserService
   ) {
     this.redirect = this.authService.redirectUrl;
-    this.isLoggedIn = this.cookieService.get('LoggedIn') ? true : false;
+    this.isLoggedIn = this.userService.getIsLoggedIn();
   }
 
   signIn() {

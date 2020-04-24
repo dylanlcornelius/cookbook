@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ItemService } from '@itemService';
 import { UserItem } from 'src/app/shopping/shared/user-item.model';
-import { CookieService } from 'ngx-cookie-service';
 import { UserItemService } from '@userItemService';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
@@ -11,9 +10,14 @@ import {
   NgForm,
   Validators
 } from '@angular/forms';
-import { ErrorStateMatcher, MatAccordion, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { MatAccordion } from '@angular/material/expansion';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { Notification } from '@notifications';
 import { Item } from '../shared/item.model';
+import { UserService } from '@userService';
 
 class ErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -53,15 +57,17 @@ export class ItemListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private cookieService: CookieService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private itemService: ItemService,
     private userItemService: UserItemService,
   ) {}
 
   ngOnInit() {
-    this.uid = this.cookieService.get('LoggedIn');
-    this.loadData();
+    this.userService.getCurrentUser().subscribe(user => {
+      this.uid = user.uid;
+      this.loadData();
+    });
   }
 
   loadData() {
@@ -148,43 +154,38 @@ export class ItemListComponent implements OnInit {
       self: this,
       text: 'Are you sure you want to delete item ' + name + '?',
       function: (self, id) => {
-        self.itemService.deleteItem(id).subscribe(() => {
-          self.notificationModalParams = {
-            self: self,
-            type: Notification.SUCCESS,
-            text: 'Item deleted!'
-          };
-    
-          self.loadData();
-        }, (error) => { console.error(error); });
+        self.itemService.deleteItem(id);
+        self.notificationModalParams = {
+          self: self,
+          type: Notification.SUCCESS,
+          text: 'Item deleted!'
+        };
+  
+        self.loadData();
       },
     };
   }
 
   onFormSubmit(form: NgForm, id: string) {
     if (id) {
-      this.itemService.putItem(id, form)
-      .subscribe(() => {
-        this.notificationModalParams = {
-          self: self,
-          type: Notification.SUCCESS,
-          text: 'Item updated!'
-        };
+      this.itemService.putItem(id, form);
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Item updated!'
+      };
 
-        // TODO: this.accordion.closeAll(); doesn't work
-      }, (error) => { console.error(error); });
+      // TODO: this.accordion.closeAll(); doesn't work
     } else {
-      this.itemService.postItem(form)
-      .subscribe(() => {
-        this.notificationModalParams = {
-          self: self,
-          type: Notification.SUCCESS,
-          text: 'Item added!'
-        };
+      this.itemService.postItem(form);
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Item added!'
+      };
 
-        this.accordion.closeAll();
-        this.loadData();
-      }, (error) => { console.error(error); });
+      this.accordion.closeAll();
+      this.loadData();
     }
   }
 }

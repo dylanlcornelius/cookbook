@@ -20,11 +20,13 @@
     ],
     "paths": {
       "@sharedModule": ["src/app/shared/shared.module.ts"],
+      "@firestoreService": ["src/app/shared/firestore.service.ts"],
       "@recipeService": ["src/app/recipe/shared/recipe.service"],
       "@ingredientService": ["src/app/ingredient/shared/ingredient.service"],
       "@userIngredientService": ["src/app/shopping/shared/user-ingredient.service"],
       "@itemService": ["src/app/item/shared/item.service"],
       "@userItemService": ["src/app/shopping/shared/user-item.service"],
+      "@userService": ["src/app/user/shared/user.service"],
       "@actionService": ["src/app/profile/shared/action.service"],
       "@actions": ["src/app/profile/shared/action.enum"],
       "@notifications": ["src/app/shared/notification-modal/notification.enum"],
