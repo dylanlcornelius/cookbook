@@ -42,7 +42,6 @@ import { environment } from '../environments/environment';
 })
 export class AppModule {
   constructor() {
-    // TODO: attempt to export const app instead of assuming this will come first
     firebase.initializeApp(environment.config);
     firebase.firestore().enablePersistence();
   }

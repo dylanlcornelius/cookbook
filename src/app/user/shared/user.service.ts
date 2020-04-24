@@ -10,7 +10,7 @@ import { User } from './user.model';
 export class UserService {
   ref = firebase.firestore().collection('users');
 
-  private currentUser = new BehaviorSubject<User>(new User('', '', '', '', false, false, ''));
+  private currentUser = new BehaviorSubject<User>(new User({}));
   private isloggedIn = new BehaviorSubject<boolean>(false);
   private isGuest = new BehaviorSubject<boolean>(false);
 
@@ -25,69 +25,51 @@ export class UserService {
 
   constructor() {}
 
-  getUsers(): Observable<User[]> {
-    return new Observable((observer) => {
+  getUsers(): Promise<User[]> {
+    return new Promise(resolve => {
       this.ref.onSnapshot((querySnapshot) => {
         const users = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          users.push(new User(
-            data.uid || '',
-            data.firstName || '',
-            data.lastName || '',
-            data.role || '',
-            data.theme || false,
-            data.simplifiedView || false,
-            doc.id
-          ));
+          users.push(new User({
+            ...doc.data(),
+            id: doc.id
+          }));
         });
-        observer.next(users);
+        resolve(users);
       });
     });
   }
 
-  getUser(uid: string): Observable<User> {
-    return new Observable((observer) => {
+  getUser(uid: string): Promise<User> {
+    return new Promise(resolve => {
       this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
         const users = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          users.push(new User(
-            data.uid || '',
-            data.firstName || '',
-            data.lastName || '',
-            data.role || '',
-            data.theme || false,
-            data.simplifiedView || false,
-            doc.id
-          ));
+          users.push(new User({
+            ...doc.data(),
+            id: doc.id
+          }));
         });
-        // return only the first user
-        observer.next(users[0]);
+        resolve(users[0]);
       });
     });
   }
 
-  postUser(data: User): Observable<User> {
-    return new Observable((observer) => {
+  postUser(data: User): Promise<User> {
+    return new Promise(resolve => {
       this.ref.add(data.getObject()).then((doc) => {
-        observer.next(new User(
-          data.uid || '',
-          data.firstName || '',
-          data.lastName || '',
-          data.role || '',
-          data.theme || false,
-          data.simplifiedView || false,
-          doc.id
-        ));
+        resolve(new User({
+          ...data,
+          id: doc.id
+        }));
       });
     });
   }
 
-  putUser(data: User): Observable<User> {
-    return new Observable((observer) => {
+  putUser(data: User): Promise<User> {
+    return new Promise(resolve => {
       this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-        observer.next();
+        resolve();
       });
     });
   }
@@ -98,10 +80,10 @@ export class UserService {
     });
   }
 
-  deleteUser(id: string): Observable<{}> {
-    return new Observable((observer) => {
+  deleteUser(id: string): Promise<{}> {
+    return new Promise(resolve => {
       this.ref.doc(id).delete().then(() => {
-        observer.next();
+        resolve();
       });
     });
   }

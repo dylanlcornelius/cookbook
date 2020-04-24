@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@sharedModule": ["src/app/shared/shared.module.ts"],
+      "@firestoreService": ["src/app/shared/firestore.service.ts"],
       "@recipeService": ["src/app/recipe/shared/recipe.service"],
       "@ingredientService": ["src/app/ingredient/shared/ingredient.service"],
       "@userIngredientService": ["src/app/shopping/shared/user-ingredient.service"],

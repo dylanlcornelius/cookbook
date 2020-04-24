@@ -7,14 +7,14 @@ export class User {
     theme: boolean;
     simplifiedView: boolean;
 
-    constructor(uid: string, firstName: string, lastName: string, role: string, theme: boolean, simplifiedView: boolean, id?: string) {
-        this.id = id;
-        this.uid = uid;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-        this.theme = theme;
-        this.simplifiedView = simplifiedView;
+    constructor(data) {
+        this.id = data.id || '';
+        this.uid = data.uid || '';
+        this.firstName = data.firstName || '';
+        this.lastName = data.lastName || '';
+        this.role = data.role || '';
+        this.theme = data.theme || false;
+        this.simplifiedView = data.simplifiedView || false;
     }
 
     public getId() {

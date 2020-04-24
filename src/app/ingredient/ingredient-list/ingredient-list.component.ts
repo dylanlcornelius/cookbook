@@ -38,7 +38,7 @@ export class IngredientListComponent implements OnInit {
       const myIngredients = [];
       this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
         this.id = userIngredient.id;
-        this.ingredientService.getIngredients().subscribe(ingredients => {
+        this.ingredientService.getIngredients().then(ingredients => {
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
               if (myIngredient.id === ingredient.id) {

@@ -66,8 +66,7 @@ export class RecipeEditComponent implements OnInit {
     });
 
     if (this.route.snapshot.params['id']) {
-      this.recipeService.getRecipe(this.route.snapshot.params['id'])
-        .subscribe(data => {
+      this.recipeService.getRecipe(this.route.snapshot.params['id']).then(data => {
           this.id = data.id;
           if (data.categories !== undefined) {
             for (let i = 0; i < data.categories.length; i++) {
@@ -80,7 +79,7 @@ export class RecipeEditComponent implements OnInit {
             }
           }
           this.addedIngredients = data.ingredients;
-          this.ingredientService.getIngredients().subscribe(ingredients => {
+          this.ingredientService.getIngredients().then(ingredients => {
             const added = [];
             this.addedIngredients.forEach(addedIngredient => {
               ingredients.forEach(ingredient => {
@@ -124,7 +123,7 @@ export class RecipeEditComponent implements OnInit {
           });
         });
     } else {
-      this.ingredientService.getIngredients().subscribe(ingredients => {
+      this.ingredientService.getIngredients().then(ingredients => {
         ingredients.forEach(ingredient => {
           this.allAvailableIngredients.push({
             id: ingredient.id,
@@ -261,15 +260,11 @@ export class RecipeEditComponent implements OnInit {
       this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
 
       if (this.route.snapshot.params['id']) {
-        this.recipeService.putRecipes(this.id, this.recipesForm.value)
-          .subscribe(() => {
-            this.router.navigate(['/recipe/detail/', this.id]);
-          }, (err) => { console.error(err); });
+        this.recipeService.putRecipes(this.id, this.recipesForm.value);
+        this.router.navigate(['/recipe/detail/', this.id]);
       } else {
-        this.recipeService.postRecipe(this.recipesForm.value)
-          .subscribe(res => {
-            this.router.navigate(['/recipe/detail/', res.id]);
-          }, (err) => { console.error(err); });
+        const id = this.recipeService.postRecipe(this.recipesForm.value);
+        this.router.navigate(['/recipe/detail/', id]);
       }
     });
   }

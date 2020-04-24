@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   setCurrentUser(user) {
-    this.userService.getUser(user.uid).subscribe(current => {
+    this.userService.getUser(user.uid).then(current => {
       this.userService.setCurrentUser(current);
       this.userService.setIsLoggedIn(true);
       this.userService.setIsGuest(false);
@@ -59,7 +59,7 @@ export class AuthService {
 
   logout() {
     firebase.auth().signOut().then(() => {
-      this.userService.setCurrentUser(new User('', '', '', '', false, false, ''));
+      this.userService.setCurrentUser(new User({}));
       this.userService.setIsLoggedIn(false);
       this.userService.setIsGuest(true);
       this.redirectUrl = null;

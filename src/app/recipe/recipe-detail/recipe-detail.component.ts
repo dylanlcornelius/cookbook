@@ -29,7 +29,7 @@ export class RecipeDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.recipeService.getRecipe(this.route.snapshot.params['id']).subscribe(data => {
+    this.recipeService.getRecipe(this.route.snapshot.params['id']).then(data => {
       this.recipe = data;
 
       this.imageService.downloadFile(this.recipe.id).then(url => {
@@ -38,7 +38,7 @@ export class RecipeDetailComponent implements OnInit {
         }
       });
 
-      this.ingredientService.getIngredients().subscribe(allIngredients => {
+      this.ingredientService.getIngredients().then(allIngredients => {
         data.ingredients.forEach(recipeIngredient => {
           allIngredients.forEach(ingredient => {
             if (recipeIngredient.id === ingredient.id) {
@@ -83,15 +83,14 @@ export class RecipeDetailComponent implements OnInit {
       text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?',
       function: (self, id) => {
         if (id) {
-          self.recipeService.deleteRecipes(id).subscribe(() => {
-            self.deleteFile(id);
-            self.notificationModalParams = {
-              self: self,
-              type: Notification.SUCCESS,
-              path: '/recipe/list',
-              text: 'Recipe Deleted!'
-            };
-          }, (err) => { console.error(err); });
+          self.recipeService.deleteRecipes(id);
+          self.deleteFile(id);
+          self.notificationModalParams = {
+            self: self,
+            type: Notification.SUCCESS,
+            path: '/recipe/list',
+            text: 'Recipe Deleted!'
+          };
         }
       }
     };

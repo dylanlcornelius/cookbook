@@ -17,8 +17,7 @@ export class IngredientDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }
 
   ngOnInit() {
-    this.ingredientService.getIngredient(this.route.snapshot.params['id'])
-    .subscribe(data => {
+    this.ingredientService.getIngredient(this.route.snapshot.params['id']).then(data => {
       this.ingredient = data;
       this.loading = false;
     });

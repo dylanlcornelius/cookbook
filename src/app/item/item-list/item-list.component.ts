@@ -80,7 +80,7 @@ export class ItemListComponent implements OnInit {
     const myItems = [];
     this.userItemService.getUserItems(this.uid).subscribe(userItem => {
       this.id = userItem.id;
-      this.itemService.getItems().subscribe(items => {
+      this.itemService.getItems().then(items => {
         items.forEach(item => {
           userItem.items.forEach(myItem => {
             if (myItem.id === item.id) {
@@ -169,28 +169,24 @@ export class ItemListComponent implements OnInit {
 
   onFormSubmit(form: NgForm, id: string) {
     if (id) {
-      this.itemService.putItem(id, form)
-      .subscribe(() => {
-        this.notificationModalParams = {
-          self: self,
-          type: Notification.SUCCESS,
-          text: 'Item updated!'
-        };
+      this.itemService.putItem(id, form);
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Item updated!'
+      };
 
-        // TODO: this.accordion.closeAll(); doesn't work
-      }, (error) => { console.error(error); });
+      // TODO: this.accordion.closeAll(); doesn't work
     } else {
-      this.itemService.postItem(form)
-      .subscribe(() => {
-        this.notificationModalParams = {
-          self: self,
-          type: Notification.SUCCESS,
-          text: 'Item added!'
-        };
+      this.itemService.postItem(form);
+      this.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        text: 'Item added!'
+      };
 
-        this.accordion.closeAll();
-        this.loadData();
-      }, (error) => { console.error(error); });
+      this.accordion.closeAll();
+      this.loadData();
     }
   }
 }

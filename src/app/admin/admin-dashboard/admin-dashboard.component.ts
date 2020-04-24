@@ -41,10 +41,10 @@ export class AdminDashboardComponent implements OnInit {
     private recipeService: RecipeService) {}
 
   ngOnInit() {
-    this.configService.getConfigs().subscribe((result) => {
+    this.configService.getConfigs().then(result => {
       this.configsDataSource = result;
     });
-    this.userService.getUsers().subscribe((result) => {
+    this.userService.getUsers().then((result) => {
       this.usersDataSource = result;
       this.loading = false;
     });
@@ -75,11 +75,7 @@ export class AdminDashboardComponent implements OnInit {
   // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
-    this.configService.postConfig(new Config('', '', ''))
-      .subscribe(() => {},
-      (err) => {
-        console.error(err);
-      });
+    this.configService.postConfig(new Config({}));
   }
 
   removeConfig(id, name) {
@@ -132,7 +128,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent(self) {
-    self.configService.getConfigs().subscribe((result) => {
+    self.configService.getConfigs().then((result) => {
       self.configsDataSource = result;
     });
     self.userService.getUsers().subscribe((result) => {
