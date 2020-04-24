@@ -53,11 +53,11 @@ export class RecipeListComponent implements OnInit {
 
     this.userService.getCurrentUser().subscribe(user => {
       this.uid = user.uid;
-      this.recipeService.getRecipes().then(recipes => {
+      this.recipeService.getRecipes().subscribe(recipes => {
         this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
           this.id = userIngredient.id;
           this.userIngredients = userIngredient.ingredients;
-          this.ingredientService.getIngredients().then(ingredients => {
+          this.ingredientService.getIngredients().subscribe(ingredients => {
             ingredients.forEach(ingredient => {
               userIngredient.ingredients.forEach(myIngredient => {
                 if (ingredient.id === myIngredient.id) {

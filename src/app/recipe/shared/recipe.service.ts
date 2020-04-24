@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
+import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Recipe } from './recipe.model';
 import { FirestoreService } from '@firestoreService';
@@ -20,10 +21,10 @@ export class RecipeService {
     private firestoreService: FirestoreService
   ) {}
 
-  getRecipes(): Promise<Recipe[]> {
-    return new Promise(resolve => {
-      this.firestoreService.get(this.ref).then(docs => {
-        resolve(docs.map(doc => {
+  getRecipes(): Observable<Recipe[]> {
+    return new Observable(observable => {
+      this.firestoreService.get(this.ref).subscribe(docs => {
+        observable.next(docs.map(doc => {
           return new Recipe(doc);
         }));
       });
@@ -32,7 +33,7 @@ export class RecipeService {
 
   getRecipe(id: string): Promise<Recipe> {
     return new Promise(resolve => {
-      this.firestoreService.get(this.ref, id).then(doc => {
+      this.firestoreService.get(this.ref, id).subscribe(doc => {
         resolve(new Recipe(doc));
       })
     });

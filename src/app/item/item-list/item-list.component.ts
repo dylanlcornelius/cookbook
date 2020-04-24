@@ -80,7 +80,7 @@ export class ItemListComponent implements OnInit {
     const myItems = [];
     this.userItemService.getUserItems(this.uid).subscribe(userItem => {
       this.id = userItem.id;
-      this.itemService.getItems().then(items => {
+      this.itemService.getItems().subscribe(items => {
         items.forEach(item => {
           userItem.items.forEach(myItem => {
             if (myItem.id === item.id) {
@@ -154,15 +154,14 @@ export class ItemListComponent implements OnInit {
       self: this,
       text: 'Are you sure you want to delete item ' + name + '?',
       function: (self, id) => {
-        self.itemService.deleteItem(id).subscribe(() => {
-          self.notificationModalParams = {
-            self: self,
-            type: Notification.SUCCESS,
-            text: 'Item deleted!'
-          };
-    
-          self.loadData();
-        }, (error) => { console.error(error); });
+        self.itemService.deleteItem(id);
+        self.notificationModalParams = {
+          self: self,
+          type: Notification.SUCCESS,
+          text: 'Item deleted!'
+        };
+  
+        self.loadData();
       },
     };
   }

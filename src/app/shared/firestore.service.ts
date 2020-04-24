@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import '@firebase/firestore';
 import { ActionService } from '@actionService';
 import { UserService } from '@userService';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,9 @@ export class FirestoreService {
   }
 
   getOne(ref, id: string) {
-    return new Promise(resolve => {
+    return new Observable(observable => {
       ref.doc(id).get().then((doc) => {
-        resolve({
+        observable.next({
           ...doc.data(),
           id: doc.id
         });
@@ -32,7 +33,7 @@ export class FirestoreService {
   }
 
   getMany(ref) {
-    return new Promise(resolve => {
+    return new Observable(observable => {
       ref.onSnapshot((querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
@@ -41,18 +42,17 @@ export class FirestoreService {
             id: doc.id
           });
         });
-        resolve(docs);
+        observable.next(docs);
       });
     });
   }
 
-  get(ref, id?: string): Promise<any> {
-    return new Promise(resolve => {
-      if (id) {
-        resolve(this.getOne(ref, id));
-      } else {}
-        resolve(this.getMany(ref));
-    });
+  get(ref, id?: string): Observable<any> {
+    if (id) {
+      return this.getOne(ref, id);
+    } else {
+      return this.getMany(ref);
+    }
   }
 
   post(ref, data, action?): String {

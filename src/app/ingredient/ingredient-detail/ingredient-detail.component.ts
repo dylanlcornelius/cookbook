@@ -30,15 +30,13 @@ export class IngredientDetailComponent implements OnInit {
       text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
       function: (self, id) => {
         if (id) {
-          self.ingredientService.deleteIngredients(id)
-          .subscribe(() => {
-            self.notificationModalParams = {
-              self: self,
-              type: Notification.SUCCESS,
-              path: '/ingredient/list',
-              text: 'Ingredient deleted!'
-            };
-          }, (err) => { console.error(err); });
+          self.ingredientService.deleteIngredients(id);
+          self.notificationModalParams = {
+            self: self,
+            type: Notification.SUCCESS,
+            path: '/ingredient/list',
+            text: 'Ingredient deleted!'
+          };
         }
       },
     };

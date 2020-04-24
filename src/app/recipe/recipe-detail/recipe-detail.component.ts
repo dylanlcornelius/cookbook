@@ -38,7 +38,7 @@ export class RecipeDetailComponent implements OnInit {
         }
       });
 
-      this.ingredientService.getIngredients().then(allIngredients => {
+      this.ingredientService.getIngredients().subscribe(allIngredients => {
         data.ingredients.forEach(recipeIngredient => {
           allIngredients.forEach(ingredient => {
             if (recipeIngredient.id === ingredient.id) {

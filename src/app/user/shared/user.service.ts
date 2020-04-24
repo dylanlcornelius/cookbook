@@ -25,8 +25,8 @@ export class UserService {
 
   constructor() {}
 
-  getUsers(): Promise<User[]> {
-    return new Promise(resolve => {
+  getUsers(): Observable<User[]> {
+    return new Observable(observable => {
       this.ref.onSnapshot((querySnapshot) => {
         const users = [];
         querySnapshot.forEach((doc) => {
@@ -35,7 +35,7 @@ export class UserService {
             id: doc.id
           }));
         });
-        resolve(users);
+        observable.next(users);
       });
     });
   }

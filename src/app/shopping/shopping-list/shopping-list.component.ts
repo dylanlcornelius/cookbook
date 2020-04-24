@@ -52,7 +52,7 @@ export class ShoppingListComponent implements OnInit {
       const myItems = [];
       this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
         this.id = userIngredients.id;
-        this.ingredientService.getIngredients().then(ingredients => {
+        this.ingredientService.getIngredients().subscribe(ingredients => {
           ingredients.forEach(ingredient => {
             if (userIngredients && userIngredients.ingredients) {
               userIngredients.ingredients.forEach(myIngredient => {
@@ -75,7 +75,7 @@ export class ShoppingListComponent implements OnInit {
 
           this.userItemService.getUserItems(this.uid).subscribe(userItems => {
             this.itemsId = userItems.id;
-            this.itemService.getItems().then(items => {
+            this.itemService.getItems().subscribe(items => {
               items.forEach(item => {
                 if (userItems && userItems.items) {
                   userItems.items.forEach(myItem => {

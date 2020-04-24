@@ -79,7 +79,7 @@ export class RecipeEditComponent implements OnInit {
             }
           }
           this.addedIngredients = data.ingredients;
-          this.ingredientService.getIngredients().then(ingredients => {
+          this.ingredientService.getIngredients().subscribe(ingredients => {
             const added = [];
             this.addedIngredients.forEach(addedIngredient => {
               ingredients.forEach(ingredient => {
@@ -123,7 +123,7 @@ export class RecipeEditComponent implements OnInit {
           });
         });
     } else {
-      this.ingredientService.getIngredients().then(ingredients => {
+      this.ingredientService.getIngredients().subscribe(ingredients => {
         ingredients.forEach(ingredient => {
           this.allAvailableIngredients.push({
             id: ingredient.id,
