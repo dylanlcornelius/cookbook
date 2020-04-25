@@ -55,23 +55,14 @@ export class UserService {
     });
   }
 
-  postUser(data: User): Promise<User> {
-    return new Promise(resolve => {
-      this.ref.add(data.getObject()).then((doc) => {
-        resolve(new User({
-          ...data,
-          id: doc.id
-        }));
-      });
-    });
+  postUser(data: User): string {
+    const newDoc = this.ref.doc();
+    newDoc.set(data.getObject());
+    return newDoc.id;
   }
 
-  putUser(data: User): Promise<User> {
-    return new Promise(resolve => {
-      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-        resolve();
-      });
-    });
+  putUser(data: User) {
+    this.ref.doc(data.getId()).set(data.getObject());
   }
 
   putUsers(data: Array<User>) {
@@ -80,11 +71,7 @@ export class UserService {
     });
   }
 
-  deleteUser(id: string): Promise<{}> {
-    return new Promise(resolve => {
-      this.ref.doc(id).delete().then(() => {
-        resolve();
-      });
-    });
+  deleteUser(id: string) {
+    this.ref.doc(id).delete();
   }
 }

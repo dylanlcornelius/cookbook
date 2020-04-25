@@ -122,7 +122,11 @@ export class ItemListComponent implements OnInit {
     self.userItems.forEach(d => {
       data.push({id: d.id, cartQuantity: d.cartQuantity});
     });
-    return new UserItem(self.uid, data, self.id);
+    return new UserItem({
+      uid: self.uid,
+      items: data,
+      id: self.id
+    });
   }
 
   removeItem(id) {

@@ -6,17 +6,10 @@ export class UserItem {
         cartQuantity: number;
     }>;
 
-    constructor(
-        uid: string,
-        items: Array<{
-            id: string,
-            cartQuantity: number,
-        }>,
-        id?: string,
-    ) {
-        this.id = id;
-        this.uid = uid;
-        this.items = items;
+    constructor(data) {
+        this.id = data.id;
+        this.uid = data.uid;
+        this.items = data.items;
     }
 
     public getId() {

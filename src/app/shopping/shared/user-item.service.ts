@@ -26,43 +26,42 @@ export class UserItemService {
           let userItem;
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            userItem = new UserItem(data.uid, data.items, doc.id);
+            userItem = new UserItem({
+              uid: data.uid,
+              items: data.items,
+              id: doc.id
+            });
           });
           observer.next(userItem);
         } else {
-          self.postUserItem(new UserItem(uid, [])).subscribe(userItem => {
-            observer.next(userItem);
+          const userItem = new UserItem({
+            uid: uid, 
+            items: []
           });
+          userItem.id = self.postUserItem(userItem);
+          observer.next(userItem);
         }
       });
     });
   }
 
-  postUserItem(userItem: UserItem): Observable<UserItem> {
-    return new Observable((observer) => {
-      this.ref.add(userItem).then((doc) => {
-        userItem.id = doc.id;
-        observer.next(userItem);
-      });
-    });
+  postUserItem(data: UserItem): string {
+    const newDoc = this.ref.doc();
+    newDoc.set(data.getObject());
+    return newDoc.id;
   }
 
   putUserItem(data: UserItem) {
-    this.ref.doc(data.getId()).set(data.getObject())
-    .catch(function(error) { console.error('error: ', error); });
+    this.ref.doc(data.getId()).set(data.getObject());
   }
 
   buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
-    const self = this;
     this.userService.getCurrentUser().subscribe(user => {
-      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-        this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions).then(function () {
-          if (isCompleted) {
-            self.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
-          }
-        });
-      })
-      .catch(function(error) { console.error('error: ', error); });
+      this.ref.doc(data.getId()).set(data.getObject());
+      this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
+      if (isCompleted) {
+        this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
+      }
     });
   }
 }
