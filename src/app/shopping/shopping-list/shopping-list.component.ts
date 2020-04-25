@@ -111,7 +111,11 @@ export class ShoppingListComponent implements OnInit {
     this.ingredientsDataSource.data.forEach(data => {
       userIngredients.push({id: data.id, pantryQuantity: data.pantryQuantity, cartQuantity: data.cartQuantity});
     });
-    return new UserIngredient(this.uid, userIngredients, this.id);
+    return new UserIngredient({
+      uid: this.uid, 
+      ingredients: userIngredients,
+      id: this.id
+    });
   }
 
   removeIngredient(id) {
@@ -157,7 +161,11 @@ export class ShoppingListComponent implements OnInit {
     this.itemsDataSource.data.forEach(data => {
       userItems.push({id: data.id, cartQuantity: data.cartQuantity});
     });
-    return new UserItem(this.uid, userItems, this.itemsId);
+    return new UserItem({
+      uid: this.uid,
+      items: userItems,
+      id: this.itemsId
+    });
   }
 
   removeItem(id) {

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { firebase } from '@firebase/app';
 import '@firebase/auth';
 import { UserService } from './user.service';
-import { ConfigService } from '../../admin/shared/config.service';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { User } from './user.model';
@@ -20,35 +19,33 @@ export class AuthService {
     private actionService: ActionService,
   ) {
     firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setCurrentUser(user);
-      } else {
-        firebase.auth().getRedirectResult().then(result => {
-          if (result.credential) {
-            this.setCurrentUser(result.user);
-          } else {
-            this.userService.setIsGuest(true);
-          }
-        }, () => {
-          this.userService.setIsGuest(true);
-        });
+      if (!user) {
+        this.userService.setIsGuest(true);
+        return;
       }
-    });
-  }
 
-  setCurrentUser(user) {
-    this.userService.getUser(user.uid).then(current => {
-      this.userService.setCurrentUser(current);
-      this.userService.setIsLoggedIn(true);
-      this.userService.setIsGuest(false);
+      this.userService.getUser(user.uid).then(current => {
+        if (!current) {
+            current = new User({
+            uid: user.uid,
+            role: 'pending'
+          });
 
-      this.actionService.commitAction(user.uid, Action.LOGIN, 1);
-
-      if (this.redirectUrl) {
-        this.router.navigate([this.redirectUrl]);
-      } else {
-        this.router.navigate(['/home']);
-      }
+          current.id = this.userService.postUser(current);
+        }
+        
+        this.userService.setCurrentUser(current);
+        this.userService.setIsLoggedIn(true);
+        this.userService.setIsGuest(false);
+  
+        this.actionService.commitAction(user.uid, Action.LOGIN, 1);
+  
+        if (this.redirectUrl) {
+          this.router.navigate([this.redirectUrl]);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      });
     });
   }
 

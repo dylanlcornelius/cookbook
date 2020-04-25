@@ -4,6 +4,8 @@ import { RecipeService } from '@recipeService';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { Notification } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
+import { Observable, merge, of, fromEvent } from 'rxjs';
+import { mapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -11,6 +13,8 @@ import { ImageService } from 'src/app/util/image.service';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
+  online$: Observable<boolean>;
+
   loading = true;
   validationModalParams;
   notificationModalParams;
@@ -26,7 +30,13 @@ export class RecipeDetailComponent implements OnInit {
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private imageService: ImageService,
-  ) { }
+  ) {
+    this.online$ = merge(
+      of(navigator.onLine),
+      fromEvent(window, 'online').pipe(mapTo(true)),
+      fromEvent(window, 'offline').pipe(mapTo(false)),
+    )
+  }
 
   ngOnInit() {
     this.recipeService.getRecipe(this.route.snapshot.params['id']).then(data => {
