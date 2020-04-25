@@ -25,25 +25,25 @@ export class UserIngredientService {
         if (querySnapshot.size > 0) {
           let userIngredient;
           querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            userIngredient = new UserIngredient(data.uid, data.ingredients, doc.id);
+            userIngredient = new UserIngredient({
+              ...doc.data(),
+              id: doc.id
+            });
           });
           observer.next(userIngredient);
         } else {
-          self.postUserIngredient(new UserIngredient(uid, [])).subscribe(userIngredient => {
-            observer.next(userIngredient);
-          });
+          const userIngredient = new UserIngredient({uid: uid, ingredients: []});
+          userIngredient.id = self.postUserIngredient(userIngredient);
+          observer.next(userIngredient);
         }
       });
     });
   }
 
-  postUserIngredient(userIngredient: UserIngredient): Observable<UserIngredient> {
-    return new Observable((observer) => {
-      this.ref.add(userIngredient).then((doc) => {
-        observer.next();
-      });
-    });
+  postUserIngredient(data: UserIngredient) {
+    const newDoc = this.ref.doc();
+    newDoc.set(data.getObject());
+    return newDoc.id;
   }
 
   putUserIngredient(data: UserIngredient) {
@@ -52,16 +52,12 @@ export class UserIngredientService {
   }
 
   buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
-    const self = this;
     this.userService.getCurrentUser().subscribe(user => {
-      this.ref.doc(data.getId()).set(data.getObject()).then(() => {
-        this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions).then(function () {
-          if (isCompleted) {
-            self.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
-          }
-        });
-      })
-      .catch(function(error) { console.error('error: ', error); });
+      this.ref.doc(data.getId()).set(data.getObject());
+      this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
+      if (isCompleted) {
+        this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
+      }
     });
   }
 }

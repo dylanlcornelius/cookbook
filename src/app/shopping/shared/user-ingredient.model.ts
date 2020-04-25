@@ -10,20 +10,10 @@ export class UserIngredient {
         amount: string,
     }>;
 
-    constructor(
-        uid: string,
-        ingredients: Array<{
-            id: string,
-            pantryQuantity: number,
-            cartQuantity: number,
-            uom: string,
-            amount: string,
-        }>,
-        id?: string,
-    ) {
-        this.id = id;
-        this.uid = uid;
-        this.ingredients = ingredients;
+    constructor(data) {
+        this.id = data.id;
+        this.uid = data.uid;
+        this.ingredients = data.ingredients;
     }
 
     public getId() {

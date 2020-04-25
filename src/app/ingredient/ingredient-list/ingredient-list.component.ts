@@ -94,7 +94,11 @@ export class IngredientListComponent implements OnInit {
     self.userIngredients.forEach(d => {
       data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
     });
-    return new UserIngredient(self.uid, data, self.id);
+    return new UserIngredient({
+      uid: self.uid, 
+      ingredients: data, 
+      id: self.id
+    });
   }
 
   removeIngredient(id) {
