@@ -10,7 +10,7 @@ const envConfigFile = `export const environment = {
 		databaseURL: '${process.env.FIREBASE_DB_URL}',
 		projectId: '${process.env.FIREBASE_PROJECT_ID}',
 		storageBucket: '${process.env.FIREBASE_STORAGE}',
-		title: 'Prod Cookbook'
+		title: 'The Cookbook'
     }
 };
 `;
