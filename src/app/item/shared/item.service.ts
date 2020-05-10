@@ -10,7 +10,13 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class ItemService {
-  ref = firebase.firestore().collection('items');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('items');
+    }
+    return this.ref;
+  }
 
   constructor(
     private firestoreService: FirestoreService
@@ -18,7 +24,7 @@ export class ItemService {
 
   getItems(): Observable<Item[]> {
     return new Observable(observable => {
-      this.firestoreService.get(this.ref).subscribe(docs => {
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
         observable.next(docs.map(doc => {
           return new Item(doc);
         }));
@@ -28,21 +34,21 @@ export class ItemService {
 
   getItem(id: string): Promise<Item> {
     return new Promise(resolve => {
-      this.firestoreService.get(this.ref, id).subscribe(doc => {
+      this.firestoreService.get(this.getRef(), id).subscribe(doc => {
         resolve(new Item(doc));
       });
     });
   }
 
   postItem(data): String {
-    return this.firestoreService.post(this.ref, data, Action.CREATE_ITEM);
+    return this.firestoreService.post(this.getRef(), data, Action.CREATE_ITEM);
   }
 
   putItem(id: string, data) {
-    this.firestoreService.put(this.ref, id, data, Action.UPDATE_ITEM);
+    this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_ITEM);
   }
 
   deleteItem(id: string) {
-    this.firestoreService.delete(this.ref, id, Action.DELETE_ITEM);
+    this.firestoreService.delete(this.getRef(), id, Action.DELETE_ITEM);
   }
 }

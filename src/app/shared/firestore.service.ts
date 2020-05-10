@@ -23,7 +23,7 @@ export class FirestoreService {
 
   getOne(ref, id: string) {
     return new Observable(observable => {
-      ref.doc(id).get().then((doc) => {
+      ref?.doc(id).get().then((doc) => {
         observable.next({
           ...doc.data(),
           id: doc.id
@@ -34,7 +34,7 @@ export class FirestoreService {
 
   getMany(ref) {
     return new Observable(observable => {
-      ref.onSnapshot((querySnapshot) => {
+      ref?.onSnapshot((querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
           docs.push({
@@ -58,7 +58,7 @@ export class FirestoreService {
   post(ref, data, action?): String {
     this.commitAction(action);
 
-    const newDoc = ref.doc();
+    const newDoc = ref?.doc();
     newDoc.set(data);
     return newDoc.id;
   }
@@ -66,12 +66,12 @@ export class FirestoreService {
   put(ref, id: string, data, action?) {
     this.commitAction(action);
 
-    ref.doc(id).set(data);
+    ref?.doc(id).set(data);
   }
 
   delete(ref, id: string, action?) {
     this.commitAction(action);
     
-    ref.doc(id).delete();
+    ref?.doc(id).delete();
   }
 }

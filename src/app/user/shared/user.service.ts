@@ -8,7 +8,13 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class UserService {
-  ref = firebase.firestore().collection('users');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('users');
+    }
+    return this.ref;
+  }
 
   private currentUser = new BehaviorSubject<User>(new User({}));
   private isloggedIn = new BehaviorSubject<boolean>(false);
@@ -27,7 +33,7 @@ export class UserService {
 
   getUsers(): Observable<User[]> {
     return new Observable(observable => {
-      this.ref.onSnapshot((querySnapshot) => {
+      this.getRef()?.onSnapshot((querySnapshot) => {
         const users = [];
         querySnapshot.forEach((doc) => {
           users.push(new User({
@@ -42,7 +48,7 @@ export class UserService {
 
   getUser(uid: string): Promise<User> {
     return new Promise(resolve => {
-      this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
+      this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
         const users = [];
         querySnapshot.forEach((doc) => {
           users.push(new User({
@@ -56,22 +62,22 @@ export class UserService {
   }
 
   postUser(data: User): string {
-    const newDoc = this.ref.doc();
+    const newDoc = this.getRef()?.doc();
     newDoc.set(data.getObject());
     return newDoc.id;
   }
 
   putUser(data: User) {
-    this.ref.doc(data.getId()).set(data.getObject());
+    this.getRef()?.doc(data.getId()).set(data.getObject());
   }
 
   putUsers(data: Array<User>) {
     data.forEach(d => {
-      this.ref.doc(d.getId()).set(d.getObject());
+      this.getRef()?.doc(d.getId()).set(d.getObject());
     });
   }
 
   deleteUser(id: string) {
-    this.ref.doc(id).delete();
+    this.getRef()?.doc(id).delete();
   }
 }

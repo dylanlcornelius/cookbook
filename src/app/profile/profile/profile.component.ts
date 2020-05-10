@@ -71,7 +71,7 @@ export class ProfileComponent implements AfterViewInit {
       this.uid = user.uid;
       this.initializeUserForm();
 
-      this.actionService.getActions(this.uid).then((userAction) => {
+      this.actionService.getActions(this.uid)?.then((userAction) => {
         const actions = this.sortActions(userAction.actions);
 
         let index = 0;

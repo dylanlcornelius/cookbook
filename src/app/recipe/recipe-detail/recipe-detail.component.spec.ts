@@ -1,13 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 
 import { RecipeDetailComponent } from './recipe-detail.component';
 
-describe('RecipesDetailComponent', () => {
+describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
   let fixture: ComponentFixture<RecipeDetailComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterModule.forRoot([])
+      ],
       declarations: [ RecipeDetailComponent ]
     })
     .compileComponents();

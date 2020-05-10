@@ -65,63 +65,65 @@ export class RecipeEditComponent implements OnInit {
       'ingredients': this.formBuilder.array([])
     });
 
+    this.load();
+  }
+
+  load() {
     if (this.route.snapshot.params['id']) {
-      this.recipeService.getRecipe(this.route.snapshot.params['id']).then(data => {
-          this.id = data.id;
-          if (data.categories !== undefined) {
-            for (let i = 0; i < data.categories.length; i++) {
-              this.addCategory();
-            }
+      this.recipeService.getRecipe(this.route.snapshot.params['id']).subscribe(data => {
+        this.id = data.id;
+        if (data.categories !== undefined) {
+          for (let i = 0; i < data.categories.length; i++) {
+            this.addCategory();
           }
-          if (data.steps !== undefined) {
-            for (let i = 1; i < data.steps.length; i++) {
-              this.addStep();
-            }
+        }
+        if (data.steps !== undefined) {
+          for (let i = 1; i < data.steps.length; i++) {
+            this.addStep();
           }
-          this.addedIngredients = data.ingredients;
-          this.ingredientService.getIngredients().subscribe(ingredients => {
-            const added = [];
-            this.addedIngredients.forEach(addedIngredient => {
-              ingredients.forEach(ingredient => {
-                if (ingredient.id === addedIngredient.id) {
-                  added.push({
-                    id: ingredient.id,
-                    name: ingredient.name,
-                    quantity: addedIngredient.quantity || '',
-                    uom: addedIngredient.uom || '',
-                  });
-                  ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
-                }
-              });
-            });
-
-            if (added !== undefined) {
-              for (let i = 0; i < added.length; i++) {
-                this.addIngredient(i);
-              }
-            }
-            this.addedIngredients = added;
-            this.recipesForm.setValue({
-              name: data.name,
-              description: data.description,
-              time: data.time,
-              servings: data.servings,
-              calories: data.calories,
-              categories: data.categories,
-              steps: data.steps,
-              ingredients: added,
-            });
-
+        }
+        this.addedIngredients = data.ingredients;
+        this.ingredientService.getIngredients().subscribe(ingredients => {
+          const added = [];
+          this.addedIngredients.forEach(addedIngredient => {
             ingredients.forEach(ingredient => {
-              ingredient.quantity = 0;
+              if (ingredient.id === addedIngredient.id) {
+                added.push({
+                  id: ingredient.id,
+                  name: ingredient.name,
+                  quantity: addedIngredient.quantity || '',
+                  uom: addedIngredient.uom || '',
+                });
+                ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
+              }
             });
-            this.allAvailableIngredients = ingredients;
-            this.availableIngredients = this.allAvailableIngredients;
-
-            this.title = 'Edit a Recipe';
-            this.loading = false;
           });
+
+          for (let i = 0; i < added.length; i++) {
+            this.addIngredient(i);
+          }
+          this.addedIngredients = added;
+          this.recipesForm.patchValue({
+            name: data.name,
+            description: data.description,
+            time: data.time,
+            servings: data.servings,
+            calories: data.calories,
+            categories: data.categories,
+            steps: data.steps,
+            ingredients: added,
+          });
+
+          ingredients.forEach(ingredient => {
+            ingredient.quantity = 0;
+          });
+          this.allAvailableIngredients = ingredients;
+          this.availableIngredients = this.allAvailableIngredients;
+
+          this.title = 'Edit a Recipe';
+          this.loading = false;
         });
+      });
     } else {
       this.ingredientService.getIngredients().subscribe(ingredients => {
         ingredients.forEach(ingredient => {
@@ -149,6 +151,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   addCategory(category?: string) {
+    console.log('not spied');
     const control = <FormArray>this.recipesForm.controls['categories'];
     control.push(this.initCategory(category));
   }
@@ -220,7 +223,7 @@ export class RecipeEditComponent implements OnInit {
     const control = <FormArray>this.recipesForm.controls['ingredients'];
     const ingredientControl = this.initIngredient();
     if (data) {
-      ingredientControl.setValue({
+      ingredientControl.patchValue({
         id: data.id,
         name: data.name,
         quantity: data.quantity,
@@ -260,7 +263,7 @@ export class RecipeEditComponent implements OnInit {
       this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
 
       if (this.route.snapshot.params['id']) {
-        this.recipeService.putRecipes(this.id, this.recipesForm.value);
+        this.recipeService.putRecipe(this.id, this.recipesForm.value);
         this.router.navigate(['/recipe/detail/', this.id]);
       } else {
         const id = this.recipeService.postRecipe(this.recipesForm.value);

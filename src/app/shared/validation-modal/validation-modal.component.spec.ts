@@ -22,4 +22,45 @@ describe('ValidationModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('cancel', () => {
+    it('should close the modal', () => {
+      component.validationModalParams = {
+        function: () => {},
+        self: component,
+        text: 'text'
+      }
+      
+      component.cancel();
+
+      expect(component.validationModalParams).toBeUndefined();
+    });
+  });
+
+  describe('confirm', () => {
+    it('should execute a function and close the modal', () => {
+      component.validationModalParams = {
+        function: () => {},
+        id: 'id',
+        self: component,
+        text: 'text'
+      };
+
+      component.confirm();
+
+      expect(component.validationModalParams).toBeUndefined();
+    });
+
+    it('should execute a function and close the modal', () => {
+      component.validationModalParams = {
+        function: () => {},
+        self: component,
+        text: 'text'
+      };
+
+      component.confirm();
+
+      expect(component.validationModalParams).toBeUndefined();
+    });
+  });
 });

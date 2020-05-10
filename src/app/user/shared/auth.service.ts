@@ -18,6 +18,12 @@ export class AuthService {
     private userService: UserService,
     private actionService: ActionService,
   ) {
+    if (firebase.apps.length > 0) {
+      this.load();
+    }
+  }
+
+  load() {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         this.userService.setIsGuest(true);

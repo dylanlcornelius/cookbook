@@ -11,7 +11,13 @@ import { UserService } from '@userService';
   providedIn: 'root'
 })
 export class UserItemService {
-  ref = firebase.firestore().collection('user-items');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('user-items');
+    }
+    return this.ref;
+  }
 
   constructor(
     private userService: UserService,
@@ -21,7 +27,7 @@ export class UserItemService {
   getUserItems(uid: string): Observable<UserItem> {
     const self = this;
     return new Observable((observer) => {
-      this.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
+      this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
         if (querySnapshot.size > 0) {
           let userItem;
           querySnapshot.forEach((doc) => {
@@ -46,18 +52,18 @@ export class UserItemService {
   }
 
   postUserItem(data: UserItem): string {
-    const newDoc = this.ref.doc();
+    const newDoc = this.getRef().doc();
     newDoc.set(data.getObject());
     return newDoc.id;
   }
 
   putUserItem(data: UserItem) {
-    this.ref.doc(data.getId()).set(data.getObject());
+    this.getRef().doc(data.getId()).set(data.getObject());
   }
 
   buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
     this.userService.getCurrentUser().subscribe(user => {
-      this.ref.doc(data.getId()).set(data.getObject());
+      this.getRef().doc(data.getId()).set(data.getObject());
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
