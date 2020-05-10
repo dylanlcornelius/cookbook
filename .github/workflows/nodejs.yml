@@ -1,0 +1,36 @@
+name: Cookbook CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    name: Firebase Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Use Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: '12.x'
+      - name: Install
+        run: npm ci
+      - name: Automated Tests
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - name: Build
+        run: npm run-script build
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE: ${{ secrets.FIREBASE_STORAGE }}
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}

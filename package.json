@@ -4,8 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --aot",
-    "build": "ng build",
-    "test": "ng test",
+    "config": "ts-node -O '{\"module\": \"commonjs\"}' ./config.index.ts",
+    "build": "npm run-script config && ng build --prod",
+    "test": "ng test --no-watch --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

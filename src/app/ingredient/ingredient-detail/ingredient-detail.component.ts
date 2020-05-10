@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { Notification } from '@notifications';
 
@@ -14,7 +14,7 @@ export class IngredientDetailComponent implements OnInit {
   notificationModalParams;
   ingredient;
 
-  constructor(private route: ActivatedRoute, private router: Router, private ingredientService: IngredientService) { }
+  constructor(private route: ActivatedRoute, private ingredientService: IngredientService) { }
 
   ngOnInit() {
     this.ingredientService.getIngredient(this.route.snapshot.params['id']).then(data => {
@@ -28,17 +28,19 @@ export class IngredientDetailComponent implements OnInit {
       id: id,
       self: this,
       text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
-      function: (self, id) => {
-        if (id) {
-          self.ingredientService.deleteIngredients(id);
-          self.notificationModalParams = {
-            self: self,
-            type: Notification.SUCCESS,
-            path: '/ingredient/list',
-            text: 'Ingredient deleted!'
-          };
-        }
-      },
+      function: this.deleteIngredientEvent
     };
+  }
+
+  deleteIngredientEvent(self, id) {
+    if (id) {
+      self.ingredientService.deleteIngredient(id);
+      self.notificationModalParams = {
+        self: self,
+        type: Notification.SUCCESS,
+        path: '/ingredient/list',
+        text: 'Ingredient deleted!'
+      };
+    }
   }
 }

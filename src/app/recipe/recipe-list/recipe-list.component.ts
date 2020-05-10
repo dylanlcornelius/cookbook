@@ -7,7 +7,7 @@ import { Notification } from '@notifications';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ImageService } from 'src/app/util/image.service';
 import { UserService } from '@userService';
 
@@ -34,7 +34,6 @@ export class RecipeListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private recipeService: RecipeService,
     private userIngredientService: UserIngredientService,
@@ -47,12 +46,14 @@ export class RecipeListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.load();
+  }
+
+  load() {
     this.userService.getCurrentUser().subscribe(user => {
       this.simplifiedView = user.simplifiedView;
-    });
-
-    this.userService.getCurrentUser().subscribe(user => {
       this.uid = user.uid;
+
       this.recipeService.getRecipes().subscribe(recipes => {
         this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
           this.id = userIngredient.id;
@@ -154,7 +155,7 @@ export class RecipeListComponent implements OnInit {
           i++;
         }
       });
-      filterList['numberOfSelected'] = i;
+      filterList.numberOfSelected = i;
     });
   }
 
@@ -262,6 +263,7 @@ export class RecipeListComponent implements OnInit {
           });
         }
       });
+
       this.userIngredientService.putUserIngredient(this.packageData());
       this.dataSource.data.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);

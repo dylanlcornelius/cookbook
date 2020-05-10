@@ -9,8 +9,13 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class ConfigService {
-
-  ref = firebase.firestore().collection('configs');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('configs');
+    }
+    return this.ref;
+  }
 
   constructor(private firestoreService: FirestoreService) {}
 
@@ -26,7 +31,7 @@ export class ConfigService {
 
   getConfig(name: string): Promise<Config> {
     return new Promise(resolve => {
-      this.ref.where('name', '==', name).get().then(function(querySnapshot) {
+      this.ref?.where('name', '==', name).get().then(function(querySnapshot) {
         const configs = [];
         querySnapshot.forEach((doc) => {
           configs.push(new Config({
@@ -54,6 +59,6 @@ export class ConfigService {
   }
 
   deleteConfig(id: string) {
-    this.ref.doc(id).delete();
+    this.firestoreService.delete(this.ref, id);
   }
 }

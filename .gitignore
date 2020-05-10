@@ -328,8 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-src/environments
 dist
 .firebaserc
-firebase.json
 backups/
+coverage/

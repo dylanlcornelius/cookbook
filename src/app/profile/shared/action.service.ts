@@ -7,7 +7,13 @@ import { Action } from './action.enum';
   providedIn: 'root'
 })
 export class ActionService {
-  ref = firebase.firestore().collection('user-actions');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('user-actions');
+    }
+    return this.ref;
+  }
 
   constructor() {}
 
@@ -54,7 +60,7 @@ export class ActionService {
   }
 
   private getAction(self, uid: string) {
-    return self.ref.where('uid', '==', uid).get().then(function(querySnapshot) {
+    return self.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
       const action = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -70,7 +76,7 @@ export class ActionService {
 
   private postAction(self, data) {
     return new Promise<void>(resolve => {
-      self.ref.add(data).then(function() {
+      self.getRef().add(data).then(function() {
         resolve();
       }, function(error) { console.error('error: ', error); });
     });
@@ -78,7 +84,7 @@ export class ActionService {
 
   private putAction(self, data): Promise<void> {
     return new Promise<void>(resolve => {
-      self.ref.doc(data.id).set(data).then(function() {
+      self.getRef().doc(data.id).set(data).then(function() {
         resolve();
       }, function(error) { console.error('error: ', error); });
     });

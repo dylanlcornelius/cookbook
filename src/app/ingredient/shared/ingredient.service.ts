@@ -10,7 +10,13 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class IngredientService {
-  ref = firebase.firestore().collection('ingredients');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('ingredients');
+    }
+    return this.ref;
+  }
 
   constructor(
     private firestoreService: FirestoreService
@@ -18,7 +24,7 @@ export class IngredientService {
 
   getIngredients(): Observable<Ingredient[]> {
     return new Observable(observable => {
-      this.firestoreService.get(this.ref).subscribe(docs => {
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
         observable.next(docs.map(doc => {
           return new Ingredient(doc);
         }));
@@ -28,21 +34,21 @@ export class IngredientService {
 
   getIngredient(id: string): Promise<Ingredient> {
     return new Promise(resolve => {
-      this.firestoreService.get(this.ref, id).subscribe(doc => {
+      this.firestoreService.get(this.getRef(), id).subscribe(doc => {
         resolve(new Ingredient(doc));
       })
     });
   }
 
   postIngredient(data): String {
-    return this.firestoreService.post(this.ref, data, Action.CREATE_INGREDIENT);
+    return this.firestoreService.post(this.getRef(), data, Action.CREATE_INGREDIENT);
   }
 
   putIngredient(id: string, data) {
-    this.firestoreService.put(this.ref, id, data, Action.UPDATE_INGREDIENT);
+    this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_INGREDIENT);
   }
 
-  deleteIngredients(id: string) {
-    this.firestoreService.delete(this.ref, id, Action.DELETE_INGREDIENT);
+  deleteIngredient(id: string) {
+    this.firestoreService.delete(this.getRef(), id, Action.DELETE_INGREDIENT);
   }
 }

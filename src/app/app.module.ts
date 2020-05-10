@@ -42,7 +42,9 @@ import { environment } from '../environments/environment';
 })
 export class AppModule {
   constructor() {
-    firebase.initializeApp(environment.config);
-    firebase.firestore().enablePersistence();
+    if (environment) {
+      firebase.initializeApp(environment.config);
+      firebase.firestore().enablePersistence();
+    }
   }
 }

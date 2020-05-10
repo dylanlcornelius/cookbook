@@ -1,10 +1,14 @@
 import { TestBed, async, inject } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 
 import { UserPendingGuard } from './user-pending.guard';
 
 describe('UserPendingGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterModule.forRoot([])
+      ],
       providers: [UserPendingGuard]
     });
   });

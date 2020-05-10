@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, observable } from 'rxjs';
 import { Action } from '@actions';
 import { Recipe } from './recipe.model';
 import { FirestoreService } from '@firestoreService';
@@ -10,7 +10,13 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class RecipeService {
-  ref = firebase.firestore().collection('recipes');
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.firestore().collection('recipes');
+    }
+    return this.ref;
+  }
 
   private filters = [];
 
@@ -23,7 +29,7 @@ export class RecipeService {
 
   getRecipes(): Observable<Recipe[]> {
     return new Observable(observable => {
-      this.firestoreService.get(this.ref).subscribe(docs => {
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
         observable.next(docs.map(doc => {
           return new Recipe(doc);
         }));
@@ -31,23 +37,23 @@ export class RecipeService {
     });
   }
 
-  getRecipe(id: string): Promise<Recipe> {
-    return new Promise(resolve => {
-      this.firestoreService.get(this.ref, id).subscribe(doc => {
-        resolve(new Recipe(doc));
+  getRecipe(id: string): Observable<Recipe> {
+    return new Observable(observable => {
+      this.firestoreService.get(this.getRef(), id).subscribe(doc => {
+        observable.next(new Recipe(doc));
       })
     });
   }
 
   postRecipe(data): String {
-    return this.firestoreService.post(this.ref, data, Action.CREATE_RECIPE);
+    return this.firestoreService.post(this.getRef(), data, Action.CREATE_RECIPE);
   }
 
-  putRecipes(id: string, data) {
-    this.firestoreService.put(this.ref, id, data, Action.UPDATE_RECIPE);
+  putRecipe(id: string, data) {
+    this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_RECIPE);
   }
 
-  deleteRecipes(id: string) {
-    this.firestoreService.delete(this.ref, id, Action.DELETE_RECIPE);
+  deleteRecipe(id: string) {
+    this.firestoreService.delete(this.getRef(), id, Action.DELETE_RECIPE);
   }
 }

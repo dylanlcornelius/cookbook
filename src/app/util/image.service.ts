@@ -7,12 +7,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImageService {
-  storageRef = firebase.storage().ref();
+  ref;
+  getRef() {
+    if (!this.ref && firebase.apps.length > 0) {
+      this.ref = firebase.storage().ref();
+    }
+    return this.ref;
+  }
 
   constructor() {}
 
   uploadFile(path: string, file: File): Observable<Number | String | void> {
-    const uploadTask = this.storageRef.child(path).put(file);
+    const uploadTask = this.getRef().child(path).put(file);
 
     return new Observable(observer => {
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
@@ -29,12 +35,12 @@ export class ImageService {
   }
 
   downloadFile(path: string) {
-    return this.storageRef.child(path).getDownloadURL().then(url => {
+    return this.getRef().child(path).getDownloadURL().then(url => {
       return url;
     }, () => {});
   }
 
   deleteFile(path: string) {
-    return this.storageRef.child(path).delete();
+    return this.getRef().child(path).delete();
   }
 }

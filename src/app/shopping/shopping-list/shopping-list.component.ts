@@ -42,12 +42,14 @@ export class ShoppingListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.load();
+  }
+
+  load() {
     this.userService.getCurrentUser().subscribe(user => {
       this.simplifiedView = user.simplifiedView;
-    });
-
-    this.userService.getCurrentUser().subscribe(user => {
       this.uid = user.uid;
+
       const myIngredients = [];
       const myItems = [];
       this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
