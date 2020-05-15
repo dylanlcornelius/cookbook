@@ -8,6 +8,8 @@ import { IngredientService } from '@ingredientService';
 
 import { IngredientEditComponent } from './ingredient-edit.component';
 import { Ingredient } from '../shared/ingredient.model';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
 
 describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
@@ -17,14 +19,19 @@ describe('IngredientEditComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([]),
+        RouterModule.forRoot([
+          {path: 'ingredient/detail/:id', component: IngredientDetailComponent}
+        ]),
         FormsModule,
         ReactiveFormsModule,
         MatInputModule,
         MatSelectModule,
         BrowserAnimationsModule
       ],
-      declarations: [ IngredientEditComponent ]
+      declarations: [ IngredientEditComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

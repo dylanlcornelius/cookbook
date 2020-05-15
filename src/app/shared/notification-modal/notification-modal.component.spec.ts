@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 
 import { NotificationModalComponent } from './notification-modal.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('NotificationModalComponent', () => {
   let component: NotificationModalComponent;
@@ -12,7 +13,10 @@ describe('NotificationModalComponent', () => {
       imports: [
         RouterModule.forRoot([])
       ],
-      declarations: [ NotificationModalComponent ]
+      declarations: [ NotificationModalComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

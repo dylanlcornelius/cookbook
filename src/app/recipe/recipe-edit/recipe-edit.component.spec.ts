@@ -11,6 +11,7 @@ import { User } from 'src/app/user/shared/user.model';
 import { Recipe } from '../shared/recipe.model';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -33,7 +34,10 @@ describe('RecipeEditComponent', () => {
       providers: [
         UOMConversion
       ],
-      declarations: [ RecipeEditComponent ]
+      declarations: [ RecipeEditComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));
@@ -161,12 +165,6 @@ describe('RecipeEditComponent', () => {
     });
   });
 
-  describe('addCategoryEvent', () => {
-    it('should ', () => {
-
-    });
-  });
-
   describe('removeCategory', () => {
     it('should remove a control', () => {
       component.recipesForm = formBuilder.group({
@@ -210,18 +208,6 @@ describe('RecipeEditComponent', () => {
 
       const control = <FormArray>component.recipesForm.controls['steps'];
       expect(control.length).toEqual(0);
-    });
-  });
-
-  describe('dropAdded', () => {
-    it('should ', () => {
-
-    });
-  });
-
-  describe('dropAvailable', () => {
-    it('should ', () => {
-
     });
   });
 

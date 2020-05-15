@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { UserService } from '@userService';
@@ -14,6 +14,7 @@ import { User } from 'src/app/user/shared/user.model';
 import { RecipeListComponent } from './recipe-list.component';
 import { Recipe } from '../shared/recipe.model';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -28,7 +29,8 @@ describe('RecipeListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        MatTableModule
       ],
       providers: [
         UOMConversion,
@@ -38,7 +40,12 @@ describe('RecipeListComponent', () => {
         IngredientService,
         ImageService
       ],
-      declarations: [ RecipeListComponent ]
+      declarations: [
+        RecipeListComponent,
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

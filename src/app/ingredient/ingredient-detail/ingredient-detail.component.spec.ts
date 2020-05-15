@@ -4,6 +4,7 @@ import { IngredientService } from '@ingredientService';
 import { Ingredient } from '../shared/ingredient.model';
 
 import { IngredientDetailComponent } from './ingredient-detail.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
@@ -18,7 +19,10 @@ describe('IngredientsDetailComponent', () => {
       providers: [
         IngredientService
       ],
-      declarations: [ IngredientDetailComponent ]
+      declarations: [ IngredientDetailComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
     ingredientService = TestBed.get(IngredientService);
@@ -47,6 +51,8 @@ describe('IngredientsDetailComponent', () => {
       component.ingredient = {name: 'name'};
 
       component.deleteIngredient('id');
+
+      expect(component.validationModalParams).toBeDefined();
     });
   });
 

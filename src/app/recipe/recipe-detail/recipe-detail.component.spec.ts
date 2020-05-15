@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 
 import { RecipeDetailComponent } from './recipe-detail.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -12,7 +13,10 @@ describe('RecipeDetailComponent', () => {
       imports: [
         RouterModule.forRoot([])
       ],
-      declarations: [ RecipeDetailComponent ]
+      declarations: [ RecipeDetailComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

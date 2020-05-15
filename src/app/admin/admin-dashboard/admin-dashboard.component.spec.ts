@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminDashboardComponent } from './admin-dashboard.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 
 describe('AdminDashboardComponent', () => {
   let component: AdminDashboardComponent;
@@ -11,9 +13,13 @@ describe('AdminDashboardComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatTableModule
       ],
-      declarations: [ AdminDashboardComponent ]
+      declarations: [ AdminDashboardComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

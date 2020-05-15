@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileComponent } from './profile.component';
 import { UserService } from '@userService';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -19,7 +20,10 @@ describe('ProfileComponent', () => {
       providers: [
         UserService
       ],
-      declarations: [ ProfileComponent ]
+      declarations: [ ProfileComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

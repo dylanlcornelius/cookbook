@@ -7,6 +7,7 @@ import { User } from '../shared/user.model';
 import { HomeComponent } from 'src/app/home/home.component';
 
 import { UserPendingComponent } from './user-pending.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UserPendingComponent', () => {
   let component: UserPendingComponent;
@@ -21,7 +22,10 @@ describe('UserPendingComponent', () => {
           {path: 'home', component: HomeComponent}
         ])
       ],
-      declarations: [ UserPendingComponent ]
+      declarations: [ UserPendingComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));
@@ -58,7 +62,7 @@ describe('UserPendingComponent', () => {
 
       component.signOut();
 
-      expect(authService.logout);
+      expect(authService.logout).toHaveBeenCalled();
     });
   });
 });
