@@ -53,9 +53,10 @@ export class RecipeEditComponent implements OnInit {
 
   ngOnInit() {
     this.recipesForm = this.formBuilder.group({
-      'name' : [null, Validators.required],
-      'description' : [null],
-      'time' : [''],
+      'name': [null, Validators.required],
+      'link': [null],
+      'description': [null],
+      'time': [''],
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'categories': this.formBuilder.array([]),
@@ -105,6 +106,7 @@ export class RecipeEditComponent implements OnInit {
           this.addedIngredients = added;
           this.recipesForm.patchValue({
             name: data.name,
+            link: data.link,
             description: data.description,
             time: data.time,
             servings: data.servings,
@@ -151,7 +153,6 @@ export class RecipeEditComponent implements OnInit {
   }
 
   addCategory(category?: string) {
-    console.log('not spied');
     const control = <FormArray>this.recipesForm.controls['categories'];
     control.push(this.initCategory(category));
   }

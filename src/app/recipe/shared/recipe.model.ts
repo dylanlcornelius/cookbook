@@ -1,6 +1,7 @@
 export class Recipe {
     id: string;
     name: string;
+    link: string;
     description: string;
     time: string;
     calories: string;
@@ -25,6 +26,7 @@ export class Recipe {
     constructor(data) {
         this.id = data.id || '';
         this.name = data.name || '';
+        this.link = data.link || '';
         this.description = data.description || '';
         this.time = data.time || '';
         this.calories = data.calories || '';

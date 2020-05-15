@@ -332,3 +332,4 @@ dist
 .firebaserc
 backups/
 coverage/
+src/environments/configs.ts

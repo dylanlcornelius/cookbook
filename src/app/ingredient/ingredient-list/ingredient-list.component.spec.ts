@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IngredientListComponent } from './ingredient-list.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 
 describe('IngredientsComponent', () => {
   let component: IngredientListComponent;
@@ -8,7 +10,13 @@ describe('IngredientsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IngredientListComponent ]
+      imports: [
+        MatTableModule
+      ],
+      declarations: [ IngredientListComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

@@ -17,7 +17,10 @@
         <button mat-button matTooltip="Delete Image" (click)="deleteFile(recipe.id)" [hidden]="!recipeImage"><mat-icon style="font-size: 20px">close</mat-icon></button>
       </div>
       <mat-card-title>
-        <h2>{{recipe.name}}</h2>
+        <h2 *ngIf="!recipe.link">{{recipe.name}}</h2>
+        <h2 *ngIf="recipe.link">
+          <a class="recipe-link" href="{{recipe.link}}" target="_blank" rel="noreferrer">{{recipe.name}}</a>
+        </h2>
       </mat-card-title>
       <mat-card-subtitle>
         <dd> {{recipe.description}} </dd>

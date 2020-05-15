@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 import { ItemListComponent } from './item-list.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ItemListComponent', () => {
   let component: ItemListComponent;
@@ -15,7 +16,10 @@ describe('ItemListComponent', () => {
         ReactiveFormsModule,
         MatExpansionModule
       ],
-      declarations: [ ItemListComponent ]
+      declarations: [ ItemListComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

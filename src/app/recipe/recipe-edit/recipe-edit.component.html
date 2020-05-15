@@ -25,6 +25,10 @@
           <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched">Please enter Recipe Name</span>
         </mat-error>
       </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <input matInput placeholder="Link" formControlName="link"/>
+      </mat-form-field>
       
       <mat-form-field class="form-field">
         <textarea matInput placeholder="Description" formControlName="description"></textarea>
@@ -164,6 +168,7 @@
 
       <div class="stepper-button-row">
         <button mat-button matStepperNext type="button">Next</button>
+        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
       </div>
     </mat-step>
     
@@ -175,6 +180,7 @@
       <div class="stepper-button-row">
         <button mat-button matStepperPrevious type="button">Back</button>
         <button mat-button matStepperNext type="button">Next</button>
+        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
       </div>
     </mat-step>
 
@@ -183,7 +189,7 @@
 
       <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
 
-      <div class="stepper-button-row button-row">
+      <div class="stepper-button-row">
         <button mat-button matStepperPrevious type="button">Back</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
       </div>
@@ -198,6 +204,7 @@
 
       <div class="stepper-button-row">
         <button mat-button matStepperNext type="button">Next</button>
+        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
       </div>
     </mat-step>
     
@@ -209,6 +216,7 @@
       <div class="stepper-button-row">
         <button mat-button matStepperPrevious type="button">Back</button>
         <button mat-button matStepperNext type="button">Next</button>
+        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
       </div>
     </mat-step>
 
@@ -217,7 +225,7 @@
 
       <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
 
-      <div class="stepper-button-row button-row">
+      <div class="stepper-button-row">
         <button mat-button matStepperPrevious type="button">Back</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm()">Save Recipe</button>
       </div>

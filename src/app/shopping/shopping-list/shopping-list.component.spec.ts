@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ShoppingListComponent } from './shopping-list.component';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { UserService } from '@userService';
@@ -13,6 +13,7 @@ import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { ItemService } from '@itemService';
 import { UserItem } from '../shared/user-item.model';
 import { Item } from 'src/app/item/shared/item.model';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -25,7 +26,13 @@ describe('ShoppingListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShoppingListComponent ]
+      imports: [
+        MatTableModule
+      ],
+      declarations: [ ShoppingListComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));
