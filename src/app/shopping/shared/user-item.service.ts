@@ -27,28 +27,29 @@ export class UserItemService {
   getUserItems(uid: string): Observable<UserItem> {
     const self = this;
     return new Observable((observer) => {
-      this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
-        if (querySnapshot.size > 0) {
-          let userItem;
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            userItem = new UserItem({
-              uid: data.uid,
-              items: data.items,
-              id: doc.id
-            });
-          });
-          observer.next(userItem);
-        } else {
-          const userItem = new UserItem({
-            uid: uid, 
-            items: []
-          });
-          userItem.id = self.postUserItem(userItem);
-          observer.next(userItem);
-        }
+      self.getRef()?.where('uid', '==', uid).onSnapshot(querySnapshot => {
+        self.getUserItem(querySnapshot, observer, uid, self);
       });
     });
+  }
+
+  getUserItem(querySnapshot, observer, uid, self) {
+    if (querySnapshot.size > 0) {
+      let userItem;
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        userItem = new UserItem({
+          uid: data.uid,
+          items: data.items,
+          id: doc.id
+        });
+      });
+      observer.next(userItem);
+    } else {
+      const userItem = new UserItem({uid: uid});
+      userItem.id = self.postUserItem(userItem);
+      observer.next(userItem);
+    }
   }
 
   postUserItem(data: UserItem): string {

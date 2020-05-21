@@ -2,14 +2,13 @@ export class UserItem {
     id: string;
     uid: string;
     items: Array<{
-        id: string;
-        cartQuantity: number;
+        name: string
     }>;
 
     constructor(data) {
-        this.id = data.id;
+        this.id = data.id || '';
         this.uid = data.uid;
-        this.items = data.items;
+        this.items = data.items || [];
     }
 
     public getId() {
