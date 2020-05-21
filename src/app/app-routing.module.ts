@@ -16,7 +16,6 @@ const routes: Routes = [
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
   {path: 'recipe', loadChildren: './recipe/recipe.module#RecipeModule', canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'ingredient', loadChildren: './ingredient/ingredient.module#IngredientModule', canActivateChild: [LoginGuard, UserPendingGuard]},
-  {path: 'item', loadChildren: './item/item.module#ItemModule', canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'shopping', loadChildren: './shopping/shopping.module#ShoppingModule', canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'about', loadChildren: './about/about.module#AboutModule', canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'profile', loadChildren: './profile/profile.module#ProfileModule', canActivateChild: [LoginGuard, UserPendingGuard]},

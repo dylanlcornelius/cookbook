@@ -10,10 +10,9 @@ import { User } from 'src/app/user/shared/user.model';
 import { UserIngredient } from '../shared/user-ingredient.model';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
-import { ItemService } from '@itemService';
 import { UserItem } from '../shared/user-item.model';
-import { Item } from 'src/app/item/shared/item.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -22,12 +21,13 @@ describe('ShoppingListComponent', () => {
   let userItemService: UserItemService;
   let userService: UserService;
   let ingredientService: IngredientService;
-  let itemService: ItemService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatTableModule
+        MatTableModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       declarations: [ ShoppingListComponent ],
       schemas: [
@@ -45,7 +45,6 @@ describe('ShoppingListComponent', () => {
     userItemService = TestBed.inject(UserItemService);
     userService = TestBed.inject(UserService);
     ingredientService = TestBed.inject(IngredientService);
-    itemService = TestBed.inject(ItemService);
   });
 
   it('should create', () => {
@@ -67,15 +66,11 @@ describe('ShoppingListComponent', () => {
           id: 'itemId'
         }]
       });
-      const items = [new Item({
-        id: 'itemId'
-      })];
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
-      spyOn(itemService, 'getItems').and.returnValue(of(items));
 
       component.load();
 
@@ -83,7 +78,6 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userItemService.getUserItems).toHaveBeenCalled();
-      expect(itemService.getItems).toHaveBeenCalled();
     });
 
     it('should not load unavailable ingredients and items', () => {
@@ -100,15 +94,11 @@ describe('ShoppingListComponent', () => {
           id: 'itemId2'
         }]
       });
-      const items = [new Item({
-        id: 'itemId'
-      })];
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
-      spyOn(itemService, 'getItems').and.returnValue(of(items));
 
       component.load();
 
@@ -116,7 +106,6 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userItemService.getUserItems).toHaveBeenCalled();
-      expect(itemService.getItems).toHaveBeenCalled();
     });
 
     it('should not load ingredients and items', () => {
@@ -125,15 +114,11 @@ describe('ShoppingListComponent', () => {
         id: 'ingredientId'
       })];
       const userItems = new UserItem({});
-      const items = [new Item({
-        id: 'itemId'
-      })];
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
-      spyOn(itemService, 'getItems').and.returnValue(of(items));
 
       component.load();
 
@@ -141,19 +126,16 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userItemService.getUserItems).toHaveBeenCalled();
-      expect(itemService.getItems).toHaveBeenCalled();
     });
   });
 
   describe('applyFilter', () => {
     it('should reset filters', () => {
       component.ingredientsDataSource = new MatTableDataSource();
-      component.itemsDataSource = new MatTableDataSource();
 
       component.applyFilter();
 
       expect(component.ingredientsDataSource.filter).toEqual('0');
-      expect(component.itemsDataSource.filter).toEqual('0');
     });
   });
 
@@ -241,7 +223,6 @@ describe('ShoppingListComponent', () => {
       component.ingredientsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 10}]);
       component.ingredientsDataSource.filteredData = [];
       component.itemsDataSource = new MatTableDataSource([]);
-      component.itemsDataSource.filteredData = [];
 
       spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'buyUserIngredient');
@@ -269,94 +250,71 @@ describe('ShoppingListComponent', () => {
 
   describe('packageItemData', () => {
     it('should create a user item object', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id'}]);
+      component.itemsDataSource = new MatTableDataSource([{name: 'name'}]);
 
       const result = component.packageItemData();
 
-      expect(result.items[0].id).toEqual('id')
+      expect(result.items[0].name).toEqual('name')
+    });
+
+    it('should handle undefined properties', () => {
+      component.itemsDataSource = new MatTableDataSource([{}]);
+
+      const result = component.packageItemData();
+
+      expect(result.items[0].name).toEqual('')
     });
   });
 
-  describe('removeItem', () => {
+  describe('addItem', () => {
     it('should update user items', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 10}]);
+      component.itemsDataSource = new MatTableDataSource([]);
 
-      spyOn(component, 'packageItemData');
+      spyOn(component, 'packageItemData').and.returnValue(new UserItem({}));
       spyOn(userItemService, 'putUserItem');
 
-      component.removeItem('id');
+      component.addItem({name: 'name'});
 
       expect(component.packageItemData).toHaveBeenCalled();
       expect(userItemService.putUserItem).toHaveBeenCalled();
     });
 
     it('should not update user items', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 0}]);
+      component.itemsDataSource = new MatTableDataSource([]);
 
       spyOn(component, 'packageItemData');
       spyOn(userItemService, 'putUserItem');
 
-      component.removeItem('id');
+      component.addItem({name: '   '});
 
       expect(component.packageItemData).not.toHaveBeenCalled();
       expect(userItemService.putUserItem).not.toHaveBeenCalled();
     });
   });
 
-  describe('addItem', () => {
-    it('should update user items', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id'}]);
-
-      spyOn(component, 'packageItemData');
-      spyOn(userItemService, 'putUserItem');
-
-      component.addItem('id');
-
-      expect(component.packageItemData).toHaveBeenCalled();
-      expect(userItemService.putUserItem).toHaveBeenCalled();
-    });
-  });
-
-  describe('removeItemFromCart', () => {
+  describe('removeItem', () => {
     it('should buy a user item', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 10}]);
+      component.itemsDataSource = new MatTableDataSource([{name: 'name'}, {name: 'name2'}]);
       component.ingredientsDataSource = new MatTableDataSource([]);
-      
-      spyOn(component, 'applyFilter');
+
       spyOn(userItemService, 'buyUserItem');
 
-      component.removeItemFromCart('id');
+      component.removeItem(1);
 
-      expect(component.applyFilter).toHaveBeenCalledTimes(2);
       expect(userItemService.buyUserItem).toHaveBeenCalled();
     });
 
     it('should complete the shopping list', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 10}]);
-      component.itemsDataSource.filteredData = [];
+      component.itemsDataSource = new MatTableDataSource([{name: 'name'}]);
       component.ingredientsDataSource = new MatTableDataSource([]);
       component.ingredientsDataSource.filteredData = [];
       
-      spyOn(component, 'applyFilter');
       spyOn(userItemService, 'buyUserItem');
 
-      component.removeItemFromCart('id');
+      component.removeItem(0);
 
-      expect(component.applyFilter).toHaveBeenCalledTimes(2);
       expect(userItemService.buyUserItem).toHaveBeenCalled();
       expect(component.isCompleted).toBeTrue();
-    });
-
-    it('should not buy a user item', () => {
-      component.itemsDataSource = new MatTableDataSource([{id: 'id'}]);
-
-      spyOn(component, 'applyFilter');
-      spyOn(userItemService, 'buyUserItem');
-
-      component.removeItemFromCart('id');
-
-      expect(component.applyFilter).toHaveBeenCalledTimes(1);
-      expect(userItemService.buyUserItem).not.toHaveBeenCalled();
     });
   });
 
@@ -375,8 +333,8 @@ describe('ShoppingListComponent', () => {
       }, {}]);
 
       component.itemsDataSource = new MatTableDataSource([{
-        cartQuantity: 10
-      }, {}]);
+        name: 'name'
+      }]);
 
       spyOn(component, 'packageIngredientData');
       spyOn(userIngredientService, 'buyUserIngredient');

@@ -1,6 +1,19 @@
+.item-form {
+    display: flex;
+    justify-content: center;
+}
+.item-form-field {
+    max-width: 400px;
+    width: 100%;
+    padding-right: 15px;
+}
 .table-container {
     display: flex;
     flex-direction: column;
+}
+.ingredients-table .mat-row:last-child,
+.items-table .mat-row:last-child {
+    border: none;
 }
 .mobile-label {
     display: none;

@@ -5,9 +5,9 @@ import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { Notification } from '@notifications';
 import { UserItemService } from '@userItemService';
-import { ItemService } from '@itemService';
 import { UserItem } from '../shared/user-item.model';
 import { UserService } from '@userService';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 // TODO: icons for notification modal
 @Component({
@@ -24,21 +24,21 @@ export class ShoppingListComponent implements OnInit {
   uid: string;
   simplifiedView: boolean;
 
+  itemForm: FormGroup;
+
   id: string;
-  displayedColumns = ['name', 'pantryQuantity', 'cartQuantity', 'buy'];
   ingredientsDataSource;
   ingredients;
 
-  itemsDisplayedColumns = ['name', 'cartQuantity', 'buy'];
   itemsDataSource;
   itemsId: string;
 
   constructor(
+    private formBuilder: FormBuilder,
     private userService: UserService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
-    private itemService: ItemService
   ) {}
 
   ngOnInit() {
@@ -46,12 +46,15 @@ export class ShoppingListComponent implements OnInit {
   }
 
   load() {
+    this.itemForm = this.formBuilder.group({
+      'name': [null],
+    });
+
     this.userService.getCurrentUser().subscribe(user => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
       const myIngredients = [];
-      const myItems = [];
       this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
         this.id = userIngredients.id;
         this.ingredientService.getIngredients().subscribe(ingredients => {
@@ -71,32 +74,14 @@ export class ShoppingListComponent implements OnInit {
             }
           });
           this.ingredientsDataSource = new MatTableDataSource(myIngredients);
-          // tslint:disable-next-line:triple-equals
           this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+          this.applyFilter();
           this.ingredients = ingredients;
 
           this.userItemService.getUserItems(this.uid).subscribe(userItems => {
             this.itemsId = userItems.id;
-            this.itemService.getItems().subscribe(items => {
-              items.forEach(item => {
-                if (userItems && userItems.items) {
-                  userItems.items.forEach(myItem => {
-                    if (myItem.id === item.id) {
-                      myItems.push({
-                        id: myItem.id,
-                        name: item.name,
-                        cartQuantity: myItem.cartQuantity
-                      });
-                    }
-                  });
-                }
-              });
-              this.itemsDataSource = new MatTableDataSource(myItems);
-              // tslint:disable-next-line: triple-equals
-              this.itemsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-              this.applyFilter();
-              this.loading = false;
-            });
+            this.itemsDataSource = new MatTableDataSource(userItems.items);
+            this.loading = false;
           });
         });
       });
@@ -105,7 +90,6 @@ export class ShoppingListComponent implements OnInit {
 
   applyFilter() {
     this.ingredientsDataSource.filter = '0';
-    this.itemsDataSource.filter = '0';
   }
 
   packageIngredientData() {
@@ -152,7 +136,7 @@ export class ShoppingListComponent implements OnInit {
         type: Notification.SUCCESS,
         text: 'Ingredient added!'
       };
-      if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.filteredData.length === 0) {
+      if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0) {
         this.isCompleted = true;
       }
     }
@@ -161,7 +145,7 @@ export class ShoppingListComponent implements OnInit {
   packageItemData() {
     const userItems = [];
     this.itemsDataSource.data.forEach(data => {
-      userItems.push({id: data.id, cartQuantity: data.cartQuantity});
+      userItems.push({name: data.name || ''});
     });
     return new UserItem({
       uid: this.uid,
@@ -170,37 +154,33 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
-  removeItem(id) {
-    const data = this.itemsDataSource.data.find(x => x.id === id);
-    if (Number(data.cartQuantity) > 0) {
-      data.cartQuantity = Number(data.cartQuantity) - 1;
-      this.userItemService.putUserItem(this.packageItemData());
+  addItem(form) {
+    if (!form.name || !form.name.toString().trim()) {
+      return;
     }
+
+    const userItems = this.packageItemData();
+    userItems.items.push({name: form.name.toString().trim()});
+    this.userItemService.putUserItem(userItems);
+
+    this.itemForm.reset();
+    this.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Item added!'
+    };
   }
 
-  addItem(id) {
-    const data = this.itemsDataSource.data.find(x => x.id === id);
-    data.cartQuantity = Number(data.cartQuantity) + 1;
-    this.userItemService.putUserItem(this.packageItemData());
-  }
+  removeItem(index) {
+    this.itemsDataSource.data = this.itemsDataSource.data.filter((_x, i) =>  i !== index);
+    this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0;
 
-  removeItemFromCart(id) {
-    this.applyFilter();
-    const isCompleted = this.itemsDataSource.data.filter(x => x.cartQuantity > 0).length === 1;
-    const data = this.itemsDataSource.data.find(x => x.id === id);
-    if (Number(data.cartQuantity > 0)) {
-      data.cartQuantity = 0;
-      this.userItemService.buyUserItem(this.packageItemData(), 1, isCompleted);
-      this.applyFilter();
-      this.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        text: 'Item removed!'
-      };
-      if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.filteredData.length === 0) {
-        this.isCompleted = true;
-      }
-    }
+    this.userItemService.buyUserItem(this.packageItemData(), 1, this.isCompleted);
+    this.notificationModalParams = {
+      self: self,
+      type: Notification.SUCCESS,
+      text: 'Item removed!'
+    };
   }
 
   addAllToPantry() {
@@ -220,12 +200,9 @@ export class ShoppingListComponent implements OnInit {
     });
     self.userIngredientService.buyUserIngredient(self.packageIngredientData(), self.ingredientsDataSource.filteredData.length, false);
 
-    self.itemsDataSource.data.forEach(item => {
-      if (Number(item.cartQuantity) > 0) {
-        item.cartQuantity = 0;
-      }
-    });
-    self.userItemService.buyUserItem(self.packageItemData(), self.itemsDataSource.filteredData.length, false);
+    const itemsCount = self.itemsDataSource.data.length;
+    self.itemsDataSource.data = [];
+    self.userItemService.buyUserItem(self.packageItemData(), itemsCount, false);
 
     self.applyFilter();
     self.notificationModalParams = {
