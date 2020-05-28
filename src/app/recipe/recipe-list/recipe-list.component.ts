@@ -10,6 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ImageService } from 'src/app/util/image.service';
 import { UserService } from '@userService';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-list',
@@ -50,69 +51,71 @@ export class RecipeListComponent implements OnInit {
   }
 
   load() {
-    this.userService.getCurrentUser().subscribe(user => {
+    const user$ = this.userService.getCurrentUser();
+    const recipes$ = this.recipeService.getRecipes();
+    const ingredients$ = this.ingredientService.getIngredients();
+
+    combineLatest(user$, recipes$, ingredients$).subscribe(([user, recipes, ingredients]) => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
-      this.recipeService.getRecipes().subscribe(recipes => {
-        this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
-          this.id = userIngredient.id;
-          this.userIngredients = userIngredient.ingredients;
-          this.ingredientService.getIngredients().subscribe(ingredients => {
-            ingredients.forEach(ingredient => {
-              userIngredient.ingredients.forEach(myIngredient => {
-                if (ingredient.id === myIngredient.id) {
-                  myIngredient.uom = ingredient.uom;
-                  myIngredient.amount = ingredient.amount;
-                }
-              });
+      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+        this.id = userIngredient.id;
+        this.userIngredients = userIngredient.ingredients;
+        ingredients.forEach(ingredient => {
+          userIngredient.ingredients.forEach(myIngredient => {
+            if (ingredient.id === myIngredient.id) {
+              myIngredient.uom = ingredient.uom;
+              myIngredient.amount = ingredient.amount;
+            }
+          });
 
-              recipes.forEach(recipe => {
-                recipe.ingredients.forEach(recipeIngredient => {
-                  if (ingredient.id === recipeIngredient.id) {
-                    recipeIngredient.amount = ingredient.amount;
-                  }
-                });
-              });
-            });
-
-            const filters = this.recipeService.selectedFilters.slice();
-
-            this.dataSource = new MatTableDataSource(recipes);
-            const categories = [];
-            const authors = [];
-            recipes.forEach(recipe => {
-              recipe.count = this.getRecipeCount(recipe.id);
-              this.imageService.downloadFile(recipe.id).then(url => {
-                if (url) {
-                  recipe.image = url;
-                }
-              });
-
-              recipe.categories.forEach(category => {
-                if (categories.find(c => c.name === category.category) === undefined) {
-                  const checked = filters.find(f => f === category.category) !== undefined;
-                  categories.push({name: category.category, checked: checked});
-                }
-              });
-
-              if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
-                const checked = filters.find(f => f === recipe.author) !== undefined;
-                authors.push({name: recipe.author, checked: checked});
+          recipes.forEach(recipe => {
+            recipe.ingredients.forEach(recipeIngredient => {
+              if (ingredient.id === recipeIngredient.id) {
+                recipeIngredient.amount = ingredient.amount;
               }
             });
-            this.dataSource = new MatTableDataSource(recipes);
-            this.dataSource.filterPredicate = this.recipeFilterPredicate;
-
-            this.filtersList.push({displayName: 'Authors', name: 'author', values: authors});
-            this.filtersList.push({displayName: 'Categories', name: 'categories', values: categories});
-            this.setSelectedFilterCount();
-            this.dataSource.filter = JSON.stringify(filters);
-            this.dataSource.paginator = this.paginator;
-
-            this.loading = false;
           });
         });
+
+        const filters = this.recipeService.selectedFilters.slice();
+
+        this.dataSource = new MatTableDataSource(recipes);
+        const categories = [];
+        const authors = [];
+        recipes.forEach(recipe => {
+          recipe.count = this.getRecipeCount(recipe.id);
+          this.imageService.downloadFile(recipe.id).then(url => {
+            if (url) {
+              recipe.image = url;
+            }
+          });
+
+          recipe.categories.forEach(category => {
+            if (categories.find(c => c.name === category.category) === undefined) {
+              const checked = filters.find(f => f === category.category) !== undefined;
+              categories.push({name: category.category, checked: checked});
+            }
+          });
+
+          if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
+            const checked = filters.find(f => f === recipe.author) !== undefined;
+            authors.push({name: recipe.author, checked: checked});
+          }
+        });
+        this.dataSource = new MatTableDataSource(recipes);
+        this.dataSource.filterPredicate = this.recipeFilterPredicate;
+
+        this.filtersList = [
+          {displayName: 'Authors', name: 'author', values: authors},
+          {displayName: 'Categories', name: 'categories', values: categories}
+        ];
+        this.setSelectedFilterCount();
+        this.dataSource.filter = JSON.stringify(filters);
+        this.dataSource.paginator = this.paginator;
+
+        this.loading = false;
       });
     });
   }
@@ -299,5 +302,9 @@ export class RecipeListComponent implements OnInit {
     });
 
     return hasAll;
+  }
+
+  onRate(rating, recipe) {
+    this.recipeService.rateRecipe(rating, this.uid, recipe);
   }
 }

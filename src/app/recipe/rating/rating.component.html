@@ -1,0 +1,12 @@
+<div class="star-ratings">
+    <div class="top" [ngStyle]="{'width': meanRating + '%'}">
+        <span (click)="handleRate(1)">★</span>
+        <span (click)="handleRate(2)">★</span>
+        <span (click)="handleRate(3)">★</span>
+    </div>
+    <div class="bottom">
+        <span (click)="handleRate(1)">★</span>
+        <span (click)="handleRate(2)">★</span>
+        <span (click)="handleRate(3)">★</span>
+    </div>
+</div>

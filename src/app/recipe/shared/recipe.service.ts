@@ -56,4 +56,11 @@ export class RecipeService {
   deleteRecipe(id: string) {
     this.firestoreService.delete(this.getRef(), id, Action.DELETE_RECIPE);
   }
+
+  rateRecipe(rating: number, uid: string, recipe: Recipe) {
+    const userRatings = recipe.ratings.filter(value => value.uid !== uid)
+    recipe.ratings = [...userRatings, {uid: uid, rating: rating}];
+
+    this.putRecipe(recipe.getId(), recipe.getObject());
+  }
 }

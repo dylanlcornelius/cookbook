@@ -17,6 +17,10 @@ export class Recipe {
         quantity: string,
         amount: string,
     }>;
+    ratings: Array<{
+        uid: string,
+        rating: number,
+    }>;
     uid: string;
     author: string;
 
@@ -35,6 +39,7 @@ export class Recipe {
         this.categories = data.categories || [];
         this.steps = data.steps || [];
         this.ingredients = data.ingredients || [];
+        this.ratings = data.ratings || [];
         this.uid = data.uid || '';
         this.author = data.author || '';
     }
@@ -54,6 +59,7 @@ export class Recipe {
             categories: this.categories,
             steps: this.steps,
             ingredients: this.ingredients,
+            ratings: this.ratings,
             uid: this.uid,
             author: this.author,
         };
