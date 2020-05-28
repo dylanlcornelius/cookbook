@@ -33,7 +33,7 @@ export class RatingComponent {
 
   handleRate(newRating) {
     const userRating = this.ratings.find(rating => rating.uid === this.uid);
-    if (userRating.rating != newRating) {
+    if (!userRating || userRating && userRating.rating != newRating) {
       this.rate.emit(newRating);
     }
   }
