@@ -51,4 +51,19 @@ export class IngredientService {
   deleteIngredient(id: string) {
     this.firestoreService.delete(this.getRef(), id, Action.DELETE_INGREDIENT);
   }
+
+  buildRecipeIngredients(recipeIngredients, allIngredients) {
+    return recipeIngredients.reduce((result, addedIngredient) => {
+      const currentIngredient = allIngredients.find(ingredient => ingredient.id === addedIngredient.id);
+      if (currentIngredient) {
+        result.push({
+          id: currentIngredient.id,
+          name: currentIngredient.name,
+          uom: addedIngredient.uom || '',
+          quantity: addedIngredient.quantity || '',
+        });
+      }
+      return result;
+    }, []);
+  }
 }

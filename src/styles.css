@@ -27,6 +27,10 @@ body {
 }
 .mat-card-header .mat-card-title {
   font-size: 18px !important;
+  margin-bottom: 5px !important;
+}
+.mat-card-header .mat-card-subtitle {
+  margin-bottom: 0 !important;
 }
 .mat-card-image {
   margin: 0 -16px 5px !important;
@@ -34,6 +38,7 @@ body {
 .mat-card-actions {
   display: flex !important;
   justify-content: center;
+  padding: 0 !important;
 }
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {

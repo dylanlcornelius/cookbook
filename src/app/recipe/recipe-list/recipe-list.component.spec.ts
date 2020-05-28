@@ -632,4 +632,14 @@ describe('RecipeListComponent', () => {
       expect(result).toBeFalse();
     });
   });
+
+  describe('onRate', () => {
+    it('should call the recipe service and rate a recipe', () => {
+      spyOn(recipeService, 'rateRecipe');
+
+      component.onRate(1, new Recipe({}));
+
+      expect(recipeService.rateRecipe).toHaveBeenCalled();
+    });
+  });
 });

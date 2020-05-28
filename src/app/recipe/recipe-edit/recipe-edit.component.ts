@@ -16,6 +16,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { UserService } from '@userService';
+import { combineLatest } from 'rxjs';
+import { Recipe } from '../shared/recipe.model';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -60,9 +62,7 @@ export class RecipeEditComponent implements OnInit {
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'categories': this.formBuilder.array([]),
-      'steps': this.formBuilder.array([
-        this.initStep()
-      ]),
+      'steps': this.formBuilder.array([this.initStep()]),
       'ingredients': this.formBuilder.array([])
     });
 
@@ -70,64 +70,58 @@ export class RecipeEditComponent implements OnInit {
   }
 
   load() {
+    const ingredients$ = this.ingredientService.getIngredients();
+
     if (this.route.snapshot.params['id']) {
-      this.recipeService.getRecipe(this.route.snapshot.params['id']).subscribe(data => {
-        this.id = data.id;
-        if (data.categories !== undefined) {
-          for (let i = 0; i < data.categories.length; i++) {
-            this.addCategory();
-          }
-        }
-        if (data.steps !== undefined) {
-          for (let i = 1; i < data.steps.length; i++) {
-            this.addStep();
-          }
-        }
-        this.addedIngredients = data.ingredients;
-        this.ingredientService.getIngredients().subscribe(ingredients => {
-          const added = [];
-          this.addedIngredients.forEach(addedIngredient => {
-            ingredients.forEach(ingredient => {
-              if (ingredient.id === addedIngredient.id) {
-                added.push({
-                  id: ingredient.id,
-                  name: ingredient.name,
-                  quantity: addedIngredient.quantity || '',
-                  uom: addedIngredient.uom || '',
-                });
-                ingredients = ingredients.filter(i => i.id !== addedIngredient.id);
-              }
-            });
-          });
+      const user$ = this.userService.getCurrentUser();
+      const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
 
-          for (let i = 0; i < added.length; i++) {
-            this.addIngredient(i);
-          }
-          this.addedIngredients = added;
-          this.recipesForm.patchValue({
-            name: data.name,
-            link: data.link,
-            description: data.description,
-            time: data.time,
-            servings: data.servings,
-            calories: data.calories,
-            categories: data.categories,
-            steps: data.steps,
-            ingredients: added,
-          });
+      combineLatest(user$, recipe$, ingredients$).subscribe(([user, recipe, ingredients]) => {
+        this.id = recipe.id;
 
-          ingredients.forEach(ingredient => {
-            ingredient.quantity = 0;
-          });
-          this.allAvailableIngredients = ingredients;
-          this.availableIngredients = this.allAvailableIngredients;
-
-          this.title = 'Edit a Recipe';
-          this.loading = false;
+        recipe.categories.forEach(() => {
+          this.addCategory();
         });
+        recipe.steps.forEach(() => {
+          this.addStep();
+        });
+
+        // figure out already added ingredients
+        this.addedIngredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
+        for (let i = 0; i < this.addedIngredients.length; i++) {
+          this.addIngredient(i);
+        }
+
+        this.recipesForm.patchValue({
+          name: recipe.name,
+          link: recipe.link,
+          description: recipe.description,
+          time: recipe.time,
+          servings: recipe.servings,
+          calories: recipe.calories,
+          categories: recipe.categories,
+          steps: recipe.steps,
+          ingredients: this.addedIngredients,
+        });
+
+        // figure out available ingredients
+        this.allAvailableIngredients = ingredients.reduce((result, ingredient) => {
+          const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
+          if (!currentIngredient) {
+            result.push({
+              ...ingredient,
+              quantity: 0
+            })
+          }
+          return result;
+        }, []);
+        this.availableIngredients = this.allAvailableIngredients;
+
+        this.title = 'Edit a Recipe';
+        this.loading = false;
       });
     } else {
-      this.ingredientService.getIngredients().subscribe(ingredients => {
+      ingredients$.subscribe(ingredients => {
         ingredients.forEach(ingredient => {
           this.allAvailableIngredients.push({
             id: ingredient.id,
@@ -256,18 +250,20 @@ export class RecipeEditComponent implements OnInit {
   }
 
   submitForm() {
-    Object.values((<FormGroup> this.recipesForm.get('ingredients')).controls).forEach((ingredient: FormGroup) => {
-      ingredient.removeControl('name');
-    });
     this.userService.getCurrentUser().subscribe(user => {
-      this.recipesForm.addControl('uid', new FormControl(user.uid));
-      this.recipesForm.addControl('author', new FormControl(user.firstName + ' ' + user.lastName));
+      const form = this.recipesForm.value;
+
+      form.uid = user.uid;
+      form.author = user.firstName + ' ' + user.lastName;
+      form.ingredients.forEach(ingredient => {
+        delete ingredient.name;
+      });
 
       if (this.route.snapshot.params['id']) {
-        this.recipeService.putRecipe(this.id, this.recipesForm.value);
+        this.recipeService.putRecipe(this.id, form);
         this.router.navigate(['/recipe/detail/', this.id]);
       } else {
-        const id = this.recipeService.postRecipe(this.recipesForm.value);
+        const id = this.recipeService.postRecipe(form);
         this.router.navigate(['/recipe/detail/', id]);
       }
     });
