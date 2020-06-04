@@ -12,7 +12,7 @@
 
     <mat-card-header class="d-flex justify-content-center center-text">
       <div class="rating-buttons">
-        <app-rating (rate)="onRate($event, recipe)" [ratings]="recipe.ratings" [uid]="uid"></app-rating>
+        <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="uid"></app-rating>
       </div>
       <div class="image-buttons" *ngIf="(online$ | async)">
         <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>

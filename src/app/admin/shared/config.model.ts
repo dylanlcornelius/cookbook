@@ -14,9 +14,7 @@ export class Config {
     }
 
     public getObject() {
-        return {
-            name: this.name,
-            value: this.value,
-        };
+        const {id, ...config} = this;
+        return config;
     }
 }

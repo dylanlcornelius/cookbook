@@ -17,7 +17,11 @@
     <span *ngFor="let filters of filtersList" class="row-button">
       <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected == 0 ? '' : filters.numberOfSelected}}">{{filters.displayName}}</button>
       <mat-menu #menu="matMenu">
-        <mat-checkbox class="mat-menu-item" *ngFor="let filter of filters.values" [(ngModel)]="filter.checked" (click)="$event.stopPropagation()" (change)="filterSelected(filter)">{{filter.name}}</mat-checkbox>
+        <mat-checkbox class="mat-menu-item" *ngFor="let filter of filters.values"
+        [(ngModel)]="filter.checked" (click)="$event.stopPropagation()"
+        (change)="filterSelected(filter)">
+        {{filter.displayName}}
+      </mat-checkbox>
       </mat-menu>
     </span>
   </div>
@@ -35,7 +39,7 @@
         <mat-card-title>{{recipe.name}}</mat-card-title>
         <mat-card-subtitle>
           <span (click)="$event.stopPropagation()">
-            <app-rating (rate)="onRate($event, recipe)" [ratings]="recipe.ratings" [uid]="uid"></app-rating>
+            <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="uid"></app-rating>
           </span>
         </mat-card-subtitle>
       </mat-card-header>

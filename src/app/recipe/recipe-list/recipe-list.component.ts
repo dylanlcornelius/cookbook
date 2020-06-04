@@ -28,7 +28,7 @@ export class RecipeListComponent implements OnInit {
   searchFilter = '';
 
   displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
-  dataSource: MatTableDataSource<any>;
+  dataSource;
   id: string;
   userIngredients;
 
@@ -82,6 +82,7 @@ export class RecipeListComponent implements OnInit {
         const filters = this.recipeService.selectedFilters.slice();
 
         this.dataSource = new MatTableDataSource(recipes);
+        const ratings = [];
         const categories = [];
         const authors = [];
         recipes.forEach(recipe => {
@@ -92,16 +93,27 @@ export class RecipeListComponent implements OnInit {
             }
           });
 
+          [1, 2, 3].forEach(ratingOption => {
+            const rating = ratingOption / 3 * 100;
+            let displayValue = '';
+            for (let i = 0; i < ratingOption; i++) {
+              displayValue += '★';
+            }
+            
+            const checked = filters.find(f => f === rating) !== undefined;
+            ratings.push({displayName: displayValue + ' & Up', name: rating, checked: checked});
+          });
+
           recipe.categories.forEach(category => {
             if (categories.find(c => c.name === category.category) === undefined) {
               const checked = filters.find(f => f === category.category) !== undefined;
-              categories.push({name: category.category, checked: checked});
+              categories.push({displayName: category.category, name: category.category, checked: checked});
             }
           });
 
           if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
             const checked = filters.find(f => f === recipe.author) !== undefined;
-            authors.push({name: recipe.author, checked: checked});
+            authors.push({displayName: recipe.author, name: recipe.author, checked: checked});
           }
         });
         this.dataSource = new MatTableDataSource(recipes);
@@ -109,7 +121,8 @@ export class RecipeListComponent implements OnInit {
 
         this.filtersList = [
           {displayName: 'Authors', name: 'author', values: authors},
-          {displayName: 'Categories', name: 'categories', values: categories}
+          {displayName: 'Categories', name: 'categories', values: categories},
+          {displayName: 'Ratings', name: 'ratings', values: ratings}
         ];
         this.setSelectedFilterCount();
         this.dataSource.filter = JSON.stringify(filters);
@@ -289,11 +302,13 @@ export class RecipeListComponent implements OnInit {
       Object.keys(data).forEach(property => {
         if (data[property] instanceof Array) {
           data[property].forEach(value => {
-            if (value.category && value.category.toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
+            if (typeof filter === 'string' && value.category && value.category.toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
               hasFilter = true;
             }
           });
-        } else if (typeof data[property] === 'string' && data[property].toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
+        } else if (typeof filter === 'string' && typeof data[property] === 'string' && data[property].toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
+          hasFilter = true;
+        } else if (property === 'meanRating' && data[property] >= filter && !hasFilter) {
           hasFilter = true;
         }
       });

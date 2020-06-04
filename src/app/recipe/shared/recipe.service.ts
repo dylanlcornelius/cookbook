@@ -20,8 +20,8 @@ export class RecipeService {
 
   private filters = [];
 
-  get selectedFilters(): Array<String> { return this.filters; }
-  set selectedFilters(filters: Array<String>) { this.filters = filters; }
+  get selectedFilters(): Array<any> { return this.filters; }
+  set selectedFilters(filters: Array<any>) { this.filters = filters; }
 
   constructor(
     private firestoreService: FirestoreService
@@ -57,10 +57,21 @@ export class RecipeService {
     this.firestoreService.delete(this.getRef(), id, Action.DELETE_RECIPE);
   }
 
-  rateRecipe(rating: number, uid: string, recipe: Recipe) {
-    const userRatings = recipe.ratings.filter(value => value.uid !== uid)
-    recipe.ratings = [...userRatings, {uid: uid, rating: rating}];
+  calculateMeanRating(ratings) {
+    if (!ratings || ratings.length === 0) {
+      return 0;
+    }
+    
+    return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length / 3 * 100;
+  }
 
+  rateRecipe(rating: number, uid: string, recipe: Recipe) {
+    recipe.ratings = recipe.ratings.filter(value => value.uid !== uid)
+    if (rating !== 0) {
+      recipe.ratings.push({uid: uid, rating: rating});
+    }
+    recipe.meanRating = this.calculateMeanRating(recipe.ratings);
+    
     this.putRecipe(recipe.getId(), recipe.getObject());
   }
 }

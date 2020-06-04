@@ -363,8 +363,21 @@ describe('RecipeListComponent', () => {
   });
 
   describe('applyFilter', () => {
-    it('should apply a search filter', () => {
+    it('should apply a search filter with a paginator', () => {
       component.dataSource = new MatTableDataSource();
+      component.dataSource.paginator = {firstPage: () => {}};
+
+      spyOn(component, 'setFilters');
+
+      component.applyFilter(' VALUE ');
+
+      expect(component.searchFilter).toEqual('value');
+      expect(component.setFilters).toHaveBeenCalled();
+    });
+
+    it('should apply a search filter and handle an empty paginator', () => {
+      component.dataSource = new MatTableDataSource();
+      component.dataSource.paginator = undefined;
 
       spyOn(component, 'setFilters');
 
@@ -630,6 +643,12 @@ describe('RecipeListComponent', () => {
       const result = component.recipeFilterPredicate({'prop': 'filter'}, "[\"test\"]");
 
       expect(result).toBeFalse();
+    });
+
+    it('should filter by rating', () => {
+      const result = component.recipeFilterPredicate({'meanRating': 0}, "[\"0\"]");
+
+      expect(result).toBeTrue();
     });
   });
 

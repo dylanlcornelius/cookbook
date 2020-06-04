@@ -17,6 +17,7 @@ export class Recipe {
         quantity: string,
         amount: string,
     }>;
+    meanRating: number;
     ratings: Array<{
         uid: string,
         rating: number,
@@ -24,7 +25,7 @@ export class Recipe {
     uid: string;
     author: string;
 
-    count: Number;
+    count: number;
     image: string;
 
     constructor(data) {
@@ -39,6 +40,7 @@ export class Recipe {
         this.categories = data.categories || [];
         this.steps = data.steps || [];
         this.ingredients = data.ingredients || [];
+        this.meanRating = data.meanRating || 0;
         this.ratings = data.ratings || [];
         this.uid = data.uid || '';
         this.author = data.author || '';
@@ -49,19 +51,7 @@ export class Recipe {
     }
 
     public getObject() {
-        return {
-            name: this.name,
-            description: this.description,
-            time: this.time,
-            calories: this.calories,
-            servings: this.servings,
-            quantity: this.quantity,
-            categories: this.categories,
-            steps: this.steps,
-            ingredients: this.ingredients,
-            ratings: this.ratings,
-            uid: this.uid,
-            author: this.author,
-        };
+        const {id, count, image, ...recipe} = this;
+        return recipe;
     }
 }

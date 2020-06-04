@@ -295,7 +295,10 @@ describe('RecipeEditComponent', () => {
 
   describe('submitForm', () => {
     it('should update a recipe', () => {
-      component.id = 'testId';
+      component.recipe = new Recipe({id: 'testId'});
+      component.recipesForm = formBuilder.group({
+        'ingredients': formBuilder.array([formBuilder.group({'name': []})])
+      });
       const route = TestBed.get(ActivatedRoute);
       route.snapshot = {params: {id: 'testId'}};
 
@@ -309,9 +312,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should create a recipe', () => {
-      component.recipesForm = formBuilder.group({
-        'ingredients': formBuilder.array([formBuilder.group({'name': []})])
-      });
+      component.recipe = new Recipe({id: 'testId'});
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'postRecipe').and.returnValue('testId');
