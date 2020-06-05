@@ -4,4 +4,9 @@
     max-height: 500px;
     min-width: 500px;
     overflow: auto;
+    margin-bottom: 20px;
+}
+td.mat-cell {
+    padding: 0 10px;
+    min-width: max-content;
 }

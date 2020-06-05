@@ -55,7 +55,7 @@ export class ShoppingListComponent implements OnInit {
       this.uid = user.uid;
 
       const myIngredients = [];
-      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredients => {
+      this.userIngredientService.getUserIngredient(this.uid).subscribe(userIngredients => {
         this.id = userIngredients.id;
         this.ingredientService.getIngredients().subscribe(ingredients => {
           ingredients.forEach(ingredient => {

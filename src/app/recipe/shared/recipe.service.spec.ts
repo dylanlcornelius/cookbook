@@ -82,6 +82,18 @@ describe('RecipeService', () => {
     });
   });
 
+  describe('putRecipes', () => {
+    it('should update a document', () => {
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'putAll');
+
+      service.putRecipes([new Recipe({})]);
+
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.putAll).toHaveBeenCalled();
+    });
+  });
+
   describe('deleteRecipe', () => {
     it('should delete a document', () => {
       spyOn(service, 'getRef');

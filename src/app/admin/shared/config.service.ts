@@ -21,7 +21,7 @@ export class ConfigService {
 
   getConfigs(): Observable<Config[]> {
     return new Observable(observable => {
-      this.firestoreService.get(this.ref).subscribe(docs => {
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
         observable.next(docs.map(doc => {
           return new Config(doc);
         }));
@@ -31,7 +31,7 @@ export class ConfigService {
 
   getConfig(name: string): Promise<Config> {
     return new Promise(resolve => {
-      this.ref?.where('name', '==', name).get().then(function(querySnapshot) {
+      this.getRef()?.where('name', '==', name).get().then(function(querySnapshot) {
         const configs = [];
         querySnapshot.forEach((doc) => {
           configs.push(new Config({
@@ -45,20 +45,18 @@ export class ConfigService {
   }
 
   postConfig(data: Config): String {
-    return this.firestoreService.post(this.ref, data);
+    return this.firestoreService.post(this.getRef(), data);
   }
 
   putConfig(data: Config) {
-    this.firestoreService.put(this.ref, data.getId(), data.getObject());
+    this.firestoreService.put(this.getRef(), data.getId(), data.getObject());
   }
 
   putConfigs(data: Array<Config>) {
-    data.forEach(d => {
-      this.ref.doc(d.getId()).set(d.getObject());
-    });
+    this.firestoreService.putAll(this.getRef(), data);
   }
 
   deleteConfig(id: string) {
-    this.firestoreService.delete(this.ref, id);
+    this.firestoreService.delete(this.getRef(), id);
   }
 }

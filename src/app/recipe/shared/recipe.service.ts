@@ -53,6 +53,10 @@ export class RecipeService {
     this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_RECIPE);
   }
 
+  putRecipes(data: Array<Recipe>) {
+    this.firestoreService.putAll(this.getRef(), data);
+  }
+
   deleteRecipe(id: string) {
     this.firestoreService.delete(this.getRef(), id, Action.DELETE_RECIPE);
   }

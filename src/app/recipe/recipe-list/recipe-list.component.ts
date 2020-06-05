@@ -59,7 +59,7 @@ export class RecipeListComponent implements OnInit {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
-      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+      this.userIngredientService.getUserIngredient(this.uid).subscribe(userIngredient => {
         this.id = userIngredient.id;
         this.userIngredients = userIngredient.ingredients;
         ingredients.forEach(ingredient => {
