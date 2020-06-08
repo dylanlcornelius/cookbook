@@ -100,7 +100,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(component, 'getRecipeCount');
       spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
@@ -110,7 +110,7 @@ describe('RecipeListComponent', () => {
 
       expect(userService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
+      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
@@ -145,7 +145,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(component, 'getRecipeCount');
       spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
@@ -155,7 +155,7 @@ describe('RecipeListComponent', () => {
 
       expect(userService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
+      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();

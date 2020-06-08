@@ -42,7 +42,7 @@ export class IngredientListComponent implements OnInit {
 
       const myIngredients = [];
 
-      const userIngredients$ = this.userIngredientService.getUserIngredients(this.uid);
+      const userIngredients$ = this.userIngredientService.getUserIngredient(this.uid);
       const ingredients$ = this.ingredientService.getIngredients();
       combineLatest(userIngredients$, ingredients$).subscribe(([userIngredient, ingredients]) => {
         this.id = userIngredient.id;

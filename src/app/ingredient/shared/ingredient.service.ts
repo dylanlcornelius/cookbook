@@ -48,6 +48,10 @@ export class IngredientService {
     this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_INGREDIENT);
   }
 
+  putIngredients(data: Array<Ingredient>) {
+    this.firestoreService.putAll(this.getRef(), data);
+  }
+
   deleteIngredient(id: string) {
     this.firestoreService.delete(this.getRef(), id, Action.DELETE_INGREDIENT);
   }

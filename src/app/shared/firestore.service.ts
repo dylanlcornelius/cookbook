@@ -69,6 +69,12 @@ export class FirestoreService {
     ref?.doc(id).set(data);
   }
 
+  putAll(ref, data) {
+    data.forEach(d => {
+      ref.doc(d.getId()).set(d.getObject());
+    });
+  }
+
   delete(ref, id: string, action?) {
     this.commitAction(action);
     

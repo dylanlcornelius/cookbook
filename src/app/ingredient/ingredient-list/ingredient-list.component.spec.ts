@@ -56,13 +56,13 @@ describe('IngredientsComponent', () => {
       })];
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
 
       component.load();
 
       expect(userService.getCurrentUser).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
+      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
     });
   });

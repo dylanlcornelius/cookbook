@@ -3,6 +3,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { FirestoreService } from '@firestoreService';
 
 import { IngredientService } from './ingredient.service';
+import { Ingredient } from './ingredient.model';
 
 describe('IngredientService', () => {
   let service: IngredientService;
@@ -67,6 +68,18 @@ describe('IngredientService', () => {
 
       expect(service.getRef).toHaveBeenCalled();
       expect(firestoreService.put).toHaveBeenCalled();
+    });
+  });
+
+  describe('putIngredients', () => {
+    it('should update a document', () => {
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'putAll');
+
+      service.putIngredients([new Ingredient({})]);
+
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.putAll).toHaveBeenCalled();
     });
   });
 

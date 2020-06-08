@@ -6,6 +6,7 @@ import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserItem } from './user-item.model';
 import { UserService } from '@userService';
+import { FirestoreService } from '@firestoreService';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,20 @@ export class UserItemService {
   }
 
   constructor(
+    private firestoreService: FirestoreService,
     private userService: UserService,
     private actionService: ActionService
   ) {}
+
+  getAllUserItems(): Observable<UserItem[]> {
+    return new Observable(observable => {
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
+        observable.next(docs.map(doc => {
+          return new UserItem(doc);
+        }));
+      });
+    });
+  }
 
   getUserItems(uid: string): Observable<UserItem> {
     const self = this;
@@ -60,6 +72,10 @@ export class UserItemService {
 
   putUserItem(data: UserItem) {
     this.getRef().doc(data.getId()).set(data.getObject());
+  }
+
+  putUserItems(data: Array<UserItem>) {
+    this.firestoreService.putAll(this.getRef(), data);
   }
 
   buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
