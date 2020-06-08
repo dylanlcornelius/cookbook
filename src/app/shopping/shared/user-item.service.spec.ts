@@ -5,17 +5,20 @@ import { UserService } from '@userService';
 import { User } from 'src/app/user/shared/user.model';
 import { of } from 'rxjs/internal/observable/of';
 import { ActionService } from '@actionService';
+import { FirestoreService } from '@firestoreService';
 
 describe('UserItemService', () => {
   let service: UserItemService;
   let userService: UserService;
   let actionService: ActionService;
+  let firestoreService: FirestoreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.get(UserItemService);
     userService = TestBed.inject(UserService);
     actionService = TestBed.inject(ActionService);
+    firestoreService = TestBed.inject(FirestoreService);
   });
 
   it('should be created', () => {
@@ -105,6 +108,18 @@ describe('UserItemService', () => {
       expect(ref.set).toHaveBeenCalled();
       expect(userItem.getId).toHaveBeenCalled();
       expect(userItem.getObject).toHaveBeenCalled();
+    });
+  });
+
+  describe('putUserItems', () => {
+    it('should update user item records', () => {
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'putAll');
+
+      service.putUserItems([new UserItem({})]);
+
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.putAll).toHaveBeenCalled();
     });
   });
 

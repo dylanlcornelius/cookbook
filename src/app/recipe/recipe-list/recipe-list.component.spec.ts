@@ -100,7 +100,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(component, 'getRecipeCount');
       spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
@@ -110,7 +110,7 @@ describe('RecipeListComponent', () => {
 
       expect(userService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
+      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
@@ -145,7 +145,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(component, 'getRecipeCount');
       spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
@@ -155,7 +155,7 @@ describe('RecipeListComponent', () => {
 
       expect(userService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
+      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
@@ -363,8 +363,21 @@ describe('RecipeListComponent', () => {
   });
 
   describe('applyFilter', () => {
-    it('should apply a search filter', () => {
+    it('should apply a search filter with a paginator', () => {
       component.dataSource = new MatTableDataSource();
+      component.dataSource.paginator = {firstPage: () => {}};
+
+      spyOn(component, 'setFilters');
+
+      component.applyFilter(' VALUE ');
+
+      expect(component.searchFilter).toEqual('value');
+      expect(component.setFilters).toHaveBeenCalled();
+    });
+
+    it('should apply a search filter and handle an empty paginator', () => {
+      component.dataSource = new MatTableDataSource();
+      component.dataSource.paginator = undefined;
 
       spyOn(component, 'setFilters');
 
@@ -630,6 +643,12 @@ describe('RecipeListComponent', () => {
       const result = component.recipeFilterPredicate({'prop': 'filter'}, "[\"test\"]");
 
       expect(result).toBeFalse();
+    });
+
+    it('should filter by rating', () => {
+      const result = component.recipeFilterPredicate({'meanRating': 0}, "[\"0\"]");
+
+      expect(result).toBeTrue();
     });
   });
 

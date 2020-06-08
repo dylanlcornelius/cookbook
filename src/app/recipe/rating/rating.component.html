@@ -1,5 +1,10 @@
 <div class="star-ratings">
-    <div class="top" [ngStyle]="{'width': meanRating + '%'}">
+    <div class="user" [ngStyle]="{'width': (getUserRating().rating / 3 * 100) + '%'}">
+        <span (click)="handleRate(1)">★</span>
+        <span (click)="handleRate(2)">★</span>
+        <span (click)="handleRate(3)">★</span>
+    </div>
+    <div class="top" [ngStyle]="{'width': recipe.meanRating + '%', 'height': getUserRating().rating ? '20px' : '100%'}">
         <span (click)="handleRate(1)">★</span>
         <span (click)="handleRate(2)">★</span>
         <span (click)="handleRate(3)">★</span>

@@ -7,34 +7,27 @@ import { Recipe } from '../shared/recipe.model';
   styleUrls: ['./rating.component.scss']
 })
 export class RatingComponent {
-  @Input() ratings: Recipe["ratings"];
+  @Input() recipe: Recipe = new Recipe({});
   @Input() uid: string;
 
-  @Output() rate: EventEmitter<string> = new EventEmitter();
+  @Output() rate: EventEmitter<number> = new EventEmitter();
 
-  meanRating: number;
+  userRating;
+  getUserRating = () => (this.userRating || {rating: 0});
 
   ngOnChanges() {
-    this.calculateMeanRating();
+    this.userRating = this.findUserRating();
   }
 
-  calculateMeanRating() {
-    if (!this.ratings) {
-      return;
-    }
-
-    if (this.ratings.length === 0) {
-      this.meanRating = 0;
-      return;
-    }
-    
-    this.meanRating = this.ratings.reduce((sum, rating) => sum + rating.rating, 0) / this.ratings.length / 3 * 100;
+  findUserRating() {
+    return this.recipe.ratings.find(rating => rating.uid === this.uid);
   }
 
   handleRate(newRating) {
-    const userRating = this.ratings.find(rating => rating.uid === this.uid);
-    if (!userRating || userRating && userRating.rating != newRating) {
+    if (!this.userRating || this.userRating && this.userRating.rating !== newRating) {
       this.rate.emit(newRating);
+    } else {
+      this.rate.emit(0);
     }
   }
 }

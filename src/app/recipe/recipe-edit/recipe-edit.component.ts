@@ -28,8 +28,8 @@ export class RecipeEditComponent implements OnInit {
   loading: Boolean = true;
   title: string;
 
+  recipe: Recipe;
   recipesForm: FormGroup;
-  id: string;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -73,11 +73,10 @@ export class RecipeEditComponent implements OnInit {
     const ingredients$ = this.ingredientService.getIngredients();
 
     if (this.route.snapshot.params['id']) {
-      const user$ = this.userService.getCurrentUser();
       const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
 
-      combineLatest(user$, recipe$, ingredients$).subscribe(([user, recipe, ingredients]) => {
-        this.id = recipe.id;
+      combineLatest(recipe$, ingredients$).subscribe(([recipe, ingredients]) => {
+        this.recipe = recipe;
 
         recipe.categories.forEach(() => {
           this.addCategory();
@@ -253,6 +252,8 @@ export class RecipeEditComponent implements OnInit {
     this.userService.getCurrentUser().subscribe(user => {
       const form = this.recipesForm.value;
 
+      form.meanRating = this.recipe.meanRating;
+      form.ratings = this.recipe.ratings;
       form.uid = user.uid;
       form.author = user.firstName + ' ' + user.lastName;
       form.ingredients.forEach(ingredient => {
@@ -260,8 +261,8 @@ export class RecipeEditComponent implements OnInit {
       });
 
       if (this.route.snapshot.params['id']) {
-        this.recipeService.putRecipe(this.id, form);
-        this.router.navigate(['/recipe/detail/', this.id]);
+        this.recipeService.putRecipe(this.recipe.id, form);
+        this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {
         const id = this.recipeService.postRecipe(form);
         this.router.navigate(['/recipe/detail/', id]);

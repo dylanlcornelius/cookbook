@@ -26,12 +26,7 @@ export class Ingredient {
     }
 
     public getObject() {
-        return {
-            name: this.name,
-            category: this.category,
-            amount: this.amount,
-            uom: this.uom,
-            calories: this.calories,
-        };
+        const {id, quantity, pantryQuantity, cartQuantity, ...ingredient} = this;
+        return ingredient;
     }
 }

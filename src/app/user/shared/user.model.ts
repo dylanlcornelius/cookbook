@@ -22,14 +22,8 @@ export class User {
     }
 
     public getObject() {
-        return {
-            uid: this.uid,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            role: this.role,
-            theme: this.theme,
-            simplifiedView: this.simplifiedView,
-        };
+        const {id, ...user} = this;
+        return user;
     }
 
     public isAdmin() { return this.role === 'admin'; }

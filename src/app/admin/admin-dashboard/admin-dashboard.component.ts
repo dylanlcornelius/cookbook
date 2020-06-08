@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-
 import { IngredientService } from '@ingredientService';
 import { RecipeService } from '@recipeService';
 import { UserService } from '@userService';
@@ -8,6 +6,13 @@ import { ConfigService } from '../shared/config.service';
 import { Config } from '../shared/config.model';
 import { User } from 'src/app/user/shared/user.model';
 import { Notification } from '@notifications';
+import { combineLatest } from 'rxjs';
+import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { Recipe } from 'src/app/recipe/shared/recipe.model';
+import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
+import { UserItem } from 'src/app/shopping/shared/user-item.model';
+import { UserIngredientService } from '@userIngredientService';
+import { UserItemService } from '@userItemService';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,64 +20,103 @@ import { Notification } from '@notifications';
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
-
   loading: Boolean = true;
   validationModalParams;
   notificationModalParams;
 
-  configsDisplayedColumns = ['id', 'name', 'value', 'delete'];
-  configsDataSource: Array<Config>;
+  originalConfigs: Array<Config>;
+  configContext = {
+    title: 'Configurations',
+    displayedColumns: ['id', 'name', 'value'],
+    dataSource: [],
+    add: this.addConfig,
+    remove: this.removeConfig,
+  };
 
-  usersDisplayedColumns = ['id', 'firstName', 'lastName', 'roles', 'themes', 'delete'];
-  roleList = ['user', 'admin', 'pending'];
-  themeList = [true, false];
-  usersDataSource: Array<User>;
-  selectedRow: {};
+  originalUsers: Array<User>;
+  userContext = {
+    title: 'Users',
+    displayedColumns: ['id', 'firstName', 'lastName', 'role', 'theme'],
+    dataSource: [],
+    remove: this.removeUser,
+  };
 
-  // ingredientsDisplayedColumns = ['name', 'type'];
-  // ingredientsDataSource = [];
-  // recipesDisplayedColumns = ['name', 'type'];
-  // recipesDataSource = [];
+  originalRecipes: Array<Recipe>;
+  recipeContext = {
+    title: 'Recipes',
+    displayedColumns: ['id', 'name', 'link', 'categories', 'steps', 'meanRating', 'uid', 'author'],
+    dataSource: []
+  };
 
-  constructor(private formBuilder: FormBuilder,
+  originalIngredients: Array<Ingredient>;
+  ingredientContext = {
+    title: 'Ingredients',
+    displayedColumns: ['id', 'name', 'category', 'amount', 'uom'],
+    dataSource: []
+  };
+
+  originalUserIngredients: Array<UserIngredient>;
+  userIngredientContext = {
+    title: 'User Ingredients',
+    displayedColumns: ['id', 'uid', 'ingredients'],
+    dataSource: []
+  };
+
+  originalUserItems: Array<UserItem>;
+  userItemContext = {
+    title: 'User Items',
+    displayedColumns: ['id', 'uid', 'items'],
+    dataSource: []
+  };
+
+  constructor(
     private configService: ConfigService,
     private userService: UserService,
     private ingredientService: IngredientService,
-    private recipeService: RecipeService) {}
+    private recipeService: RecipeService,
+    private userIngredientService: UserIngredientService,
+    private userItemService: UserItemService
+  ) {}
 
   ngOnInit() {
-    this.configService.getConfigs().subscribe(result => {
-      this.configsDataSource = result;
-    });
-    this.userService.getUsers().subscribe((result) => {
-      this.usersDataSource = result;
+    this.load();
+  }
+
+  load() {
+    const configs$ = this.configService.getConfigs();
+    const users$ = this.userService.getUsers();
+    const recipes$ = this.recipeService.getRecipes();
+    const ingredients$ = this.ingredientService.getIngredients();
+    const userIngredients$ = this.userIngredientService.getUserIngredients();
+    const userItems$ = this.userItemService.getAllUserItems();
+
+    combineLatest(configs$, users$, recipes$, ingredients$, userIngredients$, userItems$)
+    .subscribe(([configs, users, recipes, ingredients, userIngredients, userItems]) => {
+      this.originalConfigs = configs;
+      this.configContext.dataSource = configs;
+
+      this.originalUsers = users;
+      this.userContext.dataSource = users;
+
+      this.originalRecipes = recipes;
+      this.recipeContext.dataSource = recipes;
+
+      this.originalIngredients = ingredients;
+      this.ingredientContext.dataSource = ingredients;
+
+      this.originalUserIngredients = userIngredients;
+      this.userIngredientContext.dataSource = userIngredients;
+
+      this.originalUserItems = userItems;
+      this.userItemContext.dataSource = userItems;
+      
       this.loading = false;
     });
-    // this.recipeService.getRecipes().subscribe((result) => {
-    //   this.recipesDataSource = this.getCollectionData(result);
-    // });
-    // this.ingredientService.getIngredients().subscribe((result) => {
-    //   this.ingredientsDataSource = this.getCollectionData(result);
-    // });
   }
 
-  getCollectionData(result) {
-    const data = [];
-    if (result.length > 0) {
-      Object.entries(result[0]).forEach(([key, value]) => {
-        let type = 'null';
-        if (value instanceof String) {
-          type = 'String';
-        } else if (value instanceof Array) {
-          type = 'Array';
-        }
-        data.push({name: key, type: type});
-      });
-    }
-    return data;
+  isArray(obj) {
+    return Array.isArray(obj);
   }
-
-  // TODO: dynamically add, remove, init, revert, save datasources
 
   addConfig() {
     this.configService.postConfig(new Config({}));
@@ -120,12 +164,13 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   revertEvent(self) {
-    self.configService.getConfigs().then((result) => {
-      self.configsDataSource = result;
-    });
-    self.userService.getUsers().subscribe((result) => {
-      self.usersDataSource = result;
-    });
+    self.configContext.dataSource = self.originalConfigs;
+    self.userContext.dataSource = self.originalUsers;
+    self.recipeContext.dataSource = self.originalRecipes;
+    self.ingredientContext.dataSource = self.originalIngredients;
+    self.userIngredientContext.dataSource = self.originalUserIngredients;
+    self.userItemContext.dataSource = self.originalUserItems;
+
     self.notificationModalParams = {
       self: self,
       type: Notification.SUCCESS,
@@ -138,9 +183,13 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   saveEvent(self) {
-    self.configService.putConfigs(self.configsDataSource);
-    // TODO: use model
-    self.userService.putUsers(self.usersDataSource);
+    self.configService.putConfigs(self.configContext.dataSource);
+    self.userService.putUsers(self.userContext.dataSource);
+    self.recipeService.putRecipes(self.recipeContext.dataSource);
+    self.ingredientService.putIngredients(self.ingredientContext.dataSource);
+    self.userIngredientService.putUserIngredients(self.userIngredientContext.dataSource);
+    self.userItemService.putUserItems(self.userItemContext.dataSource);
+
     self.notificationModalParams = {
       self: this,
       type: Notification.SUCCESS,

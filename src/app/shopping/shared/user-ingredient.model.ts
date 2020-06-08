@@ -21,9 +21,7 @@ export class UserIngredient {
     }
 
     public getObject() {
-        return {
-            uid: this.uid,
-            ingredients: this.ingredients,
-        };
+        const {id, ...userIngredient} = this;
+        return userIngredient;
     }
 }

@@ -5,14 +5,24 @@
     margin: 0 auto;
     padding: 0;
 }
-.top {
-    color: #eec71b;
+.user {
+    color: #eb9719;
     overflow: hidden;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 1;
     padding: 0;
+}
+.top {
+    color: #eec71b;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0;
+    height: 20px;
 }
 .bottom {
     color: #737373;

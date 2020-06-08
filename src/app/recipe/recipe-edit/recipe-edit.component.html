@@ -9,7 +9,7 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', id]" *ngIf="route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="route.snapshot.params['id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
     <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']" *ngIf="!route.snapshot.params['id']">

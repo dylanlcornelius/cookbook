@@ -6,6 +6,7 @@ import { Action } from '@actions';
 import { UserIngredient } from './user-ingredient.model';
 import { Observable } from 'rxjs';
 import { UserService } from '@userService';
+import { FirestoreService } from '@firestoreService';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,22 @@ export class UserIngredientService {
   }
 
   constructor(
+    private firestoreService: FirestoreService,
     private userService: UserService,
     private actionService: ActionService
   ) {}
 
-  getUserIngredients(uid: string): Observable<UserIngredient> {
+  getUserIngredients(): Observable<UserIngredient[]> {
+    return new Observable(observable => {
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
+        observable.next(docs.map(doc => {
+          return new UserIngredient(doc);
+        }));
+      });
+    });
+  }
+
+  getUserIngredient(uid: string): Observable<UserIngredient> {
     const self = this;
     return new Observable((observer) => {
       this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
@@ -55,6 +67,10 @@ export class UserIngredientService {
   putUserIngredient(data: UserIngredient) {
     this.getRef().doc(data.getId()).set(data.getObject())
     .catch(function(error) { console.error('error: ', error); });
+  }
+
+  putUserIngredients(data: Array<UserIngredient>) {
+    this.firestoreService.putAll(this.getRef(), data);
   }
 
   buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {

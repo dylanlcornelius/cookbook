@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserService } from '@userService';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -32,34 +33,39 @@ export class IngredientListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.load();
+  }
+
+  load() {
     this.userService.getCurrentUser().subscribe(user => {
       this.uid = user.uid;
 
       const myIngredients = [];
-      this.userIngredientService.getUserIngredients(this.uid).subscribe(userIngredient => {
+
+      const userIngredients$ = this.userIngredientService.getUserIngredient(this.uid);
+      const ingredients$ = this.ingredientService.getIngredients();
+      combineLatest(userIngredients$, ingredients$).subscribe(([userIngredient, ingredients]) => {
         this.id = userIngredient.id;
-        this.ingredientService.getIngredients().subscribe(ingredients => {
-          ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (myIngredient.id === ingredient.id) {
-                ingredient.pantryQuantity = myIngredient.pantryQuantity;
-                ingredient.cartQuantity = myIngredient.cartQuantity;
+        ingredients.forEach(ingredient => {
+          userIngredient.ingredients.forEach(myIngredient => {
+            if (myIngredient.id === ingredient.id) {
+              ingredient.pantryQuantity = myIngredient.pantryQuantity;
+              ingredient.cartQuantity = myIngredient.cartQuantity;
 
-                myIngredients.push({
-                  id: myIngredient.id,
-                  pantryQuantity: myIngredient.pantryQuantity,
-                  cartQuantity: myIngredient.cartQuantity
-                });
-              }
-            });
+              myIngredients.push({
+                id: myIngredient.id,
+                pantryQuantity: myIngredient.pantryQuantity,
+                cartQuantity: myIngredient.cartQuantity
+              });
+            }
           });
-
-          this.dataSource = new MatTableDataSource(ingredients);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.userIngredients = myIngredients;
-          this.loading = false;
         });
+
+        this.dataSource = new MatTableDataSource(ingredients);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.userIngredients = myIngredients;
+        this.loading = false;
       });
     });
   }
@@ -83,10 +89,12 @@ export class IngredientListComponent implements OnInit {
       data: data,
       self: this,
       text: 'Edit pantry quantity for ' + ingredient.name,
-      function: (self) => {
-        self.userIngredientService.putUserIngredient(self.packageData(self));
-      },
+      function: this.editIngredientEvent
     };
+  }
+
+  editIngredientEvent(self) {
+    self.userIngredientService.putUserIngredient(self.packageData(self));
   }
 
   packageData(self) {
