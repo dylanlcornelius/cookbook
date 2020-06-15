@@ -1,22 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { UserItemService } from './user-item.service';
 import { UserItem } from './user-item.model';
-import { UserService } from '@userService';
 import { User } from 'src/app/user/shared/user.model';
 import { of } from 'rxjs/internal/observable/of';
 import { ActionService } from '@actionService';
 import { FirestoreService } from '@firestoreService';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 describe('UserItemService', () => {
   let service: UserItemService;
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
   let actionService: ActionService;
   let firestoreService: FirestoreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.get(UserItemService);
-    userService = TestBed.inject(UserService);
+    service = TestBed.inject(UserItemService);
+    currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
     firestoreService = TestBed.inject(FirestoreService);
   });
@@ -131,7 +131,7 @@ describe('UserItemService', () => {
         set: () => {}
       };
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(service, 'getRef').and.returnValue(ref);
       spyOn(ref, 'doc').and.returnValue(ref);
       spyOn(ref, 'set');
@@ -141,7 +141,7 @@ describe('UserItemService', () => {
 
       service.buyUserItem(userItem, 1, false);
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(service.getRef).toHaveBeenCalled();
       expect(ref.doc).toHaveBeenCalled();
       expect(ref.set).toHaveBeenCalled();
@@ -157,7 +157,7 @@ describe('UserItemService', () => {
         set: () => {}
       };
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(service, 'getRef').and.returnValue(ref);
       spyOn(ref, 'doc').and.returnValue(ref);
       spyOn(ref, 'set');
@@ -167,7 +167,7 @@ describe('UserItemService', () => {
 
       service.buyUserItem(userItem, 1, true);
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(service.getRef).toHaveBeenCalled();
       expect(ref.doc).toHaveBeenCalled();
       expect(ref.set).toHaveBeenCalled();

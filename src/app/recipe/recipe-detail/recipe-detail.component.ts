@@ -6,8 +6,8 @@ import { Notification } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
 import { Observable, merge, of, fromEvent, combineLatest } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
-import { UserService } from '@userService';
 import { Recipe } from '../shared/recipe.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -30,7 +30,7 @@ export class RecipeDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private imageService: ImageService,
@@ -47,7 +47,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   load() {
-    const user$ = this.userService.getCurrentUser();
+    const user$ = this.currentUserService.getCurrentUser();
     const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
     const ingredients$ = this.ingredientService.getIngredients();
 

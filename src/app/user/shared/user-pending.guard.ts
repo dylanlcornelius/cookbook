@@ -9,8 +9,8 @@ import {
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
-import { UserService } from '@userService';
 import { User } from '../shared/user.model';
+import { CurrentUserService } from './current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +18,11 @@ import { User } from '../shared/user.model';
 export class UserPendingGuard implements CanActivate, CanActivateChild {
   constructor(
     private router: Router,
-    private userService: UserService
+    private currentUserService: CurrentUserService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.userService.getCurrentUser()
+    return this.currentUserService.getCurrentUser()
       .pipe(
         take(1),
         map((user: User) => {

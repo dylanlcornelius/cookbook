@@ -11,12 +11,12 @@ describe('ConfigService', () => {
   
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.get(ConfigService);
+    service = TestBed.inject(ConfigService);
     firestoreService = TestBed.inject(FirestoreService);
   });
 
   it('should be created', () => {
-    const service: ConfigService = TestBed.get(ConfigService);
+    const service: ConfigService = TestBed.inject(ConfigService);
     expect(service).toBeTruthy();
   });
 

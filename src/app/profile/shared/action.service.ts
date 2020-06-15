@@ -21,7 +21,7 @@ export class ActionService {
   commitAction(uid: string, action: Action, number: Number): Promise<void> {
     const self = this;
     return new Promise<void>( resolve => {
-        if (uid) {
+      if (uid) {
         self.getAction(self, uid).then(function(userAction) {
           const weekStart = new Date();
           weekStart.setDate(weekStart.getDate() - weekStart.getDay());

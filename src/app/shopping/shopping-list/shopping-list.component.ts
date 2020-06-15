@@ -6,8 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Notification } from '@notifications';
 import { UserItemService } from '@userItemService';
 import { UserItem } from '../shared/user-item.model';
-import { UserService } from '@userService';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 // TODO: icons for notification modal
 @Component({
@@ -35,7 +35,7 @@ export class ShoppingListComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
@@ -50,7 +50,7 @@ export class ShoppingListComponent implements OnInit {
       'name': [null],
     });
 
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe(user => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 

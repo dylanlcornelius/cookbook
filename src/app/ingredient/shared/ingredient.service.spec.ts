@@ -11,7 +11,7 @@ describe('IngredientService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.get(IngredientService);
+    service = TestBed.inject(IngredientService);
     firestoreService = TestBed.inject(FirestoreService);
   });
 

@@ -8,17 +8,17 @@ import { Recipe } from '../shared/recipe.model';
 import { RecipeListComponent } from '../recipe-list/recipe-list.component';
 import { ImageService } from 'src/app/util/image.service';
 import { of } from 'rxjs';
-import { UserService } from '@userService';
 import { IngredientService } from '@ingredientService';
 import { User } from 'src/app/user/shared/user.model';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
   let fixture: ComponentFixture<RecipeDetailComponent>;
   let recipeService: RecipeService;
   let imageService: ImageService;
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
   let ingredientService: IngredientService;
 
   beforeEach(async(() => {
@@ -40,10 +40,10 @@ describe('RecipeDetailComponent', () => {
     fixture = TestBed.createComponent(RecipeDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    recipeService = TestBed.get(RecipeService);
-    imageService = TestBed.get(ImageService);
-    userService = TestBed.get(UserService);
-    ingredientService = TestBed.get(IngredientService);
+    recipeService = TestBed.inject(RecipeService);
+    imageService = TestBed.inject(ImageService);
+    currentUserService = TestBed.inject(CurrentUserService);
+    ingredientService = TestBed.inject(IngredientService);
   });
 
   it('should create', () => {
@@ -56,7 +56,7 @@ describe('RecipeDetailComponent', () => {
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(user));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'getRecipe').and.returnValue(of(recipe));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
@@ -64,7 +64,7 @@ describe('RecipeDetailComponent', () => {
 
       component.load();
       
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipe).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('RecipeDetailComponent', () => {
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(user));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'getRecipe').and.returnValue(of(recipe));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
@@ -84,7 +84,7 @@ describe('RecipeDetailComponent', () => {
 
       component.load();
       
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipe).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();

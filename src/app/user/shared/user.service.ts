@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from './user.model';
+import { FirestoreService } from '@firestoreService';
 
 @Injectable({
   providedIn: 'root'
@@ -16,32 +17,16 @@ export class UserService {
     return this.ref;
   }
 
-  private currentUser = new BehaviorSubject<User>(new User({}));
-  private isloggedIn = new BehaviorSubject<boolean>(false);
-  private isGuest = new BehaviorSubject<boolean>(false);
-
-  getCurrentUser(): Observable<User> { return this.currentUser.asObservable(); }
-  setCurrentUser(currentUser: User) { this.currentUser.next(currentUser); }
-
-  getIsLoggedIn() { return this.isloggedIn.asObservable(); }
-  setIsLoggedIn(isloggedIn: boolean) { this.isloggedIn.next(isloggedIn); }
-
-  getIsGuest() { return this.isGuest.asObservable(); }
-  setIsGuest(isGuest: boolean) { this.isGuest.next(isGuest); }
-
-  constructor() {}
+  constructor(
+    private firestoreService: FirestoreService
+  ) {}
 
   getUsers(): Observable<User[]> {
     return new Observable(observable => {
-      this.getRef()?.onSnapshot((querySnapshot) => {
-        const users = [];
-        querySnapshot.forEach((doc) => {
-          users.push(new User({
-            ...doc.data(),
-            id: doc.id
-          }));
-        });
-        observable.next(users);
+      this.firestoreService.get(this.getRef()).subscribe(docs => {
+        observable.next(docs.map(doc => {
+          return new User(doc);
+        }));
       });
     });
   }
@@ -62,22 +47,18 @@ export class UserService {
   }
 
   postUser(data: User): string {
-    const newDoc = this.getRef()?.doc();
-    newDoc.set(data.getObject());
-    return newDoc.id;
+    return this.firestoreService.post(this.getRef(), data.getObject());
   }
 
   putUser(data: User) {
-    this.getRef()?.doc(data.getId()).set(data.getObject());
+    this.firestoreService.put(this.getRef(), data.getId(), data.getObject());
   }
 
   putUsers(data: Array<User>) {
-    data.forEach(d => {
-      this.getRef()?.doc(d.getId()).set(d.getObject());
-    });
+    this.firestoreService.putAll(this.getRef(), data);
   }
 
   deleteUser(id: string) {
-    this.getRef()?.doc(id).delete();
+    this.firestoreService.delete(this.getRef(), id);
   }
 }

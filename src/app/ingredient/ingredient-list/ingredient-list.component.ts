@@ -5,8 +5,8 @@ import { UserIngredientService } from '@userIngredientService';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserService } from '@userService';
 import { combineLatest } from 'rxjs';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -27,7 +27,7 @@ export class IngredientListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
   ) {}
@@ -37,7 +37,7 @@ export class IngredientListComponent implements OnInit {
   }
 
   load() {
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe(user => {
       this.uid = user.uid;
 
       const myIngredients = [];

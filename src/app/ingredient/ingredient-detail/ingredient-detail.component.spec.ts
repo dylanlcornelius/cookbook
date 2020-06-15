@@ -25,12 +25,12 @@ describe('IngredientsDetailComponent', () => {
       ]
     })
     .compileComponents();
-    ingredientService = TestBed.get(IngredientService);
+    ingredientService = TestBed.inject(IngredientService);
   }));
 
   it('should create', () => {
-    const route = TestBed.get(ActivatedRoute);
-    route.snapshot = {params: {id: 'testId'}};
+    const route = TestBed.inject(ActivatedRoute);
+    route.snapshot.params = {id: 'testId'};
 
     spyOn(ingredientService, 'getIngredient').and.returnValue(Promise.resolve(new Ingredient({})));
     

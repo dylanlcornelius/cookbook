@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import '@firebase/firestore';
 import { ActionService } from '@actionService';
-import { UserService } from '@userService';
 import { Observable } from 'rxjs';
+import { CurrentUserService } from '../user/shared/current-user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
   constructor(
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private actionService: ActionService,
   ) {}
 
   private commitAction(action) {
     if (action) {
-      this.userService.getCurrentUser().subscribe(user => {
+      this.currentUserService.getCurrentUser().subscribe(user => {
         this.actionService.commitAction(user.uid, action, 1);
       });
     }
@@ -46,7 +46,8 @@ export class FirestoreService {
       });
     });
   }
-
+  
+  // TODO: create getOneWhere
   get(ref, id?: string): Observable<any> {
     if (id) {
       return this.getOne(ref, id);
@@ -55,7 +56,7 @@ export class FirestoreService {
     }
   }
 
-  post(ref, data, action?): String {
+  post(ref, data, action?): string {
     this.commitAction(action);
 
     const newDoc = ref?.doc();

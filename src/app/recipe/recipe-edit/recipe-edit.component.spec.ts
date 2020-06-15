@@ -4,7 +4,6 @@ import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component'
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { UOMConversion, UOM } from 'src/app/ingredient/shared/uom.emun';
 import { RecipeEditComponent } from './recipe-edit.component';
-import { UserService } from '@userService';
 import { RecipeService } from '@recipeService';
 import { of } from 'rxjs';
 import { User } from 'src/app/user/shared/user.model';
@@ -12,11 +11,12 @@ import { Recipe } from '../shared/recipe.model';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
   let fixture: ComponentFixture<RecipeEditComponent>;
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
   let uomConversion: UOMConversion;
   let formBuilder: FormBuilder;
@@ -46,7 +46,7 @@ describe('RecipeEditComponent', () => {
     fixture = TestBed.createComponent(RecipeEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    userService = TestBed.inject(UserService);
+    currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
     uomConversion = TestBed.inject(UOMConversion);
     formBuilder = TestBed.inject(FormBuilder);
@@ -59,8 +59,8 @@ describe('RecipeEditComponent', () => {
 
   describe('load', () => {
     it('should load recipes with data', () => {
-      const route = TestBed.get(ActivatedRoute);
-      route.snapshot = {params: {id: 'testId'}};
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
 
       const recipe = new Recipe({
         categories: [{}],
@@ -90,8 +90,8 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load recipes without data', () => {
-      const route = TestBed.get(ActivatedRoute);
-      route.snapshot = {params: {id: 'testId'}};
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
 
       const recipe = new Recipe({
         ingredients: [{
@@ -299,27 +299,27 @@ describe('RecipeEditComponent', () => {
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });
-      const route = TestBed.get(ActivatedRoute);
-      route.snapshot = {params: {id: 'testId'}};
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'putRecipe');
 
       component.submitForm();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.putRecipe).toHaveBeenCalled();
     });
 
     it('should create a recipe', () => {
       component.recipe = new Recipe({id: 'testId'});
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'postRecipe').and.returnValue('testId');
 
       component.submitForm();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.postRecipe).toHaveBeenCalled();
     });
   });

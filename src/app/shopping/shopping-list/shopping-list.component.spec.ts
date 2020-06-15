@@ -4,7 +4,6 @@ import { ShoppingListComponent } from './shopping-list.component';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
-import { UserService } from '@userService';
 import { of } from 'rxjs';
 import { User } from 'src/app/user/shared/user.model';
 import { UserIngredient } from '../shared/user-ingredient.model';
@@ -13,13 +12,14 @@ import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { UserItem } from '../shared/user-item.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
   let fixture: ComponentFixture<ShoppingListComponent>;
   let userIngredientService: UserIngredientService;
   let userItemService: UserItemService;
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
   let ingredientService: IngredientService;
 
   beforeEach(async(() => {
@@ -43,7 +43,7 @@ describe('ShoppingListComponent', () => {
     fixture.detectChanges();
     userIngredientService = TestBed.inject(UserIngredientService);
     userItemService = TestBed.inject(UserItemService);
-    userService = TestBed.inject(UserService);
+    currentUserService = TestBed.inject(CurrentUserService);
     ingredientService = TestBed.inject(IngredientService);
   });
 
@@ -67,14 +67,14 @@ describe('ShoppingListComponent', () => {
         }]
       });
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
 
       component.load();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userItemService.getUserItems).toHaveBeenCalled();
@@ -95,14 +95,14 @@ describe('ShoppingListComponent', () => {
         }]
       });
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
 
       component.load();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userItemService.getUserItems).toHaveBeenCalled();
@@ -115,14 +115,14 @@ describe('ShoppingListComponent', () => {
       })];
       const userItems = new UserItem({});
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
       spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
 
       component.load();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userItemService.getUserItems).toHaveBeenCalled();

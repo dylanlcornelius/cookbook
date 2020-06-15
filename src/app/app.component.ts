@@ -5,8 +5,8 @@ import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
 import { fadeComponentAnimation } from 'src/app/theme/animations';
-import { UserService } from '@userService';
 import { User } from './user/shared/user.model';
+import { CurrentUserService } from './user/shared/current-user.service';
 
 @Component({
   selector: 'app-root',
@@ -23,15 +23,15 @@ export class AppComponent implements OnInit {
 
   constructor(
     private title: Title,
-    private userService: UserService
+    private currentUserService: CurrentUserService
   ) {
     this.title.setTitle(environment.config.title);
   }
 
   ngOnInit() {
-    this.user = this.userService.getCurrentUser();
-    this.isLoggedIn = this.userService.getIsLoggedIn();
-    this.isGuest = this.userService.getIsGuest();
+    this.user = this.currentUserService.getCurrentUser();
+    this.isLoggedIn = this.currentUserService.getIsLoggedIn();
+    this.isGuest = this.currentUserService.getIsGuest();
   }
 
   routeTransition(outlet) {

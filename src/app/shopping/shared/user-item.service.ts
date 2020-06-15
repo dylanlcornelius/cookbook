@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserItem } from './user-item.model';
-import { UserService } from '@userService';
 import { FirestoreService } from '@firestoreService';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class UserItemService {
 
   constructor(
     private firestoreService: FirestoreService,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private actionService: ActionService
   ) {}
 
@@ -79,7 +79,7 @@ export class UserItemService {
   }
 
   buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe(user => {
       this.getRef().doc(data.getId()).set(data.getObject());
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {

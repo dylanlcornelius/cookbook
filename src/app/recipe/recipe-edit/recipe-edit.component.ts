@@ -15,9 +15,9 @@ import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { UserService } from '@userService';
 import { combineLatest } from 'rxjs';
 import { Recipe } from '../shared/recipe.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -45,7 +45,7 @@ export class RecipeEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
@@ -249,7 +249,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   submitForm() {
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe(user => {
       const form = this.recipesForm.value;
 
       form.meanRating = this.recipe.meanRating;

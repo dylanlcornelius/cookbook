@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { AuthService } from '../../user/shared/auth.service';
-import { UserService } from '@userService';
 import { User } from '../../user/shared/user.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +21,11 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.userService.getCurrentUser()
+    return this.currentUserService.getCurrentUser()
       .pipe(
         take(1),
         map((user: User) => {

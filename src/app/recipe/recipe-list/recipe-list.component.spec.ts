@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
-import { UserService } from '@userService';
 import { RecipeService } from '@recipeService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
@@ -15,11 +14,12 @@ import { RecipeListComponent } from './recipe-list.component';
 import { Recipe } from '../shared/recipe.model';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
   let fixture: ComponentFixture<RecipeListComponent>;
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
   let userIngredientService: UserIngredientService;
   let uomConversion: UOMConversion;
@@ -34,7 +34,7 @@ describe('RecipeListComponent', () => {
       ],
       providers: [
         UOMConversion,
-        UserService,
+        CurrentUserService,
         RecipeService,
         UserIngredientService,
         IngredientService,
@@ -54,12 +54,12 @@ describe('RecipeListComponent', () => {
     fixture = TestBed.createComponent(RecipeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    userService = TestBed.get(UserService);
-    recipeService = TestBed.get(RecipeService);
-    userIngredientService = TestBed.get(UserIngredientService);
-    uomConversion = TestBed.get(UOMConversion);
-    ingredientService = TestBed.get(IngredientService);
-    imageService = TestBed.get(ImageService);
+    currentUserService = TestBed.inject(CurrentUserService);
+    recipeService = TestBed.inject(RecipeService);
+    userIngredientService = TestBed.inject(UserIngredientService);
+    uomConversion = TestBed.inject(UOMConversion);
+    ingredientService = TestBed.inject(IngredientService);
+    imageService = TestBed.inject(ImageService);
   });
 
   it('should create', () => {
@@ -98,7 +98,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
@@ -108,7 +108,7 @@ describe('RecipeListComponent', () => {
 
       component.load();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
@@ -143,7 +143,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
@@ -153,7 +153,7 @@ describe('RecipeListComponent', () => {
 
       component.load();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
@@ -363,21 +363,8 @@ describe('RecipeListComponent', () => {
   });
 
   describe('applyFilter', () => {
-    it('should apply a search filter with a paginator', () => {
-      component.dataSource = new MatTableDataSource();
-      component.dataSource.paginator = {firstPage: () => {}};
-
-      spyOn(component, 'setFilters');
-
-      component.applyFilter(' VALUE ');
-
-      expect(component.searchFilter).toEqual('value');
-      expect(component.setFilters).toHaveBeenCalled();
-    });
-
-    it('should apply a search filter and handle an empty paginator', () => {
-      component.dataSource = new MatTableDataSource();
-      component.dataSource.paginator = undefined;
+    it('should apply a filter', () => {
+      component.dataSource = new MatTableDataSource([]);
 
       spyOn(component, 'setFilters');
 

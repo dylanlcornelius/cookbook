@@ -48,8 +48,8 @@ describe('IngredientEditComponent', () => {
   });
 
   it('should get an ingredient', () => {
-    const route = TestBed.get(ActivatedRoute);
-    route.snapshot = {params: {id: 'testId'}};
+    const route = TestBed.inject(ActivatedRoute);
+    route.snapshot.params = {id: 'testId'};
 
     spyOn(ingredientService, 'getIngredient').and.returnValue(Promise.resolve(new Ingredient({})));
 
@@ -62,8 +62,8 @@ describe('IngredientEditComponent', () => {
   describe('onFormSubmit', () => {
     it('should update an ingredient', () => {
       component.id = 'testId';
-      const route = TestBed.get(ActivatedRoute);
-      route.snapshot = {params: {id: 'testId'}};
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
 
       spyOn(ingredientService, 'putIngredient');
 

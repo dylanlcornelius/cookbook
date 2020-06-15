@@ -9,8 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ImageService } from 'src/app/util/image.service';
-import { UserService } from '@userService';
 import { combineLatest } from 'rxjs';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -41,7 +41,7 @@ export class RecipeListComponent implements OnInit {
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
     private imageService: ImageService,
-    private userService: UserService
+    private currentUserService: CurrentUserService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -51,7 +51,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   load() {
-    const user$ = this.userService.getCurrentUser();
+    const user$ = this.currentUserService.getCurrentUser();
     const recipes$ = this.recipeService.getRecipes();
     const ingredients$ = this.ingredientService.getIngredients();
 
