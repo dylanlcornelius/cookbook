@@ -34,14 +34,16 @@ describe('ConfigService', () => {
     });
   });
 
-  xdescribe('getConfig', () => {
+  describe('getConfig', () => {
     it('should get one document based on an id', () => {
-      spyOn(firestoreService, 'get').and.returnValue(of({}));
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
 
-      service.getConfig('id').then(doc => {
+      service.getConfig('name').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
+      expect(service.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
   });

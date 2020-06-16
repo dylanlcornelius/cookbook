@@ -29,29 +29,19 @@ export class UserIngredientService {
   getUserIngredients(): Observable<UserIngredient[]> {
     return new Observable(observable => {
       this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => {
-          return new UserIngredient(doc);
-        }));
+        observable.next(docs.map(doc => new UserIngredient(doc)));
       });
     });
   }
 
   getUserIngredient(uid: string): Observable<UserIngredient> {
-    const self = this;
-    return new Observable((observer) => {
-      this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
-        if (querySnapshot.size > 0) {
-          let userIngredient;
-          querySnapshot.forEach((doc) => {
-            userIngredient = new UserIngredient({
-              ...doc.data(),
-              id: doc.id
-            });
-          });
-          observer.next(userIngredient);
+    return new Observable(observer => {
+      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
+        if (docs.length > 0) {
+          observer.next(new UserIngredient(docs[0]));
         } else {
-          const userIngredient = new UserIngredient({uid: uid, ingredients: []});
-          userIngredient.id = self.postUserIngredient(userIngredient);
+          const userIngredient = new UserIngredient({uid: uid});
+          userIngredient.id = this.postUserIngredient(userIngredient);
           observer.next(userIngredient);
         }
       });
@@ -59,14 +49,11 @@ export class UserIngredientService {
   }
 
   postUserIngredient(data: UserIngredient) {
-    const newDoc = this.getRef().doc();
-    newDoc.set(data.getObject());
-    return newDoc.id;
+    return this.firestoreService.post(this.getRef(), data.getObject());
   }
 
   putUserIngredient(data: UserIngredient) {
-    this.getRef().doc(data.getId()).set(data.getObject())
-    .catch(function(error) { console.error('error: ', error); });
+    this.firestoreService.put(this.getRef(), data.getId(), data.getObject());
   }
 
   putUserIngredients(data: Array<UserIngredient>) {

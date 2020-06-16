@@ -150,11 +150,11 @@ export class RecipeEditComponent implements OnInit {
     control.push(this.initCategory(category));
   }
 
-  addCategoryEvent(event: MatChipInputEvent) {
+  addCategoryEvent(event) {
     const input = event.input;
     const value = event.value;
 
-    if ((value || '').trim()) {
+    if (value && value.trim()) {
       this.addCategory(value.trim());
     }
 
@@ -184,7 +184,7 @@ export class RecipeEditComponent implements OnInit {
     control.removeAt(i);
   }
 
-  dropAdded(event: CdkDragDrop<string[]>) {
+  dropAdded(event) {
     if (event.previousContainer === event.container) {
       this.removeIngredient(event.previousIndex);
       this.addIngredient(event.currentIndex, event.item.data);
@@ -195,7 +195,7 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
-  dropAvailable(event: CdkDragDrop<string[]>) {
+  dropAvailable(event) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {

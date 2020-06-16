@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -61,7 +61,7 @@ describe('ProfileComponent', () => {
   });
 
   describe('loadActions', () => {
-    it('should load actions', async(() => {
+    it('should load actions', fakeAsync(() => {
       component.weekPaginator = {};
       component.monthPaginator = {};
       
@@ -77,8 +77,9 @@ describe('ProfileComponent', () => {
 
       component.loadActions();
 
+      tick();
       expect(actionService.getActions).toHaveBeenCalled();
-      // expect(component.sortActions).toHaveBeenCalled();
+      expect(component.sortActions).toHaveBeenCalled();
     }));
   });
 

@@ -32,7 +32,7 @@ export class AuthService {
         return;
       }
 
-      this.userService.getUser(user.uid).then(current => {
+      this.userService.getUser(user.uid).subscribe(current => {
         if (!current) {
             current = new User({
             uid: user.uid,

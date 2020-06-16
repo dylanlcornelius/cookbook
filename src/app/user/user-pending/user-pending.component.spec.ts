@@ -37,6 +37,18 @@ describe('UserPendingComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should redirect a pending user', () => {
+    let currentUserService = TestBed.inject(CurrentUserService);
+
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'pending'})));
+
+    fixture = TestBed.createComponent(UserPendingComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+  });
+
   it('should not redirect a pending user', () => {
     let currentUserService = TestBed.inject(CurrentUserService);
 

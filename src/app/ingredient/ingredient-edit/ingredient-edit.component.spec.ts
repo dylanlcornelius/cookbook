@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -64,20 +64,27 @@ describe('IngredientEditComponent', () => {
       component.id = 'testId';
       const route = TestBed.inject(ActivatedRoute);
       route.snapshot.params = {id: 'testId'};
+      const router = TestBed.inject(Router);
 
       spyOn(ingredientService, 'putIngredient');
+      spyOn(router, 'navigate');
 
       component.onFormSubmit(new NgForm([], []));
 
       expect(ingredientService.putIngredient).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should create an ingredient', () => {
+      const router = TestBed.inject(Router);
+
       spyOn(ingredientService, 'postIngredient').and.returnValue('testId');
+      spyOn(router, 'navigate');
 
       component.onFormSubmit(new NgForm([], []));
 
       expect(ingredientService.postIngredient).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 });

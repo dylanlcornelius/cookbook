@@ -18,40 +18,39 @@ export class ActionService {
   constructor() {}
 
   // TODO: rework action data model
-  commitAction(uid: string, action: Action, number: Number): Promise<void> {
+  commitAction(uid: string, action: Action, number: Number) {
     const self = this;
-    return new Promise<void>( resolve => {
-      if (uid) {
-        self.getAction(self, uid).then(function(userAction) {
-          const weekStart = new Date();
-          weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-          const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
-          if (userAction) {
-            if (userAction.actions[week]) {
-              let exists = false;
-              Object.keys(userAction.actions[week]).forEach(id => {
-                if (id === action) {
-                  userAction.actions[week][action] += number;
-                  exists = true;
-                }
-              });
-              if (!exists) {
-                userAction.actions[week][action] = number;
-              }
-            } else {
-              userAction.actions[week] = {[action]: number};
-            }
-            self.putAction(self, userAction).then(function() {
-              resolve();
-            });
-          } else {
-            userAction = {'uid': uid, 'actions': {[week]: {[action]: number}}};
-            self.postAction(self, userAction).then(function() {
-              resolve();
-            });
+
+    if (!uid) {
+      return;
+    }
+
+    self.getAction(self, uid).then((userAction) => {
+      const weekStart = new Date();
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+      const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
+
+      if (!userAction) {
+        userAction = {'uid': uid, 'actions': {[week]: {[action]: number}}};
+        self.postAction(self, userAction);
+        return;
+      }
+        
+      if (userAction.actions[week]) {
+        let exists = false;
+        Object.keys(userAction.actions[week]).forEach(id => {
+          if (id === action) {
+            userAction.actions[week][action] += number;
+            exists = true;
           }
         });
+        if (!exists) {
+          userAction.actions[week][action] = number;
+        }
+      } else {
+        userAction.actions[week] = {[action]: number};
       }
+      self.putAction(self, userAction);
     });
   }
 
@@ -59,7 +58,7 @@ export class ActionService {
     return this.getAction(this, uid);
   }
 
-  private getAction(self, uid: string) {
+  getAction(self, uid: string) {
     return self.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
       const action = [];
       querySnapshot.forEach((doc) => {
@@ -74,19 +73,11 @@ export class ActionService {
     });
   }
 
-  private postAction(self, data) {
-    return new Promise<void>(resolve => {
-      self.getRef().add(data).then(function() {
-        resolve();
-      }, function(error) { console.error('error: ', error); });
-    });
+  postAction(self, data) {
+    self.getRef()?.add(data);
   }
 
-  private putAction(self, data): Promise<void> {
-    return new Promise<void>(resolve => {
-      self.getRef().doc(data.id).set(data).then(function() {
-        resolve();
-      }, function(error) { console.error('error: ', error); });
-    });
+  putAction(self, data) {
+    self.getRef()?.doc(data.id).set(data);
   }
 }

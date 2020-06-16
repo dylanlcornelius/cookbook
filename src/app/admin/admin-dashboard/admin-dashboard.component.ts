@@ -88,7 +88,7 @@ export class AdminDashboardComponent implements OnInit {
     const recipes$ = this.recipeService.getRecipes();
     const ingredients$ = this.ingredientService.getIngredients();
     const userIngredients$ = this.userIngredientService.getUserIngredients();
-    const userItems$ = this.userItemService.getAllUserItems();
+    const userItems$ = this.userItemService.getUserItems();
 
     combineLatest(configs$, users$, recipes$, ingredients$, userIngredients$, userItems$)
     .subscribe(([configs, users, recipes, ingredients, userIngredients, userItems]) => {

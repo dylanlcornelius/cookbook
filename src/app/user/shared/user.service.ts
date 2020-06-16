@@ -24,24 +24,15 @@ export class UserService {
   getUsers(): Observable<User[]> {
     return new Observable(observable => {
       this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => {
-          return new User(doc);
-        }));
+        observable.next(docs.map(doc => new User(doc)));
       });
     });
   }
 
-  getUser(uid: string): Promise<User> {
-    return new Promise(resolve => {
-      this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
-        const users = [];
-        querySnapshot.forEach((doc) => {
-          users.push(new User({
-            ...doc.data(),
-            id: doc.id
-          }));
-        });
-        resolve(users[0]);
+  getUser(uid: string): Observable<User> {
+    return new Observable(observable => {
+      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
+        observable.next(new User(docs[0]));
       });
     });
   }

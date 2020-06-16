@@ -39,12 +39,12 @@ describe('UserService', () => {
     });
   });
 
-  xdescribe('getUser', () => {
+  describe('getUser', () => {
     it('should get one document based on an id', () => {
       spyOn(service, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of({}));
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
 
-      service.getUser('id').then(doc => {
+      service.getUser('id').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 

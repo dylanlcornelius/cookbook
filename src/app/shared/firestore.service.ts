@@ -14,14 +14,31 @@ export class FirestoreService {
   ) {}
 
   private commitAction(action) {
-    if (action) {
-      this.currentUserService.getCurrentUser().subscribe(user => {
-        this.actionService.commitAction(user.uid, action, 1);
-      });
+    if (!action) {
+      return;
     }
+
+    this.currentUserService.getCurrentUser().subscribe(user => {
+      this.actionService.commitAction(user.uid, action, 1);
+    });
   }
 
-  getOne(ref, id: string) {
+  getWhere(ref, id: string, where: string): Observable<any> {
+    return new Observable(observable => {
+      ref?.where(where, '==', id).get().then(querySnapshot => {
+        const docs = [];
+        querySnapshot.forEach(doc => {
+          docs.push({
+            ...doc.data(),
+            id: doc.id
+          });
+        });
+        observable.next(docs);
+      });
+    });
+  };
+
+  getOne(ref, id: string): Observable<any> {
     return new Observable(observable => {
       ref?.doc(id).get().then(doc => {
         observable.next({
@@ -32,7 +49,7 @@ export class FirestoreService {
     });
   }
 
-  getMany(ref) {
+  getMany(ref): Observable<any> {
     return new Observable(observable => {
       ref?.onSnapshot(querySnapshot => {
         const docs = [];
@@ -48,8 +65,10 @@ export class FirestoreService {
   }
   
   // TODO: create getOneWhere
-  get(ref, id?: string): Observable<any> {
-    if (id) {
+  get(ref, id?: string, where?: string): Observable<any> {
+    if (id && where) {
+      return this.getWhere(ref, id, where);
+    } else if (id) {
       return this.getOne(ref, id);
     } else {
       return this.getMany(ref);

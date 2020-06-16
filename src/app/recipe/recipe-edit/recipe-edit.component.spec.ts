@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { UOMConversion, UOM } from 'src/app/ingredient/shared/uom.emun';
@@ -12,6 +12,7 @@ import { IngredientService } from '@ingredientService';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import * as cdk from '@angular/cdk/drag-drop';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -165,6 +166,24 @@ describe('RecipeEditComponent', () => {
     });
   });
 
+  describe('addCategoryEvent', () => {
+    it('should add a category', () => {
+      spyOn(component, 'addCategory');
+
+      component.addCategoryEvent({ input: {input: 'value'}, value: 'value'});
+    
+      expect(component.addCategory).toHaveBeenCalled();
+    });
+
+    it('should not add a category', () => {
+      spyOn(component, 'addCategory');
+
+      component.addCategoryEvent({ input: undefined, value: ''});
+    
+      expect(component.addCategory).not.toHaveBeenCalled();
+    });
+  });
+
   describe('removeCategory', () => {
     it('should remove a control', () => {
       component.recipesForm = formBuilder.group({
@@ -208,6 +227,66 @@ describe('RecipeEditComponent', () => {
 
       const control = <FormArray>component.recipesForm.controls['steps'];
       expect(control.length).toEqual(0);
+    });
+  });
+
+  describe('dropAdded', () => {
+    it('should reorder an item', () => {
+      const container = {data: ['id']};
+      const event = { previousContainer: container, container: container, item: {}};
+
+      spyOn(component, 'removeIngredient');
+      spyOn(component, 'addIngredient');
+      const funcSpy = jasmine.createSpy('moveItemInArray');
+      spyOnProperty(cdk, 'moveItemInArray', 'get').and.returnValue(funcSpy);
+
+      component.dropAdded(event);
+
+      expect(component.removeIngredient).toHaveBeenCalled();
+      expect(component.addIngredient).toHaveBeenCalled();
+    });
+
+    it('should move an item', () => {
+      const container = {data: ['id']};
+      const event = { previousContainer: container, container: {data: ['id']}, item: {}};
+
+      spyOn(component, 'removeIngredient');
+      spyOn(component, 'addIngredient');
+      const funcSpy = jasmine.createSpy('transferArrayItem');
+      spyOnProperty(cdk, 'transferArrayItem', 'get').and.returnValue(funcSpy);
+
+      component.dropAdded(event);
+
+      expect(component.removeIngredient).not.toHaveBeenCalled();
+      expect(component.addIngredient).toHaveBeenCalled();
+    });
+  });
+
+  describe('dropAvailable', () => {
+    it('should reorder an item', () => {
+      const container = {data: ['id']};
+      const event = { previousContainer: container, container: container, item: {}};
+
+      spyOn(component, 'removeIngredient');
+      const funcSpy = jasmine.createSpy('moveItemInArray');
+      spyOnProperty(cdk, 'moveItemInArray', 'get').and.returnValue(funcSpy);
+
+      component.dropAvailable(event);
+
+      expect(component.removeIngredient).not.toHaveBeenCalled();
+    });
+
+    it('should move an item', () => {
+      const container = {data: ['id']};
+      const event = { previousContainer: container, container: {data: ['id']}, item: {}};
+
+      spyOn(component, 'removeIngredient');
+      const funcSpy = jasmine.createSpy('transferArrayItem');
+      spyOnProperty(cdk, 'transferArrayItem', 'get').and.returnValue(funcSpy);
+
+      component.dropAvailable(event);
+
+      expect(component.removeIngredient).toHaveBeenCalled();
     });
   });
 
@@ -302,25 +381,33 @@ describe('RecipeEditComponent', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.snapshot.params = {id: 'testId'};
 
+      const router = TestBed.inject(Router);
+
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'putRecipe');
+      spyOn(router, 'navigate');
 
       component.submitForm();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.putRecipe).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should create a recipe', () => {
       component.recipe = new Recipe({id: 'testId'});
 
+      const router = TestBed.inject(Router);
+
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'postRecipe').and.returnValue('testId');
+      spyOn(router, 'navigate');
 
       component.submitForm();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.postRecipe).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 });

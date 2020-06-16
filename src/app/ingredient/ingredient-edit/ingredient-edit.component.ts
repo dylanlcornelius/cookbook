@@ -30,7 +30,8 @@ export class IngredientEditComponent implements OnInit {
 
   matcher = new ErrorMatcher();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
@@ -70,7 +71,7 @@ export class IngredientEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.ingredientService.putIngredient(this.id, form);
       this.router.navigate(['/ingredient/detail/', this.id]);
-    } else {
+    } else {  
       const id = this.ingredientService.postIngredient(form)
       this.router.navigate(['/ingredient/detail/', id]);
     }

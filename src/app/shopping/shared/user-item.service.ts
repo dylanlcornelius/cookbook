@@ -26,7 +26,7 @@ export class UserItemService {
     private actionService: ActionService
   ) {}
 
-  getAllUserItems(): Observable<UserItem[]> {
+  getUserItems(): Observable<UserItem[]> {
     return new Observable(observable => {
       this.firestoreService.get(this.getRef()).subscribe(docs => {
         observable.next(docs.map(doc => {
@@ -36,32 +36,18 @@ export class UserItemService {
     });
   }
 
-  getUserItems(uid: string): Observable<UserItem> {
-    const self = this;
+  getUserItem(uid: string): Observable<UserItem> {
     return new Observable((observer) => {
-      self.getRef()?.where('uid', '==', uid).onSnapshot(querySnapshot => {
-        self.getUserItem(querySnapshot, observer, uid, self);
+      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
+        if (docs.length > 0) {
+          observer.next(new UserItem(docs[0]));
+        } else {
+          const userItem = new UserItem({uid: uid});
+          userItem.id = this.postUserItem(userItem);
+          observer.next(userItem);
+        }
       });
     });
-  }
-
-  getUserItem(querySnapshot, observer, uid, self) {
-    if (querySnapshot.size > 0) {
-      let userItem;
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        userItem = new UserItem({
-          uid: data.uid,
-          items: data.items,
-          id: doc.id
-        });
-      });
-      observer.next(userItem);
-    } else {
-      const userItem = new UserItem({uid: uid});
-      userItem.id = self.postUserItem(userItem);
-      observer.next(userItem);
-    }
   }
 
   postUserItem(data: UserItem): string {

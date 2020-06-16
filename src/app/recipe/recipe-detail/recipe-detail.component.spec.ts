@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 import { RecipeDetailComponent } from './recipe-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -175,10 +175,15 @@ describe('RecipeDetailComponent', () => {
   });
 
   describe('setListFilter', () => {
-    it('should ', () => {
+    it('should set a filter and redirect to the recipes list page', () => {
+      const router = TestBed.inject(Router);
+      
+      spyOn(router, 'navigate');
+
       component.setListFilter('filter');
 
       expect(recipeService.selectedFilters).toEqual(['filter']);
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 

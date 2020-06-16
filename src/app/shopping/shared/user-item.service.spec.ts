@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { UserItemService } from './user-item.service';
 import { UserItem } from './user-item.model';
 import { User } from 'src/app/user/shared/user.model';
@@ -26,43 +26,48 @@ describe('UserItemService', () => {
   });
 
   describe('getUserItems', () => {
-    it('should get a user item' , () => {
-      service.getUserItems('uid');
+    it('should get all documents', () => {
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+
+      service.getUserItems().subscribe(docs => {
+        expect(docs).toBeDefined();
+      });
+
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.get).toHaveBeenCalled();
     });
   });
 
   describe('getUserItem', () => {
     it('should return an existing user item record', () => {
-      const querySnapshot = {
-        size: 1,
-        forEach: () => {}
-      };
-
-      spyOn(querySnapshot, 'forEach');
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
       spyOn(service, 'postUserItem');
 
-      service.getUserItem(querySnapshot, {next: () => {}}, 'uid', service);
+      service.getUserItem('uid').subscribe(doc => {
+        expect(doc).toBeDefined();
+      });
 
-      expect(querySnapshot.forEach).toHaveBeenCalled();
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.get).toHaveBeenCalled();
       expect(service.postUserItem).not.toHaveBeenCalled();
     });
 
-    it('should create a user item record and return it', () => {
-      const querySnapshot = {
-        size: 0,
-        doc: {
-          data: () => {}
-        }
-      };
-
-      spyOn(querySnapshot.doc, 'data');
+    it('should create a user item record and return it', fakeAsync(() => {
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([]));
       spyOn(service, 'postUserItem');
 
-      service.getUserItem([], {next: () => {}}, 'uid', service);
+      service.getUserItem('uid').subscribe(doc => {
+        expect(doc).toBeDefined();
+      });
 
-      expect(querySnapshot.doc.data).not.toHaveBeenCalled();
+      tick();
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.get).toHaveBeenCalled();
       expect(service.postUserItem).toHaveBeenCalled();
-    });
+    }));
   });
 
   describe('postUserItem', () => {

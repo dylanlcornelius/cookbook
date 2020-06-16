@@ -11,9 +11,9 @@ export class UserIngredient {
     }>;
 
     constructor(data) {
-        this.id = data.id;
+        this.id = data.id || '';
         this.uid = data.uid;
-        this.ingredients = data.ingredients;
+        this.ingredients = data.ingredients || [];
     }
 
     public getId() {

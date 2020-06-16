@@ -70,14 +70,14 @@ describe('ShoppingListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
-      spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
+      spyOn(userItemService, 'getUserItem').and.returnValue(of(userItems));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
-      expect(userItemService.getUserItems).toHaveBeenCalled();
+      expect(userItemService.getUserItem).toHaveBeenCalled();
     });
 
     it('should not load unavailable ingredients and items', () => {
@@ -98,14 +98,14 @@ describe('ShoppingListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
-      spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
+      spyOn(userItemService, 'getUserItem').and.returnValue(of(userItems));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
-      expect(userItemService.getUserItems).toHaveBeenCalled();
+      expect(userItemService.getUserItem).toHaveBeenCalled();
     });
 
     it('should not load ingredients and items', () => {
@@ -118,14 +118,14 @@ describe('ShoppingListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
-      spyOn(userItemService, 'getUserItems').and.returnValue(of(userItems));
+      spyOn(userItemService, 'getUserItem').and.returnValue(of(userItems));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
-      expect(userItemService.getUserItems).toHaveBeenCalled();
+      expect(userItemService.getUserItem).toHaveBeenCalled();
     });
   });
 

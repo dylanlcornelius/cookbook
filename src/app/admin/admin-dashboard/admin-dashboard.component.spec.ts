@@ -61,7 +61,7 @@ describe('AdminDashboardComponent', () => {
       spyOn(recipeService, 'getRecipes').and.returnValue(of([]));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of([]));
       spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of([]));
-      spyOn(userItemService, 'getAllUserItems').and.returnValue(of([]));
+      spyOn(userItemService, 'getUserItems').and.returnValue(of([]));
 
       component.load();
 
@@ -70,7 +70,7 @@ describe('AdminDashboardComponent', () => {
       expect(recipeService.getRecipes).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
-      expect(userItemService.getAllUserItems).toHaveBeenCalled();
+      expect(userItemService.getUserItems).toHaveBeenCalled();
     });
   });
 

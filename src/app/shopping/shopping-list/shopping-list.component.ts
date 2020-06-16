@@ -78,7 +78,7 @@ export class ShoppingListComponent implements OnInit {
           this.applyFilter();
           this.ingredients = ingredients;
 
-          this.userItemService.getUserItems(this.uid).subscribe(userItems => {
+          this.userItemService.getUserItem(this.uid).subscribe(userItems => {
             this.itemsId = userItems.id;
             this.itemsDataSource = new MatTableDataSource(userItems.items);
             this.loading = false;

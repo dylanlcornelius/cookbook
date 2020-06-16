@@ -41,12 +41,8 @@ describe('AppComponent', () => {
 
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
-      expect(currentUserService.setIsGuest).toHaveBeenCalled();
-    });
-
-    expect(true).toBeTrue();
+    expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+    expect(currentUserService.getIsLoggedIn).toHaveBeenCalled();
+    expect(currentUserService.getIsGuest).toHaveBeenCalled();
   });
 });
