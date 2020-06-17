@@ -32,9 +32,6 @@ body {
 .mat-card-header .mat-card-subtitle {
   margin-bottom: 0 !important;
 }
-.mat-card-image {
-  margin: 0 -16px 5px !important;
-}
 .mat-card-actions {
   display: flex !important;
   justify-content: center;

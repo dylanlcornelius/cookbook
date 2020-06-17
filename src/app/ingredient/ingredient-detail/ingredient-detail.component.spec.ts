@@ -5,6 +5,7 @@ import { Ingredient } from '../shared/ingredient.model';
 
 import { IngredientDetailComponent } from './ingredient-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { of } from 'rxjs';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
@@ -25,14 +26,14 @@ describe('IngredientsDetailComponent', () => {
       ]
     })
     .compileComponents();
-    ingredientService = TestBed.get(IngredientService);
+    ingredientService = TestBed.inject(IngredientService);
   }));
 
   it('should create', () => {
-    const route = TestBed.get(ActivatedRoute);
-    route.snapshot = {params: {id: 'testId'}};
+    const route = TestBed.inject(ActivatedRoute);
+    route.snapshot.params = {id: 'testId'};
 
-    spyOn(ingredientService, 'getIngredient').and.returnValue(Promise.resolve(new Ingredient({})));
+    spyOn(ingredientService, 'getIngredient').and.returnValue(of(new Ingredient({})));
     
     fixture = TestBed.createComponent(IngredientDetailComponent);
     component = fixture.componentInstance;

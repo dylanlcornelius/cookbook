@@ -19,16 +19,32 @@
     flex-grow: 1;
     overflow: auto;
 }
+.mat-card-header .mat-card-subtitle {
+    width: min-content;
+    margin: -8px auto 0 !important;
+}
 // .mat-card-content {
 //     flex-grow: 1;
 //     overflow: auto;
 // }
 .mat-card-image {
     // height: 100px;
+    margin: 0 -16px 5px !important;
     object-fit: cover;
 }
 .mat-card-actions {
-    margin: 0;
+    display: flex !important;
+    justify-content: center;
+    width: min-content;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+.mat-card-actions .mat-button {
+    margin: 0 0 0 20px !important;
+    padding: 0;
+}
+.mat-card-actions .mat-button:first-child {
+    margin: 0 !important;
 }
 .mat-paginator {
     background: inherit;

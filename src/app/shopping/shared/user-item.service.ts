@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserItem } from './user-item.model';
-import { UserService } from '@userService';
 import { FirestoreService } from '@firestoreService';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +22,11 @@ export class UserItemService {
 
   constructor(
     private firestoreService: FirestoreService,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private actionService: ActionService
   ) {}
 
-  getAllUserItems(): Observable<UserItem[]> {
+  getUserItems(): Observable<UserItem[]> {
     return new Observable(observable => {
       this.firestoreService.get(this.getRef()).subscribe(docs => {
         observable.next(docs.map(doc => {
@@ -36,32 +36,18 @@ export class UserItemService {
     });
   }
 
-  getUserItems(uid: string): Observable<UserItem> {
-    const self = this;
+  getUserItem(uid: string): Observable<UserItem> {
     return new Observable((observer) => {
-      self.getRef()?.where('uid', '==', uid).onSnapshot(querySnapshot => {
-        self.getUserItem(querySnapshot, observer, uid, self);
+      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
+        if (docs.length > 0) {
+          observer.next(new UserItem(docs[0]));
+        } else {
+          const userItem = new UserItem({uid: uid});
+          userItem.id = this.postUserItem(userItem);
+          observer.next(userItem);
+        }
       });
     });
-  }
-
-  getUserItem(querySnapshot, observer, uid, self) {
-    if (querySnapshot.size > 0) {
-      let userItem;
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        userItem = new UserItem({
-          uid: data.uid,
-          items: data.items,
-          id: doc.id
-        });
-      });
-      observer.next(userItem);
-    } else {
-      const userItem = new UserItem({uid: uid});
-      userItem.id = self.postUserItem(userItem);
-      observer.next(userItem);
-    }
   }
 
   postUserItem(data: UserItem): string {
@@ -79,7 +65,7 @@ export class UserItemService {
   }
 
   buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe(user => {
       this.getRef().doc(data.getId()).set(data.getObject());
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {

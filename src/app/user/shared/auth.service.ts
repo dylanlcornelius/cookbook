@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { firebase } from '@firebase/app';
 import '@firebase/auth';
-import { UserService } from './user.service';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { User } from './user.model';
+import { CurrentUserService } from './current-user.service';
+import { UserService } from '@userService';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class AuthService {
 
   constructor(
     private router: Router,
+    private currentUserService: CurrentUserService,
     private userService: UserService,
     private actionService: ActionService,
   ) {
@@ -26,11 +28,11 @@ export class AuthService {
   load() {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        this.userService.setIsGuest(true);
+        this.currentUserService.setIsGuest(true);
         return;
       }
 
-      this.userService.getUser(user.uid).then(current => {
+      this.userService.getUser(user.uid).subscribe(current => {
         if (!current) {
             current = new User({
             uid: user.uid,
@@ -40,9 +42,9 @@ export class AuthService {
           current.id = this.userService.postUser(current);
         }
         
-        this.userService.setCurrentUser(current);
-        this.userService.setIsLoggedIn(true);
-        this.userService.setIsGuest(false);
+        this.currentUserService.setCurrentUser(current);
+        this.currentUserService.setIsLoggedIn(true);
+        this.currentUserService.setIsGuest(false);
   
         this.actionService.commitAction(user.uid, Action.LOGIN, 1);
   
@@ -62,9 +64,9 @@ export class AuthService {
 
   logout() {
     firebase.auth().signOut().then(() => {
-      this.userService.setCurrentUser(new User({}));
-      this.userService.setIsLoggedIn(false);
-      this.userService.setIsGuest(true);
+      this.currentUserService.setCurrentUser(new User({}));
+      this.currentUserService.setIsLoggedIn(false);
+      this.currentUserService.setIsGuest(true);
       this.redirectUrl = null;
       this.router.navigate(['/login']);
     }).catch(error => { console.log(error.message); });

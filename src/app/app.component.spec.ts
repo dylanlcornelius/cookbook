@@ -2,14 +2,14 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs/internal/observable/of';
-import { UserService } from '@userService';
 import { User } from './user/shared/user.model';
 
 import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CurrentUserService } from './user/shared/current-user.service';
 
 describe('AppComponent', () => {
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -25,7 +25,7 @@ describe('AppComponent', () => {
       ]
     }).compileComponents();
 
-    userService = TestBed.inject(UserService);
+    currentUserService = TestBed.inject(CurrentUserService);
   }));
 
   it('should create the app', () => {
@@ -35,18 +35,14 @@ describe('AppComponent', () => {
   });
 
   it('should get user data', () => {
-    spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
-    spyOn(userService, 'getIsLoggedIn').and.returnValue(of(true));
-    spyOn(userService, 'getIsGuest').and.returnValue(of(false));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+    spyOn(currentUserService, 'getIsLoggedIn').and.returnValue(of(true));
+    spyOn(currentUserService, 'getIsGuest').and.returnValue(of(false));
 
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(userService.getCurrentUser).toHaveBeenCalled();
-      expect(userService.setIsLoggedIn).toHaveBeenCalled();
-      expect(userService.setIsGuest).toHaveBeenCalled();
-    });
-
-    expect(true).toBeTrue();
+    expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+    expect(currentUserService.getIsLoggedIn).toHaveBeenCalled();
+    expect(currentUserService.getIsGuest).toHaveBeenCalled();
   });
 });

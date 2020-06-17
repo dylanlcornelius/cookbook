@@ -11,12 +11,12 @@ describe('ConfigService', () => {
   
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.get(ConfigService);
+    service = TestBed.inject(ConfigService);
     firestoreService = TestBed.inject(FirestoreService);
   });
 
   it('should be created', () => {
-    const service: ConfigService = TestBed.get(ConfigService);
+    const service: ConfigService = TestBed.inject(ConfigService);
     expect(service).toBeTruthy();
   });
 
@@ -34,14 +34,16 @@ describe('ConfigService', () => {
     });
   });
 
-  xdescribe('getConfig', () => {
+  describe('getConfig', () => {
     it('should get one document based on an id', () => {
-      spyOn(firestoreService, 'get').and.returnValue(of({}));
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
 
-      service.getConfig('id').then(doc => {
+      service.getConfig('name').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
+      expect(service.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
   });

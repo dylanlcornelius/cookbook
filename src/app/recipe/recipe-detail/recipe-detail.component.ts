@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '@recipeService';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { Notification } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
-import { Observable, merge, of, fromEvent, combineLatest } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
-import { UserService } from '@userService';
+import { Observable, merge, of, fromEvent, combineLatest, Subject } from 'rxjs';
+import { mapTo, takeUntil } from 'rxjs/operators';
 import { Recipe } from '../shared/recipe.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
   styleUrls: ['./recipe-detail.component.scss']
 })
-export class RecipeDetailComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   online$: Observable<boolean>;
 
   loading = true;
@@ -30,7 +31,7 @@ export class RecipeDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private imageService: ImageService,
@@ -46,12 +47,17 @@ export class RecipeDetailComponent implements OnInit {
     this.load();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   load() {
-    const user$ = this.userService.getCurrentUser();
+    const user$ = this.currentUserService.getCurrentUser();
     const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
     const ingredients$ = this.ingredientService.getIngredients();
 
-    combineLatest(user$, recipe$, ingredients$).subscribe(([user, recipe, ingredients]) => {
+    combineLatest(user$, recipe$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipe, ingredients]) => {
       this.uid = user.uid;
       this.recipe = recipe;
 
@@ -68,7 +74,7 @@ export class RecipeDetailComponent implements OnInit {
 
   readFile(event) {
     if (event && event.target && event.target.files[0]) {
-      this.imageService.uploadFile(this.recipe.id, event.target.files[0]).subscribe(progress => {
+      this.imageService.uploadFile(this.recipe.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
         if (typeof progress === 'string') {
           this.recipeImage = progress;
           this.recipeImageProgress = undefined;

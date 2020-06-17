@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { AuthService } from '../shared/auth.service';
-import { UserService } from '@userService';
+import { CurrentUserService } from './current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +21,11 @@ export class LoginGuard implements CanActivate, CanActivateChild {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.userService.getIsLoggedIn()
+    return this.currentUserService.getIsLoggedIn()
       .pipe(
         take(1),
         map((isLoggedIn: boolean) => {

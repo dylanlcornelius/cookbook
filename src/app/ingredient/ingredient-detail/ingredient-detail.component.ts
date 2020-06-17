@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { Notification } from '@notifications';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-ingredient-detail',
   templateUrl: './ingredient-detail.component.html',
   styleUrls: ['./ingredient-detail.component.scss']
 })
-export class IngredientDetailComponent implements OnInit {
+export class IngredientDetailComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading: Boolean = true;
   validationModalParams;
   notificationModalParams;
@@ -17,7 +20,16 @@ export class IngredientDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private ingredientService: IngredientService) { }
 
   ngOnInit() {
-    this.ingredientService.getIngredient(this.route.snapshot.params['id']).then(data => {
+    this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  load() {
+    this.ingredientService.getIngredient(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       this.ingredient = data;
       this.loading = false;
     });

@@ -1,29 +1,46 @@
 import { Injectable } from '@angular/core';
 import '@firebase/firestore';
 import { ActionService } from '@actionService';
-import { UserService } from '@userService';
 import { Observable } from 'rxjs';
+import { CurrentUserService } from '../user/shared/current-user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
   constructor(
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private actionService: ActionService,
   ) {}
 
   private commitAction(action) {
-    if (action) {
-      this.userService.getCurrentUser().subscribe(user => {
-        this.actionService.commitAction(user.uid, action, 1);
-      });
+    if (!action) {
+      return;
     }
+
+    this.currentUserService.getCurrentUser().subscribe(user => {
+      this.actionService.commitAction(user.uid, action, 1);
+    });
   }
 
-  getOne(ref, id: string) {
+  getWhere(ref, id: string, where: string): Observable<any> {
     return new Observable(observable => {
-      ref?.doc(id).get().then(doc => {
+      ref?.where(where, '==', id).onSnapshot(querySnapshot => {
+        const docs = [];
+        querySnapshot.forEach(doc => {
+          docs.push({
+            ...doc.data(),
+            id: doc.id
+          });
+        });
+        observable.next(docs);
+      });
+    });
+  };
+
+  getOne(ref, id: string): Observable<any> {
+    return new Observable(observable => {
+      ref?.doc(id).onSnapshot(doc => {
         observable.next({
           ...doc.data(),
           id: doc.id
@@ -32,7 +49,7 @@ export class FirestoreService {
     });
   }
 
-  getMany(ref) {
+  getMany(ref): Observable<any> {
     return new Observable(observable => {
       ref?.onSnapshot(querySnapshot => {
         const docs = [];
@@ -46,16 +63,18 @@ export class FirestoreService {
       });
     });
   }
-
-  get(ref, id?: string): Observable<any> {
-    if (id) {
+  
+  get(ref, id?: string, where?: string): Observable<any> {
+    if (id && where) {
+      return this.getWhere(ref, id, where);
+    } else if (id) {
       return this.getOne(ref, id);
     } else {
       return this.getMany(ref);
     }
   }
 
-  post(ref, data, action?): String {
+  post(ref, data, action?): string {
     this.commitAction(action);
 
     const newDoc = ref?.doc();

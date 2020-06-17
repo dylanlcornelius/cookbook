@@ -32,7 +32,7 @@
 
           <div class="row">
             <div class="col-md-6 col-sm-12">
-              <mat-slide-toggle matInput formControlName="theme" [checked]="userForm.get('theme').value">
+              <mat-slide-toggle matInput formControlName="theme" ngDefaultControl [checked]="userForm.get('theme').value">
               </mat-slide-toggle>
               <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
                 <mat-icon>brightness_5</mat-icon>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="col-md-6 col-sm-12">
-              <mat-slide-toggle matInput formControlName="simplifiedView" [checked]="userForm.get('simplifiedView').value">
+              <mat-slide-toggle matInput formControlName="simplifiedView" ngDefaultControl [checked]="userForm.get('simplifiedView').value">
               </mat-slide-toggle>
               <span *ngIf="!userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Expanded View">
                 <mat-icon>view_compact</mat-icon>

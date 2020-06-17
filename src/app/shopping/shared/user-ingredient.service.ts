@@ -5,8 +5,8 @@ import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserIngredient } from './user-ingredient.model';
 import { Observable } from 'rxjs';
-import { UserService } from '@userService';
 import { FirestoreService } from '@firestoreService';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,36 +22,26 @@ export class UserIngredientService {
 
   constructor(
     private firestoreService: FirestoreService,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private actionService: ActionService
   ) {}
 
   getUserIngredients(): Observable<UserIngredient[]> {
     return new Observable(observable => {
       this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => {
-          return new UserIngredient(doc);
-        }));
+        observable.next(docs.map(doc => new UserIngredient(doc)));
       });
     });
   }
 
   getUserIngredient(uid: string): Observable<UserIngredient> {
-    const self = this;
-    return new Observable((observer) => {
-      this.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
-        if (querySnapshot.size > 0) {
-          let userIngredient;
-          querySnapshot.forEach((doc) => {
-            userIngredient = new UserIngredient({
-              ...doc.data(),
-              id: doc.id
-            });
-          });
-          observer.next(userIngredient);
+    return new Observable(observer => {
+      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
+        if (docs.length > 0) {
+          observer.next(new UserIngredient(docs[0]));
         } else {
-          const userIngredient = new UserIngredient({uid: uid, ingredients: []});
-          userIngredient.id = self.postUserIngredient(userIngredient);
+          const userIngredient = new UserIngredient({uid: uid});
+          userIngredient.id = this.postUserIngredient(userIngredient);
           observer.next(userIngredient);
         }
       });
@@ -59,14 +49,11 @@ export class UserIngredientService {
   }
 
   postUserIngredient(data: UserIngredient) {
-    const newDoc = this.getRef().doc();
-    newDoc.set(data.getObject());
-    return newDoc.id;
+    return this.firestoreService.post(this.getRef(), data.getObject());
   }
 
   putUserIngredient(data: UserIngredient) {
-    this.getRef().doc(data.getId()).set(data.getObject())
-    .catch(function(error) { console.error('error: ', error); });
+    this.firestoreService.put(this.getRef(), data.getId(), data.getObject());
   }
 
   putUserIngredients(data: Array<UserIngredient>) {
@@ -74,7 +61,7 @@ export class UserIngredientService {
   }
 
   buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe(user => {
       this.getRef().doc(data.getId()).set(data.getObject());
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {

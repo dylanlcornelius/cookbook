@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
-import { UserService } from '@userService';
+import { CurrentUserService } from '../shared/current-user.service';
 
 @Component({
   selector: 'app-login',
@@ -14,10 +14,10 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private currentUserService: CurrentUserService
   ) {
     this.redirect = this.authService.redirectUrl;
-    this.isLoggedIn = this.userService.getIsLoggedIn();
+    this.isLoggedIn = this.currentUserService.getIsLoggedIn();
   }
 
   signIn() {

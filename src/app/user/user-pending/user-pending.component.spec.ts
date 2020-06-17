@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs/internal/observable/of';
-import { UserService } from '@userService';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../shared/user.model';
 import { HomeComponent } from 'src/app/home/home.component';
 
 import { UserPendingComponent } from './user-pending.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CurrentUserService } from '../shared/current-user.service';
 
 describe('UserPendingComponent', () => {
   let component: UserPendingComponent;
   let fixture: ComponentFixture<UserPendingComponent>;
-  let userService: UserService
+  let currentUserService: CurrentUserService
   let authService: AuthService;
 
   beforeEach(async(() => {
@@ -30,8 +30,6 @@ describe('UserPendingComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {});
-
   it('should create', () => {
     fixture = TestBed.createComponent(UserPendingComponent);
     component = fixture.componentInstance;
@@ -39,16 +37,28 @@ describe('UserPendingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not redirect a pending user', () => {
-    let userService = TestBed.inject(UserService);
+  it('should redirect a pending user', () => {
+    let currentUserService = TestBed.inject(CurrentUserService);
 
-    spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({role: 'admin'})));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'pending'})));
 
     fixture = TestBed.createComponent(UserPendingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    expect(userService.getCurrentUser).toHaveBeenCalled();
+    expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+  });
+
+  it('should not redirect a pending user', () => {
+    let currentUserService = TestBed.inject(CurrentUserService);
+
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'admin'})));
+
+    fixture = TestBed.createComponent(UserPendingComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(currentUserService.getCurrentUser).toHaveBeenCalled();
   });
 
   describe('signOut', () => {

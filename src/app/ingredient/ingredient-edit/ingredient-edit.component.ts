@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import {
@@ -10,13 +10,16 @@ import {
 } from '@angular/forms';
 import { UOM } from '../shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ingredient-edit',
   templateUrl: './ingredient-edit.component.html',
   styleUrls: ['./ingredient-edit.component.scss']
 })
-export class IngredientEditComponent implements OnInit {
+export class IngredientEditComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading = true;
   title: string;
 
@@ -30,7 +33,8 @@ export class IngredientEditComponent implements OnInit {
 
   matcher = new ErrorMatcher();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
@@ -39,6 +43,15 @@ export class IngredientEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  load() {
     this.ingredientsForm = this.formBuilder.group({
       'name': [null, Validators.required],
       'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
@@ -48,7 +61,7 @@ export class IngredientEditComponent implements OnInit {
     });
 
     if (this.route.snapshot.params['id']) {
-      this.ingredientService.getIngredient(this.route.snapshot.params['id']).then(data => {
+      this.ingredientService.getIngredient(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
         this.id = data.id;
         this.ingredientsForm.setValue({
           name: data.name,
@@ -70,7 +83,7 @@ export class IngredientEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       this.ingredientService.putIngredient(this.id, form);
       this.router.navigate(['/ingredient/detail/', this.id]);
-    } else {
+    } else {  
       const id = this.ingredientService.postIngredient(form)
       this.router.navigate(['/ingredient/detail/', id]);
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RecipeService } from '@recipeService';
@@ -15,16 +15,18 @@ import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { UserService } from '@userService';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { Recipe } from '../shared/recipe.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.scss']
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading: Boolean = true;
   title: string;
 
@@ -45,7 +47,7 @@ export class RecipeEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
@@ -62,11 +64,16 @@ export class RecipeEditComponent implements OnInit {
       'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       'categories': this.formBuilder.array([]),
-      'steps': this.formBuilder.array([this.initStep()]),
+      'steps': this.formBuilder.array([]),
       'ingredients': this.formBuilder.array([])
     });
 
     this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   load() {
@@ -75,7 +82,7 @@ export class RecipeEditComponent implements OnInit {
     if (this.route.snapshot.params['id']) {
       const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
 
-      combineLatest(recipe$, ingredients$).subscribe(([recipe, ingredients]) => {
+      combineLatest(recipe$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients]) => {
         this.recipe = recipe;
 
         recipe.categories.forEach(() => {
@@ -120,7 +127,9 @@ export class RecipeEditComponent implements OnInit {
         this.loading = false;
       });
     } else {
-      ingredients$.subscribe(ingredients => {
+      this.initStep();
+
+      ingredients$.pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
         ingredients.forEach(ingredient => {
           this.allAvailableIngredients.push({
             id: ingredient.id,
@@ -150,11 +159,11 @@ export class RecipeEditComponent implements OnInit {
     control.push(this.initCategory(category));
   }
 
-  addCategoryEvent(event: MatChipInputEvent) {
+  addCategoryEvent(event) {
     const input = event.input;
     const value = event.value;
 
-    if ((value || '').trim()) {
+    if (value && value.trim()) {
       this.addCategory(value.trim());
     }
 
@@ -184,7 +193,7 @@ export class RecipeEditComponent implements OnInit {
     control.removeAt(i);
   }
 
-  dropAdded(event: CdkDragDrop<string[]>) {
+  dropAdded(event) {
     if (event.previousContainer === event.container) {
       this.removeIngredient(event.previousIndex);
       this.addIngredient(event.currentIndex, event.item.data);
@@ -195,7 +204,7 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
-  dropAvailable(event: CdkDragDrop<string[]>) {
+  dropAvailable(event) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -249,11 +258,9 @@ export class RecipeEditComponent implements OnInit {
   }
 
   submitForm() {
-    this.userService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       const form = this.recipesForm.value;
 
-      form.meanRating = this.recipe.meanRating;
-      form.ratings = this.recipe.ratings;
       form.uid = user.uid;
       form.author = user.firstName + ' ' + user.lastName;
       form.ingredients.forEach(ingredient => {
@@ -261,6 +268,9 @@ export class RecipeEditComponent implements OnInit {
       });
 
       if (this.route.snapshot.params['id']) {
+        form.meanRating = this.recipe.meanRating;
+        form.ratings = this.recipe.ratings;
+
         this.recipeService.putRecipe(this.recipe.id, form);
         this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {

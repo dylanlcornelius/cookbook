@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { UserIngredientService } from '@userIngredientService';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
@@ -9,15 +9,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ImageService } from 'src/app/util/image.service';
-import { UserService } from '@userService';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
   styleUrls: ['./recipe-list.component.scss']
 })
-export class RecipeListComponent implements OnInit {
+export class RecipeListComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading: Boolean = true;
   notificationModalParams;
 
@@ -41,7 +43,7 @@ export class RecipeListComponent implements OnInit {
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
     private imageService: ImageService,
-    private userService: UserService
+    private currentUserService: CurrentUserService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -50,16 +52,21 @@ export class RecipeListComponent implements OnInit {
     this.load();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   load() {
-    const user$ = this.userService.getCurrentUser();
+    const user$ = this.currentUserService.getCurrentUser();
     const recipes$ = this.recipeService.getRecipes();
     const ingredients$ = this.ingredientService.getIngredients();
 
-    combineLatest(user$, recipes$, ingredients$).subscribe(([user, recipes, ingredients]) => {
+    combineLatest(user$, recipes$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
-      this.userIngredientService.getUserIngredient(this.uid).subscribe(userIngredient => {
+      this.userIngredientService.getUserIngredient(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredient => {
         this.id = userIngredient.id;
         this.userIngredients = userIngredient.ingredients;
         ingredients.forEach(ingredient => {
@@ -83,6 +90,17 @@ export class RecipeListComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource(recipes);
         const ratings = [];
+        [1, 2, 3].forEach(ratingOption => {
+          const rating = ratingOption / 3 * 100;
+          let displayValue = '';
+          for (let i = 0; i < ratingOption; i++) {
+            displayValue += '★';
+          }
+          
+          const checked = filters.find(f => f === rating) !== undefined;
+          ratings.push({displayName: displayValue + ' & Up', name: rating, checked: checked});
+        });
+
         const categories = [];
         const authors = [];
         recipes.forEach(recipe => {
@@ -91,17 +109,6 @@ export class RecipeListComponent implements OnInit {
             if (url) {
               recipe.image = url;
             }
-          });
-
-          [1, 2, 3].forEach(ratingOption => {
-            const rating = ratingOption / 3 * 100;
-            let displayValue = '';
-            for (let i = 0; i < ratingOption; i++) {
-              displayValue += '★';
-            }
-            
-            const checked = filters.find(f => f === rating) !== undefined;
-            ratings.push({displayName: displayValue + ' & Up', name: rating, checked: checked});
           });
 
           recipe.categories.forEach(category => {

@@ -3,10 +3,10 @@ import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { UserService } from '@userService';
 import { AuthService } from '../user/shared/auth.service';
 import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../theme/animations';
 import { User } from '../user/shared/user.model';
+import { CurrentUserService } from '../user/shared/current-user.service';
 
 @Component({
   selector: 'app-header',
@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService,
+    private currentUserService: CurrentUserService,
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -41,8 +41,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.title = environment.config.title;
-    this.user = this.userService.getCurrentUser();
-    this.isLoggedIn = this.userService.getIsLoggedIn();
+    this.user = this.currentUserService.getCurrentUser();
+    this.isLoggedIn = this.currentUserService.getIsLoggedIn();
   }
 
   toggleNav() {

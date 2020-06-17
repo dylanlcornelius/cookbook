@@ -29,17 +29,10 @@ export class ConfigService {
     });
   }
 
-  getConfig(name: string): Promise<Config> {
-    return new Promise(resolve => {
-      this.getRef()?.where('name', '==', name).get().then(function(querySnapshot) {
-        const configs = [];
-        querySnapshot.forEach((doc) => {
-          configs.push(new Config({
-            ...doc.data(),
-            id: doc.id
-          }));
-        });
-        resolve(configs[0]);
+  getConfig(name: string): Observable<Config> {
+    return new Observable(observer => {
+      this.firestoreService.get(this.getRef(), name, 'name').subscribe(docs => {
+        observer.next(new Config(docs[0]));
       });
     });
   }

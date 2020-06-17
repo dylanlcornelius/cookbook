@@ -3,25 +3,27 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IngredientListComponent } from './ingredient-list.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { UserService } from '@userService';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { User } from 'src/app/user/shared/user.model';
 import { of } from 'rxjs';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { Ingredient } from '../shared/ingredient.model';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { RouterModule } from '@angular/router';
 
-describe('IngredientsComponent', () => {
+describe('IngredientListComponent', () => {
   let component: IngredientListComponent;
   let fixture: ComponentFixture<IngredientListComponent>;
-  let userService: UserService;
+  let currentUserService: CurrentUserService;
   let userIngredientService: UserIngredientService;
   let ingredientService: IngredientService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatTableModule
+        RouterModule.forRoot([]),
+        MatTableModule,
       ],
       declarations: [ IngredientListComponent ],
       schemas: [
@@ -35,7 +37,7 @@ describe('IngredientsComponent', () => {
     fixture = TestBed.createComponent(IngredientListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    userService = TestBed.inject(UserService);
+    currentUserService = TestBed.inject(CurrentUserService);
     userIngredientService = TestBed.inject(UserIngredientService);
     ingredientService = TestBed.inject(IngredientService);
   });
@@ -55,34 +57,21 @@ describe('IngredientsComponent', () => {
         id: 'id'
       })];
 
-      spyOn(userService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
 
       component.load();
 
-      expect(userService.getCurrentUser).toHaveBeenCalled();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
     });
   });
 
   describe('applyFilter', () => {
-    it('should apply a filter with a paginator', () => {
+    it('should apply a filter', () => {
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.paginator = {firstPage: () => {}};
-
-      spyOn(component.dataSource.paginator, 'firstPage');
-
-      component.applyFilter('filter');
-
-      expect(component.dataSource.filter).toEqual('filter');
-      expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
-    });
-
-    it('should apply a filter without a paginator', () => {
-      component.dataSource = new MatTableDataSource([]);
-      component.dataSource.paginator = undefined;
 
       component.applyFilter('filter');
 
