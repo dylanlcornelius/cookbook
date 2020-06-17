@@ -140,7 +140,7 @@ describe('RecipeEditComponent', () => {
 
       expect(recipeService.getRecipe).not.toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
-      expect(component.addStep).not.toHaveBeenCalled();
+      expect(component.addStep).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
@@ -212,7 +212,7 @@ describe('RecipeEditComponent', () => {
       component.addStep();
 
       const control = <FormArray>component.recipesForm.controls['steps'];
-      expect(control.length).toEqual(1);
+      expect(control.length).toEqual(2);
       expect(component.initStep).toHaveBeenCalled();
     });
   });
