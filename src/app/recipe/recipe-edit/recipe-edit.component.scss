@@ -29,6 +29,20 @@ td {
   box-shadow: 2px 3px 8px 2px rgba(0, 0, 0, 0.1),
               2px 4px 5px 0px rgba(0, 0, 0, 0.1);
 }
+.list::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+.list::-webkit-scrollbar:vertical {
+  width: 11px;
+}
+.list::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+.list::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid inherit;
+  background-color: rgba(0, 0, 0, 0.3);
+}
 h3 {
   font-size: 18px;
   white-space: nowrap;
