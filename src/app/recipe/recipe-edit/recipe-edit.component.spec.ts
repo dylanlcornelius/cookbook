@@ -212,7 +212,7 @@ describe('RecipeEditComponent', () => {
       component.addStep();
 
       const control = <FormArray>component.recipesForm.controls['steps'];
-      expect(control.length).toEqual(2);
+      expect(control.length).toEqual(1);
       expect(component.initStep).toHaveBeenCalled();
     });
   });

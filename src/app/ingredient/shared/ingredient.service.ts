@@ -32,10 +32,10 @@ export class IngredientService {
     });
   }
 
-  getIngredient(id: string): Promise<Ingredient> {
-    return new Promise(resolve => {
+  getIngredient(id: string): Observable<Ingredient> {
+    return new Observable(observer => {
       this.firestoreService.get(this.getRef(), id).subscribe(doc => {
-        resolve(new Ingredient(doc));
+        observer.next(new Ingredient(doc));
       })
     });
   }

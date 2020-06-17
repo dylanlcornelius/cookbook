@@ -38,7 +38,7 @@ describe('IngredientService', () => {
       spyOn(service, 'getRef');
       spyOn(firestoreService, 'get').and.returnValue(of({}));
 
-      service.getIngredient('id').then(doc => {
+      service.getIngredient('id').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 

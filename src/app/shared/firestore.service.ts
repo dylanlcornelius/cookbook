@@ -25,7 +25,7 @@ export class FirestoreService {
 
   getWhere(ref, id: string, where: string): Observable<any> {
     return new Observable(observable => {
-      ref?.where(where, '==', id).get().then(querySnapshot => {
+      ref?.where(where, '==', id).onSnapshot(querySnapshot => {
         const docs = [];
         querySnapshot.forEach(doc => {
           docs.push({
@@ -40,7 +40,7 @@ export class FirestoreService {
 
   getOne(ref, id: string): Observable<any> {
     return new Observable(observable => {
-      ref?.doc(id).get().then(doc => {
+      ref?.doc(id).onSnapshot(doc => {
         observable.next({
           ...doc.data(),
           id: doc.id
@@ -64,7 +64,6 @@ export class FirestoreService {
     });
   }
   
-  // TODO: create getOneWhere
   get(ref, id?: string, where?: string): Observable<any> {
     if (id && where) {
       return this.getWhere(ref, id, where);

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -14,14 +14,16 @@ import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { UserService } from '@userService';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileComponent implements AfterViewInit {
+export class ProfileComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading: Boolean = true;
   notificationModalParams;
 
@@ -69,12 +71,17 @@ export class ProfileComponent implements AfterViewInit {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.load();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   load() {
-    this.currentUserService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.uid = user.uid;
       this.userForm = this.formBuilder.group({
         uid: [this.uid],
@@ -148,9 +155,12 @@ export class ProfileComponent implements AfterViewInit {
 
       this.week.pageIndex = this.actionsLength - 1;
       this.month.pageIndex = this.monthActionsLength - 1;
-      // TODO: weekPaginator is undefined
-      this.weekPaginator.pageIndex = this.actionsLength - 1;
-      this.monthPaginator.pageIndex = this.monthActionsLength - 1;
+      if (this.weekPaginator) {
+        this.weekPaginator.pageIndex = this.actionsLength - 1;
+      }
+      if (this.monthPaginator) {
+        this.monthPaginator.pageIndex = this.monthActionsLength - 1;
+      }
     });
   }
 

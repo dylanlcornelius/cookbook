@@ -9,6 +9,9 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { of } from 'rxjs';
 import { ActionService } from '@actionService';
 import { User } from 'src/app/user/shared/user.model';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChartsModule } from 'ng2-charts';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -22,7 +25,10 @@ describe('ProfileComponent', () => {
       imports: [
         RouterModule.forRoot([]),
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatInputModule,
+        ChartsModule,
       ],
       providers: [
         UserService
@@ -64,6 +70,27 @@ describe('ProfileComponent', () => {
     it('should load actions', fakeAsync(() => {
       component.weekPaginator = {};
       component.monthPaginator = {};
+      
+      const actions = [
+        { day: 0, month: 1, year: 0, data: {'1': 2} },
+        { day: 0, month: 1, year: 0, data: {'2': 2} },
+        { day: 0, month: 2, year: 0, data: {'2': 2} },
+        { day: 0, month: 3, year: 0, data: {'2': 2} }
+      ];
+
+      spyOn(actionService, 'getActions').and.returnValue(Promise.resolve(true));
+      spyOn(component, 'sortActions').and.returnValue(actions);
+
+      component.loadActions();
+
+      tick();
+      expect(actionService.getActions).toHaveBeenCalled();
+      expect(component.sortActions).toHaveBeenCalled();
+    }));
+
+    it('should load actions without paginators', fakeAsync(() => {
+      component.weekPaginator = null;
+      component.monthPaginator = null;
       
       const actions = [
         { day: 0, month: 1, year: 0, data: {'1': 2} },

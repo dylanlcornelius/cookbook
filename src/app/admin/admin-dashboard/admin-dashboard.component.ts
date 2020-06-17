@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IngredientService } from '@ingredientService';
 import { RecipeService } from '@recipeService';
 import { UserService } from '@userService';
@@ -6,20 +6,22 @@ import { ConfigService } from '../shared/config.service';
 import { Config } from '../shared/config.model';
 import { User } from 'src/app/user/shared/user.model';
 import { Notification } from '@notifications';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { Recipe } from 'src/app/recipe/shared/recipe.model';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { UserItem } from 'src/app/shopping/shared/user-item.model';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading: Boolean = true;
   validationModalParams;
   notificationModalParams;
@@ -82,6 +84,11 @@ export class AdminDashboardComponent implements OnInit {
     this.load();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   load() {
     const configs$ = this.configService.getConfigs();
     const users$ = this.userService.getUsers();
@@ -91,6 +98,7 @@ export class AdminDashboardComponent implements OnInit {
     const userItems$ = this.userItemService.getUserItems();
 
     combineLatest(configs$, users$, recipes$, ingredients$, userIngredients$, userItems$)
+    .pipe(takeUntil(this.unsubscribe$))
     .subscribe(([configs, users, recipes, ingredients, userIngredients, userItems]) => {
       this.originalConfigs = configs;
       this.configContext.dataSource = configs;

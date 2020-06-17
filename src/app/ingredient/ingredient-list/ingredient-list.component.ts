@@ -1,19 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { IngredientService } from '@ingredientService';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { UserIngredientService } from '@userIngredientService';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ingredient-list',
   templateUrl: './ingredient-list.component.html',
   styleUrls: ['./ingredient-list.component.scss']
 })
-export class IngredientListComponent implements OnInit {
+export class IngredientListComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading = true;
   ingredientModalParams;
 
@@ -36,16 +38,21 @@ export class IngredientListComponent implements OnInit {
     this.load();
   }
 
-  load() {
-    this.currentUserService.getCurrentUser().subscribe(user => {
-      this.uid = user.uid;
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
-      const myIngredients = [];
+  load() {
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+      this.uid = user.uid;
 
       const userIngredients$ = this.userIngredientService.getUserIngredient(this.uid);
       const ingredients$ = this.ingredientService.getIngredients();
-      combineLatest(userIngredients$, ingredients$).subscribe(([userIngredient, ingredients]) => {
+      combineLatest(userIngredients$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
         this.id = userIngredient.id;
+      
+        const myIngredients = [];
         ingredients.forEach(ingredient => {
           userIngredient.ingredients.forEach(myIngredient => {
             if (myIngredient.id === ingredient.id) {

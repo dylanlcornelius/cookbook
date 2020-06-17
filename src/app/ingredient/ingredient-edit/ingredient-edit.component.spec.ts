@@ -10,6 +10,7 @@ import { IngredientEditComponent } from './ingredient-edit.component';
 import { Ingredient } from '../shared/ingredient.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
+import { of } from 'rxjs';
 
 describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
@@ -51,7 +52,7 @@ describe('IngredientEditComponent', () => {
     const route = TestBed.inject(ActivatedRoute);
     route.snapshot.params = {id: 'testId'};
 
-    spyOn(ingredientService, 'getIngredient').and.returnValue(Promise.resolve(new Ingredient({})));
+    spyOn(ingredientService, 'getIngredient').and.returnValue(of(new Ingredient({})));
 
     fixture = TestBed.createComponent(IngredientEditComponent);
     fixture.detectChanges();

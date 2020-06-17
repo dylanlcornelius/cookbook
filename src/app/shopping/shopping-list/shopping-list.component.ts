@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { UserIngredient } from '../shared/user-ingredient.model';
@@ -8,6 +8,8 @@ import { UserItemService } from '@userItemService';
 import { UserItem } from '../shared/user-item.model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // TODO: icons for notification modal
 @Component({
@@ -15,7 +17,8 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.scss']
 })
-export class ShoppingListComponent implements OnInit {
+export class ShoppingListComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   loading = true;
   validationModalParams;
   notificationModalParams;
@@ -45,19 +48,25 @@ export class ShoppingListComponent implements OnInit {
     this.load();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   load() {
     this.itemForm = this.formBuilder.group({
       'name': [null],
     });
 
-    this.currentUserService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
-      const myIngredients = [];
-      this.userIngredientService.getUserIngredient(this.uid).subscribe(userIngredients => {
+      this.userIngredientService.getUserIngredient(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
         this.id = userIngredients.id;
-        this.ingredientService.getIngredients().subscribe(ingredients => {
+        this.ingredientService.getIngredients().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
+          const myIngredients = [];
+
           ingredients.forEach(ingredient => {
             if (userIngredients && userIngredients.ingredients) {
               userIngredients.ingredients.forEach(myIngredient => {
@@ -78,7 +87,7 @@ export class ShoppingListComponent implements OnInit {
           this.applyFilter();
           this.ingredients = ingredients;
 
-          this.userItemService.getUserItem(this.uid).subscribe(userItems => {
+          this.userItemService.getUserItem(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
             this.itemsId = userItems.id;
             this.itemsDataSource = new MatTableDataSource(userItems.items);
             this.loading = false;
