@@ -2,8 +2,9 @@
     padding: calc(5px + 1vh) calc(10px + 1vw);
     position: relative;
     top: 0;
+    display: flex;
+    justify-content: center;
 }
-
 .nav-bar {
     display: inline-block;
 }
@@ -12,37 +13,30 @@
         min-width: 80%;
     }
 }
-
 .title {
     color: white;
     font-size: calc(18px + 1vmin);
 }
-
 .title-button {
     padding: 0;
     min-width: calc(30px + 1vmin);
 }
-
 a:hover {
     text-decoration: none;
 }
-
 .nav-button {
     border-radius: 0;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
 .nav-button:first-child {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-
 .nav-button:last-child {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-
 .nav-button.selected {
     box-shadow: none !important;
 }

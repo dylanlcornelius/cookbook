@@ -11,6 +11,7 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RatingComponent } from './rating/rating.component';
+import { UomTableComponent } from './uom-table/uom-table.component';
 
 import { SharedModule } from '@sharedModule';
 
@@ -20,6 +21,7 @@ import { SharedModule } from '@sharedModule';
     RecipeDetailComponent,
     RecipeEditComponent,
     RatingComponent,
+    UomTableComponent,
   ],
   imports: [
     CommonModule,

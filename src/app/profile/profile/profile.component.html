@@ -5,10 +5,7 @@
   <mat-tab-group class="box mat-elevation-z4" dynamicHeight="true" animationDuration="1000ms" [selectedIndex]="selectedIndex">
     <mat-tab label="Profile">
       <div class="tab-body">
-        <div class="d-flex justify-content-center">
-          <h2>Your Profile</h2>
-        </div>
-        <br/>
+        <h2>Your Profile</h2>
   
         <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)" class="container">
           <div class="row">
