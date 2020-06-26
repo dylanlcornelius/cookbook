@@ -1,19 +1,14 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 
-<div class="d-flex justify-content-center">
-  <h2>
-    {{this.title}}
-  </h2>
-</div>
-<br/>
+<h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
   <div class="button-row">
     <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="route.snapshot.params['id']">
-      <mat-icon> arrow_back </mat-icon>
+      <mat-icon>arrow_back</mat-icon>
     </a>
     <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']" *ngIf="!route.snapshot.params['id']">
-      <mat-icon> list </mat-icon>
+      <mat-icon>list</mat-icon>
     </a>
   </div>
 
@@ -74,18 +69,20 @@
       <div formArrayName="steps">
         <div class="row" *ngFor="let step of recipesForm.controls.steps.controls; let i = index">
           <div class="col-xs-12 col-sm-2">
-            <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()" *ngIf="i == 0">
-              <mat-icon> add </mat-icon>
+            <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()" *ngIf="i === 0">
+              <mat-icon>add</mat-icon>
             </button>
-            <div class="d-none d-sm-block" style="padding: 20px;" *ngIf="i > 0"></div>
+            <div class="d-sm-none" style="margin-bottom: 20px;" *ngIf="i === 0"></div>
+            <div class="d-none  d-sm-block" style="padding: 20px;" *ngIf="i > 0"></div>
           </div>
 
           <div class="col-xs-12 col-sm-10 d-flex justify-content-center" [formGroupName]="i">
             <mat-form-field style="width: 80%;">
                 <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
             </mat-form-field>
-            <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
-              <mat-icon> close </mat-icon>
+            <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" 
+                    *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
+              <mat-icon>close</mat-icon>
             </button>
             <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length == 1"></div>
           </div>
@@ -96,17 +93,13 @@
     <ng-template #ingredientsStep>
       <div class="row justify-content-center">
         <div class="col-xs-12 col-md-6" style="min-width: 260px; max-width: 400px;">
-          <h3>
-            Added Ingredients
-          </h3>
+          <h3>Added Ingredients</h3>
       
           <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
           [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
             <div class="box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i = index"
                 cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
-              <mat-label class="col-6">
-                {{ingredient.get('name')? ingredient.get('name').value : ''}}
-              </mat-label>
+              <mat-label class="col-6">{{ingredient.get('name')? ingredient.get('name').value : ''}}</mat-label>
               <mat-form-field class="col-3">
                 <input matInput placeholder="QTY" formControlName="quantity" [errorStateMatcher]="matcher"/>
                 <mat-error *ngIf="!ingredient.get('quantity').valid">
@@ -115,24 +108,18 @@
               </mat-form-field>
               <mat-form-field class="col-3">
                 <mat-select placeholder="UOM" formControlName="uom" [errorStateMatcher]="matcher">
-                  <mat-option *ngFor="let uom of getUOMs(ingredient.get('uom').value)" [value]="uom">
-                    {{uom}}
-                  </mat-option>
+                  <mat-option *ngFor="let uom of getUOMs(ingredient.get('uom').value)" [value]="uom">{{uom}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <div class="box box-bottom" *ngIf="addedIngredients.length == 0">
-              <mat-label class="col-12">
-                No Ingredients
-              </mat-label>
+              <mat-label class="col-12">No Ingredients</mat-label>
             </div>
           </div>
         </div>
 
         <div class="col-xs-12 col-md-6" style="min-width: 260px; max-width: 400px;">
-          <h3>
-            Available Ingredients
-          </h3>
+          <h3>Available Ingredients</h3>
 
           <mat-form-field style="width: 100%;">
             <input matInput (keyup)="applyIngredientFilter($event.target.value)"/>
@@ -144,18 +131,15 @@
           <div class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
               [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="dropAvailable($event)">
             <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag [cdkDragData]="ingredient">
-              <mat-label class="col-12">
-                {{ingredient.name}}
-              </mat-label>
+              <mat-label class="col-12">{{ingredient.name}}</mat-label>
             </div>
             <div class="box box-bottom" *ngIf="availableIngredients == 0">
-              <mat-label class="col-12">
-                No Ingredients
-              </mat-label>
+              <mat-label class="col-12">No Ingredients</mat-label>
             </div>
           </div>
         </div>
       </div>
+      <app-uom-table></app-uom-table>
     </ng-template>
   </form>
 

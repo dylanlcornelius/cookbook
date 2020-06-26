@@ -2,10 +2,7 @@
 <app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
 <ng-template #table let-data="data">
-  <div class="d-flex justify-content-center">
-    <h2>{{data.title}}</h2>
-  </div>
-  <br/>
+  <h2>{{data.title}}</h2>
 
   <div class="table-container mat-elevation-z8">
     <button mat-raised-button color="primary" (click)="data.add()" *ngIf="data.add">Add</button>
@@ -47,10 +44,6 @@
 <ng-template [ngTemplateOutlet]="table" [ngTemplateOutletContext]="{data: userItemContext}"></ng-template>
 
 <div class="row" style="float: right;">
-  <button mat-raised-button color="warn" (click)="revert()" style="width: 100px;">
-    Revert
-  </button>
-  <button mat-raised-button color="primary" (click)="save()" style="width: 100px;">
-    Save
-  </button>
+  <button mat-raised-button color="warn" (click)="revert()" style="width: 100px;">Revert</button>
+  <button mat-raised-button color="primary" (click)="save()" style="width: 100px;">Save</button>
 </div>

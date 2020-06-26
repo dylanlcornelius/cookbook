@@ -26,6 +26,7 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "firebase": "^7.14.1",
+    "fraction.js": "^4.0.12",
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.0",
     "ng2-charts": "~2.3.0",

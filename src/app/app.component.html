@@ -2,12 +2,13 @@
 	<div class="spinner"></div>
 	<div class="loading-message">Loading user settings</div>
 </div>
+
 <div class="app" [ngClass]="{'dark': (user | async)?.theme}" [hidden]="!(isLoggedIn | async) && !(isGuest | async)"> 
 	<div class="page">
 		<app-header></app-header>
 
 		<div class="d-flex justify-content-center">
-			<section class="content" [@fadeComponentAnimation]="routeTransition(outlet)">
+			<section [@fadeComponentAnimation]="routeTransition(outlet)">
 				<router-outlet #outlet="outlet"></router-outlet>
 			</section>
 		</div>

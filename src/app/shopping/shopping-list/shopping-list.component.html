@@ -2,12 +2,7 @@
 <app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
 <app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
 
-<div class="d-flex justify-content-center">
-  <h2>
-    Your Shopping List
-  </h2>
-</div>
-<br/>
+<h2>Your Shopping List</h2>
 
 <div *ngIf="!loading">
   <form class="item-form" [formGroup]="itemForm" (ngSubmit)="addItem(itemForm.value)">
@@ -46,7 +41,7 @@
   
             <span class="mobile-value">
               <button mat-button (click)="removeIngredient(element.id)">
-                <mat-icon class="buy-icon"> arrow_left </mat-icon>
+                <mat-icon class="buy-icon">arrow_left</mat-icon>
               </button>
               <span style="margin: 0 10px;">
                 {{element.cartQuantity}} {{element.uom === 'other'? '' : element.uom}}
@@ -107,7 +102,7 @@
   <div *ngIf="simplifiedView" class="d-flex justify-content-center">
     <div class="simplified">
       <div class="table-container mat-elevation-z8" *ngIf="ingredientsDataSource.filteredData.length > 0"
-        [ngClass]="{'ingredients-table': itemsDataSource.filteredData.length === 0}">
+          [ngClass]="{'ingredients-table': itemsDataSource.filteredData.length === 0}">
         <mat-table #table [dataSource]="ingredientsDataSource">
           <ng-container matColumnDef="name">
             <mat-cell *matCellDef="let element">
@@ -149,18 +144,12 @@
   </div>
 
   <div class="button-row" *ngIf="ingredientsDataSource.filteredData.length > 0 || itemsDataSource.filteredData.length > 0">
-    <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">
-      Add All
-    </button>
+    <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">Add All</button>
   </div>
 </div>
 
 <div *ngIf="!loading && ingredientsDataSource.filteredData.length == 0 && itemsDataSource.filteredData.length == 0" style="text-align: center;">
   <br/>
-  <h4 [hidden]="isCompleted">
-    No ingredients or items have been added to your shopping list
-  </h4>
-  <h4 [hidden]="!isCompleted">
-    Shopping list completed!
-  </h4>
+  <h4 [hidden]="isCompleted">No ingredients or items have been added to your shopping list</h4>
+  <h4 [hidden]="!isCompleted">Shopping list completed!</h4>
 </div>
