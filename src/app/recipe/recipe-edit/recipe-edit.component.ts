@@ -262,18 +262,20 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       const form = this.recipesForm.value;
 
       form.uid = user.uid;
-      form.author = user.firstName + ' ' + user.lastName;
       form.ingredients.forEach(ingredient => {
         delete ingredient.name;
       });
 
       if (this.route.snapshot.params['id']) {
+        form.author = this.recipe.author;
         form.meanRating = this.recipe.meanRating;
         form.ratings = this.recipe.ratings;
 
         this.recipeService.putRecipe(this.recipe.id, form);
         this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {
+        form.author = user.firstName + ' ' + user.lastName;
+
         const id = this.recipeService.postRecipe(form);
         this.router.navigate(['/recipe/detail/', id]);
       }
