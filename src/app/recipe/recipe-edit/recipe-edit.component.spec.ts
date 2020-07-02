@@ -374,7 +374,7 @@ describe('RecipeEditComponent', () => {
 
   describe('submitForm', () => {
     it('should update a recipe', () => {
-      component.recipe = new Recipe({id: 'testId'});
+      component.recipe = new Recipe({id: 'testId', author: '3', meanRating: 0.33});
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });
@@ -383,14 +383,20 @@ describe('RecipeEditComponent', () => {
 
       const router = TestBed.inject(Router);
 
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
       spyOn(recipeService, 'putRecipe');
       spyOn(router, 'navigate');
 
       component.submitForm();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.putRecipe).toHaveBeenCalled();
+      expect(recipeService.putRecipe).toHaveBeenCalledWith('testId', {
+        ingredients: [{}],
+        uid: '',
+        author: '3',
+        meanRating: 0.33,
+        ratings: []
+      });
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -399,14 +405,26 @@ describe('RecipeEditComponent', () => {
 
       const router = TestBed.inject(Router);
 
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
       spyOn(recipeService, 'postRecipe').and.returnValue('testId');
       spyOn(router, 'navigate');
 
       component.submitForm();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.postRecipe).toHaveBeenCalled();
+      expect(recipeService.postRecipe).toHaveBeenCalledWith({
+        name: null,
+        link: null,
+        description: null,
+        time: '',
+        servings: '',
+        calories: '',
+        categories: [],
+        steps: [{step: null}],
+        ingredients: [],
+        uid: '',
+        author: '1 2',
+      });
       expect(router.navigate).toHaveBeenCalled();
     });
   });
