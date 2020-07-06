@@ -6,6 +6,9 @@ dd {
   font-size: 16px;
   margin-bottom: 20px;
 }
+.container {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
 .center-text {
   text-align: center;
 }

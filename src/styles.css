@@ -4,17 +4,69 @@ html, body {
 body {
     font-family: "Helvetica Neue", sans-serif;
 }
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 .5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
 h2 {
+  font-size: 2rem;
   display: flex;
   justify-content: center;
   margin-bottom: 25px;
 }
+h4 {
+  font-size: 1.5rem;
+}
+h6 {
+  font-size: 1rem;
+}
+a {
+  text-decoration: none;
+  background-color: transparent;
+}
+dt {
+  font-weight: 700;
+}
+[hidden] {
+  display: none !important;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+.between {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  column-gap: 10px;
+}
+.desktop {
+  display: block !important;
+}
+.mobile {
+  display: none !important;
+}
+@media screen and (max-width: 767px) {
+  .desktop {
+    display: none !important;
+  }
+  .mobile {
+    display: block !important;
+  }
+}
+
 .button-row {
   margin: 10px auto;
   width: 90%;
 }
 .search-bar {
-  width: 100% !important;
+  display: inline !important;
   padding: 0 5%;
 }
 .mat-progress-bar,

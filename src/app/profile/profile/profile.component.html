@@ -7,9 +7,9 @@
       <div class="tab-body">
         <h2>Your Profile</h2>
   
-        <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)" class="container">
-          <div class="row">
-            <mat-form-field class="col-md-6 col-sm-12" appearance="outline">
+        <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)">
+          <div class="container">
+            <mat-form-field appearance="outline">
               <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher"/>
               <mat-error>
                 <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
@@ -17,7 +17,7 @@
               <mat-hint>First Name</mat-hint>
             </mat-form-field>
         
-            <mat-form-field class="col-md-6 col-sm-12"  appearance="outline">
+            <mat-form-field appearance="outline">
               <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher"/>
               <mat-error>
                 <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
@@ -27,8 +27,8 @@
           </div>
           <br/>
 
-          <div class="row">
-            <div class="col-md-6 col-sm-12">
+          <div class="container">
+            <div>
               <mat-slide-toggle matInput formControlName="theme" ngDefaultControl [checked]="userForm.get('theme').value">
               </mat-slide-toggle>
               <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
@@ -39,7 +39,7 @@
               </span>
             </div>
 
-            <div class="col-md-6 col-sm-12">
+            <div>
               <mat-slide-toggle matInput formControlName="simplifiedView" ngDefaultControl [checked]="userForm.get('simplifiedView').value">
               </mat-slide-toggle>
               <span *ngIf="!userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Expanded View">
@@ -61,20 +61,17 @@
     </mat-tab>
     <mat-tab label="Analytics">
       <div class="tab-body">
-        <div class="d-flex justify-content-center">
-          <h2>Your Analytics</h2>
-        </div>
-        <br/>
+        <h2>Your Analytics</h2>
 
         <mat-paginator #weekPaginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
         <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
-        <canvas baseChart class="d-none d-sm-block"
+        <canvas baseChart class="desktop"
           [data]="actions[week.pageIndex]?.data || []"
           [labels]="actionsLabels"
           [chartType]="'pie'"
           [colors]="[{ backgroundColor: actionsColors }] || []">
         </canvas>
-        <canvas baseChart class="d-block d-sm-none"
+        <canvas baseChart class="mobile"
           [data]="actions[week.pageIndex]?.data || []"
           [labels]="actionsLabels"
           [chartType]="'pie'"
@@ -84,13 +81,13 @@
 
         <mat-paginator #monthPaginator [length]="monthActionsLength" [pageSize]="1" [hidePageSize]="true" (page)="month = $event"></mat-paginator>
         <h4>{{monthActions[month.pageIndex]?.date || ''}}</h4>
-        <canvas baseChart class="d-none d-sm-block"
+        <canvas baseChart class="desktop"
           [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"
           [labels]="actionsLabels"
           [chartType]="'bar'"
           [options]="{scales: {yAxes: [{ticks: {beginAtZero: true}}]}}">
         </canvas>
-        <canvas baseChart class="d-block d-sm-none"
+        <canvas baseChart class="mobile"
           [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"
           [labels]="actionsLabels"
           [chartType]="'bar'"

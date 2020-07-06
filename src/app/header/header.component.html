@@ -1,8 +1,8 @@
 <div class="header">
   <div class="nav-bar">
-    <div class="d-flex">
+    <div class="between">
       <a routerLink="/home" class="title">{{title}}</a>
-      <span *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" class="ml-auto" [@fadeInAnimation]>
+      <span *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" [@fadeInAnimation]>
         <button mat-button class="title-button" [matMenuTriggerFor]="profileMenu">
           <mat-icon>person</mat-icon>
         </button>
@@ -29,7 +29,7 @@
 
     <div style="clear: both;"></div>
 
-    <div class="d-none d-md-block" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" [@fadeInAnimation]>
+    <div class="desktop" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending()" [@fadeInAnimation]>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/home" [ngClass]="{'selected': route === '/home'}">Home</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe/list" [ngClass]="{'selected': route === '/recipe/list'}">Recipes</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient/list" [ngClass]="{'selected': route === '/ingredient/list'}">Ingredients</a>
@@ -39,7 +39,7 @@
       <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
     </div>
 
-    <div class="mobile-nav-container d-md-none" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending() && showNav" (click)="toggleNav()" [@fadeInFastAnimation]>
+    <div class="mobile-nav-container mobile" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending() && showNav" (click)="toggleNav()" [@fadeInFastAnimation]>
       <div class="mobile-nav" [@slideInOutAnimation]>
         <a mat-button class="mobile-nav-button" routerLink="/home">
           <mat-icon>home</mat-icon>

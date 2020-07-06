@@ -6,7 +6,7 @@
         <span class="modal-text">{{ingredientModalParams.text}}</span>
       </div>
       <br/>
-      <form class="d-flex justify-content-center" [formGroup]="ingredientModalForm">
+      <form class="center" [formGroup]="ingredientModalForm">
         <mat-form-field>
           <input matInput placeholder="Pantry Quantity" formControlName="pantryQuantity" [errorStateMatcher]="matcher"/>
           <mat-error>
@@ -15,7 +15,7 @@
         </mat-form-field>
       </form>
       <br/>
-      <div class="d-flex justify-content-center">
+      <div class="center">
         <button [disabled]="!ingredientModalForm.valid" class="btn btn-primary" (click)="confirm()"  style="margin-right: 20px;">Confirm</button>
         <button class="btn btn-warning" (click)="cancel()">Cancel</button>
       </div>

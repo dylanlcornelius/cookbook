@@ -1,3 +1,6 @@
+.container {
+    column-gap: 50px;
+}
 .mat-form-field {
     width: 60%;
 }
@@ -5,8 +8,7 @@
     margin: 10px;
 }
 .recipe-card {
-    min-width: 200px;
-    max-width: 300px;
+    width: 300px;
     margin: 10px;
     text-align: center;
 }
