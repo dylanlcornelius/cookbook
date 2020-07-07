@@ -34,7 +34,7 @@ export class UserPendingComponent implements OnInit, OnDestroy {
   load() {
     this.user = this.currentUserService.getCurrentUser();
     this.user.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      if (!user.isPending()) {
+      if (!user.isPending) {
         this.router.navigate(['/home']);
       }
     });

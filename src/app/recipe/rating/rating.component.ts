@@ -12,15 +12,15 @@ export class RatingComponent {
 
   @Output() rate: EventEmitter<number> = new EventEmitter();
 
-  userRating;
-  getUserRating = () => (this.userRating || {rating: 0});
+  userRating: any = {rating: 0};
 
   ngOnChanges() {
     this.userRating = this.findUserRating();
   }
 
   findUserRating() {
-    return this.recipe.ratings.find(rating => rating.uid === this.uid);
+    const rating = this.recipe.ratings.find(rating => rating.uid === this.uid);
+    return rating ? rating : {rating: 0};
   }
 
   handleRate(newRating) {

@@ -34,7 +34,7 @@ export class AuthService {
 
       this.userService.getUser(user.uid).subscribe(current => {
         if (!current) {
-            current = new User({
+          current = new User({
             uid: user.uid,
             role: 'pending'
           });

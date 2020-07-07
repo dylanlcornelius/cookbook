@@ -51,6 +51,18 @@ describe('UserService', () => {
       expect(service.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
+
+    it('should handle a user id that does not match any documents', () => {
+      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([]));
+
+      service.getUser('id').subscribe(doc => {
+        expect(doc).toBeUndefined();
+      });
+
+      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.get).toHaveBeenCalled();
+    });
   });
 
   describe('postUser', () => {

@@ -29,7 +29,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
       .pipe(
         take(1),
         map((user: User) => {
-          if (!user.isAdmin()) {
+          if (!user.isAdmin) {
             return false;
           }
           return true;
