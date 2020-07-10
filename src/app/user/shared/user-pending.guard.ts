@@ -26,7 +26,7 @@ export class UserPendingGuard implements CanActivate, CanActivateChild {
       .pipe(
         take(1),
         map((user: User) => {
-          if (!user.isPending()) {
+          if (!user.isPending) {
             return true;
           }
 

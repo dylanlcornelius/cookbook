@@ -1,13 +1,13 @@
-<app-loading-modal *ngIf="!(user | async)?.isPending()"></app-loading-modal>
+<app-loading-modal *ngIf="!(user | async)?.isPending"></app-loading-modal>
 
-<div *ngIf="(user | async)?.isPending()">
-  <div class="d-flex justify-content-center title-text">
+<div *ngIf="(user | async)?.isPending">
+  <div class="center title-text">
     <span>Your new user account is pending and will be confirmed shortly!</span>
   </div>
   <br/>
   <br/>
 
-  <div class="d-flex justify-content-center">
+  <div class="center">
     <button mat-raised-button color="primary" (click)="signOut()">Sign-out</button>
   </div>
 </div>

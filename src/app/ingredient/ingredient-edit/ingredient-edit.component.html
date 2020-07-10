@@ -20,15 +20,15 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="row">
-      <mat-form-field class="col-12 col-md-8">
+    <div class="container">
+      <mat-form-field>
         <input matInput placeholder="Amount*" formControlName="amount" [errorStateMatcher]="matcher">
         <mat-error>
           <span *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched">Please enter a valid number for Ingredient Amount</span>
         </mat-error>
       </mat-form-field>
     
-      <mat-form-field class="col-12 col-md-4">
+      <mat-form-field>
         <mat-label> Unit of Measurement* </mat-label>
         <mat-select formControlName="uom">
           <mat-option *ngFor="let uom of uoms" [value]="uom">

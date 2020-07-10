@@ -8,35 +8,35 @@
   </div>
 
   <mat-card class="detail-card">
-    <mat-card-header class="d-flex justify-content-center">
-      <mat-card-title class="d-flex justify-content-center">
+    <mat-card-header class="center">
+      <mat-card-title class="center">
         <h2>{{ingredient.name}}</h2>
       </mat-card-title>
     </mat-card-header>
 
-    <div class="row justify-content-center">
-      <mat-card-content class="col-3 card-column">
+    <div class="container center">
+      <mat-card-content class="card-column">
         <dl>
           <dt>Category</dt>
           <dd>{{ingredient.category || "No Category"}}</dd>
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-3 card-column">
+      <mat-card-content class="card-column">
         <dl>
           <dt>Amount</dt>
           <dd>{{ingredient.amount || "No Amount"}} {{ingredient.uom === 'other'? '' : ingredient.uom}}</dd>
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-3 card-column">
+      <mat-card-content class="card-column">
         <dl>
           <dt>Calories </dt>
           <dd>{{ingredient.calories || "No Calories"}}</dd>
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="col-3 card-column">
+      <mat-card-content class="card-column">
         <dl>
           <dt>Quantity</dt>
           <dd>{{ingredient.quantity || "No Quantity"}}</dd>
@@ -44,7 +44,7 @@
       </mat-card-content>
     </div>
 
-    <mat-card-actions class="d-flex justify-content-between">
+    <mat-card-actions class="between">
       <a mat-mini-fab matTooltip="Edit Ingredient" color="primary" [routerLink]="['/ingredient/edit/', ingredient.id]">
         <mat-icon>edit</mat-icon>
       </a>

@@ -1,3 +1,6 @@
+.container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+}
 dt {
     font-size: 18px;
     margin-bottom: 5px;

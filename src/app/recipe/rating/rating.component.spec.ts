@@ -34,6 +34,14 @@ describe('RatingComponent', () => {
 
       expect(result).toEqual(rating);
     });
+
+    it('should return a default rating', () => {
+      component.recipe = new Recipe({ratings: []});
+      
+      const result = component.findUserRating();
+
+      expect(result.rating).toEqual(0);
+    });
   });
 
   describe('handleRate', () => {

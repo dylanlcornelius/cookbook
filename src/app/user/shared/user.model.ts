@@ -7,6 +7,9 @@ export class User {
     theme: boolean;
     simplifiedView: boolean;
 
+    isAdmin: boolean;
+    isPending: boolean;
+
     constructor(data) {
         this.id = data.id || '';
         this.uid = data.uid || '';
@@ -15,6 +18,8 @@ export class User {
         this.role = data.role || '';
         this.theme = data.theme || false;
         this.simplifiedView = data.simplifiedView || false;
+        this.isAdmin = data.role === 'admin';
+        this.isPending = data.role === 'pending';
     }
 
     public getId() {
@@ -22,10 +27,7 @@ export class User {
     }
 
     public getObject() {
-        const {id, ...user} = this;
+        const {id, isAdmin, isPending, ...user} = this;
         return user;
     }
-
-    public isAdmin() { return this.role === 'admin'; }
-    public isPending() { return this.role === 'pending'; }
 }

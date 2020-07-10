@@ -32,7 +32,7 @@ export class UserService {
   getUser(uid: string): Observable<User> {
     return new Observable(observable => {
       this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
-        observable.next(new User(docs[0]));
+        observable.next(docs[0] ? new User(docs[0]) : undefined);
       });
     });
   }
