@@ -374,7 +374,7 @@ describe('RecipeEditComponent', () => {
 
   describe('submitForm', () => {
     it('should update a recipe', () => {
-      component.recipe = new Recipe({id: 'testId', author: '3', meanRating: 0.33});
+      component.recipe = new Recipe({id: 'testId', author: '3', hasImage: true, meanRating: 0.33});
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });
@@ -394,6 +394,7 @@ describe('RecipeEditComponent', () => {
         ingredients: [{}],
         uid: '',
         author: '3',
+        hasImage: true,
         meanRating: 0.33,
         ratings: []
       });

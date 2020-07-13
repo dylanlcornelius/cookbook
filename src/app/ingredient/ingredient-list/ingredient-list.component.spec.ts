@@ -77,6 +77,17 @@ describe('IngredientListComponent', () => {
 
       expect(component.dataSource.filter).toEqual('filter');
     });
+
+    it('should apply a filter and go to the first page', () => {
+      component.dataSource = {paginator: {firstPage: () => {}}};
+
+      spyOn(component.dataSource.paginator, 'firstPage');
+
+      component.applyFilter('filter');
+
+      expect(component.dataSource.filter).toEqual('filter');
+      expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
+    });
   });
 
   describe('editIngredient', () => {

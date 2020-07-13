@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterModule, Router } from '@angular/router';
 
 import { RecipeDetailComponent } from './recipe-detail.component';
@@ -51,7 +51,7 @@ describe('RecipeDetailComponent', () => {
   });
 
   describe('load', () => {
-    it('should load a recipe with an image', () => {
+    it('should load a recipe with an image', fakeAsync(() => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
@@ -64,14 +64,16 @@ describe('RecipeDetailComponent', () => {
 
       component.load();
       
+      tick();
+      expect(component.recipeImage).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipe).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
-    });
+    }));
 
-    it('should load a recipe with an image', () => {
+    it('should load a recipe without an image', fakeAsync(() => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
@@ -84,22 +86,25 @@ describe('RecipeDetailComponent', () => {
 
       component.load();
       
+      tick();
+      expect(component.recipeImage).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipe).toHaveBeenCalled();
       expect(ingredientService.getIngredients).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
-
-    });
+    }));
   });
 
   describe('readFile', () => {
     it('should not upload a blank url', () => {
       spyOn(imageService, 'uploadFile');
+      spyOn(recipeService, 'putRecipe');
 
       component.readFile({});
 
       expect(imageService.uploadFile).not.toHaveBeenCalled();
+      expect(recipeService.putRecipe).not.toHaveBeenCalled();
       expect(component.recipeImage).toBeUndefined();
       expect(component.recipeImageProgress).toBeUndefined();
     });
@@ -108,36 +113,45 @@ describe('RecipeDetailComponent', () => {
       component.recipe = new Recipe({});
 
       spyOn(imageService, 'uploadFile').and.returnValue(of(1));
+      spyOn(recipeService, 'putRecipe');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.uploadFile).toHaveBeenCalled();
+      expect(recipeService.putRecipe).not.toHaveBeenCalled();
       expect(component.recipeImage).toBeUndefined();
       expect(component.recipeImageProgress).toEqual(1);
     });
 
-    it('should upload a file and return a', () => {
+    it('should upload a file and return a file', () => {
       component.recipe = new Recipe({});
 
       spyOn(imageService, 'uploadFile').and.returnValue(of('url'));
+      spyOn(recipeService, 'putRecipe');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.uploadFile).toHaveBeenCalled();
+      expect(recipeService.putRecipe).toHaveBeenCalled();
       expect(component.recipeImage).toEqual('url');
       expect(component.recipeImageProgress).toBeUndefined();
     });
   });
 
   describe('deleteFile', () => {
-    it('should delete a file', () => {
+    it('should delete a file', fakeAsync(() => {
+      component.recipe = new Recipe({});
       component.recipeImage = 'url';
+
       spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
+      spyOn(recipeService, 'putRecipe');
 
       component.deleteFile('url');
 
+      tick();
       expect(imageService.deleteFile).toHaveBeenCalled();
-    });
+      expect(recipeService.putRecipe).toHaveBeenCalled();
+    }));
   });
 
   describe('deleteRecipe', () => {

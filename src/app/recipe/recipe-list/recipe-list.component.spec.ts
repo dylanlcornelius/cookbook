@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
@@ -67,7 +67,7 @@ describe('RecipeListComponent', () => {
   });
 
   describe('load', () => {
-    it('should initialize the recipes list', () => {
+    it('should initialize the recipes list', fakeAsync(() => {
       const recipes = [
         new Recipe({
           ingredients: [{
@@ -108,6 +108,8 @@ describe('RecipeListComponent', () => {
 
       component.load();
 
+      tick();
+      expect(component.dataSource.data[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
@@ -115,9 +117,9 @@ describe('RecipeListComponent', () => {
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
-    });
+    }));
 
-    it('should handle falsey values', () => {
+    it('should handle falsey values', fakeAsync(() => {
       const recipes = [
         new Recipe({
           ingredients: [{
@@ -153,6 +155,8 @@ describe('RecipeListComponent', () => {
 
       component.load();
 
+      tick();
+      expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.getRecipes).toHaveBeenCalled();
       expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
@@ -160,7 +164,7 @@ describe('RecipeListComponent', () => {
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(imageService.downloadFile).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
-    });
+    }));
   });
 
   describe('getRecipeCount', () => {
@@ -373,6 +377,19 @@ describe('RecipeListComponent', () => {
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
     });
+
+    it('should apply a filter and go to the first page', () => {
+      component.dataSource = {paginator: {firstPage: () => {}}};
+
+      spyOn(component, 'setFilters');
+      spyOn(component.dataSource.paginator, 'firstPage');
+
+      component.applyFilter(' VALUE ');
+
+      expect(component.searchFilter).toEqual('value');
+      expect(component.setFilters).toHaveBeenCalled();
+      expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
+    });
   });
 
   describe('indentify', () => {
@@ -380,6 +397,46 @@ describe('RecipeListComponent', () => {
       const result = component.indentify(0, {id: 1});
 
       expect(result).toEqual(1);
+    });
+  });
+
+  describe('sortRecipesByName', () => {
+    it('should sort recipe a less than recipe b', () => {
+      const result = component.sortRecipesByName(new Recipe({name: 'a'}), new Recipe({name: 'b'}));
+
+      expect(result).toEqual(-1);
+    });
+
+    it('should sort recipe b greater than recipe a', () => {
+      const result = component.sortRecipesByName(new Recipe({name: 'b'}), new Recipe({name: 'a'}));
+
+      expect(result).toEqual(1);
+    });
+  });
+
+  describe('sortRecipesByImages', () => {
+    it('should sort two recipes with images', () => {
+      const result = component.sortRecipesByImages(new Recipe({hasImage: true}), new Recipe({hasImage: true}));
+
+      expect(result).toEqual(0);
+    });
+
+    it('should sort recipe a with an image', () => {
+      const result = component.sortRecipesByImages(new Recipe({hasImage: true}), new Recipe({}));
+     
+      expect(result).toEqual(-1);
+    });
+
+    it('should sort recipe b with an image', () => {
+      const result = component.sortRecipesByImages(new Recipe({}), new Recipe({hasImage: true}));
+
+      expect(result).toEqual(1);
+    });
+
+    it('should two recipes with no images', () => {
+      const result = component.sortRecipesByImages(new Recipe({}), new Recipe({}));
+
+      expect(result).toEqual(0);
     });
   });
 
