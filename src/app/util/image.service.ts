@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/storage';
 import { Observable } from 'rxjs';
+import { Recipe } from '../recipe/shared/recipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,12 @@ export class ImageService {
 
   constructor() {}
 
+  getFile(path: string) {
+    return this.getRef().child(path).getDownloadURL().then(url => {
+      return url;
+    }, () => {});
+  }
+
   uploadFile(path: string, file: File): Observable<Number | String | void> {
     const uploadTask = this.getRef().child(path).put(file);
 
@@ -27,17 +34,19 @@ export class ImageService {
       }, error => {
         console.log(error);
       }, () => {
-        this.downloadFile(path).then(url => {
+        this.getFile(path).then(url => {
           observer.next(url);
         });
       });
     });
   }
 
-  downloadFile(path: string) {
-    return this.getRef().child(path).getDownloadURL().then(url => {
-      return url;
-    }, () => {});
+  downloadFile(recipe: Recipe) {
+    if (!recipe.hasImage) {
+      return Promise.reject();
+    }
+
+    return this.getFile(recipe.id);
   }
 
   deleteFile(path: string) {

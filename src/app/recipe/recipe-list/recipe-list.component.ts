@@ -12,6 +12,7 @@ import { ImageService } from 'src/app/util/image.service';
 import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
+import { Recipe } from '../shared/recipe.model';
 
 @Component({
   selector: 'app-recipe-list',
@@ -88,6 +89,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
         const filters = this.recipeService.selectedFilters.slice();
 
+        recipes = recipes.sort(this.sortRecipesByName);
+        recipes = recipes.sort(this.sortRecipesByImages);
         this.dataSource = new MatTableDataSource(recipes);
         const ratings = [];
         [1, 2, 3].forEach(ratingOption => {
@@ -105,11 +108,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const authors = [];
         recipes.forEach(recipe => {
           recipe.count = this.getRecipeCount(recipe.id);
-          this.imageService.downloadFile(recipe.id).then(url => {
+          this.imageService.downloadFile(recipe).then(url => {
             if (url) {
               recipe.image = url;
             }
-          });
+          }, () => {});
 
           recipe.categories.forEach(category => {
             if (categories.find(c => c.name === category.category) === undefined) {
@@ -212,6 +215,26 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   indentify(_index, item) {
     return item.id;
+  }
+
+  sortRecipesByName(a: Recipe, b: Recipe) {
+    return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+  }
+
+  sortRecipesByImages(a: Recipe, b: Recipe) {
+    if (a.hasImage && b.hasImage) {
+      return 0;
+    }
+    
+    if (a.hasImage) {
+      return -1;
+    }
+
+    if (b.hasImage) {
+      return 1;
+    }
+
+    return 0;
   }
 
   packageData() {

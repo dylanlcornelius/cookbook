@@ -17,6 +17,7 @@ export class Recipe {
         quantity: string,
         amount: string,
     }>;
+    hasImage: boolean;
     meanRating: number;
     ratings: Array<{
         uid: string,
@@ -40,6 +41,7 @@ export class Recipe {
         this.categories = data.categories || [];
         this.steps = data.steps || [];
         this.ingredients = data.ingredients || [];
+        this.hasImage = data.hasImage || false;
         this.meanRating = data.meanRating || 0;
         this.ratings = data.ratings || [];
         this.uid = data.uid || '';

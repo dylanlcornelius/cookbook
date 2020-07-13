@@ -61,11 +61,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.uid = user.uid;
       this.recipe = recipe;
 
-      this.imageService.downloadFile(this.recipe.id).then(url => {
+      this.imageService.downloadFile(this.recipe).then(url => {
         if (url) {
           this.recipeImage = url;
         }
-      });
+      }, () => {});
 
       this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
       this.loading = false;
@@ -78,6 +78,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         if (typeof progress === 'string') {
           this.recipeImage = progress;
           this.recipeImageProgress = undefined;
+
+          this.recipe.hasImage = true;
+          this.recipeService.putRecipe(this.recipe.getId(), this.recipe.getObject());
         } else {
           this.recipeImageProgress = progress;
         }
@@ -87,6 +90,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   deleteFile(path) {
     this.imageService.deleteFile(path).then(() => {
+      this.recipe.hasImage = false;
+      this.recipeService.putRecipe(this.recipe.getId(), this.recipe.getObject());
       this.recipeImage = undefined;
     });
   }

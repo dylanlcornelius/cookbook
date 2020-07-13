@@ -268,6 +268,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
       if (this.route.snapshot.params['id']) {
         form.author = this.recipe.author;
+        form.hasImage = this.recipe.hasImage;
         form.meanRating = this.recipe.meanRating;
         form.ratings = this.recipe.ratings;
 
