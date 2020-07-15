@@ -13,6 +13,7 @@ import { UserItem } from '../shared/user-item.model';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -21,6 +22,7 @@ describe('ShoppingListComponent', () => {
   let userItemService: UserItemService;
   let currentUserService: CurrentUserService;
   let ingredientService: IngredientService;
+  let notificationService: NotificationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -45,6 +47,7 @@ describe('ShoppingListComponent', () => {
     userItemService = TestBed.inject(UserItemService);
     currentUserService = TestBed.inject(CurrentUserService);
     ingredientService = TestBed.inject(IngredientService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should create', () => {
@@ -341,6 +344,7 @@ describe('ShoppingListComponent', () => {
       spyOn(component, 'packageItemData');
       spyOn(userItemService, 'buyUserItem');
       spyOn(component, 'applyFilter');
+      spyOn(notificationService, 'setNotification');
 
       component.addAllToPantryEvent(component);
 
@@ -349,7 +353,7 @@ describe('ShoppingListComponent', () => {
       expect(component.packageIngredientData).toHaveBeenCalled();
       expect(userItemService.buyUserItem).toHaveBeenCalled();
       expect(component.applyFilter).toHaveBeenCalled();
-      expect(component.notificationModalParams).toBeDefined();
+      expect(notificationService.setNotification).toHaveBeenCalled();
     });
   });
 });

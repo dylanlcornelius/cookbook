@@ -12,6 +12,7 @@ import { IngredientService } from '@ingredientService';
 import { User } from 'src/app/user/shared/user.model';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -20,6 +21,7 @@ describe('RecipeDetailComponent', () => {
   let imageService: ImageService;
   let currentUserService: CurrentUserService;
   let ingredientService: IngredientService;
+  let notificationService: NotificationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -44,6 +46,7 @@ describe('RecipeDetailComponent', () => {
     imageService = TestBed.inject(ImageService);
     currentUserService = TestBed.inject(CurrentUserService);
     ingredientService = TestBed.inject(IngredientService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should create', () => {
@@ -177,14 +180,18 @@ describe('RecipeDetailComponent', () => {
     });
 
     it('should delete a recipe recipe', () => {
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
       spyOn(recipeService, 'deleteRecipe');
       spyOn(component, 'deleteFile');
+      spyOn(notificationService, 'setNotification');
 
       component.deleteRecipeEvent(component, 'id');
 
       expect(recipeService.deleteRecipe).toHaveBeenCalled();
       expect(component.deleteFile).toHaveBeenCalled();
-      expect(component.notificationModalParams).toBeDefined();
+      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 

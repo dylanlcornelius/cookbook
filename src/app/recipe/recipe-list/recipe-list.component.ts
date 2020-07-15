@@ -3,7 +3,7 @@ import { RecipeService } from '@recipeService';
 import { UserIngredientService } from '@userIngredientService';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { IngredientService } from '@ingredientService';
-import { Notification } from '@notifications';
+import { NotificationType } from '@notifications';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,6 +13,8 @@ import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '../shared/recipe.model';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
 
 @Component({
   selector: 'app-recipe-list',
@@ -44,7 +46,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
     private imageService: ImageService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    private notificationService: NotificationService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -259,11 +262,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             if (value) {
               ingredient.pantryQuantity -= Number(value);
             } else {
-              this.notificationModalParams = {
-                self: self,
-                type: Notification.FAILURE,
-                text: 'Error calculating measurements!'
-              };
+              this.notificationService.setNotification(new Notification(NotificationType.FAILURE, 'Error calculating measurements!'));
             }
           }
         });
@@ -273,11 +272,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         recipe.count = this.getRecipeCount(recipe.id);
       });
 
-      this.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        text: 'Ingredients removed from pantry'
-      };
+      this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients removed from pantry'));
     }
   }
 
@@ -292,11 +287,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             if (value) {
               ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
             } else {
-              this.notificationModalParams = {
-                self: self,
-                type: Notification.FAILURE,
-                text: 'Error calculating measurements!'
-              };
+              this.notificationService.setNotification(new Notification(NotificationType.FAILURE, 'Error calculating measurements!'));
             }
             hasIngredient = true;
           }
@@ -315,11 +306,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         recipe.count = this.getRecipeCount(recipe.id);
       });
 
-      this.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        text: 'Ingredients added to cart'
-      };
+      this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients added to cart'));
     }
   }
 

@@ -12,6 +12,7 @@ import { User } from 'src/app/user/shared/user.model';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartsModule } from 'ng2-charts';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -19,6 +20,7 @@ describe('ProfileComponent', () => {
   let userService: UserService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
+  let notificationService: NotificationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -48,6 +50,7 @@ describe('ProfileComponent', () => {
     userService = TestBed.inject(UserService);
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should create', () => {
@@ -122,12 +125,13 @@ describe('ProfileComponent', () => {
     it('should update a user record', () => {
       spyOn(userService, 'putUser');
       spyOn(currentUserService, 'setCurrentUser');
+      spyOn(notificationService, 'setNotification');
 
       component.onFormSubmit({});
 
       expect(userService.putUser).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-      expect(component.notificationModalParams).toBeDefined();
+      expect(notificationService.setNotification).toHaveBeenCalled();
     });
   });
 });

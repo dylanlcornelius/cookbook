@@ -1,45 +1,42 @@
-/*
-** DROP THIS IN HTML **
-<app-notification-modal [notificationModalParams]="notificationModalParams"></app-notification-modal>
-
-** DROP THIS IN TYPESCRIPT **
--- path is optional --
-import { Notification } from '@notifications';
-notificationModalParams;
-
-this.notificationModalParams = {
-  self: self,
-  type: Notification.SUCCESS,
-  path: 'path',
-  text: 'Text!'
-};
-*/
-
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NotificationService } from './notification.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
 
 @Component({
   selector: 'app-notification-modal',
   templateUrl: './notification-modal.component.html',
   styleUrls: ['./notification-modal.component.scss']
 })
-export class NotificationModalComponent implements OnChanges {
-  @Input()
-  notificationModalParams;
+export class NotificationModalComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
+  notification: Notification;
 
   constructor(
-    private router: Router
+    private notificationService: NotificationService
   ) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.notificationModalParams && changes.notificationModalParams) {
-      // TODO: change this to be global to allow navigating before timeout
+  ngOnInit() {
+    this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  load() {
+    this.notificationService.getNotification().pipe(takeUntil(this.unsubscribe$)).subscribe(notification => {
+      if (!notification) {
+        return;
+      }
+
+      this.notification = notification;
       setTimeout(() => {
-        if (changes.notificationModalParams.currentValue.path) {
-          this.router.navigate([changes.notificationModalParams.currentValue.path]);
-        }
-        this.notificationModalParams = undefined;
-      }, 2000);
-    }
+        this.notificationService.setNotification(undefined);
+        this.notification = undefined;
+      }, 3000);
+    });
   }
 }

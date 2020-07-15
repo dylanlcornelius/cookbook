@@ -1,8 +1,8 @@
-<div *ngIf="notificationModalParams"> 
+<div *ngIf="notification"> 
   <div class="modal-center">
-    <div class="modal-container" [ngClass]="notificationModalParams.type">
+    <div class="modal-container" [ngClass]="notification.type">
       <div style="text-align: center;">
-        <span class="modal-text">{{notificationModalParams.text}}</span>
+        <span class="modal-text">{{notification.text}}</span>
       </div>
     </div>
   </div>
