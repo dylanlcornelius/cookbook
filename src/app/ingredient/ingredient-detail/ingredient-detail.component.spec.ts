@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '../shared/ingredient.model';
 
 import { IngredientDetailComponent } from './ingredient-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
+import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
@@ -15,7 +16,9 @@ describe('IngredientsDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([])
+        RouterModule.forRoot([
+          {path: 'ingredient/list', component: IngredientListComponent}
+        ])
       ],
       providers: [
         IngredientService
@@ -62,12 +65,16 @@ describe('IngredientsDetailComponent', () => {
       fixture = TestBed.createComponent(IngredientDetailComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
+
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
       
       spyOn(ingredientService, 'deleteIngredient');
 
       component.deleteIngredientEvent(component, 'id');
 
       expect(ingredientService.deleteIngredient).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should not try to delete an ingredient without an id', () => {

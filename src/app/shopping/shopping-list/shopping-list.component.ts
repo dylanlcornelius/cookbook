@@ -3,13 +3,15 @@ import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
-import { Notification } from '@notifications';
+import { NotificationType } from '@notifications';
 import { UserItemService } from '@userItemService';
 import { UserItem } from '../shared/user-item.model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
 
 // TODO: icons for notification modal
 @Component({
@@ -42,6 +44,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -140,11 +143,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       data.cartQuantity = 0;
       this.userIngredientService.buyUserIngredient(this.packageIngredientData(), 1, isCompleted);
       this.applyFilter();
-      this.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        text: 'Ingredient added!'
-      };
+      this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredient added!'));
       if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0) {
         this.isCompleted = true;
       }
@@ -173,11 +172,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.userItemService.putUserItem(userItems);
 
     this.itemForm.reset();
-    this.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Item added!'
-    };
+    this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Item added!'));
   }
 
   removeItem(index) {
@@ -185,11 +180,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0;
 
     this.userItemService.buyUserItem(this.packageItemData(), 1, this.isCompleted);
-    this.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Item removed!'
-    };
+    this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Item removed!'));
   }
 
   addAllToPantry() {
@@ -214,11 +205,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     self.userItemService.buyUserItem(self.packageItemData(), itemsCount, false);
 
     self.applyFilter();
-    self.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Shopping list completed!'
-    };
+    self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Shopping list completed!'));
     self.isCompleted = true;
   }
 }

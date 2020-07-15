@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
-import { Notification } from '@notifications';
+import { NotificationType } from '@notifications';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -17,7 +19,12 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   notificationModalParams;
   ingredient;
 
-  constructor(private route: ActivatedRoute, private ingredientService: IngredientService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private ingredientService: IngredientService,
+    private notificationService: NotificationService,
+  ) { }
 
   ngOnInit() {
     this.load();
@@ -47,12 +54,8 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   deleteIngredientEvent(self, id) {
     if (id) {
       self.ingredientService.deleteIngredient(id);
-      self.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        path: '/ingredient/list',
-        text: 'Ingredient deleted!'
-      };
+      self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredient deleted!'));
+      self.router.navigate(['/ingredient/list']);
     }
   }
 }

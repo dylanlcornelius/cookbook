@@ -5,7 +5,7 @@ import { UserService } from '@userService';
 import { ConfigService } from '../shared/config.service';
 import { Config } from '../shared/config.model';
 import { User } from 'src/app/user/shared/user.model';
-import { Notification } from '@notifications';
+import { NotificationType } from '@notifications';
 import { combineLatest, Subject } from 'rxjs';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { Recipe } from 'src/app/recipe/shared/recipe.model';
@@ -14,6 +14,8 @@ import { UserItem } from 'src/app/shopping/shared/user-item.model';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { takeUntil } from 'rxjs/operators';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -77,7 +79,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private recipeService: RecipeService,
     private userIngredientService: UserIngredientService,
-    private userItemService: UserItemService
+    private userItemService: UserItemService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -179,11 +182,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.userIngredientContext.dataSource = self.originalUserIngredients;
     self.userItemContext.dataSource = self.originalUserItems;
 
-    self.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Changes reverted!'
-    };
+    self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Changes reverted'));
   }
 
   save() {
@@ -198,10 +197,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.userIngredientService.putUserIngredients(self.userIngredientContext.dataSource);
     self.userItemService.putUserItems(self.userItemContext.dataSource);
 
-    self.notificationModalParams = {
-      self: this,
-      type: Notification.SUCCESS,
-      text: 'Changes saved!'
-    };
+    self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Changes saved!'));
   }
 }

@@ -12,6 +12,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { of } from 'rxjs';
 import { Config } from '../shared/config.model';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 
 describe('AdminDashboardComponent', () => {
   let component: AdminDashboardComponent;
@@ -22,6 +23,7 @@ describe('AdminDashboardComponent', () => {
   let ingredientService: IngredientService;
   let userIngredientService: UserIngredientService;
   let userItemService: UserItemService;
+  let notificationService: NotificationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -48,6 +50,7 @@ describe('AdminDashboardComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     userIngredientService = TestBed.inject(UserIngredientService);
     userItemService = TestBed.inject(UserItemService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should create', () => {
@@ -158,9 +161,11 @@ describe('AdminDashboardComponent', () => {
     it('should revert all changes', () => {
       component.originalConfigs = [new Config({})];
 
+      spyOn(notificationService, 'setNotification');
+
       component.revertEvent(component);
 
-      expect(component.notificationModalParams).toBeDefined();
+      expect(notificationService.setNotification).toHaveBeenCalled();
       expect(component.configContext.dataSource).toEqual(component.originalConfigs);
     });
   });
@@ -181,6 +186,7 @@ describe('AdminDashboardComponent', () => {
       spyOn(ingredientService, 'putIngredients');
       spyOn(userIngredientService, 'putUserIngredients');
       spyOn(userItemService, 'putUserItems');
+      spyOn(notificationService, 'setNotification');
 
       component.saveEvent(component);
 
@@ -190,7 +196,7 @@ describe('AdminDashboardComponent', () => {
       expect(ingredientService.putIngredients).toHaveBeenCalled();
       expect(userIngredientService.putUserIngredients).toHaveBeenCalled();
       expect(userItemService.putUserItems).toHaveBeenCalled();
-      expect(component.notificationModalParams).toBeDefined();
+      expect(notificationService.setNotification).toHaveBeenCalled();
     });
   });
 });

@@ -2,12 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '@recipeService';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
-import { Notification } from '@notifications';
+import { NotificationType } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
 import { Observable, merge, of, fromEvent, combineLatest, Subject } from 'rxjs';
 import { mapTo, takeUntil } from 'rxjs/operators';
 import { Recipe } from '../shared/recipe.model';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -35,6 +37,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private imageService: ImageService,
+    private notificationService: NotificationService,
   ) {
     this.online$ = merge(
       of(navigator.onLine),
@@ -109,12 +112,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     if (id) {
       self.recipeService.deleteRecipe(id);
       self.deleteFile(id);
-      self.notificationModalParams = {
-        self: self,
-        type: Notification.SUCCESS,
-        path: '/recipe/list',
-        text: 'Recipe Deleted!'
-      };
+      self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Recipe Deleted!'));
+      self.router.navigate(['/recipe/list']);
     }
   }
 

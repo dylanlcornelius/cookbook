@@ -9,13 +9,15 @@ import {
 
 import { ActionService } from '@actionService';
 import { User } from 'src/app/user/shared/user.model';
-import { Notification } from '@notifications';
+import { NotificationType } from '@notifications';
 import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { UserService } from '@userService';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { Notification } from 'src/app/shared/notification-modal/notification.model';
 
 @Component({
   selector: 'app-profile',
@@ -66,7 +68,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private currentUserService: CurrentUserService,
     private userService: UserService,
-    private actionService: ActionService
+    private actionService: ActionService,
+    private notificationService: NotificationService
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
   }
@@ -189,12 +192,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.putUser(user);
     this.currentUserService.setCurrentUser(user);
 
-    this.notificationModalParams = {
-      self: self,
-      type: Notification.SUCCESS,
-      text: 'Profile Information Updated!'
-    };
-
+    this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Profile Information Updated!'));
     this.loading = true;
   }
 }
