@@ -24,7 +24,6 @@ import { Notification } from 'src/app/shared/notification-modal/notification.mod
 export class RecipeListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
-  notificationModalParams;
 
   uid: string;
   simplifiedView: boolean;
@@ -32,7 +31,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   filtersList = [];
   searchFilter = '';
 
-  displayedColumns = ['name', 'time', 'calories', 'servings', 'quantity', 'cook', 'buy'];
   dataSource;
   id: string;
   userIngredients;

@@ -26,7 +26,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
   validationModalParams;
-  notificationModalParams;
 
   originalConfigs: Array<Config>;
   configContext = {

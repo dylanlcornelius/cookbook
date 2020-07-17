@@ -22,7 +22,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   loading = true;
   validationModalParams;
-  notificationModalParams;
 
   uid: string;
   recipe: Recipe;
@@ -43,7 +42,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       of(navigator.onLine),
       fromEvent(window, 'online').pipe(mapTo(true)),
       fromEvent(window, 'offline').pipe(mapTo(false)),
-    )
+    );
   }
 
   ngOnInit() {

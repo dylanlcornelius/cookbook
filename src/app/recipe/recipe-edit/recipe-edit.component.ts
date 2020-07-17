@@ -261,12 +261,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       const form = this.recipesForm.value;
 
-      form.uid = user.uid;
       form.ingredients.forEach(ingredient => {
         delete ingredient.name;
       });
 
       if (this.route.snapshot.params['id']) {
+        form.uid = this.recipe.uid;
         form.author = this.recipe.author;
         form.hasImage = this.recipe.hasImage;
         form.meanRating = this.recipe.meanRating;
@@ -275,6 +275,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.recipeService.putRecipe(this.recipe.id, form);
         this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {
+        form.uid = user.uid;
         form.author = user.firstName + ' ' + user.lastName;
 
         const id = this.recipeService.postRecipe(form);
