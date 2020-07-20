@@ -7,6 +7,7 @@ import { Action } from '@actions';
 import { User } from './user.model';
 import { CurrentUserService } from './current-user.service';
 import { UserService } from '@userService';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class AuthService {
         return;
       }
 
-      this.userService.getUser(user.uid).subscribe(current => {
+      this.userService.getUser(user.uid).pipe(first()).subscribe(current => {
         if (!current) {
           current = new User({
             uid: user.uid,

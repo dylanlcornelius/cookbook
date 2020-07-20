@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -7,6 +7,7 @@ import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserService } from '@userService';
 import { UtilService } from 'src/app/shared/util.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-list',
@@ -23,6 +24,7 @@ export class ProfileListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
+    private router: Router,
     private recipeService: RecipeService,
     private imageService: ImageService,
     private userService: UserService,

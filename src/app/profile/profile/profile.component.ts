@@ -209,8 +209,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.userImage = progress;
           this.userImageProgress = undefined;
 
-          this.user.hasImage = true;
-          this.userService.putUser(this.user);
+          const user = new User(this.user);
+          user.hasImage = true;
+          this.userService.putUser(user);
+          this.currentUserService.setCurrentUser(user);
         } else {
           this.userImageProgress = progress;
         }
@@ -220,8 +222,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   deleteFile(path) {
     this.imageService.deleteFile(path).then(() => {
-      this.user.hasImage = false;
-      this.userService.putUser(this.user);
+
+      const user = new User(this.user);
+      user.hasImage = false;
+      this.userService.putUser(user);
+      this.currentUserService.setCurrentUser(user);
       this.userImage = undefined;
     });
   }
