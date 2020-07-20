@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartsModule } from 'ng2-charts';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { ImageService } from 'src/app/util/image.service';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -21,6 +22,7 @@ describe('ProfileComponent', () => {
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
   let notificationService: NotificationService;
+  let imageService: ImageService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -51,6 +53,7 @@ describe('ProfileComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
     notificationService = TestBed.inject(NotificationService);
+    imageService = TestBed.inject(ImageService);
   });
 
   it('should create', () => {
@@ -58,14 +61,28 @@ describe('ProfileComponent', () => {
   });
 
   describe('load', () => {
-    it('should load data', () => {
+    it('should load data with an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(component, 'loadActions');
+      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
+      expect(imageService.downloadFile).toHaveBeenCalled();
+    });
+
+    it('should load data without an image', () => {
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(component, 'loadActions');
+      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
+
+      component.load();
+
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(component.loadActions).toHaveBeenCalled();
+      expect(imageService.downloadFile).toHaveBeenCalled();
     });
   });
 
@@ -119,6 +136,64 @@ describe('ProfileComponent', () => {
 
       expect(result[0].day).toBe(1);
     });
+  });
+
+  describe('readFile', () => {
+    it('should not upload a blank url', () => {
+      spyOn(imageService, 'uploadFile');
+      spyOn(userService, 'putUser');
+
+      component.readFile({});
+
+      expect(imageService.uploadFile).not.toHaveBeenCalled();
+      expect(userService.putUser).not.toHaveBeenCalled();
+      expect(component.userImage).toBeUndefined();
+      expect(component.userImageProgress).toBeUndefined();
+    });
+
+    it('should upload a file and return progress', () => {
+      component.user = new User({});
+
+      spyOn(imageService, 'uploadFile').and.returnValue(of(1));
+      spyOn(userService, 'putUser');
+
+      component.readFile({target: {files: [{}]}});
+
+      expect(imageService.uploadFile).toHaveBeenCalled();
+      expect(userService.putUser).not.toHaveBeenCalled();
+      expect(component.userImage).toBeUndefined();
+      expect(component.userImageProgress).toEqual(1);
+    });
+
+    it('should upload a file and return a file', () => {
+      component.user = new User({});
+
+      spyOn(imageService, 'uploadFile').and.returnValue(of('url'));
+      spyOn(userService, 'putUser');
+
+      component.readFile({target: {files: [{}]}});
+
+      expect(imageService.uploadFile).toHaveBeenCalled();
+      expect(userService.putUser).toHaveBeenCalled();
+      expect(component.userImage).toEqual('url');
+      expect(component.userImageProgress).toBeUndefined();
+    });
+  });
+
+  describe('deleteFile', () => {
+    it('should delete a file', fakeAsync(() => {
+      component.user = new User({});
+      component.userImage = 'url';
+
+      spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
+      spyOn(userService, 'putUser');
+
+      component.deleteFile('url');
+
+      tick();
+      expect(imageService.deleteFile).toHaveBeenCalled();
+      expect(userService.putUser).toHaveBeenCalled();
+    }));
   });
 
   describe('onFormSubmit', () => {

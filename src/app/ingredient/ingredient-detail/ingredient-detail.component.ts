@@ -16,7 +16,6 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
   validationModalParams;
-  notificationModalParams;
   ingredient;
 
   constructor(

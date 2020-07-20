@@ -23,7 +23,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading = true;
   validationModalParams;
-  notificationModalParams;
   isCompleted = false;
 
   uid: string;

@@ -7,12 +7,14 @@ import { ChartsModule } from 'ng2-charts';
 
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile/profile.component';
+import { ProfileListComponent } from './profile-list/profile-list.component';
 
 import { SharedModule } from '@sharedModule';
 
 @NgModule({
   declarations: [
     ProfileComponent,
+    ProfileListComponent,
   ],
   imports: [
     CommonModule,

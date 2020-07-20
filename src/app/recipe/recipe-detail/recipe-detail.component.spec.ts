@@ -171,12 +171,13 @@ describe('RecipeDetailComponent', () => {
     it('should not attempt to delete a recipe without an id', () => {
       spyOn(recipeService, 'deleteRecipe');
       spyOn(component, 'deleteFile');
+      spyOn(notificationService, 'setNotification');
 
       component.deleteRecipeEvent(component, '');
 
       expect(recipeService.deleteRecipe).not.toHaveBeenCalled();
       expect(component.deleteFile).not.toHaveBeenCalled();
-      expect(component.notificationModalParams).not.toBeDefined();
+      expect(notificationService.setNotification).not.toHaveBeenCalled();
     });
 
     it('should delete a recipe recipe', () => {
@@ -191,19 +192,6 @@ describe('RecipeDetailComponent', () => {
       expect(recipeService.deleteRecipe).toHaveBeenCalled();
       expect(component.deleteFile).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
-      expect(router.navigate).toHaveBeenCalled();
-    });
-  });
-
-  describe('setListFilter', () => {
-    it('should set a filter and redirect to the recipes list page', () => {
-      const router = TestBed.inject(Router);
-      
-      spyOn(router, 'navigate');
-
-      component.setListFilter('filter');
-
-      expect(recipeService.selectedFilters).toEqual(['filter']);
       expect(router.navigate).toHaveBeenCalled();
     });
   });
