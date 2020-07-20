@@ -142,11 +142,13 @@ describe('ProfileComponent', () => {
     it('should not upload a blank url', () => {
       spyOn(imageService, 'uploadFile');
       spyOn(userService, 'putUser');
+      spyOn(currentUserService, 'setCurrentUser');
 
       component.readFile({});
 
       expect(imageService.uploadFile).not.toHaveBeenCalled();
       expect(userService.putUser).not.toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(component.userImage).toBeUndefined();
       expect(component.userImageProgress).toBeUndefined();
     });
@@ -156,11 +158,13 @@ describe('ProfileComponent', () => {
 
       spyOn(imageService, 'uploadFile').and.returnValue(of(1));
       spyOn(userService, 'putUser');
+      spyOn(currentUserService, 'setCurrentUser');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.uploadFile).toHaveBeenCalled();
       expect(userService.putUser).not.toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(component.userImage).toBeUndefined();
       expect(component.userImageProgress).toEqual(1);
     });
@@ -170,11 +174,13 @@ describe('ProfileComponent', () => {
 
       spyOn(imageService, 'uploadFile').and.returnValue(of('url'));
       spyOn(userService, 'putUser');
+      spyOn(currentUserService, 'setCurrentUser');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.uploadFile).toHaveBeenCalled();
       expect(userService.putUser).toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(component.userImage).toEqual('url');
       expect(component.userImageProgress).toBeUndefined();
     });
@@ -187,12 +193,14 @@ describe('ProfileComponent', () => {
 
       spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
       spyOn(userService, 'putUser');
+      spyOn(currentUserService, 'setCurrentUser');
 
       component.deleteFile('url');
 
       tick();
       expect(imageService.deleteFile).toHaveBeenCalled();
       expect(userService.putUser).toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).toHaveBeenCalled();
     }));
   });
 
