@@ -1,0 +1,52 @@
+.container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    column-gap: 50px;
+}
+.mat-form-field {
+    width: 60%;
+}
+.row-button {
+    margin: 10px;
+}
+.user-card {
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+}
+.mat-card-header {
+    flex-grow: 1;
+    overflow: auto;
+}
+.mat-card-header .mat-card-subtitle {
+    width: min-content;
+    margin: -8px auto 0 !important;
+}
+.mat-card-image {
+    margin: 0 -16px 16px !important;
+    object-fit: cover;
+}
+.mat-card-actions {
+    display: flex !important;
+    justify-content: center;
+    width: min-content;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+.mat-card-actions .mat-button {
+    margin: 0 0 0 20px !important;
+    padding: 0;
+}
+.mat-card-actions .mat-button:first-child {
+    margin: 0 !important;
+}
+.mat-paginator {
+    background: inherit;
+}
+.full-width {
+    width: 100%;
+}
+@media screen and (max-width: 767px) {
+    .user-card {
+        margin: 5px;
+    }
+}

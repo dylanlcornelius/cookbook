@@ -5,57 +5,69 @@
     <mat-tab label="Profile">
       <div class="tab-body">
         <h2>Your Profile</h2>
+
+        <mat-progress-bar class="image-progress" mode="determinate" [value]="userImageProgress" [hidden]="!userImageProgress"></mat-progress-bar>
+
+        <div class="image-buttons" *ngIf="(online$ | async)">
+          <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
+          <button mat-button matTooltip="Add Image" (click)="uploadFile.click()"><mat-icon>add</mat-icon></button>
+          <button mat-button matTooltip="Delete Image" (click)="deleteFile(user.id)" [hidden]="!userImage"><mat-icon>close</mat-icon></button>
+        </div>
+
+        <div class="container">
+          <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
   
-        <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)">
-          <div class="container">
-            <mat-form-field appearance="outline">
-              <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher"/>
-              <mat-error>
-                <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
-              </mat-error>
-              <mat-hint>First Name</mat-hint>
-            </mat-form-field>
-        
-            <mat-form-field appearance="outline">
-              <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher"/>
-              <mat-error>
-                <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
-              </mat-error>
-              <mat-hint>Last Name</mat-hint>
-            </mat-form-field>
-          </div>
-          <br/>
-
-          <div class="container">
-            <div>
-              <mat-slide-toggle matInput formControlName="theme" ngDefaultControl [checked]="userForm.get('theme').value">
-              </mat-slide-toggle>
-              <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
-                <mat-icon>brightness_5</mat-icon>
-              </span>
-              <span *ngIf="userForm.get('theme').value" class="theme-icon" matTooltip="Dark Theme">
-                <mat-icon>brightness_3</mat-icon>
-              </span>
-            </div>
-
-            <div>
-              <mat-slide-toggle matInput formControlName="simplifiedView" ngDefaultControl [checked]="userForm.get('simplifiedView').value">
-              </mat-slide-toggle>
-              <span *ngIf="!userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Expanded View">
-                <mat-icon>view_compact</mat-icon>
-              </span>
-              <span *ngIf="userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Simplified View">
-                <mat-icon>view_comfy</mat-icon>
-              </span>
-            </div>
-          </div>
+          <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)">
+            <div class="container">
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher"/>
+                <mat-error>
+                  <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
+                </mat-error>
+                <mat-hint>First Name</mat-hint>
+              </mat-form-field>
           
-          <div class="button-row">
-            <button mat-mini-fab type="submit" matTooltip="Save Settings" [disabled]="!userForm.valid" color="primary">
-              <mat-icon>done</mat-icon>
-            </button>
-          </div>
-        </form>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher"/>
+                <mat-error>
+                  <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
+                </mat-error>
+                <mat-hint>Last Name</mat-hint>
+              </mat-form-field>
+            </div>
+            <br/>
+
+            <div class="container button-container">
+              <div>
+                <mat-slide-toggle matInput formControlName="theme" ngDefaultControl [checked]="userForm.get('theme').value">
+                </mat-slide-toggle>
+                <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
+                  <mat-icon>brightness_5</mat-icon>
+                </span>
+                <span *ngIf="userForm.get('theme').value" class="theme-icon" matTooltip="Dark Theme">
+                  <mat-icon>brightness_3</mat-icon>
+                </span>
+              </div>
+
+              <div>
+                <mat-slide-toggle matInput formControlName="simplifiedView" ngDefaultControl [checked]="userForm.get('simplifiedView').value">
+                </mat-slide-toggle>
+                <span *ngIf="!userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Expanded View">
+                  <mat-icon>view_compact</mat-icon>
+                </span>
+                <span *ngIf="userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Simplified View">
+                  <mat-icon>view_comfy</mat-icon>
+                </span>
+              </div>
+            </div>
+            
+            <div class="button-row">
+              <button mat-mini-fab type="submit" matTooltip="Save Settings" [disabled]="!userForm.valid" color="primary">
+                <mat-icon>done</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </mat-tab>
     <mat-tab label="Analytics">

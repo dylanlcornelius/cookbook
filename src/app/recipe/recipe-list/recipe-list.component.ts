@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '../shared/recipe.model';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { UtilService } from 'src/app/shared/util.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -45,10 +46,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private uomConversion: UOMConversion,
     private imageService: ImageService,
     private currentUserService: CurrentUserService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private utilService: UtilService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
+
+  identify = this.utilService.identify;
 
   ngOnInit() {
     this.load();
@@ -212,10 +216,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  indentify(_index, item) {
-    return item.id;
   }
 
   sortRecipesByName(a: Recipe, b: Recipe) {

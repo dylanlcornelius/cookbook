@@ -4,12 +4,13 @@ import { RecipeService } from '@recipeService';
 import { IngredientService} from '../../ingredient/shared/ingredient.service';
 import { NotificationType } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
-import { Observable, merge, of, fromEvent, combineLatest, Subject } from 'rxjs';
-import { mapTo, takeUntil } from 'rxjs/operators';
+import { Observable, combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '../shared/recipe.model';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { UtilService } from 'src/app/shared/util.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -37,12 +38,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private imageService: ImageService,
     private notificationService: NotificationService,
+    private utilService: UtilService,
   ) {
-    this.online$ = merge(
-      of(navigator.onLine),
-      fromEvent(window, 'online').pipe(mapTo(true)),
-      fromEvent(window, 'offline').pipe(mapTo(false)),
-    );
+    this.online$ = this.utilService.online$;
   }
 
   ngOnInit() {
@@ -116,10 +114,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  setListFilter(filter) {
-    this.recipeService.selectedFilters = [filter];
-    this.router.navigate(['/recipe/list']);
-  }
+  setListFilter = this.utilService.setListFilter;
 
   onRate(rating, recipe) {
     this.recipeService.rateRecipe(rating, this.uid, recipe);

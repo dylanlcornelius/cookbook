@@ -395,14 +395,6 @@ describe('RecipeListComponent', () => {
     });
   });
 
-  describe('indentify', () => {
-    it('should return an id', () => {
-      const result = component.indentify(0, {id: 1});
-
-      expect(result).toEqual(1);
-    });
-  });
-
   describe('sortRecipesByName', () => {
     it('should sort recipe a less than recipe b', () => {
       const result = component.sortRecipesByName(new Recipe({name: 'a'}), new Recipe({name: 'b'}));

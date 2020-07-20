@@ -34,6 +34,7 @@
       <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe/list" [ngClass]="{'selected': route === '/recipe/list'}">Recipes</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient/list" [ngClass]="{'selected': route === '/ingredient/list'}">Ingredients</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping/list" [ngClass]="{'selected': route === '/shopping/list'}">Shopping List</a>
+      <a mat-raised-button color="primary" class="nav-button" routerLink="/profile/list" [ngClass]="{'selected': route === '/profile/list'}">Authors</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/about" [ngClass]="{'selected': route === '/about'}">About</a>
       
       <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
@@ -56,6 +57,10 @@
         <a mat-button class="mobile-nav-button" routerLink="/shopping/list">
           <mat-icon>shopping_cart</mat-icon>
           <span class="mobile-nav-text">Shopping List</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/profile/list">
+          <mat-icon>people</mat-icon>
+          <span class="mobile-nav-text">Authors</span>
         </a><br/>
         <a mat-button class="mobile-nav-button" routerLink="/about">
           <mat-icon>info</mat-icon>

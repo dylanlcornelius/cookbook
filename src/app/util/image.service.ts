@@ -41,12 +41,12 @@ export class ImageService {
     });
   }
 
-  downloadFile(recipe: Recipe) {
-    if (!recipe.hasImage) {
+  downloadFile(doc) {
+    if (!doc.hasImage) {
       return Promise.reject();
     }
 
-    return this.getFile(recipe.id);
+    return this.getFile(doc.id);
   }
 
   deleteFile(path: string) {

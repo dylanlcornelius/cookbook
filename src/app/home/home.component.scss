@@ -7,8 +7,13 @@
 }
 .nav-tile {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 .nav-tile:hover {
+    color: darkgray;
+}
+.nav-tile:focus {
+    outline: none;
     color: grey;
 }
 .nav-icon {

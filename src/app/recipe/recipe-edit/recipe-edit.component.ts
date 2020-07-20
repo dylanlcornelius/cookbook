@@ -57,15 +57,15 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.recipesForm = this.formBuilder.group({
-      'name': [null, Validators.required],
-      'link': [null],
-      'description': [null],
-      'time': [''],
-      'servings': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      'calories': ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      'categories': this.formBuilder.array([]),
-      'steps': this.formBuilder.array([]),
-      'ingredients': this.formBuilder.array([])
+      name: [null, Validators.required],
+      link: [null],
+      description: [null],
+      time: [''],
+      servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      categories: this.formBuilder.array([]),
+      steps: this.formBuilder.array([]),
+      ingredients: this.formBuilder.array([])
     });
 
     this.load();

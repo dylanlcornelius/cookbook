@@ -14,10 +14,12 @@ import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { UserService } from '@userService';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { ImageService } from 'src/app/util/image.service';
+import { UtilService } from 'src/app/shared/util.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,14 +28,17 @@ import { Notification } from 'src/app/shared/notification-modal/notification.mod
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
+  online$: Observable<boolean>;
   loading: Boolean = true;
-  notificationModalParams;
 
   selectedIndex = 0;
 
   userForm: FormGroup;
-  uid: string;
+  user: User;
   id: string;
+
+  userImage: string;
+  userImageProgress;
 
   actions = {};
   actionsLength = 0;
@@ -69,9 +74,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private userService: UserService,
     private actionService: ActionService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private imageService: ImageService,
+    private utilService: UtilService,
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
+
+    this.online$ = this.utilService.online$;
   }
 
   ngOnInit() {
@@ -85,16 +94,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   load() {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.uid = user.uid;
+      this.user = user;
       this.userForm = this.formBuilder.group({
-        uid: [this.uid],
+        uid: [user.uid],
         firstName : [user.firstName, Validators.required],
         lastName : [user.lastName, Validators.required],
         role: [user.role],
         theme: [user.theme],
         simplifiedView: [user.simplifiedView],
-        id: [user.id]
+        hasImage: [user.hasImage],
+        id: [user.id],
       });
+
+      this.imageService.downloadFile(user).then(url => {
+        if (url) {
+          this.userImage = url;
+        }
+      }, () => {});
 
       this.loading = false;
 
@@ -103,7 +119,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   loadActions() {
-    this.actionService.getActions(this.uid)?.then((userAction) => {
+    this.actionService.getActions(this.user.uid)?.then((userAction) => {
       const actions = this.sortActions(userAction.actions);
 
       let index = 0;
@@ -186,6 +202,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  readFile(event) {
+    if (event && event.target && event.target.files[0]) {
+      this.imageService.uploadFile(this.user.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
+        if (typeof progress === 'string') {
+          this.userImage = progress;
+          this.userImageProgress = undefined;
+
+          this.user.hasImage = true;
+          this.userService.putUser(this.user);
+        } else {
+          this.userImageProgress = progress;
+        }
+      });
+    }
+  }
+
+  deleteFile(path) {
+    this.imageService.deleteFile(path).then(() => {
+      this.user.hasImage = false;
+      this.userService.putUser(this.user);
+      this.userImage = undefined;
+    });
+  }
+
   onFormSubmit(form) {
     const user = new User(form);
 
@@ -193,6 +233,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.currentUserService.setCurrentUser(user);
 
     this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Profile Information Updated!'));
-    this.loading = true;
   }
 }

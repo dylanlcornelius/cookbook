@@ -1,0 +1,30 @@
+<app-loading-modal *ngIf="loading"></app-loading-modal>
+
+<h2>The Authors</h2>
+
+<div [hidden]="loading">
+  <mat-form-field class="search-bar">
+    <input matInput (keyup)="applyFilter($event.target.value)"/>
+    <mat-placeholder>
+      <mat-icon>search</mat-icon>
+    </mat-placeholder>
+  </mat-form-field>
+
+  <div *ngIf="!loading" class="container center">
+    <mat-card *ngFor="let user of dataSource.connect().value; trackBy: identify" class="user-card mat-elevation-z4"
+        (click)="setListFilter(user.firstName + ' ' + user.lastName)">
+      <mat-card-header>
+        <mat-card-title>{{user.firstName}} {{user.lastName}}</mat-card-title>
+      </mat-card-header>
+
+      <img mat-card-image *ngIf="user.image" [src]="user.image" alt=""/>
+
+      <mat-card-content class="between">
+        <span>{{user.recipeCount}} recipes</span>
+        <span>{{user.ratingCount}} ratings</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[100, 200, 500]" class="full-width"></mat-paginator>
+</div>

@@ -196,19 +196,6 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
-  describe('setListFilter', () => {
-    it('should set a filter and redirect to the recipes list page', () => {
-      const router = TestBed.inject(Router);
-      
-      spyOn(router, 'navigate');
-
-      component.setListFilter('filter');
-
-      expect(recipeService.selectedFilters).toEqual(['filter']);
-      expect(router.navigate).toHaveBeenCalled();
-    });
-  });
-
   describe('onRate', () => {
     it('should call the recipe service and rate a recipe', () => {
       spyOn(recipeService, 'rateRecipe');
