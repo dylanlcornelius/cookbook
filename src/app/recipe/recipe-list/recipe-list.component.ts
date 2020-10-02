@@ -25,6 +25,7 @@ import { UtilService } from 'src/app/shared/util.service';
 export class RecipeListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
+  recipeIngredientModalParams;
 
   uid: string;
   simplifiedView: boolean;
@@ -87,6 +88,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             recipe.ingredients.forEach(recipeIngredient => {
               if (ingredient.id === recipeIngredient.id) {
                 recipeIngredient.amount = ingredient.amount;
+                recipeIngredient.name = ingredient.name;
               }
             });
           });
@@ -276,36 +278,46 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   addIngredients(id) {
     const currentRecipe = this.dataSource.data.find(x => x.id === id);
-    if (!Number.isNaN(currentRecipe.count) && currentRecipe.ingredients) {
-      currentRecipe.ingredients.forEach(recipeIngredient => {
-        let hasIngredient = false;
-        this.userIngredients.forEach(ingredient => {
-          if (recipeIngredient.id === ingredient.id) {
-            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-            if (value) {
-              ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
-            } else {
-              this.notificationService.setNotification(new Notification(NotificationType.FAILURE, 'Error calculating measurements!'));
-            }
-            hasIngredient = true;
+    if (!Number.isNaN(currentRecipe.count) && currentRecipe.ingredients && currentRecipe.ingredients.length > 0) {
+      this.recipeIngredientModalParams = {
+        function: this.addIngredientsEvent,
+        ingredients: currentRecipe.ingredients,
+        self: this
+      };
+    } else if (currentRecipe.ingredients && currentRecipe.ingredients.length === 0) {
+      this.notificationService.setNotification(new Notification(NotificationType.INFO, 'Recipe has no ingredients'));
+    }
+  }
+
+  addIngredientsEvent(self, ingredients) {
+    ingredients.forEach(recipeIngredient => {
+      let hasIngredient = false;
+      self.userIngredients.forEach(ingredient => {
+        if (recipeIngredient.id === ingredient.id) {
+          const value = self.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+          if (value) {
+            ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
+          } else {
+            self.notificationService.setNotification(new Notification(NotificationType.FAILURE, 'Error calculating measurements!'));
           }
-        });
-        if (!hasIngredient) {
-          this.userIngredients.push({
-            id: String(recipeIngredient.id),
-            pantryQuantity: 0,
-            cartQuantity: Number(recipeIngredient.amount)
-          });
+          hasIngredient = true;
         }
       });
+      if (!hasIngredient) {
+        self.userIngredients.push({
+          id: String(recipeIngredient.id),
+          pantryQuantity: 0,
+          cartQuantity: Number(recipeIngredient.amount)
+        });
+      }
+    });
 
-      this.userIngredientService.putUserIngredient(this.packageData());
-      this.dataSource.data.forEach(recipe => {
-        recipe.count = this.getRecipeCount(recipe.id);
-      });
+    self.userIngredientService.putUserIngredient(self.packageData());
+    self.dataSource.data.forEach(recipe => {
+      recipe.count = self.getRecipeCount(recipe.id);
+    });
 
-      this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients added to cart'));
-    }
+    self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients added to cart'));
   }
 
   recipeFilterPredicate(data, filterList) {
