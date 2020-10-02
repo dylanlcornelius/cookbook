@@ -1,4 +1,4 @@
-<app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+<app-validation-modal [params]="validationModalParams"></app-validation-modal>
 
 <ng-template #table let-data="data">
   <h2>{{data.title}}</h2>
@@ -21,7 +21,7 @@
       <ng-container [matColumnDef]="'delete'">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="accent" (click)="conext.remove(element.id, element.name)">Delete</button>
+          <button mat-raised-button color="accent" (click)="context.remove(element.id, element.name)">Delete</button>
         </td>
       </ng-container>
   

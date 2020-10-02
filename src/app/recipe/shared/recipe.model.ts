@@ -13,6 +13,7 @@ export class Recipe {
     steps: Array<string>;
     ingredients: Array<{
         id: string,
+        name: string,
         uom: string,
         quantity: string,
         amount: string,

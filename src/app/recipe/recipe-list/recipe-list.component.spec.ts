@@ -568,12 +568,60 @@ describe('RecipeListComponent', () => {
       component.dataSource = new MatTableDataSource([{
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [{}]
       }]);
+
+      spyOn(notificationService, 'setNotification');
+
+      component.addIngredients('id');
+
+      expect(component.recipeIngredientModalParams).toBeDefined();
+      expect(notificationService.setNotification).not.toHaveBeenCalled();
+    });
+
+    it('should show an error if the uom conversion is invalid', () => {
+       component.dataSource = new MatTableDataSource([{
+         id: 'id',
+        count: 0,
+        ingredients: []
+      }]);
+      
+      spyOn(notificationService, 'setNotification');
+
+      component.addIngredients('id');
+
+      expect(component.recipeIngredientModalParams).toBeUndefined();
+      expect(notificationService.setNotification).toHaveBeenCalled();
+    });
+
+    it('should do nothing if recipe count is NaN', () => {
+      component.dataSource = new MatTableDataSource([{
+        id: 'id'
+      }]);
+
+      spyOn(notificationService, 'setNotification');
+
+      component.addIngredients('id');
+
+      expect(component.recipeIngredientModalParams).toBeUndefined();
+      expect(notificationService.setNotification).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('addIngredientsEvent', () => {
+    beforeEach(() => {
+      component.dataSource = new MatTableDataSource([{
+        id: 'id',
+        count: 0
+      }]);
+    });
+
+    it('should add an ingredient to the cart', () => {
+      const ingredients = [{
+        id: 'ingredientId',
+        uom: 'x',
+        quantity: 10
+      }];
 
       component.userIngredients = [{
         id: 'ingredientId',
@@ -587,7 +635,7 @@ describe('RecipeListComponent', () => {
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
-      component.addIngredients('id');
+      component.addIngredientsEvent(component, ingredients);
 
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
@@ -597,15 +645,11 @@ describe('RecipeListComponent', () => {
     });
 
     it('should show an error if the uom conversion is invalid', () => {
-       component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
+       const ingredients =  [{
+        id: 'ingredientId',
+        uom: 'x',
+        quantity: 10
+      }];
 
       component.userIngredients = [{
         id: 'ingredientId'
@@ -617,7 +661,7 @@ describe('RecipeListComponent', () => {
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
-      component.addIngredients('id');
+      component.addIngredientsEvent(component, ingredients);
 
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
@@ -627,15 +671,11 @@ describe('RecipeListComponent', () => {
     });
 
     it('should skip ingredients that are not available', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
+      const ingredients = [{
+        id: 'ingredientId',
+        uom: 'x',
+        quantity: 10
+      }];
 
       component.userIngredients = [{
         id: 'ingredientId2'
@@ -647,31 +687,13 @@ describe('RecipeListComponent', () => {
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
-      component.addIngredients('id');
+      component.addIngredientsEvent(component, ingredients);
 
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
       expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
-    });
-
-    it('should do nothing if recipe count is NaN', () => {
-      component.dataSource = new MatTableDataSource([{id: 'id'}]);
-
-      spyOn(uomConversion, 'convert');
-      spyOn(component, 'packageData');
-      spyOn(userIngredientService, 'putUserIngredient');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-
-      component.addIngredients('id');
-
-      expect(uomConversion.convert).not.toHaveBeenCalled();
-      expect(component.packageData).not.toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).not.toHaveBeenCalled();
-      expect(component.getRecipeCount).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
     });
   });
 

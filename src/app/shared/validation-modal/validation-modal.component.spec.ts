@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ValidationModalComponent } from './validation-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
 
 describe('ValidationModalComponent', () => {
   let component: ValidationModalComponent;
@@ -9,7 +10,10 @@ describe('ValidationModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValidationModalComponent ],
+      declarations: [
+        ValidationModalComponent,
+        ModalComponent
+      ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
       ]
@@ -29,42 +33,48 @@ describe('ValidationModalComponent', () => {
 
   describe('cancel', () => {
     it('should close the modal', () => {
-      component.validationModalParams = {
+      component.params = {
         function: () => {},
         self: component,
         text: 'text'
       }
+
+      spyOn(component.modal, 'close');
       
       component.cancel();
 
-      expect(component.validationModalParams).toBeUndefined();
+      expect(component.modal.close).toHaveBeenCalled();
     });
   });
 
   describe('confirm', () => {
     it('should execute a function and close the modal', () => {
-      component.validationModalParams = {
+      component.params = {
         function: () => {},
         id: 'id',
         self: component,
         text: 'text'
       };
 
+      spyOn(component.modal, 'close');
+
       component.confirm();
 
-      expect(component.validationModalParams).toBeUndefined();
+      expect(component.modal.close).toHaveBeenCalled();
     });
 
     it('should execute a function and close the modal', () => {
-      component.validationModalParams = {
+      component.params = {
         function: () => {},
         self: component,
         text: 'text'
       };
 
+      spyOn(component.modal, 'close');
+
       component.confirm();
 
-      expect(component.validationModalParams).toBeUndefined();
+      expect(component.modal.close).toHaveBeenCalled();
     });
   });
 });

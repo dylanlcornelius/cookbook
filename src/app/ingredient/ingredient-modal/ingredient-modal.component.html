@@ -1,25 +1,20 @@
-<div *ngIf="ingredientModalParams"> 
-  <div class="modal-overlay"></div>
-  <div class="modal-center">
-    <div class="modal-container">
-      <div style="text-align: center;">
-        <span class="modal-text">{{ingredientModalParams.text}}</span>
-      </div>
-      <br/>
-      <form class="center" [formGroup]="ingredientModalForm">
-        <mat-form-field>
-          <input matInput placeholder="Pantry Quantity" formControlName="pantryQuantity" [errorStateMatcher]="matcher"/>
-          <mat-error>
-            <span *ngIf="!ingredientModalForm.get('pantryQuantity').valid && ingredientModalForm.get('pantryQuantity').touched">Please enter a valid Pantry Quantity</span>
-          </mat-error>
-        </mat-form-field>
-      </form>
-      <br/>
-      <div class="center">
-        <button [disabled]="!ingredientModalForm.valid" class="btn btn-primary" (click)="confirm()"  style="margin-right: 20px;">Confirm</button>
-        <button class="btn btn-warning" (click)="cancel()">Cancel</button>
-      </div>
-    </div>
+<app-modal [params]="params">
+  <div style="text-align: center;">
+    <h4>{{params?.text}}</h4>
   </div>
-</div>
+  <br/>
+  <form class="center" [formGroup]="ingredientModalForm">
+    <mat-form-field>
+      <input matInput placeholder="Pantry Quantity" formControlName="pantryQuantity" [errorStateMatcher]="matcher"/>
+      <mat-error>
+        <span *ngIf="!ingredientModalForm.get('pantryQuantity').valid && ingredientModalForm.get('pantryQuantity').touched">Please enter a valid Pantry Quantity</span>
+      </mat-error>
+    </mat-form-field>
+  </form>
+  <br/>
+  <div class="center">
+    <button mat-raised-button color="primary" [disabled]="!ingredientModalForm.valid" (click)="confirm()"  style="margin-right: 20px;">Confirm</button>
+    <button mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+  </div>
+</app-modal>
   

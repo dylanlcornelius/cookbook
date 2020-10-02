@@ -17,12 +17,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingModalComponent } from './loading-modal/loading-modal.component';
 import { NotificationModalComponent } from './notification-modal/notification-modal.component';
 import { ValidationModalComponent } from './validation-modal/validation-modal.component';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
     LoadingModalComponent,
     NotificationModalComponent,
     ValidationModalComponent,
+    ModalComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +61,7 @@ import { ValidationModalComponent } from './validation-modal/validation-modal.co
     LoadingModalComponent,
     NotificationModalComponent,
     ValidationModalComponent,
+    ModalComponent,
   ]
 })
 export class SharedModule { }
