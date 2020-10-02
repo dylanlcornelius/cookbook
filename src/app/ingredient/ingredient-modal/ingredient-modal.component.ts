@@ -1,6 +1,6 @@
 /*
 ** DROP THIS IN HTML **
-<app-ingredient-modal [IngredientModalParams]="ingredientModalParams"></app-ingredient-modal>
+<app-ingredient-modal [Params]="ingredientModalParams"></app-ingredient-modal>
 
 ** DROP THIS IN TYPESCRIPT **
 ingredientModalParams;
@@ -13,12 +13,13 @@ this.ingredientModalParams = {
 };
 */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
@@ -32,17 +33,20 @@ export class IngredientModalComponent implements OnInit {
 
   matcher = new ErrorMatcher();
 
-  ingredientModalParams;
+  params;
 
   @Input()
-  set IngredientModalParams(params) {
-    this.ingredientModalParams = params;
-    if (this.ingredientModalParams) {
-      this.ingredientModalForm.setValue({
-        pantryQuantity: this.ingredientModalParams.data.pantryQuantity
+  set Params(params) {
+    this.params = params;
+    if (this.params) {
+      this.ingredientModalForm.patchValue({
+        pantryQuantity: this.params.data.pantryQuantity
       });
     }
   }
+
+  @ViewChild(ModalComponent)
+  modal: ModalComponent;
 
   constructor(
     private formBuilder: FormBuilder
@@ -55,15 +59,15 @@ export class IngredientModalComponent implements OnInit {
   }
 
   cancel() {
-    this.ingredientModalParams = undefined;
+    this.modal.close();
   }
 
   confirm() {
-    this.ingredientModalParams.self.userIngredients.find(x => x.id === this.ingredientModalParams.data.id)
+    this.params.self.userIngredients.find(x => x.id === this.params.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.ingredientModalParams.self.dataSource.data.find(x => x.id === this.ingredientModalParams.data.id)
+    this.params.self.dataSource.data.find(x => x.id === this.params.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.ingredientModalParams.function(this.ingredientModalParams.self);
-    this.ingredientModalParams = undefined;
+    this.params.function(this.params.self);
+    this.modal.close();
   }
 }

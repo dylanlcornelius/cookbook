@@ -1,6 +1,6 @@
 /*
 ** DROP THIS IN HTML **
-<app-validation-modal [validationModalParams]="validationModalParams"></app-validation-modal>
+<app-validation-modal [params]="validationModalParams"></app-validation-modal>
 
 ** DROP THIS IN TYPESCRIPT **
 -- id is optional --
@@ -14,7 +14,8 @@ this.validationModalParams = {
 };
 */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-validation-modal',
@@ -23,20 +24,23 @@ import { Component, Input } from '@angular/core';
 })
 export class ValidationModalComponent {
   @Input()
-  validationModalParams;
+  params;
+
+  @ViewChild(ModalComponent)
+  modal: ModalComponent;
 
   constructor() {}
 
   cancel() {
-    this.validationModalParams = undefined;
+    this.modal.close();
   }
 
   confirm() {
-    if (this.validationModalParams.id) {
-      this.validationModalParams.function(this.validationModalParams.self, this.validationModalParams.id);
+    if (this.params.id) {
+      this.params.function(this.params.self, this.params.id);
     } else {
-      this.validationModalParams.function(this.validationModalParams.self);
+      this.params.function(this.params.self);
     }
-    this.validationModalParams = undefined;
+    this.modal.close();
   }
 }
