@@ -24,6 +24,16 @@ describe('ModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('open', () => {
+    it('should set params to true', () => {
+      component.params = undefined;
+
+      component.open();
+
+      expect(component.params).toBeTrue();
+    });
+  });
+
   describe('close', () => {
     it('should set params to undefined', () => {
       component.params = { value: 'test' };

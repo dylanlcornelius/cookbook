@@ -15,6 +15,7 @@ import { UomTableComponent } from './uom-table/uom-table.component';
 import { RecipeIngredientModalComponent } from './recipe-ingredient-modal/recipe-ingredient-modal.component';
 
 import { SharedModule } from '@sharedModule';
+import { IngredientModule } from '../ingredient/ingredient.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SharedModule } from '@sharedModule';
     MatStepperModule,
     DragDropModule,
     SharedModule,
+    IngredientModule,
   ]
 })
 export class RecipeModule { }

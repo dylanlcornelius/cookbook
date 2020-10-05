@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import {
@@ -33,6 +33,12 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
   matcher = new ErrorMatcher();
 
+  @Input()
+  isQuickView: boolean = false;
+
+  @Output()
+  handleIngredientCreate: EventEmitter<boolean> = new EventEmitter();
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -43,15 +49,6 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.load();
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  load() {
     this.ingredientsForm = this.formBuilder.group({
       'name': [null, Validators.required],
       'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
@@ -60,10 +57,19 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
     });
 
-    if (this.route.snapshot.params['id']) {
-      this.ingredientService.getIngredient(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+    this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  public load() {
+    if (this.route.snapshot.params['ingredient-id']) {
+      this.ingredientService.getIngredient(this.route.snapshot.params['ingredient-id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
         this.id = data.id;
-        this.ingredientsForm.setValue({
+        this.ingredientsForm.patchValue({
           name: data.name,
           category: data.category,
           amount: data.amount || '',
@@ -79,13 +85,20 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFormSubmit(form: NgForm) {
-    if (this.route.snapshot.params['id']) {
-      this.ingredientService.putIngredient(this.id, form);
+  onFormSubmit(form: NgForm, formDirective: FormGroupDirective) {
+    if (this.route.snapshot.params['ingredient-id']) {
+      this.ingredientService.putIngredient(this.id, form.value);
       this.router.navigate(['/ingredient/detail/', this.id]);
-    } else {  
-      const id = this.ingredientService.postIngredient(form)
-      this.router.navigate(['/ingredient/detail/', id]);
+    } else {
+      const id = this.ingredientService.postIngredient(form.value);
+      
+      if (this.isQuickView) {
+        this.handleIngredientCreate.emit(true);
+      } else {
+        this.router.navigate(['/ingredient/detail/', id]);
+      }
     }
+    formDirective.resetForm();
+    form.reset();
   }
 }
