@@ -99,7 +99,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     const userIngredients$ = this.userIngredientService.getUserIngredients();
     const userItems$ = this.userItemService.getUserItems();
 
-    combineLatest(configs$, users$, recipes$, ingredients$, userIngredients$, userItems$)
+    combineLatest([configs$, users$, recipes$, ingredients$, userIngredients$, userItems$])
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe(([configs, users, recipes, ingredients, userIngredients, userItems]) => {
       this.originalConfigs = configs;

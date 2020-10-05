@@ -49,7 +49,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
       const userIngredients$ = this.userIngredientService.getUserIngredient(this.uid);
       const ingredients$ = this.ingredientService.getIngredients();
-      combineLatest(userIngredients$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
+      combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
         this.id = userIngredient.id;
       
         const myIngredients = [];

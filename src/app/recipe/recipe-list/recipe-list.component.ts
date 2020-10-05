@@ -69,7 +69,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     const recipes$ = this.recipeService.getRecipes();
     const ingredients$ = this.ingredientService.getIngredients();
 
-    combineLatest(user$, recipes$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
+    combineLatest([user$, recipes$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 

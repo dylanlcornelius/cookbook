@@ -47,7 +47,7 @@ export class ProfileListComponent implements OnInit {
     const users$ = this.userService.getUsers();
     const recipes$ = this.recipeService.getRecipes();
 
-    combineLatest(users$, recipes$).pipe(takeUntil(this.unsubscribe$)).subscribe(([users, recipes]) => {
+    combineLatest([users$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([users, recipes]) => {
       const recipeCounts = {};
 
       recipes.forEach(recipe => {
