@@ -44,10 +44,10 @@ export class ProfileListComponent implements OnInit {
   }
 
   load() {
-    const users$ = this.userService.getUsers();
-    const recipes$ = this.recipeService.getRecipes();
+    const users$ = this.userService.get();
+    const recipes$ = this.recipeService.get();
 
-    combineLatest(users$, recipes$).pipe(takeUntil(this.unsubscribe$)).subscribe(([users, recipes]) => {
+    combineLatest([users$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([users, recipes]) => {
       const recipeCounts = {};
 
       recipes.forEach(recipe => {
@@ -67,7 +67,7 @@ export class ProfileListComponent implements OnInit {
           return sum;
         }, 0)
 
-        this.imageService.downloadFile(user).then(url => {
+        this.imageService.download(user).then(url => {
           if (url) {
             user.image = url;
           }

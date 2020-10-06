@@ -58,14 +58,14 @@ describe('IngredientListComponent', () => {
       })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
     });
   });
 
@@ -117,12 +117,12 @@ describe('IngredientListComponent', () => {
   describe('editIngredientEvent', () => {
     it('should update a user ingredient', () => {
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
 
       component.editIngredientEvent(component);
 
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
   });
 
@@ -143,12 +143,12 @@ describe('IngredientListComponent', () => {
       component.dataSource.data = [{id: 'id', amount: 1}];
 
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
 
       component.removeIngredient('id');
 
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
 
     it('should not remove a user ingredient if it is zero', () => {
@@ -157,12 +157,12 @@ describe('IngredientListComponent', () => {
       component.dataSource.data = [{id: 'id', amount: 1}];
 
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
 
       component.removeIngredient('id2');
 
       expect(component.packageData).not.toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).not.toHaveBeenCalled();
+      expect(userIngredientService.update).not.toHaveBeenCalled();
     });
   });
 
@@ -173,12 +173,12 @@ describe('IngredientListComponent', () => {
       component.dataSource.data = [{id: 'id', amount: 1}];
 
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
 
       component.addIngredient('id');
 
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
 
     it('should not add a user ingredient if there is no user ingredient', () => {
@@ -186,12 +186,12 @@ describe('IngredientListComponent', () => {
       component.dataSource.data = [{id: 'id', amount: 1}];
 
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
 
       component.addIngredient('id');
 
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
 
     it('should handle an ingredient without an amount', () => {
@@ -199,12 +199,12 @@ describe('IngredientListComponent', () => {
       component.dataSource.data = [{id: 'id'}];
 
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
 
       component.addIngredient('id');
 
       expect(component.packageData).not.toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).not.toHaveBeenCalled();
+      expect(userIngredientService.update).not.toHaveBeenCalled();
     });
   });
 });

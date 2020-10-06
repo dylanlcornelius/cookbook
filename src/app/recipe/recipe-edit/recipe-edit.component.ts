@@ -77,38 +77,40 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    const ingredients$ = this.ingredientService.getIngredients();
+    const ingredients$ = this.ingredientService.get();
 
     if (this.route.snapshot.params['id']) {
-      const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
+      const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
 
-      combineLatest(recipe$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients]) => {
-        this.recipe = recipe;
+      combineLatest([recipe$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients]) => {
+        if (this.loading) {
+          this.recipe = recipe;
 
-        recipe.categories.forEach(() => {
-          this.addCategory();
-        });
-        recipe.steps.forEach(() => {
-          this.addStep();
-        });
+          recipe.categories.forEach(() => {
+            this.addCategory();
+          });
+          recipe.steps.forEach(() => {
+            this.addStep();
+          });
 
-        // figure out already added ingredients
-        this.addedIngredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
-        for (let i = 0; i < this.addedIngredients.length; i++) {
-          this.addIngredient(i);
+          // figure out already added ingredients
+          this.addedIngredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
+          for (let i = 0; i < this.addedIngredients.length; i++) {
+            this.addIngredient(i);
+          }
+
+          this.recipesForm.patchValue({
+            name: recipe.name,
+            link: recipe.link,
+            description: recipe.description,
+            time: recipe.time,
+            servings: recipe.servings,
+            calories: recipe.calories,
+            categories: recipe.categories,
+            steps: recipe.steps,
+            ingredients: this.addedIngredients,
+          });
         }
-
-        this.recipesForm.patchValue({
-          name: recipe.name,
-          link: recipe.link,
-          description: recipe.description,
-          time: recipe.time,
-          servings: recipe.servings,
-          calories: recipe.calories,
-          categories: recipe.categories,
-          steps: recipe.steps,
-          ingredients: this.addedIngredients,
-        });
 
         // figure out available ingredients
         this.allAvailableIngredients = ingredients.reduce((result, ingredient) => {
@@ -272,13 +274,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         form.meanRating = this.recipe.meanRating;
         form.ratings = this.recipe.ratings;
 
-        this.recipeService.putRecipe(this.recipe.id, form);
+        this.recipeService.update(form, this.recipe.id);
         this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {
         form.uid = user.uid;
         form.author = user.firstName + ' ' + user.lastName;
 
-        const id = this.recipeService.postRecipe(form);
+        const id = this.recipeService.create(form);
         this.router.navigate(['/recipe/detail/', id]);
       }
     });

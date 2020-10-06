@@ -66,14 +66,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   load() {
     const user$ = this.currentUserService.getCurrentUser();
-    const recipes$ = this.recipeService.getRecipes();
-    const ingredients$ = this.ingredientService.getIngredients();
+    const recipes$ = this.recipeService.get();
+    const ingredients$ = this.ingredientService.get();
 
-    combineLatest(user$, recipes$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
+    combineLatest([user$, recipes$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
-      this.userIngredientService.getUserIngredient(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredient => {
+      this.userIngredientService.get(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredient => {
         this.id = userIngredient.id;
         this.userIngredients = userIngredient.ingredients;
         ingredients.forEach(ingredient => {
@@ -115,7 +115,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const authors = [];
         recipes.forEach(recipe => {
           recipe.count = this.getRecipeCount(recipe.id);
-          this.imageService.downloadFile(recipe).then(url => {
+          this.imageService.download(recipe).then(url => {
             if (url) {
               recipe.image = url;
             }
@@ -267,7 +267,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           }
         });
       });
-      this.userIngredientService.putUserIngredient(this.packageData());
+      this.userIngredientService.update(this.packageData());
       this.dataSource.data.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
@@ -312,7 +312,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       }
     });
 
-    self.userIngredientService.putUserIngredient(self.packageData());
+    self.userIngredientService.update(self.packageData());
     self.dataSource.data.forEach(recipe => {
       recipe.count = self.getRecipeCount(recipe.id);
     });

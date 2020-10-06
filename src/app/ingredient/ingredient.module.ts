@@ -6,6 +6,7 @@ import { IngredientListComponent } from './ingredient-list/ingredient-list.compo
 import { IngredientDetailComponent } from './ingredient-detail/ingredient-detail.component';
 import { IngredientEditComponent } from './ingredient-edit/ingredient-edit.component';
 import { IngredientModalComponent } from './ingredient-modal/ingredient-modal.component';
+import { IngredientQuickCreateComponent } from './ingredient-quick-create/ingredient-quick-create.component';
 
 import { SharedModule } from '@sharedModule';
 
@@ -15,11 +16,15 @@ import { SharedModule } from '@sharedModule';
     IngredientDetailComponent,
     IngredientEditComponent,
     IngredientModalComponent,
+    IngredientQuickCreateComponent,
   ],
   imports: [
     CommonModule,
     IngredientRoutingModule,
     SharedModule,
+  ],
+  exports: [
+    IngredientQuickCreateComponent,
   ]
 })
 export class IngredientModule { }

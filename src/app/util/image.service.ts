@@ -8,24 +8,24 @@ import { Recipe } from '../recipe/shared/recipe.model';
   providedIn: 'root'
 })
 export class ImageService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.storage().ref();
+  _ref;
+  get ref() {
+    if (!this._ref && firebase.apps.length > 0) {
+      this._ref = firebase.storage().ref();
     }
-    return this.ref;
+    return this._ref;
   }
 
   constructor() {}
 
-  getFile(path: string) {
-    return this.getRef().child(path).getDownloadURL().then(url => {
+  get(path: string) {
+    return this.ref.child(path).getDownloadURL().then(url => {
       return url;
     }, () => {});
   }
 
-  uploadFile(path: string, file: File): Observable<Number | String | void> {
-    const uploadTask = this.getRef().child(path).put(file);
+  upload(path: string, file: File): Observable<Number | String | void> {
+    const uploadTask = this.ref.child(path).put(file);
 
     return new Observable(observer => {
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
@@ -34,22 +34,22 @@ export class ImageService {
       }, error => {
         console.log(error);
       }, () => {
-        this.getFile(path).then(url => {
+        this.get(path).then(url => {
           observer.next(url);
         });
       });
     });
   }
 
-  downloadFile(doc) {
+  download(doc) {
     if (!doc.hasImage) {
       return Promise.reject();
     }
 
-    return this.getFile(doc.id);
+    return this.get(doc.id);
   }
 
   deleteFile(path: string) {
-    return this.getRef().child(path).delete();
+    return this.ref.child(path).delete();
   }
 }

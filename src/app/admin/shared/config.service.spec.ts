@@ -21,77 +21,73 @@ describe('ConfigService', () => {
   });
 
   describe('getConfigs', () => {
-    it('should get all documents', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
-
-      service.getConfigs().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
-    });
-  });
-
-  describe('getConfig', () => {
     it('should get one document based on an id', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'get').and.returnValue(of([{}]));
 
-      service.getConfig('name').subscribe(doc => {
+      service.get('name').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.get).toHaveBeenCalled();
+    });
+
+    it('should get all documents', () => {
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+
+      service.get().subscribe(docs => {
+        expect(docs).toBeDefined();
+      });
+
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
   });
 
-  describe('postConfig', () => {
+  describe('create', () => {
     it('should create a new document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'post');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'create');
 
-      service.postConfig(new Config({}));
+      service.create(new Config({}));
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.post).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.create).toHaveBeenCalled();
     });
   });
 
-  describe('putConfig', () => {
+  describe('update', () => {
     it('should update a document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'put');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'update');
 
-      service.putConfig(new Config({}));
+      service.update(new Config({}));
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.put).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.update).toHaveBeenCalled();
+    });
+
+    it('should update all documents', () => {
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'updateAll');
+
+      service.update([new Config({})]);
+
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.updateAll).toHaveBeenCalled();
     });
   });
 
-  describe('putConfigs', () => {
-    it('should update a document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'putAll');
-
-      service.putConfigs([new Config({})]);
-
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.putAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('deleteConfig', () => {
+  describe('delete', () => {
     it('should delete a document', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'delete');
 
-      service.deleteConfig('id');
+      service.delete('id');
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.delete).toHaveBeenCalled();
     });
   });

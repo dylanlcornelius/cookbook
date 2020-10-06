@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, NgForm, FormGroupDirective } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -50,42 +50,74 @@ describe('IngredientEditComponent', () => {
 
   it('should get an ingredient', () => {
     const route = TestBed.inject(ActivatedRoute);
-    route.snapshot.params = {id: 'testId'};
+    route.snapshot.params = {'ingredient-id': 'testId'};
 
-    spyOn(ingredientService, 'getIngredient').and.returnValue(of(new Ingredient({})));
+    spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
 
     fixture = TestBed.createComponent(IngredientEditComponent);
     fixture.detectChanges();
 
-    expect(ingredientService.getIngredient).toHaveBeenCalled();
+    expect(ingredientService.get).toHaveBeenCalled();
   });
 
   describe('onFormSubmit', () => {
+    const form = new NgForm([], []);
+    const formDirective = new FormGroupDirective([], []);
+
+    beforeEach(() => {
+      spyOn(form, 'reset');
+      spyOn(formDirective, 'resetForm');
+    });
+
     it('should update an ingredient', () => {
       component.id = 'testId';
       const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
+      route.snapshot.params = {'ingredient-id': 'testId'};
       const router = TestBed.inject(Router);
 
-      spyOn(ingredientService, 'putIngredient');
+      spyOn(ingredientService, 'update');
+      spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(new NgForm([], []));
+      component.onFormSubmit(form, formDirective);
 
-      expect(ingredientService.putIngredient).toHaveBeenCalled();
+      expect(ingredientService.update).toHaveBeenCalled();
+      expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should create an ingredient', () => {
       const router = TestBed.inject(Router);
 
-      spyOn(ingredientService, 'postIngredient').and.returnValue('testId');
+      spyOn(ingredientService, 'create').and.returnValue('testId');
+      spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(new NgForm([], []));
+      component.onFormSubmit(form, formDirective);
 
-      expect(ingredientService.postIngredient).toHaveBeenCalled();
+      expect(ingredientService.create).toHaveBeenCalled();
+      expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+    });
+
+    it('should create an ingredient from the quick view', () => {
+      const router = TestBed.inject(Router);
+      component.isQuickView = true;
+
+      spyOn(ingredientService, 'create').and.returnValue('testId');
+      spyOn(component.handleIngredientCreate, 'emit');
+      spyOn(router, 'navigate');
+
+      component.onFormSubmit(form, formDirective);
+
+      expect(ingredientService.create).toHaveBeenCalled();
+      expect(component.handleIngredientCreate.emit).toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    afterEach(() => {
+      expect(form.reset).toHaveBeenCalled();
+      expect(formDirective.resetForm).toHaveBeenCalled();
     });
   });
 });

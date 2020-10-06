@@ -59,21 +59,21 @@ describe('AdminDashboardComponent', () => {
 
   describe('load', () => {
     it('should load every collection', () => {
-      spyOn(configService, 'getConfigs').and.returnValue(of([]));
-      spyOn(userService, 'getUsers').and.returnValue(of([]));
-      spyOn(recipeService, 'getRecipes').and.returnValue(of([]));
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of([]));
-      spyOn(userIngredientService, 'getUserIngredients').and.returnValue(of([]));
-      spyOn(userItemService, 'getUserItems').and.returnValue(of([]));
+      spyOn(configService, 'get').and.returnValue(of([]));
+      spyOn(userService, 'get').and.returnValue(of([]));
+      spyOn(recipeService, 'get').and.returnValue(of([]));
+      spyOn(ingredientService, 'get').and.returnValue(of([]));
+      spyOn(userIngredientService, 'get').and.returnValue(of([]));
+      spyOn(userItemService, 'get').and.returnValue(of([]));
 
       component.load();
 
-      expect(configService.getConfigs).toHaveBeenCalled();
-      expect(userService.getUsers).toHaveBeenCalled();
-      expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredients).toHaveBeenCalled();
-      expect(userItemService.getUserItems).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+      expect(userService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(userItemService.get).toHaveBeenCalled();
     });
   });
 
@@ -93,11 +93,11 @@ describe('AdminDashboardComponent', () => {
 
   describe('addConfig', () => {
     it('should create a new config', () => {
-      spyOn(configService, 'postConfig');
+      spyOn(configService, 'create');
 
       component.addConfig();
 
-      expect(configService.postConfig).toHaveBeenCalled();
+      expect(configService.create).toHaveBeenCalled();
     });
   });
 
@@ -117,11 +117,11 @@ describe('AdminDashboardComponent', () => {
   
   describe('removeConfigEvent', () => {
     it('should delete a config', () => {
-      spyOn(configService, 'deleteConfig');
+      spyOn(configService, 'delete');
 
       component.removeConfigEvent(component, 'id');
 
-      expect(configService.deleteConfig).toHaveBeenCalled();
+      expect(configService.delete).toHaveBeenCalled();
     });
   })
 
@@ -141,11 +141,11 @@ describe('AdminDashboardComponent', () => {
 
   describe('removeUserEvent', () => {
     it('should remove a user', () => {
-      spyOn(userService, 'deleteUser');
+      spyOn(userService, 'delete');
 
       component.removeUserEvent(component, 'id');
 
-      expect(userService.deleteUser).toHaveBeenCalled();
+      expect(userService.delete).toHaveBeenCalled();
     });
   });
 
@@ -180,22 +180,22 @@ describe('AdminDashboardComponent', () => {
 
   describe('saveEvent', () => {
     it('should save all changes', () => {
-      spyOn(configService, 'putConfigs');
-      spyOn(userService, 'putUsers');
-      spyOn(recipeService, 'putRecipes');
-      spyOn(ingredientService, 'putIngredients');
-      spyOn(userIngredientService, 'putUserIngredients');
-      spyOn(userItemService, 'putUserItems');
+      spyOn(configService, 'update');
+      spyOn(userService, 'update');
+      spyOn(recipeService, 'update');
+      spyOn(ingredientService, 'update');
+      spyOn(userIngredientService, 'update');
+      spyOn(userItemService, 'update');
       spyOn(notificationService, 'setNotification');
 
       component.saveEvent(component);
 
-      expect(configService.putConfigs).toHaveBeenCalled();
-      expect(userService.putUsers).toHaveBeenCalled();
-      expect(recipeService.putRecipes).toHaveBeenCalled();
-      expect(ingredientService.putIngredients).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredients).toHaveBeenCalled();
-      expect(userItemService.putUserItems).toHaveBeenCalled();
+      expect(configService.update).toHaveBeenCalled();
+      expect(userService.update).toHaveBeenCalled();
+      expect(recipeService.update).toHaveBeenCalled();
+      expect(ingredientService.update).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
+      expect(userItemService.update).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
   });

@@ -10,50 +10,51 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class IngredientService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.firestore().collection('ingredients');
+  _ref;
+  get ref() {
+    if (!this._ref) {
+      this._ref = this.firestoreService.getRef('ingredients');
     }
-    return this.ref;
+    return this._ref;
   }
 
   constructor(
     private firestoreService: FirestoreService
   ) {}
 
-  getIngredients(): Observable<Ingredient[]> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => {
-          return new Ingredient(doc);
-        }));
+  get(id: string): Observable<Ingredient>;
+  get(): Observable<Ingredient[]>;
+  get(): Observable<Ingredient | Ingredient[]>; // type for spyOn
+  get(id?: string): Observable<Ingredient | Ingredient[]> {
+    if (id) {
+      return new Observable(observer => {
+        this.firestoreService.get(this.ref, id).subscribe(doc => {
+          observer.next(new Ingredient(doc));
+        })
       });
-    });
+    } else {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref).subscribe(docs => {
+          observable.next(docs.map(doc => new Ingredient(doc)));
+        });
+      });
+    }
   }
 
-  getIngredient(id: string): Observable<Ingredient> {
-    return new Observable(observer => {
-      this.firestoreService.get(this.getRef(), id).subscribe(doc => {
-        observer.next(new Ingredient(doc));
-      })
-    });
+  create(data): String {
+    return this.firestoreService.create(this.ref, data, Action.CREATE_INGREDIENT);
   }
 
-  postIngredient(data): String {
-    return this.firestoreService.post(this.getRef(), data, Action.CREATE_INGREDIENT);
+  update(data, id?: string) {
+    if (id) {
+      this.firestoreService.update(this.ref, id, data, Action.UPDATE_INGREDIENT);
+    } else {
+      this.firestoreService.updateAll(this.ref, data);
+    }
   }
 
-  putIngredient(id: string, data) {
-    this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_INGREDIENT);
-  }
-
-  putIngredients(data: Array<Ingredient>) {
-    this.firestoreService.putAll(this.getRef(), data);
-  }
-
-  deleteIngredient(id: string) {
-    this.firestoreService.delete(this.getRef(), id, Action.DELETE_INGREDIENT);
+  delete(id: string) {
+    this.firestoreService.delete(this.ref, id, Action.DELETE_INGREDIENT);
   }
 
   buildRecipeIngredients(recipeIngredients, allIngredients) {

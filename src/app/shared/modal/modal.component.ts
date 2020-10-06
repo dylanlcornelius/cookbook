@@ -11,6 +11,10 @@ export class ModalComponent {
 
   constructor() { }
 
+  open() {
+    this.params = true;
+  }
+
   close() {
     this.params = undefined;
   }

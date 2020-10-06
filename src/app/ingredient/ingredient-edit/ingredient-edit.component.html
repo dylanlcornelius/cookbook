@@ -3,16 +3,16 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <div class="button-row">
-    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="route.snapshot.params['id']">
+  <div class="button-row" *ngIf="!isQuickView">
+    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="route.snapshot.params['ingredient-id']">
       <mat-icon> arrow_back </mat-icon>
     </a>
-    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient/list']" *ngIf="!route.snapshot.params['id']">
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient/list']" *ngIf="!route.snapshot.params['ingredient-id']">
       <mat-icon> list </mat-icon>
     </a>
   </div>
 
-  <form [formGroup]="ingredientsForm" (ngSubmit)="onFormSubmit(ingredientsForm.value)">
+  <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onFormSubmit(ingredientsForm, formDirective)">
     <mat-form-field class="form-field">
       <input matInput placeholder="Name*" formControlName="name" [errorStateMatcher]="matcher">
       <mat-error>

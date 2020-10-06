@@ -54,14 +54,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   load() {
     const user$ = this.currentUserService.getCurrentUser();
-    const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
-    const ingredients$ = this.ingredientService.getIngredients();
+    const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
+    const ingredients$ = this.ingredientService.get();
 
-    combineLatest(user$, recipe$, ingredients$).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipe, ingredients]) => {
+    combineLatest([user$, recipe$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipe, ingredients]) => {
       this.uid = user.uid;
       this.recipe = recipe;
 
-      this.imageService.downloadFile(this.recipe).then(url => {
+      this.imageService.download(this.recipe).then(url => {
         if (url) {
           this.recipeImage = url;
         }
@@ -74,13 +74,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   readFile(event) {
     if (event && event.target && event.target.files[0]) {
-      this.imageService.uploadFile(this.recipe.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
+      this.imageService.upload(this.recipe.getId(), event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
         if (typeof progress === 'string') {
           this.recipeImage = progress;
           this.recipeImageProgress = undefined;
 
           this.recipe.hasImage = true;
-          this.recipeService.putRecipe(this.recipe.getId(), this.recipe.getObject());
+          this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
         } else {
           this.recipeImageProgress = progress;
         }
@@ -91,7 +91,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   deleteFile(path) {
     this.imageService.deleteFile(path).then(() => {
       this.recipe.hasImage = false;
-      this.recipeService.putRecipe(this.recipe.getId(), this.recipe.getObject());
+      this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
       this.recipeImage = undefined;
     });
   }
@@ -107,7 +107,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   deleteRecipeEvent(self, id) {
     if (id) {
-      self.recipeService.deleteRecipe(id);
+      self.recipeService.delete(id);
       self.deleteFile(id);
       self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Recipe Deleted!'));
       self.router.navigate(['/recipe/list']);

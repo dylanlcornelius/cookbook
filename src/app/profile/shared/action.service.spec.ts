@@ -23,16 +23,16 @@ describe('ActionService', () => {
 
       const userActions = { actions: { [week]: {[Action.BUY_INGREDIENT]: 1}}};
 
-      spyOn(service, 'getAction').and.returnValue(Promise.resolve(userActions));
-      spyOn(service, 'postAction');
-      spyOn(service, 'putAction');
+      spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
+      spyOn(service, 'create');
+      spyOn(service, 'update');
 
       service.commitAction('uid', Action.BUY_INGREDIENT, 1);
 
       tick();
-      expect(service.getAction).toHaveBeenCalled();
-      expect(service.postAction).not.toHaveBeenCalled();
-      expect(service.putAction).toHaveBeenCalled();
+      expect(service.get).toHaveBeenCalled();
+      expect(service.create).not.toHaveBeenCalled();
+      expect(service.update).toHaveBeenCalled();
     }));
 
     it('should update a non-existing action', fakeAsync(() => {
@@ -42,88 +42,78 @@ describe('ActionService', () => {
 
       const userActions = { actions: { [week]: {[Action.COMPLETE_SHOPPING_LIST]: 1}}};
 
-      spyOn(service, 'getAction').and.returnValue(Promise.resolve(userActions));
-      spyOn(service, 'postAction');
-      spyOn(service, 'putAction');
+      spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
+      spyOn(service, 'create');
+      spyOn(service, 'update');
 
       service.commitAction('uid', Action.BUY_INGREDIENT, 1);
 
       tick();
-      expect(service.getAction).toHaveBeenCalled();
-      expect(service.postAction).not.toHaveBeenCalled();
-      expect(service.putAction).toHaveBeenCalled();
+      expect(service.get).toHaveBeenCalled();
+      expect(service.create).not.toHaveBeenCalled();
+      expect(service.update).toHaveBeenCalled();
     }));
 
     it('should update a non-existing week actions', fakeAsync(() => {
       const userActions = { actions: { ['different-week']: {[Action.BUY_INGREDIENT]: 1}}};
 
-      spyOn(service, 'getAction').and.returnValue(Promise.resolve(userActions));
-      spyOn(service, 'postAction');
-      spyOn(service, 'putAction');
+      spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
+      spyOn(service, 'create');
+      spyOn(service, 'update');
 
       service.commitAction('uid', Action.BUY_INGREDIENT, 1);
 
       tick();
-      expect(service.getAction).toHaveBeenCalled();
-      expect(service.postAction).not.toHaveBeenCalled();
-      expect(service.putAction).toHaveBeenCalled();
+      expect(service.get).toHaveBeenCalled();
+      expect(service.create).not.toHaveBeenCalled();
+      expect(service.update).toHaveBeenCalled();
     }));
 
     it('should create a new user action object', fakeAsync(() => {
       const userActions = null;
 
-      spyOn(service, 'getAction').and.returnValue(Promise.resolve(userActions));
-      spyOn(service, 'postAction');
-      spyOn(service, 'putAction');
+      spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
+      spyOn(service, 'create');
+      spyOn(service, 'update');
 
       service.commitAction('uid', Action.BUY_INGREDIENT, 1);
 
       tick();
-      expect(service.getAction).toHaveBeenCalled();
-      expect(service.postAction).toHaveBeenCalled();
-      expect(service.putAction).not.toHaveBeenCalled();
+      expect(service.get).toHaveBeenCalled();
+      expect(service.create).toHaveBeenCalled();
+      expect(service.update).not.toHaveBeenCalled();
     }));
 
     it('should not update or creating anything without a uid', () => {
-      spyOn(service, 'getAction');
-      spyOn(service, 'postAction');
-      spyOn(service, 'putAction');
+      spyOn(service, 'get');
+      spyOn(service, 'create');
+      spyOn(service, 'update');
 
       service.commitAction('', Action.BUY_INGREDIENT, 1);
 
-      expect(service.getAction).not.toHaveBeenCalled();
-      expect(service.postAction).not.toHaveBeenCalled();
-      expect(service.putAction).not.toHaveBeenCalled();
+      expect(service.get).not.toHaveBeenCalled();
+      expect(service.create).not.toHaveBeenCalled();
+      expect(service.update).not.toHaveBeenCalled();
     });
   });
 
-  describe('getActions', () => {
-    it('should wrap getAction', () => {
-      spyOn(service, 'getAction');
-
-      service.getActions('uid');
-
-      expect(service.getAction).toHaveBeenCalled();
-    });
-  });
-
-  describe('postAction', () => {
+  describe('create', () => {
     it('should add a document', () => {
-      spyOn(service, 'getRef');
+      const ref = spyOnProperty(service, 'ref');
 
-      service.postAction(service, {});
+      service.create({});
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(ref).toHaveBeenCalled();
     });
   });
 
-  describe('putAction', () => {
+  describe('update', () => {
     it('should update a document', () => {
-      spyOn(service, 'getRef');
+      const ref = spyOnProperty(service, 'ref');
 
-      service.putAction(service, {});
+      service.update({});
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(ref).toHaveBeenCalled();
     });
   });
 });

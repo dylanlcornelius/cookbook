@@ -9,47 +9,49 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class UserService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.firestore().collection('users');
+  _ref;
+  get ref() {
+    if (!this._ref) {
+      this._ref = this.firestoreService.getRef('users');
     }
-    return this.ref;
+    return this._ref;
   }
 
   constructor(
     private firestoreService: FirestoreService
   ) {}
 
-  getUsers(): Observable<User[]> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => new User(doc)));
+  get(uid: string): Observable<User>;
+  get(): Observable<User[]>;
+  get(uid?: string): Observable<User | User[]> {
+    if (uid) {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref, uid, 'uid').subscribe(docs => {
+          observable.next(docs[0] ? new User(docs[0]) : undefined);
+        });
       });
-    });
-  }
-
-  getUser(uid: string): Observable<User> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
-        observable.next(docs[0] ? new User(docs[0]) : undefined);
+    } else {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref).subscribe(docs => {
+          observable.next(docs.map(doc => new User(doc)));
+        });
       });
-    });
+    }
   }
 
-  postUser(data: User): string {
-    return this.firestoreService.post(this.getRef(), data.getObject());
+  create(data: User): string {
+    return this.firestoreService.create(this.ref, data.getObject());
   }
 
-  putUser(data: User) {
-    this.firestoreService.put(this.getRef(), data.getId(), data.getObject());
+  update(data: User | User[]) {
+    if (!Array.isArray(data)) {
+      this.firestoreService.update(this.ref, data.getId(), data.getObject());
+    } else {
+      this.firestoreService.updateAll(this.ref, data);
+    }
   }
 
-  putUsers(data: Array<User>) {
-    this.firestoreService.putAll(this.getRef(), data);
-  }
-
-  deleteUser(id: string) {
-    this.firestoreService.delete(this.getRef(), id);
+  delete(id: string) {
+    this.firestoreService.delete(this.ref, id);
   }
 }

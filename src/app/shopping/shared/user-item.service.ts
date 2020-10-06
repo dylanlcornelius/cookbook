@@ -12,12 +12,12 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
   providedIn: 'root'
 })
 export class UserItemService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.firestore().collection('user-items');
+  _ref;
+  get ref() {
+    if (!this._ref) {
+      this._ref = this.firestoreService.getRef('user-items');
     }
-    return this.ref;
+    return this._ref;
   }
 
   constructor(
@@ -26,47 +26,48 @@ export class UserItemService {
     private actionService: ActionService
   ) {}
 
-  getUserItems(): Observable<UserItem[]> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => {
-          return new UserItem(doc);
-        }));
+  get(uid: string): Observable<UserItem>;
+  get(): Observable<UserItem[]>;
+  get(): Observable<UserItem | UserItem[]>; // type for spyOn
+  get(uid?: string): Observable<UserItem | UserItem[]> {
+    if (uid) {
+      return new Observable((observer) => {
+        this.firestoreService.get(this.ref, uid, 'uid').subscribe(docs => {
+          if (docs.length > 0) {
+            observer.next(new UserItem(docs[0]));
+          } else {
+            const userItem = new UserItem({uid: uid});
+            userItem.id = this.create(userItem);
+            observer.next(userItem);
+          }
+        });
       });
-    });
-  }
-
-  getUserItem(uid: string): Observable<UserItem> {
-    return new Observable((observer) => {
-      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
-        if (docs.length > 0) {
-          observer.next(new UserItem(docs[0]));
-        } else {
-          const userItem = new UserItem({uid: uid});
-          userItem.id = this.postUserItem(userItem);
-          observer.next(userItem);
-        }
+    } else {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref).subscribe(docs => {
+          observable.next(docs.map(doc => {
+            return new UserItem(doc);
+          }));
+        });
       });
-    });
+    }
   }
 
-  postUserItem(data: UserItem): string {
-    const newDoc = this.getRef().doc();
-    newDoc.set(data.getObject());
-    return newDoc.id;
+  create(data: UserItem): string {
+    return this.firestoreService.create(this.ref, data);
   }
 
-  putUserItem(data: UserItem) {
-    this.getRef().doc(data.getId()).set(data.getObject());
-  }
-
-  putUserItems(data: Array<UserItem>) {
-    this.firestoreService.putAll(this.getRef(), data);
+  update(data: UserItem | UserItem[]) {
+    if (!Array.isArray(data)) {
+      this.firestoreService.update(this.ref, data.getId(), data.getObject());
+    } else {
+      this.firestoreService.updateAll(this.ref, data);
+    }
   }
 
   buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
     this.currentUserService.getCurrentUser().subscribe(user => {
-      this.getRef().doc(data.getId()).set(data.getObject());
+      this.update(data);
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);

@@ -35,7 +35,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    this.ingredientService.getIngredient(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+    this.ingredientService.get(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       this.ingredient = data;
       this.loading = false;
     });
@@ -52,7 +52,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
 
   deleteIngredientEvent(self, id) {
     if (id) {
-      self.ingredientService.deleteIngredient(id);
+      self.ingredientService.delete(id);
       self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredient deleted!'));
       self.router.navigate(['/ingredient/list']);
     }

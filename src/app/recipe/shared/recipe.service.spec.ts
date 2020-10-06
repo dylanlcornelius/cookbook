@@ -30,78 +30,74 @@ describe('RecipeService', () => {
     });
   });
 
-  describe('getRecipes', () => {
+  describe('get', () => {
     it('should get all documents', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'get').and.returnValue(of([{}]));
 
-      service.getRecipes().subscribe(docs => {
+      service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
-  });
 
-  describe('getRecipe', () => {
     it('should get one document based on an id', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'get').and.returnValue(of({}));
 
-      service.getRecipe('id').subscribe(doc => {
+      service.get('id').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
   });
 
-  describe('postRecipe', () => {
+  describe('create', () => {
     it('should create a new document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'post');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'create');
 
-      service.postRecipe({});
+      service.create({});
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.post).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.create).toHaveBeenCalled();
     });
   });
 
-  describe('putRecipe', () => {
+  describe('update', () => {
     it('should update a document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'put');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'update');
 
-      service.putRecipe('id', {});
+      service.update({}, 'id');
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.put).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.update).toHaveBeenCalled();
     });
-  });
 
-  describe('putRecipes', () => {
     it('should update a document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'putAll');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'updateAll');
 
-      service.putRecipes([new Recipe({})]);
+      service.update([new Recipe({})]);
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.putAll).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.updateAll).toHaveBeenCalled();
     });
   });
 
-  describe('deleteRecipe', () => {
+  describe('delete', () => {
     it('should delete a document', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'delete');
 
-      service.deleteRecipe('id');
+      service.delete('id');
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.delete).toHaveBeenCalled();
     });
   });
@@ -135,20 +131,24 @@ describe('RecipeService', () => {
   });
 
   describe('rateRecipe', () => {
-    it('should udpate a recipe with a rating', () => {
+    it('should update a recipe with a rating', () => {
       spyOn(service, 'calculateMeanRating');
+      spyOn(service, 'update');
 
       service.rateRecipe(1, 'uid', new Recipe({}));
 
       expect(service.calculateMeanRating).toHaveBeenCalled();
+      expect(service.update).toHaveBeenCalled();
     });
 
-    it('should udpate a recipe with a rating', () => {
+    it('should update a recipe with a rating', () => {
       spyOn(service, 'calculateMeanRating');
+      spyOn(service, 'update');
 
       service.rateRecipe(0, 'uid', new Recipe({}));
 
       expect(service.calculateMeanRating).toHaveBeenCalled();
+      expect(service.update).toHaveBeenCalled();
     });
   });
 });

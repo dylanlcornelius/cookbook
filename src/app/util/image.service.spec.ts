@@ -15,21 +15,21 @@ describe('ImageService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('downloadFile', () => {
+  describe('download', () => {
     it('should handle a recipe without an image', () => {
-      spyOn(service, 'getFile');
+      spyOn(service, 'get');
 
-      service.downloadFile(new Recipe({})).then(() => {}, () => {});
+      service.download(new Recipe({})).then(() => {}, () => {});
 
-      expect(service.getFile).not.toHaveBeenCalled();
+      expect(service.get).not.toHaveBeenCalled();
     });
 
     it('should handle a recipe with an image', () => {
-      spyOn(service, 'getFile');
+      spyOn(service, 'get');
 
-      service.downloadFile(new Recipe({hasImage: true}));
+      service.download(new Recipe({hasImage: true}));
 
-      expect(service.getFile).toHaveBeenCalled();
+      expect(service.get).toHaveBeenCalled();
     });
   });
 });
