@@ -64,25 +64,25 @@ describe('ProfileComponent', () => {
     it('should load data with an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(component, 'loadActions');
-      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
-      expect(imageService.downloadFile).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
     });
 
     it('should load data without an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(component, 'loadActions');
-      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve());
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
-      expect(imageService.downloadFile).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
     });
   });
 
@@ -98,13 +98,13 @@ describe('ProfileComponent', () => {
         { day: 0, month: 3, year: 0, data: {'2': 2} }
       ];
 
-      spyOn(actionService, 'getActions').and.returnValue(Promise.resolve(true));
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(true));
       spyOn(component, 'sortActions').and.returnValue(actions);
 
       component.loadActions();
 
       tick();
-      expect(actionService.getActions).toHaveBeenCalled();
+      expect(actionService.get).toHaveBeenCalled();
       expect(component.sortActions).toHaveBeenCalled();
     }));
 
@@ -119,13 +119,13 @@ describe('ProfileComponent', () => {
         { day: 0, month: 3, year: 0, data: {'2': 2} }
       ];
 
-      spyOn(actionService, 'getActions').and.returnValue(Promise.resolve(true));
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(true));
       spyOn(component, 'sortActions').and.returnValue(actions);
 
       component.loadActions();
 
       tick();
-      expect(actionService.getActions).toHaveBeenCalled();
+      expect(actionService.get).toHaveBeenCalled();
       expect(component.sortActions).toHaveBeenCalled();
     }));
   });
@@ -140,14 +140,14 @@ describe('ProfileComponent', () => {
 
   describe('readFile', () => {
     it('should not upload a blank url', () => {
-      spyOn(imageService, 'uploadFile');
-      spyOn(userService, 'putUser');
+      spyOn(imageService, 'upload');
+      spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
       component.readFile({});
 
-      expect(imageService.uploadFile).not.toHaveBeenCalled();
-      expect(userService.putUser).not.toHaveBeenCalled();
+      expect(imageService.upload).not.toHaveBeenCalled();
+      expect(userService.update).not.toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(component.userImage).toBeUndefined();
       expect(component.userImageProgress).toBeUndefined();
@@ -156,14 +156,14 @@ describe('ProfileComponent', () => {
     it('should upload a file and return progress', () => {
       component.user = new User({});
 
-      spyOn(imageService, 'uploadFile').and.returnValue(of(1));
-      spyOn(userService, 'putUser');
+      spyOn(imageService, 'upload').and.returnValue(of(1));
+      spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
       component.readFile({target: {files: [{}]}});
 
-      expect(imageService.uploadFile).toHaveBeenCalled();
-      expect(userService.putUser).not.toHaveBeenCalled();
+      expect(imageService.upload).toHaveBeenCalled();
+      expect(userService.update).not.toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(component.userImage).toBeUndefined();
       expect(component.userImageProgress).toEqual(1);
@@ -172,14 +172,14 @@ describe('ProfileComponent', () => {
     it('should upload a file and return a file', () => {
       component.user = new User({});
 
-      spyOn(imageService, 'uploadFile').and.returnValue(of('url'));
-      spyOn(userService, 'putUser');
+      spyOn(imageService, 'upload').and.returnValue(of('url'));
+      spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
       component.readFile({target: {files: [{}]}});
 
-      expect(imageService.uploadFile).toHaveBeenCalled();
-      expect(userService.putUser).toHaveBeenCalled();
+      expect(imageService.upload).toHaveBeenCalled();
+      expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(component.userImage).toEqual('url');
       expect(component.userImageProgress).toBeUndefined();
@@ -192,27 +192,27 @@ describe('ProfileComponent', () => {
       component.userImage = 'url';
 
       spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
-      spyOn(userService, 'putUser');
+      spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
       component.deleteFile('url');
 
       tick();
       expect(imageService.deleteFile).toHaveBeenCalled();
-      expect(userService.putUser).toHaveBeenCalled();
+      expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
     }));
   });
 
   describe('onFormSubmit', () => {
     it('should update a user record', () => {
-      spyOn(userService, 'putUser');
+      spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(notificationService, 'setNotification');
 
       component.onFormSubmit({});
 
-      expect(userService.putUser).toHaveBeenCalled();
+      expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });

@@ -67,7 +67,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
   public load() {
     if (this.route.snapshot.params['ingredient-id']) {
-      this.ingredientService.getIngredient(this.route.snapshot.params['ingredient-id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      this.ingredientService.get(this.route.snapshot.params['ingredient-id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
         this.id = data.id;
         this.ingredientsForm.patchValue({
           name: data.name,
@@ -87,10 +87,10 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
   onFormSubmit(form: NgForm, formDirective: FormGroupDirective) {
     if (this.route.snapshot.params['ingredient-id']) {
-      this.ingredientService.putIngredient(this.id, form.value);
+      this.ingredientService.update(form.value, this.id);
       this.router.navigate(['/ingredient/detail/', this.id]);
     } else {
-      const id = this.ingredientService.postIngredient(form.value);
+      const id = this.ingredientService.create(form.value);
       
       if (this.isQuickView) {
         this.handleIngredientCreate.emit(true);

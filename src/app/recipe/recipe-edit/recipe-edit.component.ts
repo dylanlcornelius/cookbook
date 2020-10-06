@@ -77,10 +77,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    const ingredients$ = this.ingredientService.getIngredients();
+    const ingredients$ = this.ingredientService.get();
 
     if (this.route.snapshot.params['id']) {
-      const recipe$ = this.recipeService.getRecipe(this.route.snapshot.params['id']);
+      const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
 
       combineLatest([recipe$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients]) => {
         if (this.loading) {
@@ -274,13 +274,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         form.meanRating = this.recipe.meanRating;
         form.ratings = this.recipe.ratings;
 
-        this.recipeService.putRecipe(this.recipe.id, form);
+        this.recipeService.update(form, this.recipe.id);
         this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {
         form.uid = user.uid;
         form.author = user.firstName + ' ' + user.lastName;
 
-        const id = this.recipeService.postRecipe(form);
+        const id = this.recipeService.create(form);
         this.router.navigate(['/recipe/detail/', id]);
       }
     });

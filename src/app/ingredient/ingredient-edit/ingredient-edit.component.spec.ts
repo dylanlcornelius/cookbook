@@ -52,12 +52,12 @@ describe('IngredientEditComponent', () => {
     const route = TestBed.inject(ActivatedRoute);
     route.snapshot.params = {'ingredient-id': 'testId'};
 
-    spyOn(ingredientService, 'getIngredient').and.returnValue(of(new Ingredient({})));
+    spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
 
     fixture = TestBed.createComponent(IngredientEditComponent);
     fixture.detectChanges();
 
-    expect(ingredientService.getIngredient).toHaveBeenCalled();
+    expect(ingredientService.get).toHaveBeenCalled();
   });
 
   describe('onFormSubmit', () => {
@@ -75,13 +75,13 @@ describe('IngredientEditComponent', () => {
       route.snapshot.params = {'ingredient-id': 'testId'};
       const router = TestBed.inject(Router);
 
-      spyOn(ingredientService, 'putIngredient');
+      spyOn(ingredientService, 'update');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
       component.onFormSubmit(form, formDirective);
 
-      expect(ingredientService.putIngredient).toHaveBeenCalled();
+      expect(ingredientService.update).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
@@ -89,13 +89,13 @@ describe('IngredientEditComponent', () => {
     it('should create an ingredient', () => {
       const router = TestBed.inject(Router);
 
-      spyOn(ingredientService, 'postIngredient').and.returnValue('testId');
+      spyOn(ingredientService, 'create').and.returnValue('testId');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
       component.onFormSubmit(form, formDirective);
 
-      expect(ingredientService.postIngredient).toHaveBeenCalled();
+      expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
@@ -104,13 +104,13 @@ describe('IngredientEditComponent', () => {
       const router = TestBed.inject(Router);
       component.isQuickView = true;
 
-      spyOn(ingredientService, 'postIngredient').and.returnValue('testId');
+      spyOn(ingredientService, 'create').and.returnValue('testId');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
       component.onFormSubmit(form, formDirective);
 
-      expect(ingredientService.postIngredient).toHaveBeenCalled();
+      expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).toHaveBeenCalled();
       expect(router.navigate).not.toHaveBeenCalled();
     });

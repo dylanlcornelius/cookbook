@@ -102,11 +102,11 @@ describe('RecipeListComponent', () => {
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
+      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'getRecipeCount');
-      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(component, 'setSelectedFilterCount');
 
       component.load();
@@ -114,11 +114,11 @@ describe('RecipeListComponent', () => {
       tick();
       expect(component.dataSource.data[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(imageService.downloadFile).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
 
@@ -149,11 +149,11 @@ describe('RecipeListComponent', () => {
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'getUserIngredient').and.returnValue(of(userIngredient));
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
+      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'getRecipeCount');
-      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(component, 'setSelectedFilterCount');
 
       component.load();
@@ -161,11 +161,11 @@ describe('RecipeListComponent', () => {
       tick();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(userIngredientService.getUserIngredient).toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(imageService.downloadFile).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
   });
@@ -467,7 +467,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(uomConversion, 'convert').and.returnValue(5);
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -475,7 +475,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
@@ -499,7 +499,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(uomConversion, 'convert').and.returnValue(false);
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -507,7 +507,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
@@ -531,7 +531,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(uomConversion, 'convert');
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -539,7 +539,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
@@ -549,7 +549,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(uomConversion, 'convert');
       spyOn(component, 'packageData');
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -557,7 +557,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(component.packageData).not.toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).not.toHaveBeenCalled();
+      expect(userIngredientService.update).not.toHaveBeenCalled();
       expect(component.getRecipeCount).not.toHaveBeenCalled();
       expect(notificationService.setNotification).not.toHaveBeenCalled();
     });
@@ -631,7 +631,7 @@ describe('RecipeListComponent', () => {
 
       spyOn(uomConversion, 'convert').and.returnValue(5);
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -639,7 +639,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
@@ -657,7 +657,7 @@ describe('RecipeListComponent', () => {
       
       spyOn(uomConversion, 'convert').and.returnValue(false);
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -665,7 +665,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
@@ -683,7 +683,7 @@ describe('RecipeListComponent', () => {
       
       spyOn(uomConversion, 'convert');
       spyOn(component, 'packageData').and.returnValue(new UserIngredient({}));
-      spyOn(userIngredientService, 'putUserIngredient');
+      spyOn(userIngredientService, 'update');
       spyOn(component, 'getRecipeCount');
       spyOn(notificationService, 'setNotification');
 
@@ -691,7 +691,7 @@ describe('RecipeListComponent', () => {
 
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(component.packageData).toHaveBeenCalled();
-      expect(userIngredientService.putUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });

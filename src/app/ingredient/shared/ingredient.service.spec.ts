@@ -19,78 +19,74 @@ describe('IngredientService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getIngredients', () => {
-    it('should get all documents', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
-
-      service.getIngredients().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
-    });
-  });
-
-  describe('getIngredient', () => {
+  describe('get', () => {
     it('should get one document based on an id', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'get').and.returnValue(of({}));
 
-      service.getIngredient('id').subscribe(doc => {
+      service.get('id').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.get).toHaveBeenCalled();
+    });
+
+    it('should get all documents', () => {
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+
+      service.get().subscribe(docs => {
+        expect(docs).toBeDefined();
+      });
+
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.get).toHaveBeenCalled();
     });
   });
 
-  describe('postIngredient', () => {
+  describe('create', () => {
     it('should create a new document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'post');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'create');
 
-      service.postIngredient({});
+      service.create({});
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.post).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.create).toHaveBeenCalled();
     });
   });
 
-  describe('putIngredient', () => {
+  describe('update', () => {
     it('should update a document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'put');
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'update');
 
-      service.putIngredient('id', {});
+      service.update({}, 'id');
 
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.put).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.update).toHaveBeenCalled();
+    });
+
+    it('should update all documents', () => {
+      spyOn(firestoreService, 'getRef');
+      spyOn(firestoreService, 'updateAll');
+
+      service.update([new Ingredient({})]);
+
+      expect(firestoreService.getRef).toHaveBeenCalled();
+      expect(firestoreService.updateAll).toHaveBeenCalled();
     });
   });
 
-  describe('putIngredients', () => {
-    it('should update a document', () => {
-      spyOn(service, 'getRef');
-      spyOn(firestoreService, 'putAll');
-
-      service.putIngredients([new Ingredient({})]);
-
-      expect(service.getRef).toHaveBeenCalled();
-      expect(firestoreService.putAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('deleteIngredient', () => {
+  describe('delete', () => {
     it('should delete a document', () => {
-      spyOn(service, 'getRef');
+      spyOn(firestoreService, 'getRef');
       spyOn(firestoreService, 'delete');
 
-      service.deleteIngredient('id');
+      service.delete('id');
 
-      expect(service.getRef).toHaveBeenCalled();
+      expect(firestoreService.getRef).toHaveBeenCalled();
       expect(firestoreService.delete).toHaveBeenCalled();
     });
   });

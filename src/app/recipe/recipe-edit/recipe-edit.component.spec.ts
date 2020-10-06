@@ -75,18 +75,18 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })]
 
-      spyOn(recipeService, 'getRecipe').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
       spyOn(component, 'addStep');
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
       component.load();
 
-      expect(recipeService.getRecipe).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).toHaveBeenCalled();
       // expect(component.addStep).toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
     });
 
@@ -104,18 +104,18 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })]
 
-      spyOn(recipeService, 'getRecipe').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
       spyOn(component, 'addStep');
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
       component.load();
 
-      expect(recipeService.getRecipe).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(component.addStep).not.toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -130,18 +130,18 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })]
 
-      spyOn(recipeService, 'getRecipe');
+      spyOn(recipeService, 'get');
       spyOn(component, 'addCategory');
       spyOn(component, 'addStep');
-      spyOn(ingredientService, 'getIngredients').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
       component.load();
 
-      expect(recipeService.getRecipe).not.toHaveBeenCalled();
+      expect(recipeService.get).not.toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(component.addStep).toHaveBeenCalled();
-      expect(ingredientService.getIngredients).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
   });
@@ -384,20 +384,20 @@ describe('RecipeEditComponent', () => {
       const router = TestBed.inject(Router);
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
-      spyOn(recipeService, 'putRecipe');
+      spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
       component.submitForm();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.putRecipe).toHaveBeenCalledWith('testId', {
+      expect(recipeService.update).toHaveBeenCalledWith({
         ingredients: [{}],
         uid: '',
         author: '3',
         hasImage: true,
         meanRating: 0.33,
         ratings: []
-      });
+      }, 'testId');
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -407,13 +407,13 @@ describe('RecipeEditComponent', () => {
       const router = TestBed.inject(Router);
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
-      spyOn(recipeService, 'postRecipe').and.returnValue('testId');
+      spyOn(recipeService, 'create').and.returnValue('testId');
       spyOn(router, 'navigate');
 
       component.submitForm();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.postRecipe).toHaveBeenCalledWith({
+      expect(recipeService.create).toHaveBeenCalledWith({
         name: null,
         link: null,
         description: null,

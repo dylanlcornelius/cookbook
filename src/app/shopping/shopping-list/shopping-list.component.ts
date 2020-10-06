@@ -64,9 +64,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       this.simplifiedView = user.simplifiedView;
       this.uid = user.uid;
 
-      this.userIngredientService.getUserIngredient(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
+      this.userIngredientService.get(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
         this.id = userIngredients.id;
-        this.ingredientService.getIngredients().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
+        this.ingredientService.get().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
           const myIngredients = [];
 
           ingredients.forEach(ingredient => {
@@ -89,7 +89,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
           this.applyFilter();
           this.ingredients = ingredients;
 
-          this.userItemService.getUserItem(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
+          this.userItemService.get(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
             this.itemsId = userItems.id;
             this.itemsDataSource = new MatTableDataSource(userItems.items);
             this.loading = false;
@@ -120,7 +120,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const ingredient = this.ingredients.find(x => x.id === id);
     if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.putUserIngredient(this.packageIngredientData());
+      this.userIngredientService.update(this.packageIngredientData());
     }
   }
 
@@ -129,7 +129,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const ingredient = this.ingredients.find(x => x.id === id);
     if (ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
-      this.userIngredientService.putUserIngredient(this.packageIngredientData());
+      this.userIngredientService.update(this.packageIngredientData());
     }
   }
 
@@ -168,7 +168,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
     const userItems = this.packageItemData();
     userItems.items.push({name: form.name.toString().trim()});
-    this.userItemService.putUserItem(userItems);
+    this.userItemService.update(userItems);
 
     this.itemForm.reset();
     this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Item added!'));

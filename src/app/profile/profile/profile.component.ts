@@ -106,7 +106,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         id: [user.id],
       });
 
-      this.imageService.downloadFile(user).then(url => {
+      this.imageService.download(user).then(url => {
         if (url) {
           this.userImage = url;
         }
@@ -119,7 +119,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   loadActions() {
-    this.actionService.getActions(this.user.uid)?.then((userAction) => {
+    this.actionService.get(this.user.uid)?.then((userAction) => {
       const actions = this.sortActions(userAction.actions);
 
       let index = 0;
@@ -204,14 +204,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   readFile(event) {
     if (event && event.target && event.target.files[0]) {
-      this.imageService.uploadFile(this.user.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
+      this.imageService.upload(this.user.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
         if (typeof progress === 'string') {
           this.userImage = progress;
           this.userImageProgress = undefined;
 
           const user = new User(this.user);
           user.hasImage = true;
-          this.userService.putUser(user);
+          this.userService.update(user);
           this.currentUserService.setCurrentUser(user);
         } else {
           this.userImageProgress = progress;
@@ -225,7 +225,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       const user = new User(this.user);
       user.hasImage = false;
-      this.userService.putUser(user);
+      this.userService.update(user);
       this.currentUserService.setCurrentUser(user);
       this.userImage = undefined;
     });
@@ -234,7 +234,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onFormSubmit(form) {
     const user = new User(form);
 
-    this.userService.putUser(user);
+    this.userService.update(user);
     this.currentUserService.setCurrentUser(user);
 
     this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Profile Information Updated!'));

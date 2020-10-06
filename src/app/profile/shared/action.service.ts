@@ -7,12 +7,12 @@ import { Action } from './action.enum';
   providedIn: 'root'
 })
 export class ActionService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.firestore().collection('user-actions');
+  _ref;
+  get ref() {
+    if (!this._ref && firebase.apps.length > 0) {
+      this._ref = firebase.firestore().collection('user-actions');
     }
-    return this.ref;
+    return this._ref;
   }
 
   constructor() {}
@@ -25,14 +25,14 @@ export class ActionService {
       return;
     }
 
-    self.getAction(self, uid).then((userAction) => {
+    this.get(uid).then((userAction) => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
       const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
 
       if (!userAction) {
         userAction = {'uid': uid, 'actions': {[week]: {[action]: number}}};
-        self.postAction(self, userAction);
+        self.create(userAction);
         return;
       }
         
@@ -50,16 +50,12 @@ export class ActionService {
       } else {
         userAction.actions[week] = {[action]: number};
       }
-      self.putAction(self, userAction);
+      self.update(userAction);
     });
   }
 
-  getActions(uid) {
-    return this.getAction(this, uid);
-  }
-
-  getAction(self, uid: string) {
-    return self.getRef()?.where('uid', '==', uid).get().then(function(querySnapshot) {
+  get(uid: string) {
+    return this.ref?.where('uid', '==', uid).get().then(function(querySnapshot) {
       const action = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -73,11 +69,11 @@ export class ActionService {
     });
   }
 
-  postAction(self, data) {
-    self.getRef()?.add(data);
+  create(data) {
+    this.ref?.add(data);
   }
 
-  putAction(self, data) {
-    self.getRef()?.doc(data.id).set(data);
+  update(data) {
+    this.ref?.doc(data.id).set(data);
   }
 }

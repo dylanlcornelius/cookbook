@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { firebase } from '@firebase/app';
 import '@firebase/firestore';
-import { Observable, observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Recipe } from './recipe.model';
 import { FirestoreService } from '@firestoreService';
@@ -10,12 +9,12 @@ import { FirestoreService } from '@firestoreService';
   providedIn: 'root'
 })
 export class RecipeService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.firestore().collection('recipes');
+  _ref;
+  get ref() {
+    if (!this._ref) {
+      this._ref = this.firestoreService.getRef('recipes');
     }
-    return this.ref;
+    return this._ref;
   }
 
   private filters = [];
@@ -27,38 +26,39 @@ export class RecipeService {
     private firestoreService: FirestoreService
   ) {}
 
-  getRecipes(): Observable<Recipe[]> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => {
-          return new Recipe(doc);
-        }));
+  get(id: string): Observable<Recipe>;
+  get(): Observable<Recipe[]>;
+  get(): Observable<Recipe | Recipe[]>; // type for spyOn
+  get(id?: string): Observable<Recipe | Recipe[]> {
+    if (id) {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref, id).subscribe(doc => {
+          observable.next(new Recipe(doc));
+        })
       });
-    });
+    } else {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref).subscribe(docs => {
+          observable.next(docs.map(doc => new Recipe(doc)));
+        });
+      });
+    }
   }
 
-  getRecipe(id: string): Observable<Recipe> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef(), id).subscribe(doc => {
-        observable.next(new Recipe(doc));
-      })
-    });
+  create(data): String {
+    return this.firestoreService.create(this.ref, data, Action.CREATE_RECIPE);
   }
 
-  postRecipe(data): String {
-    return this.firestoreService.post(this.getRef(), data, Action.CREATE_RECIPE);
+  update(data, id?: string) {
+    if (id) {
+      this.firestoreService.update(this.ref, id, data, Action.UPDATE_RECIPE);
+    } else {
+      this.firestoreService.updateAll(this.ref, data);
+    }
   }
 
-  putRecipe(id: string, data) {
-    this.firestoreService.put(this.getRef(), id, data, Action.UPDATE_RECIPE);
-  }
-
-  putRecipes(data: Array<Recipe>) {
-    this.firestoreService.putAll(this.getRef(), data);
-  }
-
-  deleteRecipe(id: string) {
-    this.firestoreService.delete(this.getRef(), id, Action.DELETE_RECIPE);
+  delete(id: string) {
+    this.firestoreService.delete(this.ref, id, Action.DELETE_RECIPE);
   }
 
   calculateMeanRating(ratings) {
@@ -76,6 +76,6 @@ export class RecipeService {
     }
     recipe.meanRating = this.calculateMeanRating(recipe.ratings);
     
-    this.putRecipe(recipe.getId(), recipe.getObject());
+    this.update(recipe.getObject(), recipe.getId());
   }
 }

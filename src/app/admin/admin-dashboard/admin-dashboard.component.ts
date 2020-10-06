@@ -92,12 +92,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    const configs$ = this.configService.getConfigs();
-    const users$ = this.userService.getUsers();
-    const recipes$ = this.recipeService.getRecipes();
-    const ingredients$ = this.ingredientService.getIngredients();
-    const userIngredients$ = this.userIngredientService.getUserIngredients();
-    const userItems$ = this.userItemService.getUserItems();
+    const configs$ = this.configService.get();
+    const users$ = this.userService.get();
+    const recipes$ = this.recipeService.get();
+    const ingredients$ = this.ingredientService.get();
+    const userIngredients$ = this.userIngredientService.get();
+    const userItems$ = this.userItemService.get();
 
     combineLatest([configs$, users$, recipes$, ingredients$, userIngredients$, userItems$])
     .pipe(takeUntil(this.unsubscribe$))
@@ -129,7 +129,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   addConfig() {
-    this.configService.postConfig(new Config({}));
+    this.configService.create(new Config({}));
   }
 
   removeConfig(id, name) {
@@ -145,7 +145,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   removeConfigEvent(self, id) {
-    self.configService.deleteConfig(id);
+    self.configService.delete(id);
   }
 
   removeUser(id, firstName, lastName) {
@@ -162,7 +162,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   removeUserEvent(self, id) {
-    self.userService.deleteUser(id);
+    self.userService.delete(id);
   }
 
   revert() {
@@ -189,12 +189,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   saveEvent(self) {
-    self.configService.putConfigs(self.configContext.dataSource);
-    self.userService.putUsers(self.userContext.dataSource);
-    self.recipeService.putRecipes(self.recipeContext.dataSource);
-    self.ingredientService.putIngredients(self.ingredientContext.dataSource);
-    self.userIngredientService.putUserIngredients(self.userIngredientContext.dataSource);
-    self.userItemService.putUserItems(self.userItemContext.dataSource);
+    self.configService.update(self.configContext.dataSource);
+    self.userService.update(self.userContext.dataSource);
+    self.recipeService.update(self.recipeContext.dataSource);
+    self.ingredientService.update(self.ingredientContext.dataSource);
+    self.userIngredientService.update(self.userIngredientContext.dataSource);
+    self.userItemService.update(self.userItemContext.dataSource);
 
     self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Changes saved!'));
   }

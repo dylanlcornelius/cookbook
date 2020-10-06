@@ -33,14 +33,14 @@ export class AuthService {
         return;
       }
 
-      this.userService.getUser(user.uid).pipe(first()).subscribe(current => {
+      this.userService.get(user.uid).pipe(first()).subscribe(current => {
         if (!current) {
           current = new User({
             uid: user.uid,
             role: 'pending'
           });
 
-          current.id = this.userService.postUser(current);
+          current.id = this.userService.create(current);
         }
         
         this.currentUserService.setCurrentUser(current);

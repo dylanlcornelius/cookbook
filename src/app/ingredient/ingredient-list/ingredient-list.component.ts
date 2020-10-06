@@ -47,8 +47,8 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.uid = user.uid;
 
-      const userIngredients$ = this.userIngredientService.getUserIngredient(this.uid);
-      const ingredients$ = this.ingredientService.getIngredients();
+      const userIngredients$ = this.userIngredientService.get(this.uid);
+      const ingredients$ = this.ingredientService.get();
       combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
         this.id = userIngredient.id;
       
@@ -101,7 +101,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   editIngredientEvent(self) {
-    self.userIngredientService.putUserIngredient(self.packageData(self));
+    self.userIngredientService.update(self.packageData(self));
   }
 
   packageData(self) {
@@ -122,7 +122,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.putUserIngredient(this.packageData(this));
+      this.userIngredientService.update(this.packageData(this));
     }
   }
 
@@ -137,7 +137,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
         ingredient.cartQuantity = Number(ingredient.amount);
       }
-      this.userIngredientService.putUserIngredient(this.packageData(this));
+      this.userIngredientService.update(this.packageData(this));
     }
   }
 }

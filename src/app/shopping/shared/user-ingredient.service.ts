@@ -12,12 +12,12 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
   providedIn: 'root'
 })
 export class UserIngredientService {
-  ref;
-  getRef() {
-    if (!this.ref && firebase.apps.length > 0) {
-      this.ref = firebase.firestore().collection('user-ingredients');
+  _ref;
+  get ref() {
+    if (!this._ref) {
+      this._ref = this.firestoreService.getRef('user-ingredients');
     }
-    return this.ref;
+    return this._ref;
   }
 
   constructor(
@@ -26,43 +26,46 @@ export class UserIngredientService {
     private actionService: ActionService
   ) {}
 
-  getUserIngredients(): Observable<UserIngredient[]> {
-    return new Observable(observable => {
-      this.firestoreService.get(this.getRef()).subscribe(docs => {
-        observable.next(docs.map(doc => new UserIngredient(doc)));
+  get(uid: string): Observable<UserIngredient>;
+  get(): Observable<UserIngredient[]>;
+  get(): Observable<UserIngredient | UserIngredient[]>; // type for spyOn
+  get(uid?: string): Observable<UserIngredient | UserIngredient[]> {
+    if (uid) {
+      return new Observable(observer => {
+        this.firestoreService.get(this.ref, uid, 'uid').subscribe(docs => {
+          if (docs.length > 0) {
+            observer.next(new UserIngredient(docs[0]));
+          } else {
+            const userIngredient = new UserIngredient({uid: uid});
+            userIngredient.id = this.create(userIngredient);
+            observer.next(userIngredient);
+          }
+        });
       });
-    });
-  }
-
-  getUserIngredient(uid: string): Observable<UserIngredient> {
-    return new Observable(observer => {
-      this.firestoreService.get(this.getRef(), uid, 'uid').subscribe(docs => {
-        if (docs.length > 0) {
-          observer.next(new UserIngredient(docs[0]));
-        } else {
-          const userIngredient = new UserIngredient({uid: uid});
-          userIngredient.id = this.postUserIngredient(userIngredient);
-          observer.next(userIngredient);
-        }
+    } else {
+      return new Observable(observable => {
+        this.firestoreService.get(this.ref).subscribe(docs => {
+          observable.next(docs.map(doc => new UserIngredient(doc)));
+        });
       });
-    });
+    }
   }
 
-  postUserIngredient(data: UserIngredient) {
-    return this.firestoreService.post(this.getRef(), data.getObject());
+  create(data: UserIngredient) {
+    return this.firestoreService.create(this.ref, data.getObject());
   }
 
-  putUserIngredient(data: UserIngredient) {
-    this.firestoreService.put(this.getRef(), data.getId(), data.getObject());
-  }
-
-  putUserIngredients(data: Array<UserIngredient>) {
-    this.firestoreService.putAll(this.getRef(), data);
+  update(data: UserIngredient | UserIngredient[]) {
+    if (!Array.isArray(data)) {
+      this.firestoreService.update(this.ref, data.getId(), data.getObject());
+    } else {
+      this.firestoreService.updateAll(this.ref, data);
+    }
   }
 
   buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
     this.currentUserService.getCurrentUser().subscribe(user => {
-      this.getRef().doc(data.getId()).set(data.getObject());
+      this.update(data);
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);

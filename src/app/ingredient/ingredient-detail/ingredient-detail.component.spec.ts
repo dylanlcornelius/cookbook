@@ -36,13 +36,13 @@ describe('IngredientsDetailComponent', () => {
     const route = TestBed.inject(ActivatedRoute);
     route.snapshot.params = {id: 'testId'};
 
-    spyOn(ingredientService, 'getIngredient').and.returnValue(of(new Ingredient({})));
+    spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
     
     fixture = TestBed.createComponent(IngredientDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    expect(ingredientService.getIngredient).toHaveBeenCalled();
+    expect(ingredientService.get).toHaveBeenCalled();
     expect(component).toBeTruthy();
   });
 
@@ -69,11 +69,11 @@ describe('IngredientsDetailComponent', () => {
       const router = TestBed.inject(Router);
       spyOn(router, 'navigate');
       
-      spyOn(ingredientService, 'deleteIngredient');
+      spyOn(ingredientService, 'delete');
 
       component.deleteIngredientEvent(component, 'id');
 
-      expect(ingredientService.deleteIngredient).toHaveBeenCalled();
+      expect(ingredientService.delete).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -82,11 +82,11 @@ describe('IngredientsDetailComponent', () => {
       component = fixture.componentInstance;
       fixture.detectChanges();
       
-      spyOn(ingredientService, 'deleteIngredient');
+      spyOn(ingredientService, 'delete');
 
       component.deleteIngredientEvent(component, undefined);
 
-      expect(ingredientService.deleteIngredient).not.toHaveBeenCalled();
+      expect(ingredientService.delete).not.toHaveBeenCalled();
     });
   });
 });

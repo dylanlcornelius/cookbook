@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
@@ -12,6 +13,12 @@ export class FirestoreService {
     private currentUserService: CurrentUserService,
     private actionService: ActionService,
   ) {}
+
+  getRef(collection: string) {
+    if (firebase.apps.length > 0) {
+      return firebase.firestore().collection(collection);
+    }
+  }
 
   private commitAction(action) {
     if (!action) {
@@ -74,7 +81,7 @@ export class FirestoreService {
     }
   }
 
-  post(ref, data, action?): string {
+  create(ref, data, action?): string {
     this.commitAction(action);
 
     const newDoc = ref?.doc();
@@ -82,13 +89,13 @@ export class FirestoreService {
     return newDoc.id;
   }
 
-  put(ref, id: string, data, action?) {
+  update(ref, id: string, data, action?) {
     this.commitAction(action);
 
     ref?.doc(id).set(data);
   }
 
-  putAll(ref, data) {
+  updateAll(ref, data) {
     data.forEach(d => {
       ref.doc(d.getId()).set(d.getObject());
     });

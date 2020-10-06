@@ -55,15 +55,15 @@ describe('ProfileListComponent', () => {
         new Recipe({uid: 'uid'}),
       ];
 
-      spyOn(userService, 'getUsers').and.returnValue(of(users));
-      spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve('url'));
+      spyOn(userService, 'get').and.returnValue(of(users));
+      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
-      expect(userService.getUsers).toHaveBeenCalled();
-      expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(imageService.downloadFile).toHaveBeenCalled();
+      expect(userService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
     });
 
     it('should load all users with images', () => {
@@ -76,15 +76,15 @@ describe('ProfileListComponent', () => {
         new Recipe({}),
       ];
 
-      spyOn(userService, 'getUsers').and.returnValue(of(users));
-      spyOn(recipeService, 'getRecipes').and.returnValue(of(recipes));
-      spyOn(imageService, 'downloadFile').and.returnValue(Promise.resolve());
+      spyOn(userService, 'get').and.returnValue(of(users));
+      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve());
 
       component.load();
 
-      expect(userService.getUsers).toHaveBeenCalled();
-      expect(recipeService.getRecipes).toHaveBeenCalled();
-      expect(imageService.downloadFile).toHaveBeenCalled();
+      expect(userService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
     });
   });
 
