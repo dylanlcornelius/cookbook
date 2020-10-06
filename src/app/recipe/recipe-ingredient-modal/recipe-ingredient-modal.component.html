@@ -1,7 +1,7 @@
 <app-modal [params]="params">
     <h4>Select Ingredients</h4>
     <div *ngFor="let ingredient of params?.ingredients">
-        <mat-checkbox class="mat-menu-item" [(ngModel)]="ingredient.selected" (change)="select(ingredient.selected)">
+        <mat-checkbox class="mat-menu-item" [(ngModel)]="ingredient.selected" (change)="select(ingredient.selected)" *ngIf="ingredient.name">
             {{ingredient.name}}
         </mat-checkbox>
     </div>
