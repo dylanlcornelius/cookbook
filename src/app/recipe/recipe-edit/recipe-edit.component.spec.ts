@@ -119,6 +119,39 @@ describe('RecipeEditComponent', () => {
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
+    it('should reload recipes with data', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
+
+      component.loading = false;
+
+      const recipe = new Recipe({
+        categories: [{}],
+        steps: [{}],
+        ingredients: [{
+          id: 'id'
+        }]
+      });
+
+      const ingredients = [new Ingredient({
+        id: 'id'
+      })]
+
+      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(component, 'addCategory');
+      spyOn(component, 'addStep');
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(component, 'addIngredient');
+
+      component.load();
+
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(component.addCategory).not.toHaveBeenCalled();
+      // expect(component.addStep).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(component.addIngredient).not.toHaveBeenCalled();
+    });
+
     it('should load ingredients for a new recipe', () => {
       const recipe = new Recipe({
         ingredients: [{

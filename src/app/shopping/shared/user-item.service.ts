@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
@@ -54,7 +52,7 @@ export class UserItemService {
   }
 
   create(data: UserItem): string {
-    return this.firestoreService.create(this.ref, data);
+    return this.firestoreService.create(this.ref, data.getObject());
   }
 
   update(data: UserItem | UserItem[]) {

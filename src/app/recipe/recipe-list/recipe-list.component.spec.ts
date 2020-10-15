@@ -74,7 +74,7 @@ describe('RecipeListComponent', () => {
       const recipes = [
         new Recipe({
           ingredients: [{
-            id: 'ingredientId'
+            id: 'ingredientId',
           }],
           categories: [{
             category: 'category'
@@ -94,7 +94,8 @@ describe('RecipeListComponent', () => {
 
       const ingredients = [
         new Ingredient({
-          id: 'ingredientId'
+          id: 'ingredientId',
+          name: 'ingredient name'
         }),
         new Ingredient({
           id: 'ingredientId2'
@@ -251,7 +252,7 @@ describe('RecipeListComponent', () => {
 
       const result = component.getRecipeCount('id');
 
-      expect(result).toEqual('-');
+      expect(result).toEqual(0);
       expect(uomConversion.convert).toHaveBeenCalled();
     });
 
@@ -280,7 +281,39 @@ describe('RecipeListComponent', () => {
       expect(uomConversion.convert).not.toHaveBeenCalled();
     });
 
-    it('should handle   no user ingredients', () => {
+    it('should skip deleted ingredients', () => {
+      component.dataSource = new MatTableDataSource([{
+        id: 'id',
+        count: 1,
+        ingredients: [{
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+          name: null
+        },
+        {
+          id: 'ingredientId2',
+          uom: 'x',
+          quantity: 10
+        }]
+      }]);
+
+      component.userIngredients = [{
+        id: 'ingredientId2',
+        uom: 'y',
+        amount: 2,
+        pantryQuantity: 10
+      }];
+
+      spyOn(uomConversion, 'convert').and.returnValue(5);
+
+      const result = component.getRecipeCount('id');
+
+      expect(result).toEqual(2);
+      expect(uomConversion.convert).toHaveBeenCalled();
+    });
+
+    it('should handle no user ingredients', () => {
       component.dataSource = new MatTableDataSource([{
         id: 'id',
         count: 1,
@@ -437,7 +470,7 @@ describe('RecipeListComponent', () => {
 
   describe('packageData', () => {
     it('should create a user ingredient', () => {
-      component.uid = 'uid';
+      component.user = new User({defaultShoppingList: 'uid'});
       component.userIngredients = [{id: 'id', pantryQuantity: 1, cartQuantity: 2, extra: ''}];
 
       const result = component.packageData();
@@ -731,6 +764,8 @@ describe('RecipeListComponent', () => {
 
   describe('onRate', () => {
     it('should call the recipe service and rate a recipe', () => {
+      component.user = new User({uid: 'uid'});
+
       spyOn(recipeService, 'rateRecipe');
 
       component.onRate(1, new Recipe({}));

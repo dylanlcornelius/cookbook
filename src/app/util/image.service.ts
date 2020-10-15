@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/storage';
 import { Observable } from 'rxjs';
-import { Recipe } from '../recipe/shared/recipe.model';
 
 @Injectable({
   providedIn: 'root'

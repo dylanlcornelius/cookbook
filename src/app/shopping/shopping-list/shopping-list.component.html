@@ -14,7 +14,7 @@
     </button>
   </form>
 
-  <div *ngIf="!simplifiedView">
+  <div *ngIf="!user.simplifiedView">
     <div class="table-container ingredients-table mat-elevation-z8" *ngIf="ingredientsDataSource.filteredData.length > 0">
       <mat-table #table [dataSource]="ingredientsDataSource">
         <ng-container matColumnDef="name">
@@ -98,7 +98,7 @@
     </div>
   </div>
     
-  <div *ngIf="simplifiedView" class="center">
+  <div *ngIf="user.simplifiedView" class="center">
     <div class="simplified">
       <div class="table-container mat-elevation-z8" *ngIf="ingredientsDataSource.filteredData.length > 0"
           [ngClass]="{'ingredients-table': itemsDataSource.filteredData.length === 0}">

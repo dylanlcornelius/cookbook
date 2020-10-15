@@ -111,7 +111,7 @@ describe('ShoppingListComponent', () => {
       expect(userItemService.get).toHaveBeenCalled();
     });
 
-    it('should not load ingredients and items', () => {
+    it('should handle empty ingredients and user ingredients', () => {
       const userIngredients = new UserIngredient({});
       const ingredients = [new Ingredient({
         id: 'ingredientId'

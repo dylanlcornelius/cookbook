@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserIngredient } from './user-ingredient.model';
@@ -51,7 +49,7 @@ export class UserIngredientService {
     }
   }
 
-  create(data: UserIngredient) {
+  create(data: UserIngredient): string {
     return this.firestoreService.create(this.ref, data.getObject());
   }
 

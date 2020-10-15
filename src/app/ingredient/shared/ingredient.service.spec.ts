@@ -90,4 +90,12 @@ describe('IngredientService', () => {
       expect(firestoreService.delete).toHaveBeenCalled();
     });
   });
+
+  describe('sort', () => {
+    it('should delete a document', () => {
+      const result = service.sort(new Ingredient({name: 'a'}), new Ingredient({name: 'b'}));
+
+      expect(result).toEqual(-1);
+    });
+  })
 });

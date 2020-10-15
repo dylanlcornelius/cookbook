@@ -16,6 +16,7 @@ import { Recipe } from '../shared/recipe.model';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { UtilService } from 'src/app/shared/util.service';
+import { User } from 'src/app/user/shared/user.model';
 
 @Component({
   selector: 'app-recipe-list',
@@ -27,8 +28,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   loading: Boolean = true;
   recipeIngredientModalParams;
 
-  uid: string;
-  simplifiedView: boolean;
+  user: User;
 
   filtersList = [];
   searchFilter = '';
@@ -70,10 +70,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     const ingredients$ = this.ingredientService.get();
 
     combineLatest([user$, recipes$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
-      this.simplifiedView = user.simplifiedView;
-      this.uid = user.uid;
+      this.user = user;
 
-      this.userIngredientService.get(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredient => {
+      this.userIngredientService.get(this.user.defaultShoppingList).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredient => {
         this.id = userIngredient.id;
         this.userIngredients = userIngredient.ingredients;
         ingredients.forEach(ingredient => {
@@ -91,6 +90,15 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 recipeIngredient.name = ingredient.name;
               }
             });
+          });
+        });
+
+        // account for deleted ingredients
+        recipes.forEach(recipe => {
+          recipe.ingredients.forEach(recipeIngredient => {
+            if (!recipeIngredient.name) {
+              recipeIngredient.name = null;
+            }
           });
         });
 
@@ -158,25 +166,27 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       return 0;
     }
     recipe.ingredients.forEach(recipeIngredient => {
+      // handle deleted ingredients
+      if (recipeIngredient.name === null) {
+        ingredientCount++;
+        return;
+      }
+
       this.userIngredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
           ingredientCount++;
           const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-          if (value) {
-            if (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined) {
-              recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
-            }
-          } else {
-            recipeCount = '-';
+          if (value && (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
+            recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
           }
         }
       });
     });
 
-    if (ingredientCount !== recipe.ingredients.length) {
+    // user doesn't have all recipe ingredients
+    if (ingredientCount !== recipe.ingredients.length || recipeCount === undefined) {
       return 0;
     }
-
     return recipeCount;
   }
 
@@ -221,7 +231,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   sortRecipesByName(a: Recipe, b: Recipe) {
-    return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+    return a.name.localeCompare(b.name);
   }
 
   sortRecipesByImages(a: Recipe, b: Recipe) {
@@ -246,7 +256,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
     });
     return new UserIngredient({
-      uid: this.uid, 
+      uid: this.user.defaultShoppingList, 
       ingredients: data, 
       id: this.id
     });
@@ -347,6 +357,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   onRate(rating, recipe) {
-    this.recipeService.rateRecipe(rating, this.uid, recipe);
+    this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
 }

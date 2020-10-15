@@ -14,7 +14,7 @@ import { ActionLabel } from '../shared/action.enum';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { UserService } from '@userService';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
@@ -39,6 +39,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   userImage: string;
   userImageProgress;
+
+  users: User[];
 
   actions = {};
   actionsLength = 0;
@@ -93,12 +95,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+    const user$ = this.currentUserService.getCurrentUser();
+    const users$ = this.userService.get();
+
+    combineLatest([user$, users$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, users]) => {
+      this.users = users;
+
       this.user = user;
       this.userForm = this.formBuilder.group({
         uid: [user.uid],
         firstName : [user.firstName, Validators.required],
         lastName : [user.lastName, Validators.required],
+        defaultShoppingList: [user.defaultShoppingList],
         role: [user.role],
         theme: [user.theme],
         simplifiedView: [user.simplifiedView],
