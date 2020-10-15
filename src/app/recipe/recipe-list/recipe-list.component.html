@@ -35,14 +35,14 @@
         <mat-card-title>{{recipe.name}}</mat-card-title>
         <mat-card-subtitle>
           <span (click)="$event.stopPropagation()">
-            <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="uid"></app-rating>
+            <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="user.uid"></app-rating>
           </span>
         </mat-card-subtitle>
       </mat-card-header>
 
       <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt=""/>
 
-      <mat-card-content *ngIf="!simplifiedView">
+      <mat-card-content *ngIf="!user.simplifiedView">
         Preparation Time: {{recipe.time}}<br/>
         Servings: {{recipe.servings}}<br/>
         Calories: {{recipe.calories}}<br/>

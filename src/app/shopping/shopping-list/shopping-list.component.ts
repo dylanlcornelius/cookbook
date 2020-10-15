@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { User } from 'src/app/user/shared/user.model';
 
 // TODO: icons for notification modal
 @Component({
@@ -25,8 +26,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   validationModalParams;
   isCompleted = false;
 
-  uid: string;
-  simplifiedView: boolean;
+  user: User;
 
   itemForm: FormGroup;
 
@@ -61,35 +61,32 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     });
 
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.simplifiedView = user.simplifiedView;
-      this.uid = user.uid;
+      this.user = user;
 
-      this.userIngredientService.get(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
+      this.userIngredientService.get(this.user.defaultShoppingList).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
         this.id = userIngredients.id;
         this.ingredientService.get().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
           const myIngredients = [];
 
           ingredients.forEach(ingredient => {
-            if (userIngredients && userIngredients.ingredients) {
-              userIngredients.ingredients.forEach(myIngredient => {
-                if (myIngredient.id === ingredient.id) {
-                  myIngredients.push({
-                    id: myIngredient.id,
-                    name: ingredient.name,
-                    uom: ingredient.uom,
-                    pantryQuantity: myIngredient.pantryQuantity,
-                    cartQuantity: myIngredient.cartQuantity
-                  });
-                }
-              });
-            }
+            userIngredients.ingredients.forEach(myIngredient => {
+              if (myIngredient.id === ingredient.id) {
+                myIngredients.push({
+                  id: myIngredient.id,
+                  name: ingredient.name,
+                  uom: ingredient.uom,
+                  pantryQuantity: myIngredient.pantryQuantity,
+                  cartQuantity: myIngredient.cartQuantity
+                });
+              }
+            });
           });
           this.ingredientsDataSource = new MatTableDataSource(myIngredients);
           this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
           this.applyFilter();
           this.ingredients = ingredients;
 
-          this.userItemService.get(this.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
+          this.userItemService.get(this.user.defaultShoppingList).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
             this.itemsId = userItems.id;
             this.itemsDataSource = new MatTableDataSource(userItems.items);
             this.loading = false;
@@ -109,7 +106,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       userIngredients.push({id: data.id, pantryQuantity: data.pantryQuantity, cartQuantity: data.cartQuantity});
     });
     return new UserIngredient({
-      uid: this.uid, 
+      uid: this.user.defaultShoppingList, 
       ingredients: userIngredients,
       id: this.id
     });
@@ -155,7 +152,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       userItems.push({name: data.name || ''});
     });
     return new UserItem({
-      uid: this.uid,
+      uid: this.user.defaultShoppingList,
       items: userItems,
       id: this.itemsId
     });

@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Ingredient } from './ingredient.model';
@@ -35,7 +33,7 @@ export class IngredientService {
     } else {
       return new Observable(observable => {
         this.firestoreService.get(this.ref).subscribe(docs => {
-          observable.next(docs.map(doc => new Ingredient(doc)));
+          observable.next(docs.map(doc => new Ingredient(doc)).sort(this.sort));
         });
       });
     }
@@ -55,6 +53,10 @@ export class IngredientService {
 
   delete(id: string) {
     this.firestoreService.delete(this.ref, id, Action.DELETE_INGREDIENT);
+  }
+
+  sort(a: Ingredient, b: Ingredient) {
+    return a.name.localeCompare(b.name);
   }
 
   buildRecipeIngredients(recipeIngredients, allIngredients) {

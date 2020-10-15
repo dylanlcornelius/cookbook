@@ -3,6 +3,7 @@ export class User {
     uid: string;
     firstName: string;
     lastName: string;
+    defaultShoppingList: string;
     role: string;
     theme: boolean;
     simplifiedView: boolean;
@@ -19,6 +20,7 @@ export class User {
         this.uid = data.uid || '';
         this.firstName = data.firstName || '';
         this.lastName = data.lastName || '';
+        this.defaultShoppingList = data.defaultShoppingList || data.uid || '';
         this.role = data.role || '';
         this.theme = data.theme || false;
         this.simplifiedView = data.simplifiedView || false;

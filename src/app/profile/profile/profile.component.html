@@ -20,19 +20,31 @@
           <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)">
             <div class="container">
               <mat-form-field appearance="outline">
+                <mat-label>First Name</mat-label>
                 <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher"/>
                 <mat-error>
                   <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
                 </mat-error>
-                <mat-hint>First Name</mat-hint>
               </mat-form-field>
           
               <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
                 <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher"/>
                 <mat-error>
                   <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
                 </mat-error>
-                <mat-hint>Last Name</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Default Shopping List</mat-label>
+                <mat-select formControlName="defaultShoppingList">
+                  <mat-option *ngFor="let user of users" [value]="user.uid">
+                    {{user.firstName + ' ' + user.lastName}}
+                  </mat-option>
+                </mat-select>
+                <mat-error>
+                  <span *ngIf="!userForm.get('defaultShoppingList').valid && userForm.get('defaultShoppingList').touched">Please Select a default shopping list</span>
+                </mat-error>
               </mat-form-field>
             </div>
             <br/>

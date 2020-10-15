@@ -8,6 +8,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
+import { User } from 'src/app/user/shared/user.model';
+import { Ingredient } from '../shared/ingredient.model';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -21,9 +23,11 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
   dataSource;
-  uid: string;
+
   id: string;
   userIngredients = [];
+
+  user: User;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -45,9 +49,9 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
   load() {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.uid = user.uid;
+      this.user = user;
 
-      const userIngredients$ = this.userIngredientService.get(this.uid);
+      const userIngredients$ = this.userIngredientService.get(this.user.defaultShoppingList);
       const ingredients$ = this.ingredientService.get();
       combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
         this.id = userIngredient.id;
@@ -110,7 +114,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
       data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
     });
     return new UserIngredient({
-      uid: self.uid, 
+      uid: self.user.defaultShoppingList, 
       ingredients: data, 
       id: self.id
     });

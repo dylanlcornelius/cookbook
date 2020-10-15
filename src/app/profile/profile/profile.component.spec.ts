@@ -63,6 +63,7 @@ describe('ProfileComponent', () => {
   describe('load', () => {
     it('should load data with an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
@@ -75,6 +76,7 @@ describe('ProfileComponent', () => {
 
     it('should load data without an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
 
@@ -88,6 +90,7 @@ describe('ProfileComponent', () => {
 
   describe('loadActions', () => {
     it('should load actions', fakeAsync(() => {
+      component.user = new User({uid: 'uid'});
       component.weekPaginator = {};
       component.monthPaginator = {};
       
@@ -109,6 +112,7 @@ describe('ProfileComponent', () => {
     }));
 
     it('should load actions without paginators', fakeAsync(() => {
+      component.user = new User({uid: 'uid'});
       component.weekPaginator = null;
       component.monthPaginator = null;
       
@@ -127,6 +131,19 @@ describe('ProfileComponent', () => {
       tick();
       expect(actionService.get).toHaveBeenCalled();
       expect(component.sortActions).toHaveBeenCalled();
+    }));
+
+    it('should handle no actions', fakeAsync(() => {
+      component.user = new User({uid: 'uid'});
+
+      spyOn(actionService, 'get').and.returnValue(undefined);
+      spyOn(component, 'sortActions');
+
+      component.loadActions();
+
+      tick();
+      expect(actionService.get).toHaveBeenCalled();
+      expect(component.sortActions).not.toHaveBeenCalled();
     }));
   });
 
