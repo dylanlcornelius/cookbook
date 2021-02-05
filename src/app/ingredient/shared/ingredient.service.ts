@@ -24,19 +24,17 @@ export class IngredientService {
   get(): Observable<Ingredient[]>;
   get(): Observable<Ingredient | Ingredient[]>; // type for spyOn
   get(id?: string): Observable<Ingredient | Ingredient[]> {
-    if (id) {
-      return new Observable(observer => {
+    return new Observable(observer => {
+      if (id) {
         this.firestoreService.get(this.ref, id).subscribe(doc => {
           observer.next(new Ingredient(doc));
         })
-      });
-    } else {
-      return new Observable(observable => {
+      } else {
         this.firestoreService.get(this.ref).subscribe(docs => {
-          observable.next(docs.map(doc => new Ingredient(doc)).sort(this.sort));
+          observer.next(docs.map(doc => new Ingredient(doc)).sort(this.sort));
         });
-      });
-    }
+      }
+    });
   }
 
   create(data): String {

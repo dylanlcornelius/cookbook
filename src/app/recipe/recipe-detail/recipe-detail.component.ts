@@ -11,6 +11,7 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { UtilService } from 'src/app/shared/util.service';
+import { RecipeHistoryService } from '../shared/recipe-history.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -29,6 +30,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   ingredients = [];
   recipeImage: string;
   recipeImageProgress;
+  timesCooked: number;
+  lastDateCooked: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,6 +39,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
+    private recipeHistoryService: RecipeHistoryService,
     private imageService: ImageService,
     private notificationService: NotificationService,
     private utilService: UtilService,
@@ -53,22 +57,28 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    const user$ = this.currentUserService.getCurrentUser();
-    const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
-    const ingredients$ = this.ingredientService.get();
-
-    combineLatest([user$, recipe$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipe, ingredients]) => {
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.uid = user.uid;
-      this.recipe = recipe;
+      
+      const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
+      const ingredients$ = this.ingredientService.get();
+      const recipeHistory$ = this.recipeHistoryService.get(user.defaultShoppingList, this.route.snapshot.params['id']);
 
-      this.imageService.download(this.recipe).then(url => {
-        if (url) {
-          this.recipeImage = url;
-        }
-      }, () => {});
+      combineLatest([recipe$, ingredients$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipeHistory]) => {
+        this.recipe = recipe;
 
-      this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
-      this.loading = false;
+        this.imageService.download(this.recipe).then(url => {
+          if (url) {
+            this.recipeImage = url;
+          }
+        }, () => {});
+
+        this.timesCooked = recipeHistory.timesCooked;
+        this.lastDateCooked = recipeHistory.lastDateCooked;
+
+        this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
+        this.loading = false;
+      });
     });
   }
 

@@ -30,21 +30,6 @@ export class FirestoreService {
     });
   }
 
-  getWhere(ref, id: string, where: string): Observable<any> {
-    return new Observable(observable => {
-      ref?.where(where, '==', id).onSnapshot(querySnapshot => {
-        const docs = [];
-        querySnapshot.forEach(doc => {
-          docs.push({
-            ...doc.data(),
-            id: doc.id
-          });
-        });
-        observable.next(docs);
-      });
-    });
-  };
-
   getOne(ref, id: string): Observable<any> {
     return new Observable(observable => {
       ref?.doc(id).onSnapshot(doc => {
@@ -71,10 +56,8 @@ export class FirestoreService {
     });
   }
   
-  get(ref, id?: string, where?: string): Observable<any> {
-    if (id && where) {
-      return this.getWhere(ref, id, where);
-    } else if (id) {
+  get(ref, id?: string): Observable<any> {
+    if (id) {
       return this.getOne(ref, id);
     } else {
       return this.getMany(ref);

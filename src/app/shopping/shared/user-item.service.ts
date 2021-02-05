@@ -28,9 +28,9 @@ export class UserItemService {
   get(): Observable<UserItem[]>;
   get(): Observable<UserItem | UserItem[]>; // type for spyOn
   get(uid?: string): Observable<UserItem | UserItem[]> {
-    if (uid) {
-      return new Observable((observer) => {
-        this.firestoreService.get(this.ref, uid, 'uid').subscribe(docs => {
+    return new Observable((observer) => {
+      if (uid) {
+        this.firestoreService.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new UserItem(docs[0]));
           } else {
@@ -39,16 +39,14 @@ export class UserItemService {
             observer.next(userItem);
           }
         });
-      });
-    } else {
-      return new Observable(observable => {
+      } else {
         this.firestoreService.get(this.ref).subscribe(docs => {
-          observable.next(docs.map(doc => {
+          observer.next(docs.map(doc => {
             return new UserItem(doc);
           }));
         });
-      });
-    }
+      }
+    });
   }
 
   create(data: UserItem): string {

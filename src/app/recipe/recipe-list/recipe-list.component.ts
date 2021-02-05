@@ -17,6 +17,7 @@ import { NotificationService } from 'src/app/shared/notification-modal/notificat
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { UtilService } from 'src/app/shared/util.service';
 import { User } from 'src/app/user/shared/user.model';
+import { RecipeHistoryService } from '../shared/recipe-history.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -44,6 +45,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
+    private recipeHistoryService: RecipeHistoryService,
     private uomConversion: UOMConversion,
     private imageService: ImageService,
     private currentUserService: CurrentUserService,
@@ -264,13 +266,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   removeIngredients(id) {
     const currentRecipe = this.dataSource.data.find(x => x.id === id);
-    if (!Number.isNaN(currentRecipe.count) && currentRecipe.count > 0 && currentRecipe.ingredients) {
+    if (currentRecipe.ingredients) {
       currentRecipe.ingredients.forEach(recipeIngredient => {
         this.userIngredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
             const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
             if (value) {
-              ingredient.pantryQuantity -= Number(value);
+              ingredient.pantryQuantity = Math.min(ingredient.pantryQuantity - Number(value), 0);
             } else {
               this.notificationService.setNotification(new Notification(NotificationType.FAILURE, 'Error calculating measurements!'));
             }
@@ -278,12 +280,15 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         });
       });
       this.userIngredientService.update(this.packageData());
+
       this.dataSource.data.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
       });
 
-      this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients removed from pantry'));
     }
+
+    this.recipeHistoryService.add(this.user.defaultShoppingList, id);
+    this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients removed from pantry'));
   }
 
   addIngredients(id) {

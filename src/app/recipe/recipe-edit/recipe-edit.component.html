@@ -67,19 +67,17 @@
   
     <ng-template #stepsStep>
       <div formArrayName="steps">
-        <div *ngFor="let step of recipesForm.controls.steps.controls; let i = index">
-          <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()" *ngIf="i === 0">
-            <mat-icon>add</mat-icon>
-          </button>
-          <div class="desktop" style="padding: 20px;" *ngIf="i > 0"></div>
-          <div class="mobile" style="margin-bottom: 20px;" *ngIf="i === 0"></div>
+        <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <div class="mobile" style="margin-bottom: 20px;"></div>
 
+        <div *ngFor="let step of recipesForm.controls.steps.controls; let i = index">
           <div class="center" [formGroupName]="i">
             <mat-form-field style="width: 80%;">
                 <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
             </mat-form-field>
-            <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" 
-                    *ngIf="recipesForm.controls.steps.controls.length > 1" (click)="removeStep(i)">
+            <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" (click)="removeStep(i)">
               <mat-icon>close</mat-icon>
             </button>
             <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length == 1"></div>

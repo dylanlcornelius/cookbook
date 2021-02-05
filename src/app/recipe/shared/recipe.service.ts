@@ -30,22 +30,20 @@ export class RecipeService {
   get(): Observable<Recipe[]>;
   get(): Observable<Recipe | Recipe[]>; // type for spyOn
   get(id?: string): Observable<Recipe | Recipe[]> {
-    if (id) {
-      return new Observable(observable => {
+    return new Observable(observer => {
+      if (id) {
         this.firestoreService.get(this.ref, id).subscribe(doc => {
-          observable.next(new Recipe(doc));
+          observer.next(new Recipe(doc));
         })
-      });
-    } else {
-      return new Observable(observable => {
+      } else {
         this.firestoreService.get(this.ref).subscribe(docs => {
-          observable.next(docs.map(doc => new Recipe(doc)));
+          observer.next(docs.map(doc => new Recipe(doc)));
         });
-      });
-    }
+      }
+    });
   }
 
-  create(data): String {
+  create(data): string {
     return this.firestoreService.create(this.ref, data, Action.CREATE_RECIPE);
   }
 

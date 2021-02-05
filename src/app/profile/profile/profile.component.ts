@@ -15,11 +15,13 @@ import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { UserService } from '@userService';
 import { Subject, Observable, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { ImageService } from 'src/app/util/image.service';
 import { UtilService } from 'src/app/shared/util.service';
+import { RecipeHistoryService } from 'src/app/recipe/shared/recipe-history.service';
+import { RecipeService } from '@recipeService';
 
 @Component({
   selector: 'app-profile',
@@ -70,6 +72,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild('weekPaginator') weekPaginator: any;
   @ViewChild('monthPaginator') monthPaginator: any;
 
+  history = {};
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -79,6 +83,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private imageService: ImageService,
     private utilService: UtilService,
+    private recipeService: RecipeService,
+    private recipeHistoryService: RecipeHistoryService
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
 
@@ -123,6 +129,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.loading = false;
 
       this.loadActions();
+      this.loadHistory();
     });
   }
 
@@ -206,6 +213,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
         month: date[1],
         year: date[2],
         data: userActions[date[0] + '/' + date[1] + '/' + date[2]]
+      };
+    });
+  }
+
+  loadHistory() {
+    const recipes$ = this.recipeService.get();
+    const recipeHistory$ = this.recipeHistoryService.get(this.user.defaultShoppingList);
+
+    combineLatest([recipes$, recipeHistory$]).pipe(take(1)).subscribe(([recipes, histories]) => {
+      const recipeActions = [];
+      
+      histories.forEach(recipeHistory => {
+        const recipeName = recipes.find(recipe => recipe.id === recipeHistory.recipeId).name;
+        recipeActions.push({data: [recipeHistory.timesCooked], label: recipeName});
+      });
+
+      this.history = {
+        data: recipeActions,
+        labels: ['Recipes']
       };
     });
   }

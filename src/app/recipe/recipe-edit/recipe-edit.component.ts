@@ -129,8 +129,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.loading = false;
       });
     } else {
-      this.addStep();
-
       ingredients$.pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
         ingredients.forEach(ingredient => {
           this.allAvailableIngredients.push({

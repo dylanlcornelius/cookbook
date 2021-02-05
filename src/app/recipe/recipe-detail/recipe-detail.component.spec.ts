@@ -13,6 +13,8 @@ import { User } from 'src/app/user/shared/user.model';
 import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { RecipeHistoryService } from '../shared/recipe-history.service';
+import { RecipeHistory } from '../shared/recipe-history.model';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -22,6 +24,7 @@ describe('RecipeDetailComponent', () => {
   let currentUserService: CurrentUserService;
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
+  let recipeHistoryService: RecipeHistoryService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -47,6 +50,7 @@ describe('RecipeDetailComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
+    recipeHistoryService = TestBed.inject(RecipeHistoryService);
   });
 
   it('should create', () => {
@@ -58,10 +62,12 @@ describe('RecipeDetailComponent', () => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
+      const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(ingredientService, 'buildRecipeIngredients');
 
@@ -72,6 +78,7 @@ describe('RecipeDetailComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
     }));
@@ -80,10 +87,12 @@ describe('RecipeDetailComponent', () => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
+      const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(ingredientService, 'buildRecipeIngredients');
 
@@ -94,6 +103,7 @@ describe('RecipeDetailComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
     }));
