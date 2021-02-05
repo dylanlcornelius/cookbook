@@ -15,8 +15,8 @@ import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 
 import { SharedModule } from '@sharedModule';
 
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import { environment } from '../environments/environment';
 
 @NgModule({

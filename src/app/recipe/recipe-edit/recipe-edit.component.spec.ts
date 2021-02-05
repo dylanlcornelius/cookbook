@@ -262,13 +262,13 @@ describe('RecipeEditComponent', () => {
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'addIngredient');
-      const funcSpy = jasmine.createSpy('moveItemInArray');
-      spyOnProperty(cdk, 'moveItemInArray', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'moveItem');
 
       component.dropAdded(event);
 
       expect(component.removeIngredient).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
+      expect(component.moveItem);
     });
 
     it('should move an item', () => {
@@ -277,13 +277,13 @@ describe('RecipeEditComponent', () => {
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'addIngredient');
-      const funcSpy = jasmine.createSpy('transferArrayItem');
-      spyOnProperty(cdk, 'transferArrayItem', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'transferItem');
 
       component.dropAdded(event);
 
       expect(component.removeIngredient).not.toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
+      expect(component.transferItem);
     });
   });
 
@@ -293,12 +293,12 @@ describe('RecipeEditComponent', () => {
       const event = { previousContainer: container, container: container, item: {}};
 
       spyOn(component, 'removeIngredient');
-      const funcSpy = jasmine.createSpy('moveItemInArray');
-      spyOnProperty(cdk, 'moveItemInArray', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'moveItem');
 
       component.dropAvailable(event);
 
       expect(component.removeIngredient).not.toHaveBeenCalled();
+      expect(component.moveItem);
     });
 
     it('should move an item', () => {
@@ -306,12 +306,12 @@ describe('RecipeEditComponent', () => {
       const event = { previousContainer: container, container: {data: ['id']}, item: {}};
 
       spyOn(component, 'removeIngredient');
-      const funcSpy = jasmine.createSpy('transferArrayItem');
-      spyOnProperty(cdk, 'transferArrayItem', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'transferItem');
 
       component.dropAvailable(event);
 
       expect(component.removeIngredient).toHaveBeenCalled();
+      expect(component.transferItem);
     });
   });
 

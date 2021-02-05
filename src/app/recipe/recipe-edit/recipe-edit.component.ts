@@ -193,22 +193,30 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     control.removeAt(i);
   }
 
+  moveItem(data, previous, current) {
+    moveItemInArray(data, previous, current);
+  }
+
+  transferItem(previousData, data, previous, current) {
+    transferArrayItem(previousData, data, previous, current);
+  }
+
   dropAdded(event) {
     if (event.previousContainer === event.container) {
       this.removeIngredient(event.previousIndex);
       this.addIngredient(event.currentIndex, event.item.data);
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.moveItem(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       this.addIngredient(event.currentIndex, event.item.data);
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.transferItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
   }
 
   dropAvailable(event) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.moveItem(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.transferItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
       this.removeIngredient(event.previousIndex);
     }
   }

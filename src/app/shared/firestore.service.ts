@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '../user/shared/current-user.service';
