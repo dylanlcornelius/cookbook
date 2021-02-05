@@ -77,7 +77,6 @@ describe('RecipeEditComponent', () => {
 
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
-      spyOn(component, 'addStep');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
@@ -85,7 +84,6 @@ describe('RecipeEditComponent', () => {
 
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).toHaveBeenCalled();
-      // expect(component.addStep).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
     });
@@ -106,7 +104,6 @@ describe('RecipeEditComponent', () => {
 
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
-      spyOn(component, 'addStep');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
@@ -114,7 +111,6 @@ describe('RecipeEditComponent', () => {
 
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
-      expect(component.addStep).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
@@ -139,7 +135,6 @@ describe('RecipeEditComponent', () => {
 
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
-      spyOn(component, 'addStep');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
@@ -147,7 +142,6 @@ describe('RecipeEditComponent', () => {
 
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
-      // expect(component.addStep).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
@@ -165,7 +159,6 @@ describe('RecipeEditComponent', () => {
 
       spyOn(recipeService, 'get');
       spyOn(component, 'addCategory');
-      spyOn(component, 'addStep');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(component, 'addIngredient');
 
@@ -173,7 +166,6 @@ describe('RecipeEditComponent', () => {
 
       expect(recipeService.get).not.toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
-      expect(component.addStep).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
@@ -245,7 +237,7 @@ describe('RecipeEditComponent', () => {
       component.addStep();
 
       const control = <FormArray>component.recipesForm.controls['steps'];
-      expect(control.length).toEqual(2);
+      expect(control.length).toEqual(1);
       expect(component.initStep).toHaveBeenCalled();
     });
   });
@@ -270,13 +262,13 @@ describe('RecipeEditComponent', () => {
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'addIngredient');
-      const funcSpy = jasmine.createSpy('moveItemInArray');
-      spyOnProperty(cdk, 'moveItemInArray', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'moveItem');
 
       component.dropAdded(event);
 
       expect(component.removeIngredient).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
+      expect(component.moveItem);
     });
 
     it('should move an item', () => {
@@ -285,13 +277,13 @@ describe('RecipeEditComponent', () => {
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'addIngredient');
-      const funcSpy = jasmine.createSpy('transferArrayItem');
-      spyOnProperty(cdk, 'transferArrayItem', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'transferItem');
 
       component.dropAdded(event);
 
       expect(component.removeIngredient).not.toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
+      expect(component.transferItem);
     });
   });
 
@@ -301,12 +293,12 @@ describe('RecipeEditComponent', () => {
       const event = { previousContainer: container, container: container, item: {}};
 
       spyOn(component, 'removeIngredient');
-      const funcSpy = jasmine.createSpy('moveItemInArray');
-      spyOnProperty(cdk, 'moveItemInArray', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'moveItem');
 
       component.dropAvailable(event);
 
       expect(component.removeIngredient).not.toHaveBeenCalled();
+      expect(component.moveItem);
     });
 
     it('should move an item', () => {
@@ -314,12 +306,12 @@ describe('RecipeEditComponent', () => {
       const event = { previousContainer: container, container: {data: ['id']}, item: {}};
 
       spyOn(component, 'removeIngredient');
-      const funcSpy = jasmine.createSpy('transferArrayItem');
-      spyOnProperty(cdk, 'transferArrayItem', 'get').and.returnValue(funcSpy);
+      spyOn(component, 'transferItem');
 
       component.dropAvailable(event);
 
       expect(component.removeIngredient).toHaveBeenCalled();
+      expect(component.transferItem);
     });
   });
 
@@ -454,7 +446,7 @@ describe('RecipeEditComponent', () => {
         servings: '',
         calories: '',
         categories: [],
-        steps: [{step: null}],
+        steps: [],
         ingredients: [],
         uid: '',
         author: '1 2',

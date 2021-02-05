@@ -34,42 +34,59 @@
     <div class="container">
       <mat-card-content class="center-text">
         <dl>
-          <dt>Preparation Time</dt>
-          <dd>{{recipe.time || "No Preparation Time"}}</dd>
+          <span *ngIf="recipe.time">
+            <dt>Preparation Time</dt>
+            <dd>{{recipe.time}}</dd>
+          </span>
 
-          <dt>Servings</dt>
-          <dd>{{recipe.servings || "No Servings"}}</dd>
+          <span *ngIf="recipe.servings">
+            <dt>Servings</dt>
+           <dd>{{recipe.servings}}</dd>
+          </span>
+          
+          <span *ngIf="recipe.calories">
+            <dt>Calories</dt>
+            <dd>{{recipe.calories}}</dd>
+          </span>
 
-          <dt>Calories</dt>
-          <dd>{{recipe.calories || "No Calories"}}</dd>
+          <span *ngIf="recipe.quantity">
+            <dt>Quantity</dt>
+            <dd>{{recipe.quantity}}</dd>
+          </span>
 
-          <dt>Quantity</dt>
-          <dd>{{recipe.quantity || "No Quantity"}}</dd>
+          <span *ngIf="recipe.categories && recipe.categories.length">
+            <dt>Categories</dt>
+            <dd>
+              <mat-chip-list class="center">
+                <mat-chip *ngFor="let category of recipe.categories; let i = index" (click)="setListFilter(category.category)">
+                  {{category.category}}
+                </mat-chip>
+              </mat-chip-list>
+            </dd>
+          </span>
 
-          <dt>Categories</dt>
-          <dd>
-            <mat-chip-list class="center">
-              <mat-chip *ngFor="let category of recipe.categories; let i = index" (click)="setListFilter(category.category)">
-                {{category.category}}
-              </mat-chip>
-            </mat-chip-list>
-            <span *ngIf="recipe.categories.length == 0">No Categories</span>
-          </dd>
+          <dt>Times Cooked</dt>
+          <dd>{{timesCooked}}</dd>
+
+          <span *ngIf="lastDateCooked">
+            <dt>Last Date Cooked</dt>
+            <dd>{{lastDateCooked}}</dd>
+          </span>
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="center-text"> 
+      <mat-card-content class="center-text" *ngIf="recipe.steps && recipe.steps.length"> 
         <dl>
           <dt>Directions</dt>
 
           <div *ngFor="let step of recipe.steps; let i = index">
               <span class="step-header">Step: {{i+1}}</span>
-              <dd>{{step.step || "No Steps"}}</dd>
+              <dd>{{step.step}}</dd>
           </div>
         </dl>
       </mat-card-content>
 
-      <mat-card-content class="center-text">
+      <mat-card-content class="center-text" *ngIf="ingredients && ingredients.length">
         <dl>
           <dt>Ingredients</dt>
 
@@ -77,7 +94,6 @@
             <div class="box" *ngFor="let ingredient of ingredients">
                 {{ingredient.quantity}}  {{ingredient.uom === 'other'? '' : ingredient.uom}} - {{ingredient.name}}
             </div>
-            <div class="box" *ngIf="ingredients == null || ingredients.length == 0">No Ingredients</div>
           </div>
         </dl>
       </mat-card-content>

@@ -15,6 +15,10 @@
             <mat-icon>bar_chart</mat-icon>
             <span>Analytics</span>
           </a>
+          <a mat-menu-item routerLink="/profile/recipe-history">
+            <mat-icon>timeline</mat-icon>
+            <span>History</span>
+          </a>
         </mat-menu>
         
         <a mat-button class="title-button" routerLink="/admin/dashboard" *ngIf="(user | async)?.isAdmin">

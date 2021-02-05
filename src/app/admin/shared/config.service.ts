@@ -20,20 +20,18 @@ export class ConfigService {
   get(name: string): Observable<Config>;
   get(): Observable<Config[]>;
   get(name?: string): Observable<Config | Config[]> {
-    if (name) {
-      return new Observable(observer => {
-        this.firestoreService.get(this.ref, name, 'name').subscribe(docs => {
+    return new Observable(observer => {
+      if (name) {
+        this.firestoreService.get(this.ref?.where('name', '==', name)).subscribe(docs => {
           observer.next(new Config(docs[0]));
         });
-      });
-    } else {
-      return new Observable(observable => {
+      } else {
         this.firestoreService.get(this.ref).subscribe(docs => {
-          observable.next(docs.map(doc => new Config(doc)));
+          observer.next(docs.map(doc => new Config(doc)));
         });
-      });
-    }
-  }
+      }
+    });
+}
 
   create(data: Config): String {
     return this.firestoreService.create(this.ref, data);

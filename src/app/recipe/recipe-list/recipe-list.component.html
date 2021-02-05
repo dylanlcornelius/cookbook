@@ -49,9 +49,9 @@
       </mat-card-content>
       <mat-card-actions (click)="$event.stopPropagation()">
           <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
-          <button mat-button color="warn" (click)="removeIngredients(recipe.id)" *ngIf="recipe.count && recipe.count > 0">
+          <button mat-button color="warn" (click)="removeIngredients(recipe.id)">
             <span>Cook</span>
-            <span>({{recipe.count | number: '1.0-2'}})</span>
+            <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
           </button>
       </mat-card-actions>
     </mat-card>

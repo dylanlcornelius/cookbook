@@ -22,20 +22,18 @@ export class UserService {
   get(uid: string): Observable<User>;
   get(): Observable<User[]>;
   get(uid?: string): Observable<User | User[]> {
-    if (uid) {
-      return new Observable(observable => {
-        this.firestoreService.get(this.ref, uid, 'uid').subscribe(docs => {
-          observable.next(docs[0] ? new User(docs[0]) : undefined);
+    return new Observable(observer => {
+      if (uid) {
+        this.firestoreService.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+          observer.next(docs[0] ? new User(docs[0]) : undefined);
         });
-      });
-    } else {
-      return new Observable(observable => {
-        this.firestoreService.get(this.ref).subscribe(docs => {
-          observable.next(docs.map(doc => new User(doc)));
-        });
-      });
-    }
-  }
+      } else {
+          this.firestoreService.get(this.ref).subscribe(docs => {
+            observer.next(docs.map(doc => new User(doc)));
+          });
+      }
+    });
+}
 
   create(data: User): string {
     return this.firestoreService.create(this.ref, data.getObject());
