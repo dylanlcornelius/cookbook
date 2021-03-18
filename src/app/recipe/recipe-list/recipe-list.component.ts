@@ -18,6 +18,7 @@ import { Notification } from 'src/app/shared/notification-modal/notification.mod
 import { UtilService } from 'src/app/shared/util.service';
 import { User } from 'src/app/user/shared/user.model';
 import { RecipeHistoryService } from '../shared/recipe-history.service';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from '@recipeFilterService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -43,6 +44,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private recipeService: RecipeService,
+    private recipeFilterService: RecipeFilterService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private recipeHistoryService: RecipeHistoryService,
@@ -104,7 +106,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           });
         });
 
-        const filters = this.recipeService.selectedFilters.slice();
+        const filters = this.recipeFilterService.selectedFilters.slice();
 
         recipes = recipes.sort(this.sortRecipesByName);
         recipes = recipes.sort(this.sortRecipesByImages);
@@ -117,8 +119,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             displayValue += '★';
           }
           
-          const checked = filters.find(f => f === rating) !== undefined;
-          ratings.push({displayName: displayValue + ' & Up', name: rating, checked: checked});
+          const checked = filters.find(f => f.value === rating) !== undefined;
+          ratings.push({ displayName: displayValue + ' & Up', name: rating, checked: checked, filter: new RatingFilter(rating) });
         });
 
         const categories = [];
@@ -131,28 +133,30 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             }
           }, () => {});
 
-          recipe.categories.forEach(category => {
-            if (categories.find(c => c.name === category.category) === undefined) {
-              const checked = filters.find(f => f === category.category) !== undefined;
-              categories.push({displayName: category.category, name: category.category, checked: checked});
+          recipe.categories.forEach(({ category }) => {
+            if (categories.find(c => c.name === category) === undefined) {
+              const checked = filters.find(f => f.value === category) !== undefined;
+              categories.push({ displayName: category, name: category, checked: checked, filter: new CategoryFilter(category) });
             }
           });
 
           if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
-            const checked = filters.find(f => f === recipe.author) !== undefined;
-            authors.push({displayName: recipe.author, name: recipe.author, checked: checked});
+            const checked = filters.find(f => f.value === recipe.author) !== undefined;
+            authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
           }
         });
         this.dataSource = new MatTableDataSource(recipes);
-        this.dataSource.filterPredicate = this.recipeFilterPredicate;
+        this.dataSource.filterPredicate = this.recipeFilterService.recipeFilterPredicate;
 
+        authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+        categories.sort(({ name: a }, { name: b }) => a.localeCompare(b));
         this.filtersList = [
-          {displayName: 'Authors', name: 'author', values: authors},
-          {displayName: 'Categories', name: 'categories', values: categories},
-          {displayName: 'Ratings', name: 'ratings', values: ratings}
+          { displayName: 'Authors', name: 'author', values: authors },
+          { displayName: 'Categories', name: 'categories', values: categories },
+          { displayName: 'Ratings', name: 'ratings', values: ratings }
         ];
         this.setSelectedFilterCount();
-        this.dataSource.filter = JSON.stringify(filters);
+        this.dataSource.filter = filters;
         this.dataSource.paginator = this.paginator;
 
         this.loading = false;
@@ -205,18 +209,18 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   setFilters() {
-    const filters = this.recipeService.selectedFilters.slice();
+    const filters = this.recipeFilterService.selectedFilters.slice();
     if (this.searchFilter) {
-      filters.push(this.searchFilter);
+      filters.push(new SearchFilter(this.searchFilter));
     }
-    this.dataSource.filter = JSON.stringify(filters);
+    this.dataSource.filter = filters;
   }
 
-  filterSelected(filterValue) {
-    if (filterValue.checked) {
-      this.recipeService.selectedFilters.push(filterValue.name);
+  filterSelected(selectedFilter) {
+    if (selectedFilter.checked) {
+      this.recipeFilterService.selectedFilters.push(selectedFilter.filter);
     } else {
-      this.recipeService.selectedFilters = this.recipeService.selectedFilters.filter(x => x !== filterValue.name);
+      this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => selectedFilter.filter !== f );
     }
 
     this.setSelectedFilterCount();
@@ -258,8 +262,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
     });
     return new UserIngredient({
-      uid: this.user.defaultShoppingList, 
-      ingredients: data, 
+      uid: this.user.defaultShoppingList,
+      ingredients: data,
       id: this.id
     });
   }
@@ -333,32 +337,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     });
 
     self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredients added to cart'));
-  }
-
-  recipeFilterPredicate(data, filterList) {
-    let hasAll = true;
-
-    JSON.parse(filterList).forEach(filter => {
-      let hasFilter = false;
-
-      Object.keys(data).forEach(property => {
-        if (data[property] instanceof Array) {
-          data[property].forEach(value => {
-            if (typeof filter === 'string' && value.category && value.category.toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
-              hasFilter = true;
-            }
-          });
-        } else if (typeof filter === 'string' && typeof data[property] === 'string' && data[property].toLowerCase().includes(filter.toLowerCase()) && !hasFilter) {
-          hasFilter = true;
-        } else if (property === 'meanRating' && data[property] >= filter && !hasFilter) {
-          hasFilter = true;
-        }
-      });
-
-      hasAll = hasAll && hasFilter;
-    });
-
-    return hasAll;
   }
 
   onRate(rating, recipe) {

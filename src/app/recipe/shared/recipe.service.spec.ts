@@ -19,17 +19,6 @@ describe('RecipeService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('filters', () => {
-    it('should be able to be retrieved', () => {
-      expect(service.selectedFilters).toEqual([]);
-    });
-
-    it('should be able to be set', () => {
-      service.selectedFilters = ['filter'];
-      expect(service.selectedFilters).toEqual(['filter']);
-    });
-  });
-
   describe('get', () => {
     it('should get all documents', () => {
       spyOn(firestoreService, 'getRef');

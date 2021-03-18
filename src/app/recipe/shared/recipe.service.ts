@@ -17,11 +17,6 @@ export class RecipeService {
     return this._ref;
   }
 
-  private filters = [];
-
-  get selectedFilters(): Array<any> { return this.filters; }
-  set selectedFilters(filters: Array<any>) { this.filters = filters; }
-
   constructor(
     private firestoreService: FirestoreService
   ) {}

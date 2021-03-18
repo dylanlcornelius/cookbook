@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UserService } from '@userService';
 import { UtilService } from 'src/app/shared/util.service';
 import { Router } from '@angular/router';
+import { AuthorFilter } from '@recipeFilterService';
 
 @Component({
   selector: 'app-profile-list',
@@ -32,7 +33,7 @@ export class ProfileListComponent implements OnInit {
   ) { }
 
   identify = this.utilService.identify;
-  setListFilter = this.utilService.setListFilter;
+  setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
 
   ngOnInit() {
     this.load();
