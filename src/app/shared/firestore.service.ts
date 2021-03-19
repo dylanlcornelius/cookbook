@@ -8,16 +8,21 @@ import { CurrentUserService } from '../user/shared/current-user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class FirestoreService {
+export abstract class FirestoreService {
+  private _ref;
+
+  abstract get ref();
+
   constructor(
-    private currentUserService: CurrentUserService,
-    private actionService: ActionService,
-  ) {}
+    protected currentUserService: CurrentUserService,
+    protected actionService: ActionService,
+  ) { }
 
   getRef(collection: string) {
-    if (firebase.apps.length > 0) {
-      return firebase.firestore().collection(collection);
+    if (firebase.apps.length > 0 && !this._ref) {
+      this._ref = firebase.firestore().collection(collection);
     }
+    return this._ref;
   }
 
   private commitAction(action) {
@@ -55,7 +60,7 @@ export class FirestoreService {
       });
     });
   }
-  
+
   get(ref, id?: string): Observable<any> {
     if (id) {
       return this.getOne(ref, id);

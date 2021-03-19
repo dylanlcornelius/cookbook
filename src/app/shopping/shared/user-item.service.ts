@@ -9,20 +9,17 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserItemService {
-  _ref;
+export class UserItemService extends FirestoreService{
   get ref() {
-    if (!this._ref) {
-      this._ref = this.firestoreService.getRef('user-items');
-    }
-    return this._ref;
+    return super.getRef('user-items');
   }
 
   constructor(
-    private firestoreService: FirestoreService,
-    private currentUserService: CurrentUserService,
-    private actionService: ActionService
-  ) {}
+    currentUserService: CurrentUserService,
+    actionService: ActionService,
+  ) {
+    super(currentUserService, actionService);
+  }
 
   get(uid: string): Observable<UserItem>;
   get(): Observable<UserItem[]>;
@@ -30,7 +27,7 @@ export class UserItemService {
   get(uid?: string): Observable<UserItem | UserItem[]> {
     return new Observable((observer) => {
       if (uid) {
-        this.firestoreService.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new UserItem(docs[0]));
           } else {
@@ -40,7 +37,7 @@ export class UserItemService {
           }
         });
       } else {
-        this.firestoreService.get(this.ref).subscribe(docs => {
+        super.get(this.ref).subscribe(docs => {
           observer.next(docs.map(doc => {
             return new UserItem(doc);
           }));
@@ -50,14 +47,14 @@ export class UserItemService {
   }
 
   create(data: UserItem): string {
-    return this.firestoreService.create(this.ref, data.getObject());
+    return super.create(this.ref, data.getObject());
   }
 
   update(data: UserItem | UserItem[]) {
     if (!Array.isArray(data)) {
-      this.firestoreService.update(this.ref, data.getId(), data.getObject());
+      super.update(this.ref, data.getId(), data.getObject());
     } else {
-      this.firestoreService.updateAll(this.ref, data);
+      super.updateAll(this.ref, data);
     }
   }
 

@@ -7,12 +7,10 @@ import { RecipeHistoryService } from './recipe-history.service';
 
 describe('RecipeHistoryService', () => {
   let service: RecipeHistoryService;
-  let firestoreService: FirestoreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(RecipeHistoryService);
-    firestoreService = TestBed.inject(FirestoreService);
   });
 
   it('should be created', () => {
@@ -51,51 +49,51 @@ describe('RecipeHistoryService', () => {
 
   describe('get', () => {
     it('should get all documents', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get('uid').subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
 
     it('should get one document based on an id', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of({}));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of({}));
 
       service.get('uid', 'recipeId').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a new document', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'create');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'create');
 
       service.create(new RecipeHistory({}));
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.create).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a document', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'update');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'update');
 
       service.update(new RecipeHistory({}));
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.update).toHaveBeenCalled();
     });
   });
 });
