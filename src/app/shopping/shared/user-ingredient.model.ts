@@ -1,23 +1,15 @@
-export class UserIngredient {
-    id: string;
-    uid: string;
-    ingredients: Array<{
-        id: string,
-        pantryQuantity: number,
-        cartQuantity: number,
+import { Model } from '@model';
+import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
 
-        uom: string,
-        amount: string,
-    }>;
+export class UserIngredient extends Model {
+    uid: string;
+    ingredients: Array<Ingredient>;
 
     constructor(data) {
+        super();
         this.id = data.id || '';
         this.uid = data.uid;
         this.ingredients = data.ingredients || [];
-    }
-
-    public getId() {
-        return this.id;
     }
 
     public getObject() {

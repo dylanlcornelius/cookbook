@@ -1,5 +1,6 @@
-export class RecipeHistory {
-    id: string;
+import { Model } from '@model';
+
+export class RecipeHistory extends Model {
     uid: string;
     recipeId: string
     history: Array<string>;
@@ -7,16 +8,13 @@ export class RecipeHistory {
     lastDateCooked: string;
 
     constructor(data: any = {}) {
+        super();
         this.id = data.id || '';
         this.uid = data.uid;
         this.recipeId = data.recipeId;
         this.history = data.history || [];
         this.timesCooked = data.timesCooked || 0;
         this.lastDateCooked = data.lastDateCooked || '';
-    }
-
-    public getId() {
-        return this.id;
     }
 
     public getObject() {
