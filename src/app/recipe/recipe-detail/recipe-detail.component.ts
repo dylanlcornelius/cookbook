@@ -12,6 +12,7 @@ import { NotificationService } from 'src/app/shared/notification-modal/notificat
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { UtilService } from 'src/app/shared/util.service';
 import { RecipeHistoryService } from '../shared/recipe-history.service';
+import { AuthorFilter, CategoryFilter } from '@recipeFilterService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -124,7 +125,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  setListFilter = this.utilService.setListFilter;
+  setCategoryFilter = (filter) => this.utilService.setListFilter(new CategoryFilter(filter));
+  setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
+
 
   onRate(rating, recipe) {
     this.recipeService.rateRecipe(rating, this.uid, recipe);

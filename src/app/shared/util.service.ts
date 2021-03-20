@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RecipeService } from '@recipeService';
+import { RecipeFilterService } from '@recipeFilterService';
 import { Router } from '@angular/router';
 import { Observable, merge, of, fromEvent } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
@@ -12,7 +12,7 @@ export class UtilService {
 
   constructor(
     private router: Router,
-    private recipeService: RecipeService
+    private recipeFilterService: RecipeFilterService
   ) {
     this.online$ = merge(
       of(navigator.onLine),
@@ -26,7 +26,7 @@ export class UtilService {
   }
 
   public setListFilter(filter) {
-    this.recipeService.selectedFilters = [filter];
+    this.recipeFilterService.selectedFilters = [filter];
     this.router.navigate(['/recipe/list']);
   }
 }

@@ -1,5 +1,6 @@
-export class User {
-    id: string;
+import { Model } from '@model';
+
+export class User extends Model {
     uid: string;
     firstName: string;
     lastName: string;
@@ -16,6 +17,7 @@ export class User {
     image: string;
 
     constructor(data) {
+        super();
         this.id = data.id || '';
         this.uid = data.uid || '';
         this.firstName = data.firstName || '';
@@ -27,10 +29,6 @@ export class User {
         this.hasImage = data.hasImage || false;
         this.isAdmin = data.role === 'admin';
         this.isPending = data.role === 'pending';
-    }
-
-    public getId() {
-        return this.id;
     }
 
     public getObject() {

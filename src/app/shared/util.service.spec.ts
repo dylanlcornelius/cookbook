@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 
 import { UtilService } from './util.service';
 import { Router, RouterModule } from '@angular/router';
-import { RecipeService } from '@recipeService';
+import { AuthorFilter, RecipeFilterService } from '@recipeFilterService';
 import { RecipeListComponent } from '../recipe/recipe-list/recipe-list.component';
 
 describe('UtilService', () => {
   let service: UtilService;
-  let recipeService: RecipeService;
+  let recipeFilterService: RecipeFilterService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,7 +18,7 @@ describe('UtilService', () => {
       ],
     });
     service = TestBed.inject(UtilService);
-    recipeService = TestBed.inject(RecipeService);
+    recipeFilterService = TestBed.inject(RecipeFilterService);
   });
 
   it('should be created', () => {
@@ -35,13 +35,14 @@ describe('UtilService', () => {
 
   describe('setListFilter', () => {
     it('should set a filter and redirect to the recipes list page', () => {
+      const filter = new AuthorFilter('test');
       const router = TestBed.inject(Router);
       
       spyOn(router, 'navigate');
 
-      service.setListFilter('filter');
+      service.setListFilter(filter);
 
-      expect(recipeService.selectedFilters).toEqual(['filter']);
+      expect(recipeFilterService.selectedFilters).toEqual([filter]);
       expect(router.navigate).toHaveBeenCalled();
     });
   });

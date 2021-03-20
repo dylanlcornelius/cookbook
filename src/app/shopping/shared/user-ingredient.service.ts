@@ -9,20 +9,17 @@ import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserIngredientService {
-  _ref;
+export class UserIngredientService extends FirestoreService {
   get ref() {
-    if (!this._ref) {
-      this._ref = this.firestoreService.getRef('user-ingredients');
-    }
-    return this._ref;
+    return super.getRef('user-ingredients');
   }
 
   constructor(
-    private firestoreService: FirestoreService,
-    private currentUserService: CurrentUserService,
-    private actionService: ActionService
-  ) {}
+    currentUserService: CurrentUserService,
+    actionService: ActionService,
+  ) {
+    super(currentUserService, actionService);
+  }
 
   get(uid: string): Observable<UserIngredient>;
   get(): Observable<UserIngredient[]>;
@@ -30,7 +27,7 @@ export class UserIngredientService {
   get(uid?: string): Observable<UserIngredient | UserIngredient[]> {
     return new Observable(observer => {
       if (uid) {
-        this.firestoreService.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new UserIngredient(docs[0]));
           } else {
@@ -40,7 +37,7 @@ export class UserIngredientService {
           }
         });
       } else {
-        this.firestoreService.get(this.ref).subscribe(docs => {
+        super.get(this.ref).subscribe(docs => {
           observer.next(docs.map(doc => new UserIngredient(doc)));
         });
       }
@@ -48,14 +45,14 @@ export class UserIngredientService {
   }
 
   create(data: UserIngredient): string {
-    return this.firestoreService.create(this.ref, data.getObject());
+    return super.create(this.ref, data.getObject());
   }
 
   update(data: UserIngredient | UserIngredient[]) {
     if (!Array.isArray(data)) {
-      this.firestoreService.update(this.ref, data.getId(), data.getObject());
+      super.update(this.ref, data.getId(), data.getObject());
     } else {
-      this.firestoreService.updateAll(this.ref, data);
+      super.updateAll(this.ref, data);
     }
   }
 

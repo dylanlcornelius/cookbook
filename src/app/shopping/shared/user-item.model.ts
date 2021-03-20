@@ -1,18 +1,16 @@
-export class UserItem {
-    id: string;
+import { Model } from '@model';
+
+export class UserItem extends Model {
     uid: string;
     items: Array<{
         name: string
     }>;
 
     constructor(data) {
+        super();
         this.id = data.id || '';
         this.uid = data.uid;
         this.items = data.items || [];
-    }
-
-    public getId() {
-        return this.id;
     }
 
     public getObject() {

@@ -11,14 +11,12 @@ describe('UserItemService', () => {
   let service: UserItemService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
-  let firestoreService: FirestoreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(UserItemService);
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
-    firestoreService = TestBed.inject(FirestoreService);
   });
 
   it('should be created', () => {
@@ -27,22 +25,22 @@ describe('UserItemService', () => {
 
   describe('get', () => {
     it('should return an existing user item record', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
       spyOn(service, 'create');
 
       service.get('uid').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
       expect(service.create).not.toHaveBeenCalled();
     });
 
     it('should create a user item record and return it', fakeAsync(() => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
       spyOn(service, 'create');
 
       service.get('uid').subscribe(doc => {
@@ -50,33 +48,33 @@ describe('UserItemService', () => {
       });
 
       tick();
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
       expect(service.create).toHaveBeenCalled();
     }));
 
     it('should get all documents', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a user item record', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'create');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'create');
 
       service.create(new UserItem({}));
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.create).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
@@ -84,27 +82,27 @@ describe('UserItemService', () => {
     it('should update a user item record', () => {
       const userItem = new UserItem({});
 
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'update');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'update');
       spyOn(userItem, 'getId');
       spyOn(userItem, 'getObject');
 
       service.update(userItem);
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.update).toHaveBeenCalled();
       expect(userItem.getId).toHaveBeenCalled();
       expect(userItem.getObject).toHaveBeenCalled();
     });
 
     it('should update user item records', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'updateAll');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'updateAll');
 
       service.update([new UserItem({})]);
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.updateAll).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
     });
   });
 

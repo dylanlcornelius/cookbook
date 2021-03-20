@@ -1,24 +1,25 @@
+import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '@firestoreService';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { RecipeHistory } from './recipe-history.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecipeHistoryService {
-  _ref;
+export class RecipeHistoryService extends FirestoreService {
   get ref() {
-    if (!this._ref) {
-      this._ref = this.firestoreService.getRef('recipe-histories');
-    }
-    return this._ref;
+    return super.getRef('recipe-histories');
   }
 
   constructor(
-    private firestoreService: FirestoreService
-  ) { }
+    currentUserService: CurrentUserService,
+    actionService: ActionService,
+  ) {
+    super(currentUserService, actionService);
+  }
 
   add(uid: string, recipeId: string) {
     this.get(uid, recipeId).pipe(take(1)).subscribe(recipeHistory => {
@@ -44,22 +45,22 @@ export class RecipeHistoryService {
   get(uid: string, recipeId?: string): Observable<RecipeHistory | RecipeHistory[]> {
     return new Observable(observable => {
       if (recipeId) {
-        this.firestoreService.get(this.ref?.where('uid', '==', uid).where('recipeId', '==', recipeId)).subscribe(docs => {
+        super.get(this.ref?.where('uid', '==', uid).where('recipeId', '==', recipeId)).subscribe(docs => {
           observable.next(new RecipeHistory(docs[0]));
         });
       } else {
-        this.firestoreService.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           observable.next(docs.map(doc => new RecipeHistory(doc)));
         });
       }
     });
   }
 
-  create(data: RecipeHistory) {
-    this.firestoreService.create(this.ref, data.getObject());
+  create(data: RecipeHistory): string {
+    return super.create(this.ref, data.getObject());
   }
 
   update(data: RecipeHistory) {
-    this.firestoreService.update(this.ref, data.getId(), data.getObject());
+    super.update(this.ref, data.getId(), data.getObject());
   }
 }

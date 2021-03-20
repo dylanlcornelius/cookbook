@@ -3,22 +3,23 @@ import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Ingredient } from './ingredient.model';
 import { FirestoreService } from '@firestoreService';
+import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { ActionService } from '@actionService';
 
 @Injectable({
   providedIn: 'root'
 })
-export class IngredientService {
-  _ref;
+export class IngredientService extends FirestoreService {
   get ref() {
-    if (!this._ref) {
-      this._ref = this.firestoreService.getRef('ingredients');
-    }
-    return this._ref;
+    return super.getRef('ingredients');
   }
 
   constructor(
-    private firestoreService: FirestoreService
-  ) {}
+    currentUserService: CurrentUserService,
+    actionService: ActionService,
+  ) {
+    super(currentUserService, actionService);
+  }
 
   get(id: string): Observable<Ingredient>;
   get(): Observable<Ingredient[]>;
@@ -26,31 +27,31 @@ export class IngredientService {
   get(id?: string): Observable<Ingredient | Ingredient[]> {
     return new Observable(observer => {
       if (id) {
-        this.firestoreService.get(this.ref, id).subscribe(doc => {
+        super.get(this.ref, id).subscribe(doc => {
           observer.next(new Ingredient(doc));
         })
       } else {
-        this.firestoreService.get(this.ref).subscribe(docs => {
+        super.get(this.ref).subscribe(docs => {
           observer.next(docs.map(doc => new Ingredient(doc)).sort(this.sort));
         });
       }
     });
   }
 
-  create(data): String {
-    return this.firestoreService.create(this.ref, data, Action.CREATE_INGREDIENT);
+  create(data): string {
+    return super.create(this.ref, data, Action.CREATE_INGREDIENT);
   }
 
   update(data, id?: string) {
     if (id) {
-      this.firestoreService.update(this.ref, id, data, Action.UPDATE_INGREDIENT);
+      super.update(this.ref, id, data, Action.UPDATE_INGREDIENT);
     } else {
-      this.firestoreService.updateAll(this.ref, data);
+      super.updateAll(this.ref, data);
     }
   }
 
   delete(id: string) {
-    this.firestoreService.delete(this.ref, id, Action.DELETE_INGREDIENT);
+    super.delete(this.ref, id, Action.DELETE_INGREDIENT);
   }
 
   sort(a: Ingredient, b: Ingredient) {

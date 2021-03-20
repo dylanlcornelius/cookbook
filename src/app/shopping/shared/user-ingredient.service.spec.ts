@@ -12,14 +12,12 @@ describe('UserIngredientService', () => {
   let service: UserIngredientService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
-  let firestoreService: FirestoreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(UserIngredientService);
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
-    firestoreService = TestBed.inject(FirestoreService);
   });
 
   it('should be created', () => {
@@ -28,22 +26,22 @@ describe('UserIngredientService', () => {
 
   describe('get', () => {
     it('should get one document based on an id', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
       spyOn(service, 'create');
 
       service.get('uid').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
       expect(service.create).not.toHaveBeenCalled();
     });
 
     it('should create a document if none are found', fakeAsync(() => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
       spyOn(service, 'create').and.returnValue('id');
 
       service.get('uid').subscribe(doc => {
@@ -51,55 +49,55 @@ describe('UserIngredientService', () => {
       });
 
       tick();
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
       expect(service.create).toHaveBeenCalled();
     }));
 
     it('should get all documents', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a new document', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'create');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'create');
 
       service.create(new UserIngredient({}));
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.create).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a document', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'update');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'update');
 
       service.update(new UserIngredient({}));
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.update).toHaveBeenCalled();
     });
 
     it('should update user ingredients', () => {
-      spyOn(firestoreService, 'getRef');
-      spyOn(firestoreService, 'updateAll');
+      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'updateAll');
 
       service.update([new UserIngredient({})]);
 
-      expect(firestoreService.getRef).toHaveBeenCalled();
-      expect(firestoreService.updateAll).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
     });
   });
 

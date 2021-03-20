@@ -4,6 +4,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { RecipeService } from '@recipeService';
+import { RecipeFilterService, CategoryFilter, SearchFilter } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { IngredientService } from '@ingredientService';
@@ -23,6 +24,7 @@ describe('RecipeListComponent', () => {
   let fixture: ComponentFixture<RecipeListComponent>;
   let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
+  let recipeFilterService: RecipeFilterService;
   let userIngredientService: UserIngredientService;
   let uomConversion: UOMConversion;
   let ingredientService: IngredientService;
@@ -40,6 +42,7 @@ describe('RecipeListComponent', () => {
         UOMConversion,
         CurrentUserService,
         RecipeService,
+        RecipeFilterService,
         UserIngredientService,
         IngredientService,
         ImageService
@@ -60,6 +63,7 @@ describe('RecipeListComponent', () => {
     fixture.detectChanges();
     currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
+    recipeFilterService = TestBed.inject(RecipeFilterService);
     userIngredientService = TestBed.inject(UserIngredientService);
     uomConversion = TestBed.inject(UOMConversion);
     ingredientService = TestBed.inject(IngredientService);
@@ -358,22 +362,24 @@ describe('RecipeListComponent', () => {
   describe('setFilters', () => {
     it('should set the dataSource filter from the filters list', () => {
       component.dataSource = new MatTableDataSource();
-      recipeService.selectedFilters = ['test'];
+      const filter = new CategoryFilter('category');
+      recipeFilterService.selectedFilters = [filter];
       component.searchFilter = undefined;
 
       component.setFilters();
 
-      expect(component.dataSource.filter).toEqual(JSON.stringify(['test']));
+      expect(component.dataSource.filter).toEqual([filter]);
     });
 
     it('should set the dataSource filter from the filters list and search filter', () => {
       component.dataSource = new MatTableDataSource();
-      recipeService.selectedFilters = ['test'];
+      const filter = new CategoryFilter('category');
+      recipeFilterService.selectedFilters = [filter];
       component.searchFilter = 'filter';
 
       component.setFilters();
 
-      expect(component.dataSource.filter).toEqual(JSON.stringify(['test', 'filter']));
+      expect(component.dataSource.filter.length).toEqual(2);
     });
   });
 
@@ -384,19 +390,21 @@ describe('RecipeListComponent', () => {
     });
 
     it('should apply a filter', () => {
-      recipeService.selectedFilters = [];
+      const filter = new CategoryFilter('test');
+      recipeFilterService.selectedFilters = [];
 
-      component.filterSelected({checked: true, name: 'test'});
+      component.filterSelected({checked: true, name: 'test', filter});
 
-      expect(recipeService.selectedFilters).toContain('test');
+      expect(recipeFilterService.selectedFilters).toContain(filter);
     });
 
     it('should unapply a filter', () => {
-      recipeService.selectedFilters = ['test'];
+      const filter = new CategoryFilter('test');
+      recipeFilterService.selectedFilters = [filter];
 
-      component.filterSelected({checked: false, name: 'test'});
+      component.filterSelected({checked: false, name: 'test', filter});
 
-      expect(recipeService.selectedFilters).not.toContain('test');
+      expect(recipeFilterService.selectedFilters).not.toContain(filter);
     });
 
     afterEach(() => {
@@ -745,38 +753,6 @@ describe('RecipeListComponent', () => {
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(component.getRecipeCount).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
-    });
-  });
-
-  describe('recipeFilterPredicate', () => {
-    it('should filter by category', () => {
-      const result = component.recipeFilterPredicate({'prop': [{category: 'category-test'}]}, "[\"test\"]");
-
-      expect(result).toBeTrue();
-    });
-
-    it('should not filter by category', () => {
-      const result = component.recipeFilterPredicate({'prop': [{category: 'category'}]}, "[\"test\"]");
-
-      expect(result).toBeFalse();
-    });
-
-    it('should filter by search', () => {
-      const result = component.recipeFilterPredicate({'prop': 'filter-test'}, "[\"test\"]");
-
-      expect(result).toBeTrue();
-    });
-
-    it('should not filter', () => {
-      const result = component.recipeFilterPredicate({'prop': 'filter'}, "[\"test\"]");
-
-      expect(result).toBeFalse();
-    });
-
-    it('should filter by rating', () => {
-      const result = component.recipeFilterPredicate({'meanRating': 0}, "[\"0\"]");
-
-      expect(result).toBeTrue();
     });
   });
 

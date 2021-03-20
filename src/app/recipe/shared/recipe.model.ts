@@ -1,5 +1,7 @@
-export class Recipe {
-    id: string;
+import { Model } from '@model';
+import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+
+export class Recipe extends Model {
     name: string;
     link: string;
     description: string;
@@ -10,14 +12,10 @@ export class Recipe {
     categories: Array<{
         category: string,
     }>;
-    steps: Array<string>;
-    ingredients: Array<{
-        id: string,
-        name: string,
-        uom: string,
-        quantity: string,
-        amount: string,
+    steps: Array<{
+        step: string,
     }>;
+    ingredients: Array<Ingredient>;
     hasImage: boolean;
     meanRating: number;
     ratings: Array<{
@@ -31,6 +29,7 @@ export class Recipe {
     image: string;
 
     constructor(data) {
+        super();
         this.id = data.id || '';
         this.name = data.name || '';
         this.link = data.link || '';
@@ -47,10 +46,6 @@ export class Recipe {
         this.ratings = data.ratings || [];
         this.uid = data.uid || '';
         this.author = data.author || '';
-    }
-
-    public getId() {
-        return this.id;
     }
 
     public getObject() {
