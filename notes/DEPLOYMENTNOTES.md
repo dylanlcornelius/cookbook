@@ -2,6 +2,10 @@
 ## For Firebase Hosting
 ---
 
+#### CLI (admin command prompt)
+npm i -g --production windows-build-tools --vs2015
+npm i -g firebase-tools
+
 #### Initialize Firebase
 ```
 firebase login
