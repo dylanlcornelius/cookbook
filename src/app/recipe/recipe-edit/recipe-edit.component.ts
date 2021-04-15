@@ -56,6 +56,17 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.init();
+
+    this.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(this.init);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  init() {
     this.recipesForm = this.formBuilder.group({
       name: [null, Validators.required],
       link: [null],
@@ -69,11 +80,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     });
 
     this.load();
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   load() {
@@ -265,7 +271,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  submitForm() {
+  submitForm(createNew: boolean) {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       const form = this.recipesForm.value;
 
@@ -273,6 +279,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         delete ingredient.name;
       });
 
+      let recipeId = this.recipe?.id;
       if (this.route.snapshot.params['id']) {
         form.uid = this.recipe.uid;
         form.author = this.recipe.author;
@@ -281,13 +288,17 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         form.ratings = this.recipe.ratings;
 
         this.recipeService.update(form, this.recipe.id);
-        this.router.navigate(['/recipe/detail/', this.recipe.id]);
       } else {
         form.uid = user.uid;
         form.author = user.firstName + ' ' + user.lastName;
 
-        const id = this.recipeService.create(form);
-        this.router.navigate(['/recipe/detail/', id]);
+        recipeId = this.recipeService.create(form);
+      }
+
+      if (createNew) {
+        this.router.navigate(['/recipe/edit']);
+      } else {
+        this.router.navigate(['/recipe/detail/', recipeId]);
       }
     });
   }

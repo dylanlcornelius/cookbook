@@ -412,7 +412,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
-      component.submitForm();
+      component.submitForm(false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalledWith({
@@ -427,7 +427,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should create a recipe', () => {
-      component.recipe = new Recipe({id: 'testId'});
+      component.recipe = undefined;
 
       const router = TestBed.inject(Router);
 
@@ -435,7 +435,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'create').and.returnValue('testId');
       spyOn(router, 'navigate');
 
-      component.submitForm();
+      component.submitForm(false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.create).toHaveBeenCalledWith({
@@ -452,6 +452,34 @@ describe('RecipeEditComponent', () => {
         author: '1 2',
       });
       expect(router.navigate).toHaveBeenCalled();
+    });
+
+    it('should update a recipe and redirect to creating a new recipe', () => {
+      component.recipe = new Recipe({id: 'testId', author: '3', hasImage: true, meanRating: 0.33});
+      component.recipesForm = formBuilder.group({
+        'ingredients': formBuilder.array([formBuilder.group({'name': []})])
+      });
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
+
+      const router = TestBed.inject(Router);
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
+      spyOn(recipeService, 'update');
+      spyOn(router, 'navigate');
+
+      component.submitForm(true);
+
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(recipeService.update).toHaveBeenCalledWith({
+        ingredients: [{}],
+        uid: '',
+        author: '3',
+        hasImage: true,
+        meanRating: 0.33,
+        ratings: []
+      }, 'testId');
+      expect(router.navigate).toHaveBeenCalledWith(['/recipe/edit']);
     });
   });
 });
