@@ -28,5 +28,19 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "dynamicResources",
+      "urls": [
+        "https://firebasestorage.googleapis.com/v0/b/*"
+      ],
+      "cacheConfig": {
+        "maxSize": 500,
+        "maxAge": "365d",
+        "timeout": "0u",
+        "strategy": "freshness"
+      }
+    }
   ]
 }

@@ -92,6 +92,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
           this.recipe.hasImage = true;
           this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
+          this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Recipe image uploaded!'));
         } else {
           this.recipeImageProgress = progress;
         }

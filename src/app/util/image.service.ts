@@ -24,7 +24,7 @@ export class ImageService {
   }
 
   upload(path: string, file: File): Observable<Number | String | void> {
-    const uploadTask = this.ref.child(path).put(file);
+    const uploadTask = this.ref.child(path).put(file, { cacheControl: 'public,max-age=31557600' });
 
     return new Observable(observer => {
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {

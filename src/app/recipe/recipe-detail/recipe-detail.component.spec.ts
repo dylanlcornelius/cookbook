@@ -141,11 +141,13 @@ describe('RecipeDetailComponent', () => {
 
       spyOn(imageService, 'upload').and.returnValue(of('url'));
       spyOn(recipeService, 'update');
+      spyOn(notificationService, 'setNotification');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.upload).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalled();
+      expect(notificationService.setNotification).toHaveBeenCalled();
       expect(component.recipeImage).toEqual('url');
       expect(component.recipeImageProgress).toBeUndefined();
     });

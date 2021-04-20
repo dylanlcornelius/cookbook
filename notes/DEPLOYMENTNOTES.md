@@ -2,6 +2,11 @@
 ## For Firebase Hosting
 ---
 
+#### CLI (admin command prompt)
+npm i -g --production windows-build-tools --vs2015
+npm i -g firebase-tools
+npm i -g @angular/cli
+
 #### Initialize Firebase
 ```
 firebase login
