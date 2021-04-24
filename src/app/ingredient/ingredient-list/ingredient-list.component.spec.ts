@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IngredientListComponent } from './ingredient-list.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -19,7 +19,7 @@ describe('IngredientListComponent', () => {
   let userIngredientService: UserIngredientService;
   let ingredientService: IngredientService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),

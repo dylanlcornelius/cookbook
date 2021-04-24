@@ -44,7 +44,7 @@ $light-theme: (
 );
 
 @include angular-material-theme($light-mat-theme);
-@include mat-button-theme($light-mat-theme);
+@include mat-button-color($light-mat-theme);
 @include theme($light-theme);
 
 // dark theme
@@ -66,6 +66,6 @@ $dark-theme: (
 
 .dark {
     @include angular-material-theme($dark-mat-theme);
-    @include mat-button-theme($dark-mat-theme);
+    @include mat-button-color($dark-mat-theme);
     @include theme($dark-theme);
 }

@@ -1,3 +1,4 @@
+import { Injectable } from "@angular/core";
 export enum UOM {
     TEASPOON = 'tsp',
     TABLESPOON = 'tbsp',
@@ -11,13 +12,14 @@ export enum UOM {
     OTHER = 'other',
 }
 
+@Injectable()
 export class UOMConversion {
     uoms = {
         tsp: {
             tsp: 1,
             tbsp: 0.3333333333,
             'fl oz': 0.1666666667,
-            c: 0.0205372,
+            c: 0.0208333,
             pt: 0.0104167,
             qt: 0.00520833,
             gal: 0.00130208,
@@ -26,7 +28,7 @@ export class UOMConversion {
             tsp: 3,
             tbsp: 1,
             'fl oz': 0.5,
-            c: 0.0616115,
+            c: 0.0625,
             pt: 0.03125,
             qt: 0.015625,
             gal: 0.00390625,
@@ -35,7 +37,7 @@ export class UOMConversion {
             tsp: 6,
             tbsp: 2,
             'fl oz': 1,
-            c: 0.123223,
+            c: 0.125,
             pt: 0.0625,
             qt: 0.03125,
             gal: 0.0078125,

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProfileListComponent } from './profile-list.component';
 import { RouterModule } from '@angular/router';
@@ -18,7 +18,7 @@ describe('ProfileListComponent', () => {
   let recipeService: RecipeService;
   let imageService: ImageService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),

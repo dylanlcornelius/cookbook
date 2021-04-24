@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, NgForm, FormGroupDirective } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -17,11 +17,11 @@ describe('IngredientEditComponent', () => {
   let fixture: ComponentFixture<IngredientEditComponent>;
   let ingredientService: IngredientService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'ingredient/detail/:id', component: IngredientDetailComponent}
+          { path: 'ingredient/detail/:id', component: IngredientDetailComponent }
         ]),
         FormsModule,
         ReactiveFormsModule,

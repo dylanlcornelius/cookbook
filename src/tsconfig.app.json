@@ -16,11 +16,18 @@
       "@actionService": ["src/app/profile/shared/action.service"],
       "@actions": ["src/app/profile/shared/action.enum"],
       "@notifications": ["src/app/shared/notification-modal/notification.enum"],
-      "@model": ["src/app/shared/model.ts"],
+      "@model": ["src/app/shared/model.ts"]
     }
   },
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "./**/*.d.ts"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
-  ],
+  ]
 }

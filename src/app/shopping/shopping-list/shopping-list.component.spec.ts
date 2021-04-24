@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ShoppingListComponent } from './shopping-list.component';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -24,7 +24,7 @@ describe('ShoppingListComponent', () => {
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatTableModule,

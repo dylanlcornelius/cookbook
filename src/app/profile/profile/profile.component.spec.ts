@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -11,9 +11,13 @@ import { ActionService } from '@actionService';
 import { User } from 'src/app/user/shared/user.model';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ChartsModule } from 'ng2-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { ImageService } from 'src/app/util/image.service';
+import { RecipeService } from '@recipeService';
+import { RecipeHistoryService } from 'src/app/recipe/shared/recipe-history.service';
+import { Recipe } from 'src/app/recipe/shared/recipe.model';
+import { RecipeHistory } from 'src/app/recipe/shared/recipe-history.model';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -23,8 +27,10 @@ describe('ProfileComponent', () => {
   let actionService: ActionService;
   let notificationService: NotificationService;
   let imageService: ImageService;
+  let recipeService: RecipeService;
+  let recipeHistoryService: RecipeHistoryService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),
@@ -32,7 +38,7 @@ describe('ProfileComponent', () => {
         ReactiveFormsModule,
         BrowserAnimationsModule,
         MatInputModule,
-        ChartsModule,
+        NgxChartsModule,
       ],
       providers: [
         UserService
@@ -54,6 +60,8 @@ describe('ProfileComponent', () => {
     actionService = TestBed.inject(ActionService);
     notificationService = TestBed.inject(NotificationService);
     imageService = TestBed.inject(ImageService);
+    recipeService = TestBed.inject(RecipeService);
+    recipeHistoryService = TestBed.inject(RecipeHistoryService);
   });
 
   it('should create', () => {
@@ -65,12 +73,14 @@ describe('ProfileComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
+      spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
+      expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
 
@@ -78,12 +88,14 @@ describe('ProfileComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
+      spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
+      expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
   });
@@ -92,7 +104,6 @@ describe('ProfileComponent', () => {
     it('should load actions', fakeAsync(() => {
       component.user = new User({uid: 'uid'});
       component.weekPaginator = {};
-      component.monthPaginator = {};
       
       const actions = [
         { day: 0, month: 1, year: 0, data: {'1': 2} },
@@ -114,7 +125,6 @@ describe('ProfileComponent', () => {
     it('should load actions without paginators', fakeAsync(() => {
       component.user = new User({uid: 'uid'});
       component.weekPaginator = null;
-      component.monthPaginator = null;
       
       const actions = [
         { day: 0, month: 1, year: 0, data: {'1': 2} },
@@ -152,6 +162,36 @@ describe('ProfileComponent', () => {
       const result = component.sortActions({'2/2/2': {}, '1/1/1': {}});
 
       expect(result[0].day).toBe(1);
+    });
+  });
+
+  describe('loadHistory', () => {
+    it('should load histories', () => {
+      component.user = new User({ defaultShoppingList: 'default' });
+
+      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 })]));
+
+      component.loadHistory();
+
+      expect(component.history[0].name).toEqual('recipe');
+      expect(component.history[0].value).toEqual(2);
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
+    });
+
+    it('should load histories with missing recipes', () => {
+      component.user = new User({ defaultShoppingList: 'default' });
+
+      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id2', timesCooked: 2 })]));
+
+      component.loadHistory();
+
+      expect(component.history[0].name).toEqual(undefined);
+      expect(component.history[0].value).toEqual(2);
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
     });
   });
 

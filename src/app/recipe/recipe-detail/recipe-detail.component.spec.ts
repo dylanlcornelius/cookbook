@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { RouterModule, Router } from '@angular/router';
 
 import { RecipeDetailComponent } from './recipe-detail.component';
@@ -26,11 +26,11 @@ describe('RecipeDetailComponent', () => {
   let notificationService: NotificationService;
   let recipeHistoryService: RecipeHistoryService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'recipe/list', component: RecipeListComponent}
+          { path: 'recipe/list', component: RecipeListComponent }
         ])
       ],
       declarations: [ RecipeDetailComponent ],

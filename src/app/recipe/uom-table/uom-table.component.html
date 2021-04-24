@@ -5,7 +5,10 @@
             <tr>
                 <th>
                     <label for="uomValue">value: </label>
-                    <input matInput type="number" id="uomValue" [value]="uomValue" [(ngModel)]="uomValue"/>
+                    <input matInput type="text" id="uomValue" [value]="uomValue" [(ngModel)]="uomValue"/>
+                    <mat-error>
+                        <span *ngIf="!isValid(uomValue)">Invalid value</span>
+                    </mat-error>
                 </th>
                 <th *ngFor="let uomColumn of uoms; let columnIndex = index;">to {{uomColumn}}</th>
             </tr>

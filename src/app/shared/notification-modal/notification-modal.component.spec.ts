@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 
 import { NotificationModalComponent } from './notification-modal.component';
@@ -13,7 +13,7 @@ describe('NotificationModalComponent', () => {
   let fixture: ComponentFixture<NotificationModalComponent>;
   let notificationService: NotificationService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([])
