@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,11 +14,11 @@ describe('IngredientQuickCreateComponent', () => {
   let component: IngredientQuickCreateComponent;
   let fixture: ComponentFixture<IngredientQuickCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'ingredient/edit', component: IngredientEditComponent}
+          { path: 'ingredient/edit', component: IngredientEditComponent }
         ]),
         FormsModule,
         ReactiveFormsModule,

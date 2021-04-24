@@ -13,7 +13,7 @@ describe('UtilService', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'recipe/list', component: RecipeListComponent}
+          { path: 'recipe/list', component: RecipeListComponent }
         ])
       ],
     });

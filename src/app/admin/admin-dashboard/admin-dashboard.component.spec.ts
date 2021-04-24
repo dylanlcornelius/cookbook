@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminDashboardComponent } from './admin-dashboard.component';
@@ -25,7 +25,7 @@ describe('AdminDashboardComponent', () => {
   let userItemService: UserItemService;
   let notificationService: NotificationService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,

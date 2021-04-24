@@ -10,7 +10,7 @@
 
         <div class="image-buttons" *ngIf="(online$ | async)">
           <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
-          <button mat-button matTooltip="Add Image" (click)="uploadFile.click()"><mat-icon>add</mat-icon></button>
+          <button mat-button matTooltip="Add Image" (click)="uploadFile.click()" [hidden]="userImage"><mat-icon>add</mat-icon></button>
           <button mat-button matTooltip="Delete Image" (click)="deleteFile(user.id)" [hidden]="!userImage"><mat-icon>close</mat-icon></button>
         </div>
 
@@ -82,58 +82,47 @@
         </div>
       </div>
     </mat-tab>
+
     <mat-tab label="Analytics">
       <div class="tab-body">
         <h2>Your Analytics</h2>
 
         <mat-paginator #weekPaginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
         <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
-        <canvas baseChart class="desktop"
-          [data]="actions[week.pageIndex]?.data || []"
-          [labels]="actionsLabels"
-          [chartType]="'pie'"
-          [colors]="[{ backgroundColor: actionsColors }] || []">
-        </canvas>
-        <canvas baseChart class="mobile"
-          [data]="actions[week.pageIndex]?.data || []"
-          [labels]="actionsLabels"
-          [chartType]="'pie'"
-          [colors]="[{ backgroundColor: actionsColors }] || []"
-          [options]="{legend: false}">
-        </canvas>
 
-        <mat-paginator #monthPaginator [length]="monthActionsLength" [pageSize]="1" [hidePageSize]="true" (page)="month = $event"></mat-paginator>
-        <h4>{{monthActions[month.pageIndex]?.date || ''}}</h4>
-        <canvas baseChart class="desktop"
-          [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"
-          [labels]="actionsLabels"
-          [chartType]="'bar'"
-          [options]="{scales: {yAxes: [{ticks: {beginAtZero: true}}]}}">
-        </canvas>
-        <canvas baseChart class="mobile"
-          [datasets]="monthActions[month.pageIndex]?.data || [{data: []}]"
-          [labels]="actionsLabels"
-          [chartType]="'bar'"
-          [options]="{legend: false, scales: {yAxes: [{ticks: {beginAtZero: true}}], xAxes: [{display: false}]}}">
-        </canvas>
+        <div class="chart-container">
+          <ngx-charts-pie-chart class="desktop"
+            [results]="actions[week.pageIndex]?.data"
+            [legend]="true"
+            [doughnut]="true">
+          </ngx-charts-pie-chart>
+          <ngx-charts-pie-chart class="mobile"
+            [results]="actions[week.pageIndex]?.data">
+          </ngx-charts-pie-chart>
+        </div>
       </div>
     </mat-tab>
+
     <mat-tab label="History">
       <div class="tab-body">
         <h2>Your Recipe History</h2>
 
-        <canvas baseChart class="desktop"
-          [datasets]="history.data || [{data: []}]"
-          [labels]="history.labels"
-          [chartType]="'bar'"
-          [options]="{scales: {yAxes: [{ticks: {beginAtZero: true}}]}}">
-        </canvas>
-        <canvas baseChart class="mobile"
-          [datasets]="history.data || [{data: []}]"
-          [labels]="history.labels"
-          [chartType]="'bar'"
-          [options]="{legend: false, scales: {yAxes: [{ticks: {beginAtZero: true}}], xAxes: [{display: false}]}}">
-        </canvas>
+        <div class="chart-container">
+          <ngx-charts-bar-vertical class="desktop"
+            [results]="history"
+            [gradient]="true"
+            [xAxis]="true"
+            [legend]="true"
+            [showDataLabel]="true"
+            [trimXAxisTicks]="false">
+          </ngx-charts-bar-vertical>
+          <ngx-charts-bar-horizontal class="mobile"
+            [results]="history"
+            [gradient]="true"
+            [yAxis]="true"
+            [showDataLabel]="true">
+          </ngx-charts-bar-horizontal>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>

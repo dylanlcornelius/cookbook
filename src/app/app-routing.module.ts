@@ -14,16 +14,16 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
-  {path: 'recipe', loadChildren: './recipe/recipe.module#RecipeModule', canActivateChild: [LoginGuard, UserPendingGuard]},
-  {path: 'ingredient', loadChildren: './ingredient/ingredient.module#IngredientModule', canActivateChild: [LoginGuard, UserPendingGuard]},
-  {path: 'shopping', loadChildren: './shopping/shopping.module#ShoppingModule', canActivateChild: [LoginGuard, UserPendingGuard]},
-  {path: 'about', loadChildren: './about/about.module#AboutModule', canActivateChild: [LoginGuard, UserPendingGuard]},
-  {path: 'profile', loadChildren: './profile/profile.module#ProfileModule', canActivateChild: [LoginGuard, UserPendingGuard]},
-  {path: 'admin', loadChildren: './admin/admin.module#AdminModule', canActivateChild: [LoginGuard, UserPendingGuard, AdminGuard]},
+  {path: 'recipe', loadChildren: () => import('./recipe/recipe.module').then(m => m.RecipeModule), canActivateChild: [LoginGuard, UserPendingGuard]},
+  {path: 'ingredient', loadChildren: () => import ('./ingredient/ingredient.module').then(m => m.IngredientModule), canActivateChild: [LoginGuard, UserPendingGuard]},
+  {path: 'shopping', loadChildren: () => import('./shopping/shopping.module').then(m => m.ShoppingModule), canActivateChild: [LoginGuard, UserPendingGuard]},
+  {path: 'about', loadChildren: () => import('./about/about.module').then(m => m.AboutModule), canActivateChild: [LoginGuard, UserPendingGuard]},
+  {path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivateChild: [LoginGuard, UserPendingGuard]},
+  {path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivateChild: [LoginGuard, UserPendingGuard, AdminGuard]},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules, onSameUrlNavigation: 'reload'})],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, onSameUrlNavigation: 'reload' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

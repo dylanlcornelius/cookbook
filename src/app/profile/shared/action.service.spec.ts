@@ -1,4 +1,4 @@
-import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 
 import { ActionService } from 'src/app/profile/shared/action.service';
 import { Action } from '@actions';

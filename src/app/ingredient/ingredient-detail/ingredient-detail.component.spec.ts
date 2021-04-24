@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '../shared/ingredient.model';
@@ -13,11 +13,11 @@ describe('IngredientsDetailComponent', () => {
   let fixture: ComponentFixture<IngredientDetailComponent>;
   let ingredientService: IngredientService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'ingredient/list', component: IngredientListComponent}
+          { path: 'ingredient/list', component: IngredientListComponent }
         ])
       ],
       providers: [

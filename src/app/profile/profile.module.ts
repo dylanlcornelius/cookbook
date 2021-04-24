@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ChartsModule } from 'ng2-charts';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile/profile.component';
@@ -22,7 +23,8 @@ import { SharedModule } from '@sharedModule';
     MatTabsModule,
     MatSlideToggleModule,
     MatPaginatorModule,
-    ChartsModule,
+    MatProgressBarModule,
+    NgxChartsModule,
     SharedModule,
   ]
 })

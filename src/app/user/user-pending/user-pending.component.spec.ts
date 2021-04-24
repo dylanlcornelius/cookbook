@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs/internal/observable/of';
 import { AuthService } from '../shared/auth.service';
@@ -15,11 +15,11 @@ describe('UserPendingComponent', () => {
   let currentUserService: CurrentUserService
   let authService: AuthService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'home', component: HomeComponent}
+          { path: 'home', component: HomeComponent }
         ])
       ],
       declarations: [ UserPendingComponent ],

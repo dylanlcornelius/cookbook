@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
@@ -23,11 +23,11 @@ describe('RecipeEditComponent', () => {
   let formBuilder: FormBuilder;
   let ingredientService: IngredientService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          {path: 'recipe/detail/:id', component: RecipeDetailComponent}
+          { path: 'recipe/detail/:id', component: RecipeDetailComponent }
         ]),
         FormsModule,
         ReactiveFormsModule
