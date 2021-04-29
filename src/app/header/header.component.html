@@ -6,7 +6,7 @@
         <button mat-button class="title-button" [matMenuTriggerFor]="profileMenu">
           <mat-icon>person</mat-icon>
         </button>
-        <mat-menu #profileMenu="matMenu" style="width: fit-content">
+        <mat-menu #profileMenu="matMenu">
           <a mat-menu-item routerLink="/profile/settings">
             <mat-icon>settings</mat-icon>
             <span>Settings</span>
@@ -36,9 +36,22 @@
     <div class="desktop" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending" [@fadeInAnimation]>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/home" [ngClass]="{'selected': route === '/home'}">Home</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe/list" [ngClass]="{'selected': route === '/recipe/list'}">Recipes</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/ingredient/list" [ngClass]="{'selected': route === '/ingredient/list'}">Ingredients</a>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping/list" [ngClass]="{'selected': route === '/shopping/list'}">Shopping List</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/profile/list" [ngClass]="{'selected': route === '/profile/list'}">Authors</a>
+      <button mat-raised-button color="primary" class="nav-button" [matMenuTriggerFor]="profileMenu">Tools</button>
+      <mat-menu #profileMenu="matMenu">
+        <a mat-menu-item routerLink="/profile/list">
+          <mat-icon>people</mat-icon>
+          <span>Authors</span>
+        </a>
+        <a mat-menu-item routerLink="/ingredient/list">
+          <mat-icon>kitchen</mat-icon>
+          <span>Ingredients</span>
+        </a>
+        <a mat-menu-item routerLink="/ingredient/uom">
+          <mat-icon>square_foot</mat-icon>
+          <span>UOMs</span>
+        </a>
+      </mat-menu>
       <a mat-raised-button color="primary" class="nav-button" routerLink="/about" [ngClass]="{'selected': route === '/about'}">About</a>
       
       <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
@@ -61,6 +74,10 @@
         <a mat-button class="mobile-nav-button" routerLink="/shopping/list">
           <mat-icon>shopping_cart</mat-icon>
           <span class="mobile-nav-text">Shopping List</span>
+        </a><br/>
+        <a mat-button class="mobile-nav-button" routerLink="/ingredient/uom">
+          <mat-icon>square_foot</mat-icon>
+          <span class="mobile-nav-text">UOMs</span>
         </a><br/>
         <a mat-button class="mobile-nav-button" routerLink="/profile/list">
           <mat-icon>people</mat-icon>

@@ -5,9 +5,6 @@
     display: flex;
     justify-content: center;
 }
-.nav-bar {
-    display: inline-block;
-}
 @media screen and (max-width: 767px) {
     .nav-bar {
         min-width: 80%;
@@ -16,10 +13,12 @@
 .title {
     color: white;
     font-size: calc(18px + 1vmin);
+    line-height: 36px;
 }
 .title-button {
     padding: 0;
     min-width: calc(30px + 1vmin);
+    line-height: 30px;
 }
 a:hover {
     text-decoration: none;

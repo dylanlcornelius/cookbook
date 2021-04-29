@@ -7,6 +7,7 @@ import { IngredientDetailComponent } from './ingredient-detail/ingredient-detail
 import { IngredientEditComponent } from './ingredient-edit/ingredient-edit.component';
 import { IngredientModalComponent } from './ingredient-modal/ingredient-modal.component';
 import { IngredientQuickCreateComponent } from './ingredient-quick-create/ingredient-quick-create.component';
+import { UomTableComponent } from './uom-table/uom-table.component';
 
 import { SharedModule } from '@sharedModule';
 
@@ -17,6 +18,7 @@ import { SharedModule } from '@sharedModule';
     IngredientEditComponent,
     IngredientModalComponent,
     IngredientQuickCreateComponent,
+    UomTableComponent,
   ],
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { SharedModule } from '@sharedModule';
   ],
   exports: [
     IngredientQuickCreateComponent,
+    UomTableComponent,
   ]
 })
 export class IngredientModule { }
