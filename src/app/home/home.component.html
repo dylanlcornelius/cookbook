@@ -6,39 +6,9 @@
   </div>
 
   <div class="container center">
-    <div class="nav-tile" routerLink="/recipe/list">
-      <mat-icon class="nav-icon">restaurant</mat-icon>
-      <h6>Recipes</h6>
-    </div>
-
-    <div class="nav-tile" routerLink="/ingredient/list">
-      <mat-icon class="nav-icon">kitchen</mat-icon>
-      <h6>Ingredients</h6>
-    </div>
-
-    <div class="nav-tile" routerLink="/shopping/list">
-      <mat-icon class="nav-icon">shopping_cart</mat-icon>
-      <h6>Shopping List</h6>
-    </div>
-
-    <div class="nav-tile" routerLink="/profile/list">
-      <mat-icon class="nav-icon">people</mat-icon>
-      <h6>Authors</h6>
-    </div>
-
-    <div class="nav-tile" routerLink="/profile/settings">
-      <mat-icon class="nav-icon">person</mat-icon>
-      <h6>Profile</h6>
-    </div>
-
-    <div class="nav-tile" routerLink="/profile/analytics">
-      <mat-icon class="nav-icon">bar_chart</mat-icon>
-      <h6>Analytics</h6>
-    </div>
-
-    <div class="nav-tile" routerLink="/profile/recipe-history">
-      <mat-icon class="nav-icon">timeline</mat-icon>
-      <h6>History</h6>
+    <div *ngFor="let nav of navs" class="nav-tile" routerLink="{{nav.link}}">
+      <mat-icon class="nav-icon">{{nav.icon}}</mat-icon>
+      <h6>{{nav.name}}</h6>
     </div>
   </div>
 </div>

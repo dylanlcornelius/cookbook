@@ -4,17 +4,18 @@ import { RouterModule, Router } from '@angular/router';
 import { RecipeDetailComponent } from './recipe-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RecipeService } from '@recipeService';
-import { Recipe } from '../shared/recipe.model';
+import { Recipe } from '@recipe';
 import { RecipeListComponent } from '../recipe-list/recipe-list.component';
 import { ImageService } from 'src/app/util/image.service';
 import { of } from 'rxjs';
 import { IngredientService } from '@ingredientService';
-import { User } from 'src/app/user/shared/user.model';
-import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { User } from '@user';
+import { Ingredient } from '@ingredient';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { RecipeHistoryService } from '../shared/recipe-history.service';
 import { RecipeHistory } from '../shared/recipe-history.model';
+import { UtilService } from 'src/app/shared/util.service';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -25,6 +26,7 @@ describe('RecipeDetailComponent', () => {
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
   let recipeHistoryService: RecipeHistoryService;
+  let utilService: UtilService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -51,6 +53,7 @@ describe('RecipeDetailComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
     recipeHistoryService = TestBed.inject(RecipeHistoryService);
+    utilService = TestBed.inject(UtilService);
   });
 
   it('should create', () => {
@@ -94,6 +97,31 @@ describe('RecipeDetailComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
+      spyOn(ingredientService, 'buildRecipeIngredients');
+
+      component.load();
+      
+      tick();
+      expect(component.recipeImage).toBeUndefined();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+    }));
+
+    it('should handle image errors', fakeAsync(() => {
+      const user = new User({});
+      const recipe = new Recipe({});
+      const ingredients = [new Ingredient({})];
+      const recipeHistories = new RecipeHistory({});
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
+      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
+      spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(ingredientService, 'buildRecipeIngredients');
 
       component.load();
@@ -205,6 +233,26 @@ describe('RecipeDetailComponent', () => {
       expect(component.deleteFile).toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('setCategoryFilter', () => {
+    it('should set a category filter', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setCategoryFilter('filter');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
+    });
+  });
+
+  describe('setAuthorFilter', () => {
+    it('should set an author filter', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setAuthorFilter('filter');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
     });
   });
 

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
-import { Ingredient } from '../shared/ingredient.model';
+import { Ingredient } from '@ingredient';
 
 import { IngredientDetailComponent } from './ingredient-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';

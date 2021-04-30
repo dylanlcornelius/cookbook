@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from './user.model';
+import { User } from '@user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,4 @@ export class CurrentUserService {
 
   getIsGuest() { return this.isGuest.asObservable(); }
   setIsGuest(isGuest: boolean) { this.isGuest.next(isGuest); }
-
-  constructor() {}
 }

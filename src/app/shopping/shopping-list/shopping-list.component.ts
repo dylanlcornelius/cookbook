@@ -1,20 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
-import { UserIngredient } from '../shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationType } from '@notifications';
 import { UserItemService } from '@userItemService';
-import { UserItem } from '../shared/user-item.model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
-import { User } from 'src/app/user/shared/user.model';
+import { User } from '@user';
 
-// TODO: icons for notification modal
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
@@ -100,24 +97,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.ingredientsDataSource.filter = '0';
   }
 
-  packageIngredientData() {
-    const userIngredients = [];
-    this.ingredientsDataSource.data.forEach(data => {
-      userIngredients.push({id: data.id, pantryQuantity: data.pantryQuantity, cartQuantity: data.cartQuantity});
-    });
-    return new UserIngredient({
-      uid: this.user.defaultShoppingList, 
-      ingredients: userIngredients,
-      id: this.id
-    });
-  }
-
   removeIngredient(id) {
     const data = this.ingredientsDataSource.data.find(x => x.id === id);
     const ingredient = this.ingredients.find(x => x.id === id);
     if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.update(this.packageIngredientData());
+      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
     }
   }
 
@@ -126,7 +111,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const ingredient = this.ingredients.find(x => x.id === id);
     if (ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
-      this.userIngredientService.update(this.packageIngredientData());
+      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
     }
   }
 
@@ -137,7 +122,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     if (Number(data.cartQuantity > 0)) {
       data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
       data.cartQuantity = 0;
-      this.userIngredientService.buyUserIngredient(this.packageIngredientData(), 1, isCompleted);
+      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
+      this.userIngredientService.buyUserIngredient(1, isCompleted);
       this.applyFilter();
       this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredient added!'));
       if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0) {
@@ -146,26 +132,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
   }
 
-  packageItemData() {
-    const userItems = [];
-    this.itemsDataSource.data.forEach(data => {
-      userItems.push({name: data.name || ''});
-    });
-    return new UserItem({
-      uid: this.user.defaultShoppingList,
-      items: userItems,
-      id: this.itemsId
-    });
-  }
-
   addItem(form) {
     if (!form.name || !form.name.toString().trim()) {
       return;
     }
 
-    const userItems = this.packageItemData();
-    userItems.items.push({name: form.name.toString().trim()});
-    this.userItemService.update(userItems);
+    this.userItemService.formattedUpdate([...this.itemsDataSource.data, { name: form.name.toString().trim() }], this.user.defaultShoppingList, this.itemsId);
 
     this.itemForm.reset();
     this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Item added!'));
@@ -175,7 +147,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.itemsDataSource.data = this.itemsDataSource.data.filter((_x, i) =>  i !== index);
     this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0;
 
-    this.userItemService.buyUserItem(this.packageItemData(), 1, this.isCompleted);
+    this.userItemService.formattedUpdate(this.itemsDataSource.data, this.user.defaultShoppingList, this.itemsId);
+    this.userItemService.buyUserItem(1, this.isCompleted);
     this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Item removed!'));
   }
 
@@ -194,11 +167,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         ingredient.cartQuantity = 0;
       }
     });
-    self.userIngredientService.buyUserIngredient(self.packageIngredientData(), self.ingredientsDataSource.filteredData.length, false);
+    self.userIngredientService.formattedUpdate(self.ingredientsDataSource.data, self.user.defaultShoppingList, self.id);
+    self.userIngredientService.buyUserIngredient(self.ingredientsDataSource.filteredData.length, false);
 
     const itemsCount = self.itemsDataSource.data.length;
     self.itemsDataSource.data = [];
-    self.userItemService.buyUserItem(self.packageItemData(), itemsCount, false);
+    self.userItemService.formattedUpdate(self.itemsDataSource.data, self.user.defaultShoppingList, self.itemsId);
+    self.userItemService.buyUserItem(itemsCount, false);
 
     self.applyFilter();
     self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Shopping list completed!'));

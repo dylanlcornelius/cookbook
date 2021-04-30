@@ -56,11 +56,6 @@ export class RecipeHistoryService extends FirestoreService {
     });
   }
 
-  create(data: RecipeHistory): string {
-    return super.create(this.ref, data.getObject());
-  }
-
-  update(data: RecipeHistory) {
-    super.update(this.ref, data.getId(), data.getObject());
-  }
+  create = (data: RecipeHistory): string => super.create(this.ref, data.getObject());
+  update = (data: RecipeHistory) => super.update(this.ref, data.getObject(), data.getId());
 }

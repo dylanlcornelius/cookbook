@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '@recipeService';
-import { IngredientService} from '../../ingredient/shared/ingredient.service';
+import { IngredientService} from '@ingredientService';
 import { NotificationType } from '@notifications';
 import { ImageService } from 'src/app/util/image.service';
 import { Observable, combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Recipe } from '../shared/recipe.model';
+import { Recipe } from '@recipe';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
@@ -128,7 +128,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   setCategoryFilter = (filter) => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
-
 
   onRate(rating, recipe) {
     this.recipeService.rateRecipe(rating, this.uid, recipe);

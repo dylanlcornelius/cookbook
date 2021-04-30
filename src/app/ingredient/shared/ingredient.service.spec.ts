@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs/internal/observable/of';
 import { FirestoreService } from '@firestoreService';
 
-import { IngredientService } from './ingredient.service';
-import { Ingredient } from './ingredient.model';
+import { IngredientService } from '@ingredientService';
+import { Ingredient } from '@ingredient';
 
 describe('IngredientService', () => {
   let service: IngredientService;
@@ -24,6 +24,7 @@ describe('IngredientService', () => {
 
       service.get('id').subscribe(doc => {
         expect(doc).toBeDefined();
+        expect(doc.getObject().name).toEqual('');
       });
 
       expect(FirestoreService.prototype.getRef).toHaveBeenCalled();

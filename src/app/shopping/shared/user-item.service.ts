@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
-import { UserItem } from './user-item.model';
+import { UserItem } from '@userItem';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
@@ -46,21 +46,17 @@ export class UserItemService extends FirestoreService{
     });
   }
 
-  create(data: UserItem): string {
-    return super.create(this.ref, data.getObject());
+  create = (data: UserItem): string => super.create(this.ref, data.getObject());
+  update = (data, id?: string) => super.update(this.ref, data, id);
+
+  formattedUpdate(data, uid, id) {
+    const items = data.map(({ name = '' }) => ({ name }));
+    const userIngredient = new UserItem({ uid, items, id });
+    this.update(userIngredient.getObject(), userIngredient.getId());
   }
 
-  update(data: UserItem | UserItem[]) {
-    if (!Array.isArray(data)) {
-      super.update(this.ref, data.getId(), data.getObject());
-    } else {
-      super.updateAll(this.ref, data);
-    }
-  }
-
-  buyUserItem(data: UserItem, actions: Number, isCompleted: boolean) {
+  buyUserItem(actions: Number, isCompleted: boolean) {
     this.currentUserService.getCurrentUser().subscribe(user => {
-      this.update(data);
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);

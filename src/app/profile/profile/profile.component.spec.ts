@@ -8,7 +8,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { of } from 'rxjs';
 import { ActionService } from '@actionService';
-import { User } from 'src/app/user/shared/user.model';
+import { User } from '@user';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -16,7 +16,7 @@ import { NotificationService } from 'src/app/shared/notification-modal/notificat
 import { ImageService } from 'src/app/util/image.service';
 import { RecipeService } from '@recipeService';
 import { RecipeHistoryService } from 'src/app/recipe/shared/recipe-history.service';
-import { Recipe } from 'src/app/recipe/shared/recipe.model';
+import { Recipe } from '@recipe';
 import { RecipeHistory } from 'src/app/recipe/shared/recipe-history.model';
 
 describe('ProfileComponent', () => {

@@ -17,8 +17,7 @@ export class User extends Model {
     image: string;
 
     constructor(data) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.uid = data.uid || '';
         this.firstName = data.firstName || '';
         this.lastName = data.lastName || '';

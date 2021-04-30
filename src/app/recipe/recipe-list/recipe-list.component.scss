@@ -5,7 +5,13 @@
     width: 60%;
 }
 .row-button {
-    margin: 10px;
+    margin: 2%;
+}
+.row-button button {
+    padding: 0;
+}
+.mat-menu-item {
+    display: block;
 }
 .recipe-card {
     width: 300px;

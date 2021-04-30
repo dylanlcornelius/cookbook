@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from './user.model';
+import { User } from '@user';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from './current-user.service';
 import { ActionService } from '@actionService';
@@ -36,19 +36,7 @@ export class UserService extends FirestoreService {
     });
 }
 
-  create(data: User): string {
-    return super.create(this.ref, data.getObject());
-  }
-
-  update(data: User | User[]) {
-    if (!Array.isArray(data)) {
-      super.update(this.ref, data.getId(), data.getObject());
-    } else {
-      super.updateAll(this.ref, data);
-    }
-  }
-
-  delete(id: string) {
-    super.delete(this.ref, id);
-  }
+  create = (data: User): string => super.create(this.ref, data.getObject());
+  update = (data, id?: string) => super.update(this.ref, data, id);
+  delete = (id: string) => super.delete(this.ref, id);
 }

@@ -11,12 +11,12 @@ import {
   FormArray
 } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientService} from '../../ingredient/shared/ingredient.service';
+import { IngredientService} from '@ingredientService';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Subject } from 'rxjs';
-import { Recipe } from '../shared/recipe.model';
+import { Recipe } from '@recipe';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
 

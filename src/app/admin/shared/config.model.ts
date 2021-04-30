@@ -5,14 +5,8 @@ export class Config extends Model {
     value: string;
 
     constructor(data) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.name = data.name || '';
         this.value = data.value || '';
-    }
-
-    public getObject() {
-        const {id, ...config} = this;
-        return config;
     }
 }

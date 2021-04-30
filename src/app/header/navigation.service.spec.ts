@@ -1,36 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { FirestoreService } from '@firestoreService';
-import { of } from 'rxjs/internal/observable/of';
-import { Config } from '@config';
+import { Navigation } from '@navigation';
 
-import { ConfigService } from '@configService';
+import { NavigationService } from '@navigationService';
+import { of } from 'rxjs';
 
-describe('ConfigService', () => {
-  let service: ConfigService;
-  
+describe('NavigationService', () => {
+  let service: NavigationService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ConfigService);
+    service = TestBed.inject(NavigationService);
   });
 
   it('should be created', () => {
-    const service: ConfigService = TestBed.inject(ConfigService);
     expect(service).toBeTruthy();
   });
 
   describe('getConfigs', () => {
-    it('should get one document based on an id', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
-
-      service.get('name').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
-    });
-
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
@@ -49,7 +36,7 @@ describe('ConfigService', () => {
       spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create(new Config({}));
+      service.create(new Navigation({}));
 
       expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
@@ -61,7 +48,7 @@ describe('ConfigService', () => {
       spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'updateAll');
 
-      service.update([new Config({})]);
+      service.update([new Navigation({})]);
 
       expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
@@ -77,6 +64,14 @@ describe('ConfigService', () => {
 
       expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.delete).toHaveBeenCalled();
+    });
+  });
+
+  describe('sort', () => {
+    it('should sort two navs', () => {
+      const result = service.sort(new Navigation({ order: 2 }), new Navigation({ order: 1 }));
+
+      expect(result).toEqual(1)
     });
   });
 });

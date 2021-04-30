@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from './recipe-filter.service';
-import { Recipe } from './recipe.model';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from '@recipeFilterService';
+import { Recipe } from '@recipe';
 
 describe('RecipeFilterService', () => {
   let service: RecipeFilterService;

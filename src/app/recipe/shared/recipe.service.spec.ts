@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 
-import { RecipeService } from './recipe.service';
-import { Recipe } from './recipe.model';
+import { RecipeService } from '@recipeService';
+import { Recipe } from '@recipe';
 
 describe('RecipeService', () => {
   let service: RecipeService;
@@ -122,13 +122,13 @@ describe('RecipeService', () => {
       spyOn(service, 'calculateMeanRating');
       spyOn(service, 'update');
 
-      service.rateRecipe(1, 'uid', new Recipe({}));
+      service.rateRecipe(1, 'uid', new Recipe({ ratings: [{ uid: 'uid2' }] }));
 
       expect(service.calculateMeanRating).toHaveBeenCalled();
       expect(service.update).toHaveBeenCalled();
     });
 
-    it('should update a recipe with a rating', () => {
+    it('should update a recipe without a rating', () => {
       spyOn(service, 'calculateMeanRating');
       spyOn(service, 'update');
 

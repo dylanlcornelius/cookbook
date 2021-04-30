@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { AuthService } from '../../user/shared/auth.service';
-import { User } from '../../user/shared/user.model';
+import { User } from '@user';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 
 @Injectable({

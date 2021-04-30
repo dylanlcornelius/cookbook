@@ -19,19 +19,27 @@
       "dom"
     ],
     "paths": {
-      "@sharedModule": ["src/app/shared/shared.module.ts"],
-      "@firestoreService": ["src/app/shared/firestore.service.ts"],
+      "@sharedModule": ["src/app/shared/shared.module"],
+      "@notifications": ["src/app/shared/notification-modal/notification.enum"],
+      "@model": ["src/app/shared/model"],
+      "@firestoreService": ["src/app/shared/firestore.service"],
+      "@config": ["src/app/admin/shared/config.model"],
+      "@configService": ["src/app/admin/shared/config.service"],
+      "@navigation": ["src/app/header/navigation.model"],
+      "@navigationService": ["src/app/header/navigation.service"],
+      "@recipe": ["src/app/recipe/shared/recipe.model"],
       "@recipeService": ["src/app/recipe/shared/recipe.service"],
       "@recipeFilterService": ["src/app/recipe/shared/recipe-filter.service"],
+      "@ingredient": ["src/app/ingredient/shared/ingredient.model"],
       "@ingredientService": ["src/app/ingredient/shared/ingredient.service"],
+      "@userIngredient": ["src/app/shopping/shared/user-ingredient.model"],
       "@userIngredientService": ["src/app/shopping/shared/user-ingredient.service"],
-      "@itemService": ["src/app/item/shared/item.service"],
+      "@userItem": ["src/app/shopping/shared/user-item.model"],
       "@userItemService": ["src/app/shopping/shared/user-item.service"],
+      "@user": ["src/app/user/shared/user.model"],
       "@userService": ["src/app/user/shared/user.service"],
-      "@actionService": ["src/app/profile/shared/action.service"],
       "@actions": ["src/app/profile/shared/action.enum"],
-      "@notifications": ["src/app/shared/notification-modal/notification.enum"],
-      "@model": ["src/app/shared/model.ts"]
+      "@actionService": ["src/app/profile/shared/action.service"]
     }
   }
 }

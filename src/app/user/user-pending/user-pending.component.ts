@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 
 import { AuthService } from '../shared/auth.service';
-import { User } from '../shared/user.model';
+import { User } from '@user';
 import { CurrentUserService } from '../shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
 

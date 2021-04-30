@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { Recipe } from '../shared/recipe.model';
+import { Recipe } from '@recipe';
 
 @Component({
   selector: 'app-rating',

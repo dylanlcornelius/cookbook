@@ -7,9 +7,9 @@ import {
   Validators
 } from '@angular/forms';
 import { ActionService } from '@actionService';
-import { User } from 'src/app/user/shared/user.model';
+import { User } from '@user';
 import { NotificationType } from '@notifications';
-import { ActionLabel } from '../shared/action.enum';
+import { ActionLabel } from '@actions';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { UserService } from '@userService';
@@ -174,9 +174,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.userImage = progress;
           this.userImageProgress = undefined;
 
-          const user = new User(this.user);
-          user.hasImage = true;
-          this.userService.update(user);
+          const user = new User({ ...this.user, hasImage: true });
+
+          this.userService.update(user.getObject(), user.getId());
           this.currentUserService.setCurrentUser(user);
         } else {
           this.userImageProgress = progress;
@@ -187,10 +187,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   deleteFile(path) {
     this.imageService.deleteFile(path).then(() => {
+      const user = new User({ ...this.user, hasImage: false });
 
-      const user = new User(this.user);
-      user.hasImage = false;
-      this.userService.update(user);
+      this.userService.update(user.getObject(), user.getId());
       this.currentUserService.setCurrentUser(user);
       this.userImage = undefined;
     });
@@ -199,9 +198,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onFormSubmit(form) {
     const user = new User(form);
 
-    this.userService.update(user);
+    this.userService.update(user.getObject(), user.getId());
     this.currentUserService.setCurrentUser(user);
-
     this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Profile Information Updated!'));
   }
 }

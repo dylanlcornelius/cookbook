@@ -7,14 +7,8 @@ export class UserItem extends Model {
     }>;
 
     constructor(data) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.uid = data.uid;
         this.items = data.items || [];
-    }
-
-    public getObject() {
-        const {id, ...userItem} = this;
-        return userItem;
     }
 }
