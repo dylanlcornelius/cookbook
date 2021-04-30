@@ -9,7 +9,7 @@ import { User } from '@user';
 import { of } from 'rxjs';
 import { UserIngredient } from '@userIngredient';
 import { Ingredient } from '@ingredient';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { RouterModule } from '@angular/router';
 
 describe('IngredientListComponent', () => {

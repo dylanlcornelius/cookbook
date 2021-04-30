@@ -4,7 +4,7 @@ import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { UserItem } from '@userItem';
 import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 @Injectable({
   providedIn: 'root'

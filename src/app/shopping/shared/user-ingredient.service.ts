@@ -4,7 +4,7 @@ import { Action } from '@actions';
 import { UserIngredient } from '@userIngredient';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 @Injectable({
   providedIn: 'root'

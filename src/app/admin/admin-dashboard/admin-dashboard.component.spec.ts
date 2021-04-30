@@ -12,7 +12,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { of } from 'rxjs';
 import { Config } from '@config';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { NotificationService } from '@notificationService';
 import { NavigationService } from '@navigationService';
 
 describe('AdminDashboardComponent', () => {

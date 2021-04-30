@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { ImageService } from 'src/app/util/image.service';
+import { ImageService } from '@imageService';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserService } from '@userService';
-import { UtilService } from 'src/app/shared/util.service';
+import { UtilService } from '@utilService';
 import { Router } from '@angular/router';
 import { AuthorFilter } from '@recipeFilterService';
 

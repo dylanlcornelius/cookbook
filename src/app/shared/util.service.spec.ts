@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UtilService } from './util.service';
+import { UtilService } from '@utilService';
 import { Router, RouterModule } from '@angular/router';
 import { AuthorFilter, RecipeFilterService } from '@recipeFilterService';
 import { RecipeListComponent } from '../recipe/recipe-list/recipe-list.component';

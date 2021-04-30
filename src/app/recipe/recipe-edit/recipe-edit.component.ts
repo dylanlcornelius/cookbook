@@ -17,7 +17,7 @@ import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Subject } from 'rxjs';
 import { Recipe } from '@recipe';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({

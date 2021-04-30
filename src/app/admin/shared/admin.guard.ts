@@ -11,7 +11,7 @@ import { map, take } from 'rxjs/operators';
 
 import { AuthService } from '../../user/shared/auth.service';
 import { User } from '@user';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 @Injectable({
   providedIn: 'root'

@@ -12,8 +12,8 @@ import { Ingredient } from '@ingredient';
 import { UserItem } from '@userItem';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { CurrentUserService } from '@currentUserService';
+import { NotificationService } from '@notificationService';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;

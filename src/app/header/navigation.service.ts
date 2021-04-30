@@ -2,7 +2,7 @@ import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '@firestoreService';
 import { Observable } from 'rxjs';
-import { CurrentUserService } from '../user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { Navigation } from '@navigation';
 
 @Injectable({

@@ -5,7 +5,7 @@ import { User } from '@user';
 import { of } from 'rxjs/internal/observable/of';
 import { ActionService } from '@actionService';
 import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 describe('UserItemService', () => {
   let service: UserItemService;

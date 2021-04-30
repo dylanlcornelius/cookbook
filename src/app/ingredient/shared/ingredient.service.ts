@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Ingredient } from '@ingredient';
 import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 
 @Injectable({

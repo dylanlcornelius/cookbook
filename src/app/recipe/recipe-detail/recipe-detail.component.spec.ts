@@ -6,16 +6,16 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { Recipe } from '@recipe';
 import { RecipeListComponent } from '../recipe-list/recipe-list.component';
-import { ImageService } from 'src/app/util/image.service';
+import { ImageService } from '@imageService';
 import { of } from 'rxjs';
 import { IngredientService } from '@ingredientService';
 import { User } from '@user';
 import { Ingredient } from '@ingredient';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
-import { RecipeHistoryService } from '../shared/recipe-history.service';
-import { RecipeHistory } from '../shared/recipe-history.model';
-import { UtilService } from 'src/app/shared/util.service';
+import { CurrentUserService } from '@currentUserService';
+import { NotificationService } from '@notificationService';
+import { RecipeHistoryService } from '@recipeHistoryService';
+import { RecipeHistory } from '@recipeHistory';
+import { UtilService } from '@utilService';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;

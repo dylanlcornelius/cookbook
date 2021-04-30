@@ -11,7 +11,7 @@ import { Recipe } from '@recipe';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import * as cdk from '@angular/cdk/drag-drop';
 
 describe('RecipeEditComponent', () => {

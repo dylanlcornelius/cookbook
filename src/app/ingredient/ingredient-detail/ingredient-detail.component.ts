@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
-import { NotificationType } from '@notifications';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { NotificationService } from '@notificationService';
+import { SuccessNotification } from '@notification';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -53,7 +52,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   deleteIngredientEvent(self, id) {
     if (id) {
       self.ingredientService.delete(id);
-      self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Ingredient deleted!'));
+      self.notificationService.setNotification(new SuccessNotification('Ingredient deleted!'));
       self.router.navigate(['/ingredient/list']);
     }
   }
