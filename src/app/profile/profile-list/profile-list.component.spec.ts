@@ -7,9 +7,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { UserService } from '@userService';
 import { RecipeService } from '@recipeService';
 import { ImageService } from 'src/app/util/image.service';
-import { User } from 'src/app/user/shared/user.model';
+import { User } from '@user';
 import { of } from 'rxjs';
-import { Recipe } from 'src/app/recipe/shared/recipe.model';
+import { Recipe } from '@recipe';
+import { UtilService } from 'src/app/shared/util.service';
 
 describe('ProfileListComponent', () => {
   let component: ProfileListComponent;
@@ -17,6 +18,7 @@ describe('ProfileListComponent', () => {
   let userService: UserService;
   let recipeService: RecipeService;
   let imageService: ImageService;
+  let utilService: UtilService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -38,10 +40,21 @@ describe('ProfileListComponent', () => {
     userService = TestBed.inject(UserService);
     recipeService = TestBed.inject(RecipeService);
     imageService = TestBed.inject(ImageService);
+    utilService = TestBed.inject(UtilService);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('setAuthorFilter', () => {
+    it('should set an author filter', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setAuthorFilter('filter');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
+    });
   });
 
   describe('load', () => {
@@ -79,6 +92,27 @@ describe('ProfileListComponent', () => {
       spyOn(userService, 'get').and.returnValue(of(users));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
+
+      component.load();
+
+      expect(userService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
+    });
+
+    it('should handle image error', () => {
+      const users = [
+        new User({firstName: 'b'}),
+        new User({firstName: 'a'}),
+      ];
+      const recipes = [
+        new Recipe({}),
+        new Recipe({}),
+      ];
+
+      spyOn(userService, 'get').and.returnValue(of(users));
+      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(imageService, 'download').and.returnValue(Promise.reject());
 
       component.load();
 

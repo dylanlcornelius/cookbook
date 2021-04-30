@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Config } from './config.model';
+import { Config } from '@config';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { ActionService } from '@actionService';
@@ -36,19 +36,7 @@ export class ConfigService extends FirestoreService {
     });
 }
 
-  create(data: Config): string {
-    return super.create(this.ref, data);
-  }
-
-  update(data: Config | Array<Config>) {
-    if (!Array.isArray(data)) {
-      super.update(this.ref, data.getId(), data.getObject());
-    } else {
-      super.updateAll(this.ref, data);
-    }
-  }
-
-  delete(id: string) {
-    super.delete(this.ref, id);
-  }
+  create = (data: Config): string => super.create(this.ref, data);
+  update = (data: Config[]) => super.updateAll(this.ref, data);
+  delete = (id: string) => super.delete(this.ref, id);
 }

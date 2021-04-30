@@ -50,7 +50,7 @@ a:hover {
 }
 .mobile-nav {
     position: relative;
-    width: fit-content;
+    width: min-content;
     height: 100%;
     border-left: 2px solid grey;
     box-shadow: -10px 5px 30px 0px rgba(0,0,0,0.60);

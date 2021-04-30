@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { Action } from '@actions';
-import { Recipe } from './recipe.model';
+import { Recipe } from '@recipe';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { ActionService } from '@actionService';
@@ -39,21 +39,9 @@ export class RecipeService extends FirestoreService {
     });
   }
 
-  create(data): string {
-    return super.create(this.ref, data, Action.CREATE_RECIPE);
-  }
-
-  update(data, id?: string) {
-    if (id) {
-      super.update(this.ref, id, data, Action.UPDATE_RECIPE);
-    } else {
-      super.updateAll(this.ref, data);
-    }
-  }
-
-  delete(id: string) {
-    super.delete(this.ref, id, Action.DELETE_RECIPE);
-  }
+  create = (data): string => super.create(this.ref, data, Action.CREATE_RECIPE);
+  update = (data, id?: string) => super.update(this.ref, data, id, Action.UPDATE_RECIPE);
+  delete = (id: string) => super.delete(this.ref, id, Action.DELETE_RECIPE);
 
   calculateMeanRating(ratings) {
     if (!ratings || ratings.length === 0) {

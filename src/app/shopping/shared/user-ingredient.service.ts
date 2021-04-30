@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
-import { UserIngredient } from './user-ingredient.model';
+import { UserIngredient } from '@userIngredient';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
@@ -44,21 +44,17 @@ export class UserIngredientService extends FirestoreService {
     });
   }
 
-  create(data: UserIngredient): string {
-    return super.create(this.ref, data.getObject());
+  create = (data: UserIngredient): string => super.create(this.ref, data.getObject());
+  update = (data, id?: string) => super.update(this.ref, data, id);
+
+  formattedUpdate(data, uid, id) {
+    const ingredients = data.map(({ id, pantryQuantity, cartQuantity }) => ({ id, pantryQuantity, cartQuantity }));
+    const userIngredient = new UserIngredient({ uid, ingredients, id });
+    this.update(userIngredient.getObject(), userIngredient.getId());
   }
 
-  update(data: UserIngredient | UserIngredient[]) {
-    if (!Array.isArray(data)) {
-      super.update(this.ref, data.getId(), data.getObject());
-    } else {
-      super.updateAll(this.ref, data);
-    }
-  }
-
-  buyUserIngredient(data: UserIngredient, actions: Number, isCompleted: boolean) {
+  buyUserIngredient(actions: Number, isCompleted: boolean) {
     this.currentUserService.getCurrentUser().subscribe(user => {
-      this.update(data);
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);

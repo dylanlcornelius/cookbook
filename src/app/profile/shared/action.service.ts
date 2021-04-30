@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { Action } from './action.enum';
+import { Action } from '@actions';
 
 @Injectable({
   providedIn: 'root'
@@ -69,11 +69,6 @@ export class ActionService {
     });
   }
 
-  create(data) {
-    this.ref?.add(data);
-  }
-
-  update(data) {
-    this.ref?.doc(data.id).set(data);
-  }
+  create = (data) => this.ref?.add(data);
+  update = (data) => this.ref?.doc(data.id).set(data);
 }

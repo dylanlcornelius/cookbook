@@ -4,7 +4,6 @@ import { UserIngredientService } from '@userIngredientService';
 import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { IngredientService } from '@ingredientService';
 import { NotificationType } from '@notifications';
-import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -12,11 +11,11 @@ import { ImageService } from 'src/app/util/image.service';
 import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
-import { Recipe } from '../shared/recipe.model';
+import { Recipe } from '@recipe';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { UtilService } from 'src/app/shared/util.service';
-import { User } from 'src/app/user/shared/user.model';
+import { User } from '@user';
 import { RecipeHistoryService } from '../shared/recipe-history.service';
 import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from '@recipeFilterService';
 
@@ -256,18 +255,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  packageData() {
-    const data = [];
-    this.userIngredients.forEach(d => {
-      data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
-    });
-    return new UserIngredient({
-      uid: this.user.defaultShoppingList,
-      ingredients: data,
-      id: this.id
-    });
-  }
-
   removeIngredients(id) {
     const currentRecipe = this.dataSource.data.find(x => x.id === id);
     if (currentRecipe.ingredients) {
@@ -283,7 +270,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           }
         });
       });
-      this.userIngredientService.update(this.packageData());
+      this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
 
       this.dataSource.data.forEach(recipe => {
         recipe.count = this.getRecipeCount(recipe.id);
@@ -331,7 +318,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       }
     });
 
-    self.userIngredientService.update(self.packageData());
+    self.userIngredientService.formattedUpdate(self.userIngredients, self.user.defaultShoppingList, self.id);
     self.dataSource.data.forEach(recipe => {
       recipe.count = self.getRecipeCount(recipe.id);
     });

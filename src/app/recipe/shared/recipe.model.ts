@@ -1,5 +1,5 @@
 import { Model } from '@model';
-import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { Ingredient } from '@ingredient';
 
 export class Recipe extends Model {
     name: string;
@@ -29,8 +29,7 @@ export class Recipe extends Model {
     image: string;
 
     constructor(data) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.name = data.name || '';
         this.link = data.link || '';
         this.description = data.description || '';

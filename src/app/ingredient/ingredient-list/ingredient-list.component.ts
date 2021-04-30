@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { IngredientService } from '@ingredientService';
-import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
 import { UserIngredientService } from '@userIngredientService';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,8 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { takeUntil } from 'rxjs/operators';
-import { User } from 'src/app/user/shared/user.model';
-import { Ingredient } from '../shared/ingredient.model';
+import { User } from '@user';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -105,19 +103,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   editIngredientEvent(self) {
-    self.userIngredientService.update(self.packageData(self));
-  }
-
-  packageData(self) {
-    const data = [];
-    self.userIngredients.forEach(d => {
-      data.push({id: d.id, pantryQuantity: d.pantryQuantity, cartQuantity: d.cartQuantity});
-    });
-    return new UserIngredient({
-      uid: self.user.defaultShoppingList, 
-      ingredients: data, 
-      id: self.id
-    });
+    self.userIngredientService.formattedUpdate(self.userIngredients, self.user.defaultShoppingList, self.id);
   }
 
   removeIngredient(id) {
@@ -126,7 +112,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.update(this.packageData(this));
+      this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
     }
   }
 
@@ -141,7 +127,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
         ingredient.cartQuantity = Number(ingredient.amount);
       }
-      this.userIngredientService.update(this.packageData(this));
+      this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
     }
   }
 }

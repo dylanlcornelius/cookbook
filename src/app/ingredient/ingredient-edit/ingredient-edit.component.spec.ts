@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IngredientService } from '@ingredientService';
 
 import { IngredientEditComponent } from './ingredient-edit.component';
-import { Ingredient } from '../shared/ingredient.model';
+import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
 import { of } from 'rxjs';

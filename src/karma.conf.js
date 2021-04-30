@@ -21,7 +21,8 @@ module.exports = function (config) {
       subdir: '.',
       reporters: [
         { type: 'html', subdir: '.' },
-        { type: 'lcovonly', subdir: '.' }
+        { type: 'lcovonly', subdir: '.' },
+        { type: 'text-summary' }
       ]
     },
     port: 9876,

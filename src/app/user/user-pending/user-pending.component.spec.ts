@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs/internal/observable/of';
 import { AuthService } from '../shared/auth.service';
-import { User } from '../shared/user.model';
+import { User } from '@user';
 import { HomeComponent } from 'src/app/home/home.component';
 
 import { UserPendingComponent } from './user-pending.component';

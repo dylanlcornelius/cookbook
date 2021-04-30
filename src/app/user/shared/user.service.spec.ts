@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { UserService } from '@userService';
 import { FirestoreService } from '@firestoreService';
 import { of } from 'rxjs';
-import { User } from './user.model';
+import { User } from '@user';
 
 describe('UserService', () => {
   let service: UserService;

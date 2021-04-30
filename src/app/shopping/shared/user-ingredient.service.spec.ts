@@ -1,12 +1,12 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { UserIngredientService } from './user-ingredient.service';
+import { UserIngredientService } from '@userIngredientService';
 import { FirestoreService } from '@firestoreService';
-import { UserIngredient } from './user-ingredient.model';
+import { UserIngredient } from '@userIngredient';
 import { of } from 'rxjs';
 import { CurrentUserService } from 'src/app/user/shared/current-user.service';
 import { ActionService } from '@actionService';
-import { User } from 'src/app/user/shared/user.model';
+import { User } from '@user';
 
 describe('UserIngredientService', () => {
   let service: UserIngredientService;
@@ -101,32 +101,34 @@ describe('UserIngredientService', () => {
     });
   });
 
+  describe('formattedUpdate', () => {
+    it('should update with formatted data', () => {
+      spyOn(service, 'update');
+
+      service.formattedUpdate([{}], '', '');
+
+      expect(service.update).toHaveBeenCalled();
+    });
+  });
+
   describe('buyUserIngredient', () => {
     it('should update a user item record', () => {
-      const userItem = new UserIngredient({});
-
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(service, 'update');
       spyOn(actionService, 'commitAction');
 
-      service.buyUserIngredient(userItem, 1, false);
+      service.buyUserIngredient(1, false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(service.update).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalledTimes(1);
     });
 
     it('should update a user item record and mark it as completed', () => {
-      const userItem = new UserIngredient({});
-
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(service, 'update');
       spyOn(actionService, 'commitAction');
 
-      service.buyUserIngredient(userItem, 1, true);
+      service.buyUserIngredient(1, true);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(service.update).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalledTimes(2);
     });
   });

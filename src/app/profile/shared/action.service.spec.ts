@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 
-import { ActionService } from 'src/app/profile/shared/action.service';
+import { ActionService } from '@actionService';
 import { Action } from '@actions';
 
 describe('ActionService', () => {

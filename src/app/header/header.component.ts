@@ -5,8 +5,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../user/shared/auth.service';
 import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../theme/animations';
-import { User } from '../user/shared/user.model';
+import { User } from '@user';
 import { CurrentUserService } from '../user/shared/current-user.service';
+import { NavigationService } from '@navigationService';
+import { Navigation, NavigationMenu } from '@navigation';
 
 @Component({
   selector: 'app-header',
@@ -15,17 +17,21 @@ import { CurrentUserService } from '../user/shared/current-user.service';
   animations: [fadeInAnimation, fadeInFastAnimation, slideInOutAnimation]
 })
 export class HeaderComponent implements OnInit {
-
   title: string;
   user: Observable<User>;
   isLoggedIn: Observable<boolean>;
   route: string;
   showNav = false;
+  desktopNavs: Navigation[] = [];
+  mobileNavs: Navigation[] = [];
+  profileNavs: Navigation[] = [];
+  toolNavs: Navigation[] = [];
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private currentUserService: CurrentUserService,
+    private navigationService: NavigationService,
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -43,6 +49,17 @@ export class HeaderComponent implements OnInit {
     this.title = environment.config.title;
     this.user = this.currentUserService.getCurrentUser();
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
+
+    this.load();
+  }
+
+  load() {
+    this.navigationService.get().subscribe(navs => {
+      this.desktopNavs = navs.filter(({ subMenu }) => !subMenu);
+      this.mobileNavs = navs.filter(({ subMenu }) => subMenu !== NavigationMenu.PROFILE);
+      this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
+      this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+    });
   }
 
   toggleNav() {

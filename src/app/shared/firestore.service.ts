@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '../user/shared/current-user.service';
+import { Action } from '@actions';
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +78,7 @@ export abstract class FirestoreService {
     return newDoc.id;
   }
 
-  update(ref, id: string, data, action?) {
+  updateOne(ref, data, id: string, action?) {
     this.commitAction(action);
 
     ref?.doc(id).set(data);
@@ -87,6 +88,14 @@ export abstract class FirestoreService {
     data.forEach(d => {
       ref.doc(d.getId()).set(d.getObject());
     });
+  }
+
+  update(ref, data, id?: string, action?: Action) {
+    if (id) {
+      this.updateOne(ref, data, id, action);
+    } else {
+      this.updateAll(ref, data);
+    }
   }
 
   delete(ref, id: string, action?) {

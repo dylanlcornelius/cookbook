@@ -8,17 +8,11 @@ export class RecipeHistory extends Model {
     lastDateCooked: string;
 
     constructor(data: any = {}) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.uid = data.uid;
         this.recipeId = data.recipeId;
         this.history = data.history || [];
         this.timesCooked = data.timesCooked || 0;
         this.lastDateCooked = data.lastDateCooked || '';
-    }
-
-    public getObject() {
-        const {id, ...recipeHistory} = this;
-        return recipeHistory;
     }
 }

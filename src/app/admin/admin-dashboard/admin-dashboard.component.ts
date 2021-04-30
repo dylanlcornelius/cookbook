@@ -2,20 +2,22 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IngredientService } from '@ingredientService';
 import { RecipeService } from '@recipeService';
 import { UserService } from '@userService';
-import { ConfigService } from '../shared/config.service';
-import { Config } from '../shared/config.model';
-import { User } from 'src/app/user/shared/user.model';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
+import { User } from '@user';
 import { NotificationType } from '@notifications';
 import { combineLatest, Subject } from 'rxjs';
-import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
-import { Recipe } from 'src/app/recipe/shared/recipe.model';
-import { UserIngredient } from 'src/app/shopping/shared/user-ingredient.model';
-import { UserItem } from 'src/app/shopping/shared/user-item.model';
+import { Ingredient } from '@ingredient';
+import { Recipe } from '@recipe';
+import { UserIngredient } from '@userIngredient';
+import { UserItem } from '@userItem';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { takeUntil } from 'rxjs/operators';
 import { Notification } from 'src/app/shared/notification-modal/notification.model';
 import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { Navigation } from '@navigation';
+import { NavigationService } from '@navigationService';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -27,45 +29,57 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   loading: Boolean = true;
   validationModalParams;
 
-  originalConfigs: Array<Config>;
+  originalConfigs: Config[];
   configContext = {
     title: 'Configurations',
     displayedColumns: ['id', 'name', 'value'],
     dataSource: [],
     add: this.addConfig,
     remove: this.removeConfig,
+    self: this,
   };
 
-  originalUsers: Array<User>;
+  originalNavs: Navigation[];
+  navigationContext = {
+    title: 'Navs',
+    displayedColumns: ['id', 'name', 'link', 'icon', 'order', 'subMenu', 'isNavOnly'],
+    dataSource: [],
+    add: this.addNav,
+    remove: this.removeNav,
+    self: this,
+  }
+
+  originalUsers: User[];
   userContext = {
     title: 'Users',
     displayedColumns: ['id', 'firstName', 'lastName', 'role', 'theme'],
     dataSource: [],
     remove: this.removeUser,
+    self: this,
   };
 
-  originalRecipes: Array<Recipe>;
+  originalRecipes: Recipe[];
   recipeContext = {
     title: 'Recipes',
     displayedColumns: ['id', 'name', 'link', 'categories', 'steps', 'meanRating', 'uid', 'author'],
     dataSource: []
   };
 
-  originalIngredients: Array<Ingredient>;
+  originalIngredients: Ingredient[];
   ingredientContext = {
     title: 'Ingredients',
     displayedColumns: ['id', 'name', 'category', 'amount', 'uom'],
     dataSource: []
   };
 
-  originalUserIngredients: Array<UserIngredient>;
+  originalUserIngredients: UserIngredient[];
   userIngredientContext = {
     title: 'User Ingredients',
     displayedColumns: ['id', 'uid', 'ingredients'],
     dataSource: []
   };
 
-  originalUserItems: Array<UserItem>;
+  originalUserItems: UserItem[];
   userItemContext = {
     title: 'User Items',
     displayedColumns: ['id', 'uid', 'items'],
@@ -79,6 +93,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private userIngredientService: UserIngredientService,
     private userItemService: UserItemService,
+    private navigationService: NavigationService,
     private notificationService: NotificationService,
   ) {}
 
@@ -93,17 +108,21 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   load() {
     const configs$ = this.configService.get();
+    const navs$ = this.navigationService.get();
     const users$ = this.userService.get();
     const recipes$ = this.recipeService.get();
     const ingredients$ = this.ingredientService.get();
     const userIngredients$ = this.userIngredientService.get();
     const userItems$ = this.userItemService.get();
 
-    combineLatest([configs$, users$, recipes$, ingredients$, userIngredients$, userItems$])
+    combineLatest([configs$, navs$, users$, recipes$, ingredients$, userIngredients$, userItems$])
     .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(([configs, users, recipes, ingredients, userIngredients, userItems]) => {
+    .subscribe(([configs, navs, users, recipes, ingredients, userIngredients, userItems]: [Config[], Navigation[], User[], Recipe[], Ingredient[], UserIngredient[], UserItem[]]) => {
       this.originalConfigs = configs;
       this.configContext.dataSource = configs;
+
+      this.originalNavs = navs;
+      this.navigationContext.dataSource = navs;
 
       this.originalUsers = users;
       this.userContext.dataSource = users;
@@ -128,19 +147,20 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return Array.isArray(obj);
   }
 
-  addConfig() {
-    this.configService.create(new Config({}));
+  addConfig(self) {
+    self.configService.create({});
   }
 
-  removeConfig(id, name) {
+  removeConfig(self, id, name) {
     if (!name) {
       name = 'NO NAME';
     }
-    this.validationModalParams = {
-      function: this.removeConfigEvent,
+
+    self.validationModalParams = {
+      function: self.removeConfigEvent,
       id: id,
-      self: this,
-      text: 'Are you sure you want to delete config ' + name + '?'
+      self: self,
+      text: `Are you sure you want to delete config ${name}?`
     };
   }
 
@@ -148,16 +168,38 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.configService.delete(id);
   }
 
-  removeUser(id, firstName, lastName) {
+  addNav(self) {
+    self.navigationService.create({});
+  }
+
+  removeNav(self, id, name) {
+    if (!name) {
+      name = 'NO NAME';
+    }
+
+    self.validationModalParams = {
+      function: self.removeNavEvent,
+      id: id,
+      self: self,
+      text: `Are you sure you want to delete nav ${name}?`
+    }
+  }
+
+  removeNavEvent(self, id) {
+    self.navigationService.delete(id);
+  }
+
+  removeUser(self, id, firstName, lastName) {
     if (!firstName && !lastName) {
       firstName = 'NO';
       lastName = 'NAME';
     }
-    this.validationModalParams = {
-      function: this.removeUserEvent,
+    
+    self.validationModalParams = {
+      function: self.removeUserEvent,
       id: id,
-      self: this,
-      text: 'Are you sure you want to delete user ' + firstName + ' ' + lastName + '?'
+      self: self,
+      text: `Are you sure you want to delete user ${firstName} ${lastName}?`
     };
   }
 
@@ -175,6 +217,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   revertEvent(self) {
     self.configContext.dataSource = self.originalConfigs;
+    self.navigationContext.dataSource = self.originalNavs;
     self.userContext.dataSource = self.originalUsers;
     self.recipeContext.dataSource = self.originalRecipes;
     self.ingredientContext.dataSource = self.originalIngredients;
@@ -190,6 +233,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   saveEvent(self) {
     self.configService.update(self.configContext.dataSource);
+    self.navigationService.update(self.navigationContext.dataSource);
     self.userService.update(self.userContext.dataSource);
     self.recipeService.update(self.recipeContext.dataSource);
     self.ingredientService.update(self.ingredientContext.dataSource);

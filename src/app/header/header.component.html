@@ -7,17 +7,9 @@
           <mat-icon>person</mat-icon>
         </button>
         <mat-menu #profileMenu="matMenu">
-          <a mat-menu-item routerLink="/profile/settings">
-            <mat-icon>settings</mat-icon>
-            <span>Settings</span>
-          </a>
-          <a mat-menu-item routerLink="/profile/analytics">
-            <mat-icon>bar_chart</mat-icon>
-            <span>Analytics</span>
-          </a>
-          <a mat-menu-item routerLink="/profile/recipe-history">
-            <mat-icon>timeline</mat-icon>
-            <span>History</span>
+          <a *ngFor="let nav of profileNavs" mat-menu-item routerLink="{{nav.link}}">
+            <mat-icon>{{nav.icon}}</mat-icon>
+            <span>{{nav.name}}</span>
           </a>
         </mat-menu>
         
@@ -34,59 +26,25 @@
     <div style="clear: both;"></div>
 
     <div class="desktop" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending" [@fadeInAnimation]>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/home" [ngClass]="{'selected': route === '/home'}">Home</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/recipe/list" [ngClass]="{'selected': route === '/recipe/list'}">Recipes</a>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/shopping/list" [ngClass]="{'selected': route === '/shopping/list'}">Shopping List</a>
+      <a *ngFor="let nav of desktopNavs" mat-raised-button color="primary" class="nav-button" routerLink="{{nav.link}}" [ngClass]="{'selected': route === nav.link}">{{nav.name}}</a>
+      
       <button mat-raised-button color="primary" class="nav-button" [matMenuTriggerFor]="profileMenu">Tools</button>
       <mat-menu #profileMenu="matMenu">
-        <a mat-menu-item routerLink="/profile/list">
-          <mat-icon>people</mat-icon>
-          <span>Authors</span>
-        </a>
-        <a mat-menu-item routerLink="/ingredient/list">
-          <mat-icon>kitchen</mat-icon>
-          <span>Ingredients</span>
-        </a>
-        <a mat-menu-item routerLink="/ingredient/uom">
-          <mat-icon>square_foot</mat-icon>
-          <span>UOMs</span>
+        <a *ngFor="let nav of toolNavs" mat-menu-item routerLink="{{nav.link}}">
+          <mat-icon>{{nav.icon}}</mat-icon>
+          <span>{{nav.name}}</span>
         </a>
       </mat-menu>
-      <a mat-raised-button color="primary" class="nav-button" routerLink="/about" [ngClass]="{'selected': route === '/about'}">About</a>
       
       <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
     </div>
 
     <div class="mobile-nav-container mobile" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending && showNav" (click)="toggleNav()" [@fadeInFastAnimation]>
       <div class="mobile-nav" [@slideInOutAnimation]>
-        <a mat-button class="mobile-nav-button" routerLink="/home">
-          <mat-icon>home</mat-icon>
-          <span class="mobile-nav-text">Home</span>
-        </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/recipe/list">
-          <mat-icon>restaurant</mat-icon>
-          <span class="mobile-nav-text">Recipes</span>
-        </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/ingredient/list">
-          <mat-icon>kitchen</mat-icon>
-          <span class="mobile-nav-text">Ingredients</span>
-        </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/shopping/list">
-          <mat-icon>shopping_cart</mat-icon>
-          <span class="mobile-nav-text">Shopping List</span>
-        </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/ingredient/uom">
-          <mat-icon>square_foot</mat-icon>
-          <span class="mobile-nav-text">UOMs</span>
-        </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/profile/list">
-          <mat-icon>people</mat-icon>
-          <span class="mobile-nav-text">Authors</span>
-        </a><br/>
-        <a mat-button class="mobile-nav-button" routerLink="/about">
-          <mat-icon>info</mat-icon>
-          <span class="mobile-nav-text">About</span>
-        </a><br/>
+        <a *ngFor="let nav of mobileNavs" mat-button class="mobile-nav-button" routerLink="{{nav.link}}">
+          <mat-icon>{{nav.icon}}</mat-icon>
+          <span class="mobile-nav-text">{{nav.name}}</span>
+        </a>
         
         <div class="mobile-nav-bottom">
           <button mat-button class="mobile-nav-button" style="border: none" (click)="signOut()">

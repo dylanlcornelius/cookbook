@@ -1,19 +1,13 @@
 import { Model } from '@model';
-import { Ingredient } from 'src/app/ingredient/shared/ingredient.model';
+import { Ingredient } from '@ingredient';
 
 export class UserIngredient extends Model {
     uid: string;
     ingredients: Array<Ingredient>;
 
     constructor(data) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.uid = data.uid;
         this.ingredients = data.ingredients || [];
-    }
-
-    public getObject() {
-        const {id, ...userIngredient} = this;
-        return userIngredient;
     }
 }

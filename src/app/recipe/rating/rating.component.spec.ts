@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RatingComponent } from './rating.component';
-import { Recipe } from '../shared/recipe.model';
+import { Recipe } from '@recipe';
 
 describe('RatingComponent', () => {
   let component: RatingComponent;

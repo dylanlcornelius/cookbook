@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { UserItemService } from './user-item.service';
-import { UserItem } from './user-item.model';
-import { User } from 'src/app/user/shared/user.model';
+import { UserItemService } from '@userItemService';
+import { UserItem } from '@userItem';
+import { User } from '@user';
 import { of } from 'rxjs/internal/observable/of';
 import { ActionService } from '@actionService';
 import { FirestoreService } from '@firestoreService';
@@ -80,19 +80,13 @@ describe('UserItemService', () => {
 
   describe('update', () => {
     it('should update a user item record', () => {
-      const userItem = new UserItem({});
-
       spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'update');
-      spyOn(userItem, 'getId');
-      spyOn(userItem, 'getObject');
 
-      service.update(userItem);
+      service.update(new UserItem({}));
 
       expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.update).toHaveBeenCalled();
-      expect(userItem.getId).toHaveBeenCalled();
-      expect(userItem.getObject).toHaveBeenCalled();
     });
 
     it('should update user item records', () => {
@@ -106,32 +100,34 @@ describe('UserItemService', () => {
     });
   });
 
+  describe('formattedUpdate', () => {
+    it('should update with formatted data', () => {
+      spyOn(service, 'update');
+
+      service.formattedUpdate([{}], '', '');
+
+      expect(service.update).toHaveBeenCalled();
+    });
+  });
+
   describe('buyUserItem', () => {
     it('should update a user item record', () => {
-      const userItem = new UserItem({});
-
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(service, 'update');
       spyOn(actionService, 'commitAction');
 
-      service.buyUserItem(userItem, 1, false);
+      service.buyUserItem(1, false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(service.update).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalledTimes(1);
     });
 
     it('should update a user item record and mark it as completed', () => {
-      const userItem = new UserItem({});
-
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(service, 'update');
       spyOn(actionService, 'commitAction');
 
-      service.buyUserItem(userItem, 1, true);
+      service.buyUserItem(1, true);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(service.update).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalledTimes(2);
     });
   });

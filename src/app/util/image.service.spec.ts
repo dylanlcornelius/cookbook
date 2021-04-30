@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ImageService } from './image.service';
-import { Recipe } from '../recipe/shared/recipe.model';
+import { Recipe } from '@recipe';
 
 describe('ImageService', () => {
   let service: ImageService;

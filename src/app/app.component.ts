@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
 import { fadeComponentAnimation } from 'src/app/theme/animations';
-import { User } from './user/shared/user.model';
+import { User } from '@user';
 import { CurrentUserService } from './user/shared/current-user.service';
 
 @Component({

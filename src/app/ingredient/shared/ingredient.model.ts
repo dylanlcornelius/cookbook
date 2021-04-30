@@ -13,8 +13,7 @@ export class Ingredient extends Model {
     cartQuantity: Number;
 
     constructor (data) {
-        super();
-        this.id = data.id || '';
+        super(data);
         this.name = data.name || '';
         this.category = data.category || '';
         this.amount = data.amount || '';
