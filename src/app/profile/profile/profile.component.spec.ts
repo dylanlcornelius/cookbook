@@ -5,19 +5,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './profile.component';
 import { UserService } from '@userService';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { of } from 'rxjs';
 import { ActionService } from '@actionService';
 import { User } from '@user';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
-import { ImageService } from 'src/app/util/image.service';
+import { NotificationService } from '@notificationService';
+import { ImageService } from '@imageService';
 import { RecipeService } from '@recipeService';
-import { RecipeHistoryService } from 'src/app/recipe/shared/recipe-history.service';
+import { RecipeHistoryService } from '@recipeHistoryService';
 import { Recipe } from '@recipe';
-import { RecipeHistory } from 'src/app/recipe/shared/recipe-history.model';
+import { RecipeHistory } from '@recipeHistory';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;

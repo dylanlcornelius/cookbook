@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NotificationService } from './notification.service';
+import { NotificationService } from '@notificationService';
 import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { NotificationType } from '@notifications';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { Notification, SuccessNotification } from '@notification';
 
 describe('NotificationService', () => {
   let service: NotificationService;
@@ -20,7 +19,7 @@ describe('NotificationService', () => {
 
   describe('getNotification', () => {
     it('should return a subject of Notification', () => {
-      service.notification = new BehaviorSubject<Notification>(new Notification(NotificationType.SUCCESS, 'text'));
+      service.notification = new BehaviorSubject<Notification>(new SuccessNotification('text'));
 
       service.getNotification().pipe(take(1)).subscribe(notification => {
         expect(notification).toBeDefined();
@@ -30,7 +29,7 @@ describe('NotificationService', () => {
 
   describe('setNotification', () => {
     it('should set a subject with a Notification', () => {
-      service.setNotification(new Notification(NotificationType.SUCCESS, 'text'));
+      service.setNotification(new SuccessNotification('text'));
 
       service.notification.pipe(take(1)).subscribe(notification => {
         expect(notification).toBeDefined();

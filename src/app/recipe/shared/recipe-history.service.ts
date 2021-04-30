@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { FirestoreService } from '@firestoreService';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
-import { RecipeHistory } from './recipe-history.model';
+import { CurrentUserService } from '@currentUserService';
+import { RecipeHistory } from '@recipeHistory';
 
 @Injectable({
   providedIn: 'root'

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NotificationService } from './notification.service';
+import { NotificationService } from '@notificationService';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { Notification } from '@notification';
 
 @Component({
   selector: 'app-notification-modal',

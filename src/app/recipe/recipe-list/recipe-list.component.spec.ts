@@ -8,16 +8,16 @@ import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter } from 
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { IngredientService } from '@ingredientService';
-import { ImageService } from 'src/app/util/image.service';
+import { ImageService } from '@imageService';
 import { User } from '@user';
 
 import { RecipeListComponent } from './recipe-list.component';
 import { Recipe } from '@recipe';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
-import { RecipeHistoryService } from '../shared/recipe-history.service';
+import { CurrentUserService } from '@currentUserService';
+import { NotificationService } from '@notificationService';
+import { RecipeHistoryService } from '@recipeHistoryService';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;

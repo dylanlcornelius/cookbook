@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 
 import { AuthService } from '../shared/auth.service';
 import { User } from '@user';
-import { CurrentUserService } from '../shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({

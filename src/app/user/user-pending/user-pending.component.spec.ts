@@ -7,7 +7,7 @@ import { HomeComponent } from 'src/app/home/home.component';
 
 import { UserPendingComponent } from './user-pending.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from '../shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 describe('UserPendingComponent', () => {
   let component: UserPendingComponent;

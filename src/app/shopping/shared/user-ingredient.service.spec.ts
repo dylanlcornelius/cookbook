@@ -4,7 +4,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { FirestoreService } from '@firestoreService';
 import { UserIngredient } from '@userIngredient';
 import { of } from 'rxjs';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { User } from '@user';
 

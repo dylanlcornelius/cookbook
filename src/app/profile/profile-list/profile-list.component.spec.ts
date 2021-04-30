@@ -6,11 +6,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserService } from '@userService';
 import { RecipeService } from '@recipeService';
-import { ImageService } from 'src/app/util/image.service';
+import { ImageService } from '@imageService';
 import { User } from '@user';
 import { of } from 'rxjs';
 import { Recipe } from '@recipe';
-import { UtilService } from 'src/app/shared/util.service';
+import { UtilService } from '@utilService';
 
 describe('ProfileListComponent', () => {
   let component: ProfileListComponent;

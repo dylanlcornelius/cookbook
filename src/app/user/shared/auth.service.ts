@@ -5,7 +5,7 @@ import '@firebase/auth';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { User } from '@user';
-import { CurrentUserService } from './current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { first } from 'rxjs/operators';
 

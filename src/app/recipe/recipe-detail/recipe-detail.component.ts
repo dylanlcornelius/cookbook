@@ -2,16 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '@recipeService';
 import { IngredientService} from '@ingredientService';
-import { NotificationType } from '@notifications';
-import { ImageService } from 'src/app/util/image.service';
+import { ImageService } from '@imageService';
 import { Observable, combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
-import { UtilService } from 'src/app/shared/util.service';
-import { RecipeHistoryService } from '../shared/recipe-history.service';
+import { CurrentUserService } from '@currentUserService';
+import { NotificationService } from '@notificationService';
+import { SuccessNotification } from '@notification';
+import { UtilService } from '@utilService';
+import { RecipeHistoryService } from '@recipeHistoryService';
 import { AuthorFilter, CategoryFilter } from '@recipeFilterService';
 
 @Component({
@@ -92,7 +91,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
           this.recipe.hasImage = true;
           this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-          this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Recipe image uploaded!'));
+          this.notificationService.setNotification(new SuccessNotification('Image uploaded!'));
         } else {
           this.recipeImageProgress = progress;
         }
@@ -121,7 +120,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     if (id) {
       self.recipeService.delete(id);
       self.deleteFile(id);
-      self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Recipe Deleted!'));
+      self.notificationService.setNotification(new SuccessNotification('Recipe deleted!'));
       self.router.navigate(['/recipe/list']);
     }
   }

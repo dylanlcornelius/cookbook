@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { User } from '@user';
-import { CurrentUserService } from './current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 @Injectable({
   providedIn: 'root'

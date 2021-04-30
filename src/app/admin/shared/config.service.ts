@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Config } from '@config';
 import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 
 @Injectable({

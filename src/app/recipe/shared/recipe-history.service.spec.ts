@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { FirestoreService } from '@firestoreService';
 import { of } from 'rxjs';
-import { RecipeHistory } from './recipe-history.model';
+import { RecipeHistory } from '@recipeHistory';
 
-import { RecipeHistoryService } from './recipe-history.service';
+import { RecipeHistoryService } from '@recipeHistoryService';
 
 describe('RecipeHistoryService', () => {
   let service: RecipeHistoryService;

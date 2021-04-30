@@ -3,9 +3,8 @@ import { RouterModule } from '@angular/router';
 
 import { NotificationModalComponent } from './notification-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NotificationService } from './notification.service';
-import { NotificationType } from '@notifications';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
+import { NotificationService } from '@notificationService';
+import { SuccessNotification } from '@notification';
 import { BehaviorSubject } from 'rxjs';
 
 describe('NotificationModalComponent', () => {
@@ -39,7 +38,7 @@ describe('NotificationModalComponent', () => {
 
   describe('load', () => {
     it('should listen to the notification service and handle a value', fakeAsync(() => {
-      spyOn(notificationService, 'getNotification').and.returnValue(new BehaviorSubject(new Notification(NotificationType.SUCCESS, 'text')));
+      spyOn(notificationService, 'getNotification').and.returnValue(new BehaviorSubject(new SuccessNotification('text')));
       spyOn(notificationService, 'setNotification');
 
       component.load();

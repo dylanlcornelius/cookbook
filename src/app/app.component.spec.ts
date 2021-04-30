@@ -6,7 +6,7 @@ import { User } from '@user';
 
 import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from './user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 describe('AppComponent', () => {
   let currentUserService: CurrentUserService;

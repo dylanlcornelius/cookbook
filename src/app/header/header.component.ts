@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 import { AuthService } from '../user/shared/auth.service';
 import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../theme/animations';
 import { User } from '@user';
-import { CurrentUserService } from '../user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { NavigationService } from '@navigationService';
 import { Navigation, NavigationMenu } from '@navigation';
 

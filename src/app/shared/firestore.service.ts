@@ -3,7 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
-import { CurrentUserService } from '../user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
 
 @Injectable({

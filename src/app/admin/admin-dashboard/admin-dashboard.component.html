@@ -3,9 +3,8 @@
 <ng-template #table let-data="data">
   <h2>{{data.title}}</h2>
 
+  <button mat-raised-button color="primary" (click)="data.add(data.self)" *ngIf="data.add">Add</button>
   <div class="table-container mat-elevation-z8">
-    <button mat-raised-button color="primary" (click)="data.add(data.self)" *ngIf="data.add">Add</button>
-
     <table mat-table #table [dataSource]="data.dataSource">
       <ng-contaner *ngFor="let column of data.displayedColumns" [matColumnDef]="column">
         <th mat-header-cell *matHeaderCellDef>{{column}}</th>
@@ -21,7 +20,7 @@
       <ng-container [matColumnDef]="'delete'">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="accent" (click)="data.remove(data.self, element.id, element.name)">Delete</button>
+          <button mat-raised-button color="accent" (click)="data.remove(data.self, element.id, element.name)" *ngIf="data.remove">Delete</button>
         </td>
       </ng-container>
   

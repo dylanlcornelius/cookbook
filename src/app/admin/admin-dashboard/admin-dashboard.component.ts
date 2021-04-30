@@ -5,7 +5,6 @@ import { UserService } from '@userService';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
 import { User } from '@user';
-import { NotificationType } from '@notifications';
 import { combineLatest, Subject } from 'rxjs';
 import { Ingredient } from '@ingredient';
 import { Recipe } from '@recipe';
@@ -14,8 +13,8 @@ import { UserItem } from '@userItem';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { takeUntil } from 'rxjs/operators';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
+import { SuccessNotification } from '@notification';
+import { NotificationService } from '@notificationService';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
 
@@ -224,7 +223,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.userIngredientContext.dataSource = self.originalUserIngredients;
     self.userItemContext.dataSource = self.originalUserItems;
 
-    self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Changes reverted'));
+    self.notificationService.setNotification(new SuccessNotification('Changes reverted'));
   }
 
   save() {
@@ -240,6 +239,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.userIngredientService.update(self.userIngredientContext.dataSource);
     self.userItemService.update(self.userItemContext.dataSource);
 
-    self.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Changes saved!'));
+    self.notificationService.setNotification(new SuccessNotification('Changes saved!'));
   }
 }

@@ -3,10 +3,10 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { fadeComponentAnimation } from 'src/app/theme/animations';
 import { User } from '@user';
-import { CurrentUserService } from './user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
   isGuest: Observable<boolean>;
 
   constructor(
+    private overlayContainer: OverlayContainer,
     private title: Title,
     private currentUserService: CurrentUserService
   ) {
@@ -32,6 +33,12 @@ export class AppComponent implements OnInit {
     this.user = this.currentUserService.getCurrentUser();
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
     this.isGuest = this.currentUserService.getIsGuest();
+
+    this.user.subscribe(user => {
+      if (user.theme) {
+        this.overlayContainer.getContainerElement().classList.add('dark');
+      }
+    });
   }
 
   routeTransition(outlet) {

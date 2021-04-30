@@ -8,18 +8,17 @@ import {
 } from '@angular/forms';
 import { ActionService } from '@actionService';
 import { User } from '@user';
-import { NotificationType } from '@notifications';
 import { ActionLabel } from '@actions';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { CurrentUserService } from 'src/app/user/shared/current-user.service';
+import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { Subject, Observable, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from 'src/app/shared/notification-modal/notification.service';
-import { Notification } from 'src/app/shared/notification-modal/notification.model';
-import { ImageService } from 'src/app/util/image.service';
-import { UtilService } from 'src/app/shared/util.service';
-import { RecipeHistoryService } from 'src/app/recipe/shared/recipe-history.service';
+import { NotificationService } from '@notificationService';
+import { SuccessNotification } from '@notification';
+import { ImageService } from '@imageService';
+import { UtilService } from '@utilService';
+import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeService } from '@recipeService';
 
 @Component({
@@ -200,6 +199,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.userService.update(user.getObject(), user.getId());
     this.currentUserService.setCurrentUser(user);
-    this.notificationService.setNotification(new Notification(NotificationType.SUCCESS, 'Profile Information Updated!'));
+    this.notificationService.setNotification(new SuccessNotification('Profile updated!'));
   }
 }
