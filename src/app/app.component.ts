@@ -37,6 +37,8 @@ export class AppComponent implements OnInit {
     this.user.subscribe(user => {
       if (user.theme) {
         this.overlayContainer.getContainerElement().classList.add('dark');
+      } else {
+        this.overlayContainer.getContainerElement().classList.remove('dark');
       }
     });
   }
