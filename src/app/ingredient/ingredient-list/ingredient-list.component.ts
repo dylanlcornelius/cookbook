@@ -87,17 +87,21 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     }
   }
 
+  findIngredient(id) {
+    return this.dataSource.data.find(x => x.id === id);
+  }
+
   editIngredient(id) {
     let data = this.userIngredients.find(x => x.id === id);
-    const ingredient = this.dataSource.data.find(x => x.id === id);
     if (!data) {
       this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: 0});
       data = this.userIngredients.find(x => x.id === id);
     }
+
     this.ingredientModalParams = {
       data: data,
       self: this,
-      text: 'Edit pantry quantity for ' + ingredient.name,
+      text: 'Edit pantry quantity for ' + this.findIngredient(id).name,
       function: this.editIngredientEvent
     };
   }
@@ -108,7 +112,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
   removeIngredient(id) {
     const data = this.userIngredients.find(x => x.id === id);
-    const ingredient = this.dataSource.data.find(x => x.id === id);
+    const ingredient = this.findIngredient(id);
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
@@ -118,7 +122,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
   addIngredient(id) {
     const data = this.userIngredients.find(x => x.id === id);
-    const ingredient = this.dataSource.data.find(x => x.id === id);
+    const ingredient = this.findIngredient(id);
     if (ingredient.amount) {
       if (data) {
         data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);

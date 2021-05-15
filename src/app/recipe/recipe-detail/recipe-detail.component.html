@@ -11,7 +11,7 @@
 
     <mat-card-header class="center center-text">
       <div class="rating-buttons">
-        <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="uid"></app-rating>
+        <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="user.uid"></app-rating>
       </div>
       <div class="image-buttons" *ngIf="(online$ | async)">
         <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
@@ -30,6 +30,14 @@
     </mat-card-header>
     
     <img mat-card-image *ngIf="recipeImage" [src]="recipeImage" alt=""/>
+
+    <mat-card-actions>
+      <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
+      <button mat-button color="warn" (click)="removeIngredients(recipe.id)">
+        <span>Cook</span>
+        <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
+      </button>
+    </mat-card-actions>
 
     <div class="container">
       <mat-card-content class="center-text">
@@ -70,7 +78,7 @@
 
           <span *ngIf="lastDateCooked">
             <dt>Last Date Cooked</dt>
-            <dd>{{lastDateCooked}}</dd>
+            <dd>{{lastDateCooked | date:'mediumDate'}}</dd>
           </span>
         </dl>
       </mat-card-content>
@@ -105,6 +113,7 @@
       </a>
 
       <button mat-raised-button (click)="setAuthorFilter(recipe.author)" class="author-link" *ngIf="recipe.author">by {{recipe.author}}</button>
+      
       <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)">
         <mat-icon>delete</mat-icon>
       </a>

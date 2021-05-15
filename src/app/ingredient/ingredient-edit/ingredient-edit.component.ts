@@ -8,7 +8,7 @@ import {
   NgForm,
   Validators
 } from '@angular/forms';
-import { UOM } from '../shared/uom.emun';
+import { UOM } from '@UOMConverson';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

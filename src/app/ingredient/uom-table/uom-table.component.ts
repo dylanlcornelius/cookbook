@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { UOM, UOMConversion } from '@UOMConverson';
 
 @Component({
   selector: 'app-uom-table',

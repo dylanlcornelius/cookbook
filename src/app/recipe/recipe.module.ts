@@ -11,7 +11,6 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RatingComponent } from './rating/rating.component';
-import { RecipeIngredientModalComponent } from './recipe-ingredient-modal/recipe-ingredient-modal.component';
 
 import { SharedModule } from '@sharedModule';
 import { IngredientModule } from '../ingredient/ingredient.module';
@@ -22,7 +21,6 @@ import { IngredientModule } from '../ingredient/ingredient.module';
     RecipeDetailComponent,
     RecipeEditComponent,
     RatingComponent,
-    RecipeIngredientModalComponent,
   ],
   imports: [
     CommonModule,

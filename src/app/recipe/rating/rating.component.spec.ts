@@ -24,6 +24,19 @@ describe('RatingComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should update user rating', () => {
+    const rating = {uid: 'uid', rating: 1}
+
+    spyOn(component, 'findUserRating').and.returnValue({ rating: 1 });
+
+    component.uid = 'uid';
+    component.recipe = new Recipe({ ratings: [] });
+    component.recipe = new Recipe({ ratings: [rating] });
+    component.ngOnChanges();
+
+    expect(component.findUserRating).toHaveBeenCalled();
+  });
+
   describe('findUserRating', () => {
     it('should return a user rating', () => {
       const rating = {uid: 'uid', rating: 1}
