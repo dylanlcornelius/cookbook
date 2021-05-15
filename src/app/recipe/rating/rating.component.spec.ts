@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RatingComponent } from './rating.component';
 import { Recipe } from '@recipe';
-import { SimpleChange } from '@angular/core';
 
 describe('RatingComponent', () => {
   let component: RatingComponent;
