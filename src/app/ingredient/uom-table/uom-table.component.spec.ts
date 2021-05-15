@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { UomTableComponent } from './uom-table.component';
-import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { UOM, UOMConversion } from '@UOMConverson';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 

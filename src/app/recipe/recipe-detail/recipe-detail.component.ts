@@ -12,6 +12,10 @@ import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { AuthorFilter, CategoryFilter } from '@recipeFilterService';
+import { RecipeIngredientService } from '@recipeIngredientService';
+import { User } from '@user';
+import { UserIngredientService } from '@userIngredientService';
+import { UserIngredient } from '@userIngredient';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -25,13 +29,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   loading = true;
   validationModalParams;
 
-  uid: string;
+  user: User;
   recipe: Recipe;
+  userIngredient: UserIngredient;
   ingredients = [];
   recipeImage: string;
   recipeImageProgress;
   timesCooked: number;
-  lastDateCooked: string;
+  lastDateCooked: Date;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,6 +48,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private notificationService: NotificationService,
     private utilService: UtilService,
+    private recipeIngredientService: RecipeIngredientService,
+    private userIngredientService: UserIngredientService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -58,14 +65,25 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   load() {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.uid = user.uid;
+      this.user = user;
       
       const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
       const ingredients$ = this.ingredientService.get();
+      const userIngredient$ = this.userIngredientService.get(this.user.defaultShoppingList);
       const recipeHistory$ = this.recipeHistoryService.get(user.defaultShoppingList, this.route.snapshot.params['id']);
 
-      combineLatest([recipe$, ingredients$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipeHistory]) => {
+      combineLatest([recipe$, ingredients$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, userIngredient, recipeHistory]) => {
         this.recipe = recipe;
+        this.userIngredient = userIngredient;
+
+        ingredients.forEach(ingredient => {
+          userIngredient.ingredients.forEach(myIngredient => {
+            if (ingredient.id === myIngredient.id) {
+              myIngredient.uom = ingredient.uom;
+              myIngredient.amount = ingredient.amount;
+            }
+          });
+        });
 
         this.imageService.download(this.recipe).then(url => {
           if (url) {
@@ -74,9 +92,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         }, () => {});
 
         this.timesCooked = recipeHistory.timesCooked;
-        this.lastDateCooked = recipeHistory.lastDateCooked;
+        const date = recipeHistory.lastDateCooked.split('/');
+        this.lastDateCooked = new Date(Number.parseInt(date[2]), Number.parseInt(date[1]) - 1, Number.parseInt(date[0]));
 
         this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
+        this.recipe.ingredients = this.ingredients;
+        this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, this.userIngredient);
         this.loading = false;
       });
     });
@@ -128,7 +149,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   setCategoryFilter = (filter) => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
 
+  addIngredients() {
+    this.recipeIngredientService.addIngredients(this.recipe, this.userIngredient, this.user.defaultShoppingList);
+  }
+
+  removeIngredients() {
+    this.recipeIngredientService.removeIngredients(this.recipe, this.userIngredient, this.user.defaultShoppingList);
+  }
+
   onRate(rating, recipe) {
-    this.recipeService.rateRecipe(rating, this.uid, recipe);
+    this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
 }

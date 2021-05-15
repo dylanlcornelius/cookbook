@@ -16,13 +16,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LoadingModalComponent } from './loading-modal/loading-modal.component';
 import { NotificationModalComponent } from './notification-modal/notification-modal.component';
+import { RecipeIngredientModalComponent } from './recipe-ingredient-modal/recipe-ingredient-modal.component';
 import { ValidationModalComponent } from './validation-modal/validation-modal.component';
 import { ModalComponent } from './modal/modal.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { UOMConversion } from '@UOMConverson';
 
 @NgModule({
   declarations: [
     LoadingModalComponent,
     NotificationModalComponent,
+    RecipeIngredientModalComponent,
     ValidationModalComponent,
     ModalComponent,
   ],
@@ -32,6 +36,7 @@ import { ModalComponent } from './modal/modal.component';
     MatInputModule,
     MatCardModule,
     MatPaginatorModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -60,8 +65,12 @@ import { ModalComponent } from './modal/modal.component';
     ReactiveFormsModule,
     LoadingModalComponent,
     NotificationModalComponent,
+    RecipeIngredientModalComponent,
     ValidationModalComponent,
     ModalComponent,
+  ],
+  providers: [
+    UOMConversion,
   ]
 })
 export class SharedModule { }

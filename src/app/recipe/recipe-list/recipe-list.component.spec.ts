@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angul
 import { RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
-import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { UOMConversion } from '@UOMConverson';
 import { RecipeService } from '@recipeService';
 import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
@@ -16,8 +16,7 @@ import { Recipe } from '@recipe';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
-import { NotificationService } from '@notificationService';
-import { RecipeHistoryService } from '@recipeHistoryService';
+import { RecipeIngredientService } from '@recipeIngredientService';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -26,11 +25,9 @@ describe('RecipeListComponent', () => {
   let recipeService: RecipeService;
   let recipeFilterService: RecipeFilterService;
   let userIngredientService: UserIngredientService;
-  let uomConversion: UOMConversion;
   let ingredientService: IngredientService;
   let imageService: ImageService;
-  let notificationService: NotificationService;
-  let recipeHistoryService: RecipeHistoryService;
+  let recipeIngredientService: RecipeIngredientService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -39,13 +36,13 @@ describe('RecipeListComponent', () => {
         MatTableModule
       ],
       providers: [
-        UOMConversion,
         CurrentUserService,
         RecipeService,
         RecipeFilterService,
         UserIngredientService,
         IngredientService,
-        ImageService
+        ImageService,
+        UOMConversion,
       ],
       declarations: [
         RecipeListComponent,
@@ -65,11 +62,9 @@ describe('RecipeListComponent', () => {
     recipeService = TestBed.inject(RecipeService);
     recipeFilterService = TestBed.inject(RecipeFilterService);
     userIngredientService = TestBed.inject(UserIngredientService);
-    uomConversion = TestBed.inject(UOMConversion);
     ingredientService = TestBed.inject(IngredientService);
     imageService = TestBed.inject(ImageService);
-    notificationService = TestBed.inject(NotificationService);
-    recipeHistoryService = TestBed.inject(RecipeHistoryService);
+    recipeIngredientService = TestBed.inject(RecipeIngredientService);
   });
 
   it('should create', () => {
@@ -116,7 +111,7 @@ describe('RecipeListComponent', () => {
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(component, 'getRecipeCount');
+      spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(component, 'setSelectedFilterCount');
 
@@ -128,7 +123,7 @@ describe('RecipeListComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
@@ -170,7 +165,7 @@ describe('RecipeListComponent', () => {
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(component, 'getRecipeCount');
+      spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(component, 'setSelectedFilterCount');
 
@@ -182,7 +177,7 @@ describe('RecipeListComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
@@ -217,7 +212,7 @@ describe('RecipeListComponent', () => {
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(component, 'getRecipeCount');
+      spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(component, 'setSelectedFilterCount');
 
@@ -229,174 +224,10 @@ describe('RecipeListComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
-  });
-
-  describe('getRecipeCount', () => {
-    it('should count the available number of recipes', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [{
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      }];
-
-      spyOn(uomConversion, 'convert').and.returnValue(5);
-
-      const result = component.getRecipeCount('id');
-
-      expect(result).toEqual(2);
-      expect(uomConversion.convert).toHaveBeenCalled();
-    });
-
-    it('should handle duplicate ingredients', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [{
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      },
-      {
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      }];
-
-      spyOn(uomConversion, 'convert').and.returnValue(5);
-
-      const result = component.getRecipeCount('id');
-
-      expect(result).toEqual(0);
-      expect(uomConversion.convert).toHaveBeenCalled();
-    });
-
-    it('should handle an invalid uom conversion', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [{
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      }];
-
-      spyOn(uomConversion, 'convert').and.returnValue(false);
-
-      const result = component.getRecipeCount('id');
-
-      expect(result).toEqual(0);
-      expect(uomConversion.convert).toHaveBeenCalled();
-    });
-
-    it('should skip unavailble ingredients', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [{
-        id: 'ingredientId2',
-        uom: 'y',
-        amount: 2
-      }];
-
-      spyOn(uomConversion, 'convert');
-
-      const result = component.getRecipeCount('id');
-
-      expect(result).toEqual(0);
-      expect(uomConversion.convert).not.toHaveBeenCalled();
-    });
-
-    it('should skip deleted ingredients', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10,
-          name: null
-        },
-        {
-          id: 'ingredientId2',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [{
-        id: 'ingredientId2',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      }];
-
-      spyOn(uomConversion, 'convert').and.returnValue(5);
-
-      const result = component.getRecipeCount('id');
-
-      expect(result).toEqual(2);
-      expect(uomConversion.convert).toHaveBeenCalled();
-    });
-
-    it('should handle no user ingredients', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [];
-
-      spyOn(uomConversion, 'convert');
-
-      const result = component.getRecipeCount('id');
-
-      expect(result).toEqual(0);
-      expect(uomConversion.convert).not.toHaveBeenCalled();
-    });
   });
 
   describe('setSelectedFilterCount', () => {
@@ -536,256 +367,45 @@ describe('RecipeListComponent', () => {
     });
   });
 
-  describe('removeIngredients', () => {
-    it('should remove an ingredient from the pantry', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
+  describe('findRecipe', () => {
+    it('should find a recipe', () => {
+      component.dataSource = new MatTableDataSource([new Recipe({id: 'id'})]);
 
-      component.userIngredients = [{
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2
-      }];
+      const result = component.findRecipe('id');
 
-      component.user = new User({});
-
-      spyOn(uomConversion, 'convert').and.returnValue(5);
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-      spyOn(recipeHistoryService, 'add');
-
-      component.removeIngredients('id');
-
-      expect(uomConversion.convert).toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
+      expect(result).toBeDefined();
     });
 
-    it('should show an error if the uom conversion is invalid', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
+    it('should not find a recipe', () => {
+      component.dataSource = new MatTableDataSource([new Recipe({id: 'id2'})]);
 
-      component.userIngredients = [{
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2
-      }];
+      const result = component.findRecipe('id');
 
-      component.user = new User({});
-
-      spyOn(uomConversion, 'convert').and.returnValue(false);
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-      spyOn(recipeHistoryService, 'add');
-
-      component.removeIngredients('id');
-
-      expect(uomConversion.convert).toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
-    });
-
-    it('should handle recipes without ingredients', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
-      }]);
-
-      component.userIngredients = [{
-        id: 'ingredientId2',
-        uom: 'y',
-        amount: 2
-      }];
-
-      component.user = new User({});
-
-      spyOn(uomConversion, 'convert');
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-      spyOn(recipeHistoryService, 'add');
-
-      component.removeIngredients('id');
-
-      expect(uomConversion.convert).not.toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
-    });
-
-    it('should do nothing if recipe count if NaN', () => {
-      component.dataSource = new MatTableDataSource([{id: 'id'}]);
-      component.user = new User({});
-
-      spyOn(uomConversion, 'convert');
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-      spyOn(recipeHistoryService, 'add');
-
-      component.removeIngredients('id');
-
-      expect(uomConversion.convert).not.toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
-      expect(component.getRecipeCount).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
+      expect(result).toBeUndefined();
     });
   });
 
   describe('addIngredients', () => {
-    it('should add an ingredient to the cart', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 1,
-        ingredients: [{}]
-      }]);
+    it('should add ingredients', () => {
+      spyOn(component, 'findRecipe').and.returnValue(new Recipe({}));
+      spyOn(recipeIngredientService, 'addIngredients');
 
-      spyOn(notificationService, 'setNotification');
+      component.addIngredients('');
 
-      component.addIngredients('id');
-
-      expect(component.recipeIngredientModalParams).toBeDefined();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
-    });
-
-    it('should show an error if the uom conversion is invalid', () => {
-       component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 0,
-        ingredients: []
-      }]);
-      
-      spyOn(notificationService, 'setNotification');
-
-      component.addIngredients('id');
-
-      expect(component.recipeIngredientModalParams).toBeUndefined();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-    });
-
-    it('should do nothing if recipe count is NaN', () => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id'
-      }]);
-
-      spyOn(notificationService, 'setNotification');
-
-      component.addIngredients('id');
-
-      expect(component.recipeIngredientModalParams).toBeUndefined();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
+      expect(component.findRecipe).toHaveBeenCalled();
+      expect(recipeIngredientService.addIngredients).toHaveBeenCalled();
     });
   });
 
-  describe('addIngredientsEvent', () => {
-    beforeEach(() => {
-      component.dataSource = new MatTableDataSource([{
-        id: 'id',
-        count: 0
-      }]);
-
-      component.user = new User({});
-    });
-
-    it('should add an ingredient to the cart', () => {
-      const ingredients = [{
-        id: 'ingredientId',
-        uom: 'x',
-        quantity: 10
-      }];
-
-      component.userIngredients = [{
-        id: 'ingredientId',
-        uom: 'y',
-        amount: 2
-      }];
-
-      spyOn(uomConversion, 'convert').and.returnValue(5);
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-
-      component.addIngredientsEvent(component, ingredients);
-
-      expect(uomConversion.convert).toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-    });
-
-    it('should show an error if the uom conversion is invalid', () => {
-       const ingredients =  [{
-        id: 'ingredientId',
-        uom: 'x',
-        quantity: 10
-      }];
-
-      component.userIngredients = [{
-        id: 'ingredientId'
-      }];
-      
-      spyOn(uomConversion, 'convert').and.returnValue(false);
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-
-      component.addIngredientsEvent(component, ingredients);
-
-      expect(uomConversion.convert).toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-    });
-
-    it('should skip ingredients that are not available', () => {
-      const ingredients = [{
-        id: 'ingredientId',
-        uom: 'x',
-        quantity: 10
-      }];
-
-      component.userIngredients = [{
-        id: 'ingredientId2'
-      }];
-      
-      spyOn(uomConversion, 'convert');
-      spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(component, 'getRecipeCount');
-      spyOn(notificationService, 'setNotification');
-
-      component.addIngredientsEvent(component, ingredients);
-
-      expect(uomConversion.convert).not.toHaveBeenCalled();
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(component.getRecipeCount).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+  describe('removeIngredients', () => {
+    it('should remove ingredients', () => {
+      spyOn(component, 'findRecipe').and.returnValue(new Recipe({}));
+      spyOn(recipeIngredientService, 'removeIngredients');
+  
+      component.removeIngredients('');
+  
+      expect(component.findRecipe).toHaveBeenCalled();
+      expect(recipeIngredientService.removeIngredients).toHaveBeenCalled();
     });
   });
 

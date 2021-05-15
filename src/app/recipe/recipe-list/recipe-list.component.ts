@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { UserIngredientService } from '@userIngredientService';
-import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
 import { IngredientService } from '@ingredientService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -11,12 +10,11 @@ import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
-import { NotificationService } from '@notificationService';
-import { FailureNotification, InfoNotification, SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { User } from '@user';
-import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from '@recipeFilterService';
+import { UserIngredient } from '@userIngredient';
+import { RecipeIngredientService } from '@recipeIngredientService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -26,7 +24,6 @@ import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, Search
 export class RecipeListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
-  recipeIngredientModalParams;
 
   user: User;
 
@@ -34,8 +31,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   searchFilter = '';
 
   dataSource;
-  id: string;
-  userIngredients;
+  userIngredient: UserIngredient;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -45,12 +41,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private recipeFilterService: RecipeFilterService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
-    private recipeHistoryService: RecipeHistoryService,
-    private uomConversion: UOMConversion,
     private imageService: ImageService,
     private currentUserService: CurrentUserService,
-    private notificationService: NotificationService,
     private utilService: UtilService,
+    private recipeIngredientService: RecipeIngredientService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -67,16 +61,15 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    const user$ = this.currentUserService.getCurrentUser();
-    const recipes$ = this.recipeService.get();
-    const ingredients$ = this.ingredientService.get();
-
-    combineLatest([user$, recipes$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, recipes, ingredients]) => {
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      this.userIngredientService.get(this.user.defaultShoppingList).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredient => {
-        this.id = userIngredient.id;
-        this.userIngredients = userIngredient.ingredients;
+      const recipes$ = this.recipeService.get();
+      const ingredients$ = this.ingredientService.get();
+      const userIngredient$ = this.userIngredientService.get(this.user.defaultShoppingList);
+
+      combineLatest([recipes$, ingredients$, userIngredient$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, ingredients, userIngredient]) => {
+        this.userIngredient = userIngredient;
         ingredients.forEach(ingredient => {
           userIngredient.ingredients.forEach(myIngredient => {
             if (ingredient.id === myIngredient.id) {
@@ -124,7 +117,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const categories = [];
         const authors = [];
         recipes.forEach(recipe => {
-          recipe.count = this.getRecipeCount(recipe.id);
+          recipe.count = this.recipeIngredientService.getRecipeCount(recipe, this.userIngredient);
           this.imageService.download(recipe).then(url => {
             if (url) {
               recipe.image = url;
@@ -160,38 +153,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         this.loading = false;
       });
     });
-  }
-
-  getRecipeCount(id) {
-    let recipeCount;
-    let ingredientCount = 0;
-    const recipe = this.dataSource.data.find(x => x.id === id);
-    if (recipe.ingredients.length === 0 || this.userIngredients.length === 0) {
-      return 0;
-    }
-    recipe.ingredients.forEach(recipeIngredient => {
-      // handle deleted ingredients
-      if (recipeIngredient.name === null) {
-        ingredientCount++;
-        return;
-      }
-
-      this.userIngredients.forEach(ingredient => {
-        if (recipeIngredient.id === ingredient.id) {
-          ingredientCount++;
-          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-          if (value && (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
-            recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
-          }
-        }
-      });
-    });
-
-    // user doesn't have all recipe ingredients
-    if (ingredientCount !== recipe.ingredients.length || recipeCount === undefined) {
-      return 0;
-    }
-    return recipeCount;
   }
 
   setSelectedFilterCount() {
@@ -254,75 +215,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  removeIngredients(id) {
-    const currentRecipe = this.dataSource.data.find(x => x.id === id);
-    if (currentRecipe.ingredients) {
-      currentRecipe.ingredients.forEach(recipeIngredient => {
-        this.userIngredients.forEach(ingredient => {
-          if (recipeIngredient.id === ingredient.id) {
-            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-            if (value) {
-              ingredient.pantryQuantity = Math.min(ingredient.pantryQuantity - Number(value), 0);
-            } else {
-              this.notificationService.setNotification(new FailureNotification('Calculation error!'));
-            }
-          }
-        });
-      });
-      this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
-
-      this.dataSource.data.forEach(recipe => {
-        recipe.count = this.getRecipeCount(recipe.id);
-      });
-
-    }
-
-    this.recipeHistoryService.add(this.user.defaultShoppingList, id);
-    this.notificationService.setNotification(new SuccessNotification('Recipe cooked!'));
+  findRecipe(id: string) {
+    return this.dataSource.data.find(x => x.id === id);
   }
 
-  addIngredients(id) {
-    const currentRecipe = this.dataSource.data.find(x => x.id === id);
-    if (!Number.isNaN(currentRecipe.count) && currentRecipe.ingredients && currentRecipe.ingredients.length > 0) {
-      this.recipeIngredientModalParams = {
-        function: this.addIngredientsEvent,
-        ingredients: currentRecipe.ingredients,
-        self: this
-      };
-    } else if (currentRecipe.ingredients && currentRecipe.ingredients.length === 0) {
-      this.notificationService.setNotification(new InfoNotification('Recipe has no ingredients'));
-    }
+  addIngredients(id: string) {
+    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.userIngredient, this.user.defaultShoppingList);
   }
 
-  addIngredientsEvent(self, ingredients) {
-    ingredients.forEach(recipeIngredient => {
-      let hasIngredient = false;
-      self.userIngredients.forEach(ingredient => {
-        if (recipeIngredient.id === ingredient.id) {
-          const value = self.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
-          if (value) {
-            ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
-          } else {
-            self.notificationService.setNotification(new FailureNotification('Calculation error!'));
-          }
-          hasIngredient = true;
-        }
-      });
-      if (!hasIngredient) {
-        self.userIngredients.push({
-          id: String(recipeIngredient.id),
-          pantryQuantity: 0,
-          cartQuantity: Number(recipeIngredient.amount)
-        });
-      }
-    });
-
-    self.userIngredientService.formattedUpdate(self.userIngredients, self.user.defaultShoppingList, self.id);
-    self.dataSource.data.forEach(recipe => {
-      recipe.count = self.getRecipeCount(recipe.id);
-    });
-
-    self.notificationService.setNotification(new SuccessNotification('Added to list!'));
+  removeIngredients(id: string) {
+    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.userIngredient, this.user.defaultShoppingList);
   }
 
   onRate(rating, recipe) {

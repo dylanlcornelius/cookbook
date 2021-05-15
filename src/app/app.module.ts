@@ -10,7 +10,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './user/login/login.component';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
-import { UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { UOMConversion } from '@UOMConverson';
 
 import { SharedModule } from '@sharedModule';
 

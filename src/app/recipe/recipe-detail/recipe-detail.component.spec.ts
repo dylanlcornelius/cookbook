@@ -16,6 +16,10 @@ import { NotificationService } from '@notificationService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeHistory } from '@recipeHistory';
 import { UtilService } from '@utilService';
+import { UOMConversion } from '@UOMConverson';
+import { UserIngredient } from '@userIngredient';
+import { UserIngredientService } from '@userIngredientService';
+import { RecipeIngredientService } from '@recipeIngredientService';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -27,6 +31,8 @@ describe('RecipeDetailComponent', () => {
   let notificationService: NotificationService;
   let recipeHistoryService: RecipeHistoryService;
   let utilService: UtilService;
+  let userIngredientService: UserIngredientService;
+  let recipeIngredientService: RecipeIngredientService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -34,6 +40,9 @@ describe('RecipeDetailComponent', () => {
         RouterModule.forRoot([
           { path: 'recipe/list', component: RecipeListComponent }
         ])
+      ],
+      providers: [
+        UOMConversion,
       ],
       declarations: [ RecipeDetailComponent ],
       schemas: [
@@ -54,6 +63,8 @@ describe('RecipeDetailComponent', () => {
     notificationService = TestBed.inject(NotificationService);
     recipeHistoryService = TestBed.inject(RecipeHistoryService);
     utilService = TestBed.inject(UtilService);
+    userIngredientService = TestBed.inject(UserIngredientService);
+    recipeIngredientService = TestBed.inject(RecipeIngredientService);
   });
 
   it('should create', () => {
@@ -64,15 +75,27 @@ describe('RecipeDetailComponent', () => {
     it('should load a recipe with an image', fakeAsync(() => {
       const user = new User({});
       const recipe = new Recipe({});
-      const ingredients = [new Ingredient({})];
+      const ingredients = [new Ingredient({id: 'ingredient'})];
+      const userIngredient = new UserIngredient({
+        ingredients: [
+          {
+            id: 'ingredient'
+          },
+          {
+            id: 'ingredient2'
+          }
+        ]
+      });
       const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(ingredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
       
@@ -81,23 +104,28 @@ describe('RecipeDetailComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
 
     it('should load a recipe without an image', fakeAsync(() => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
+      const userIngredient = new UserIngredient({});
       const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(ingredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
       
@@ -106,23 +134,28 @@ describe('RecipeDetailComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
 
     it('should handle image errors', fakeAsync(() => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
+      const userIngredient = new UserIngredient({});
       const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(ingredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
       
@@ -131,9 +164,11 @@ describe('RecipeDetailComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
   });
 
@@ -253,6 +288,26 @@ describe('RecipeDetailComponent', () => {
       component.setAuthorFilter('filter');
 
       expect(utilService.setListFilter).toHaveBeenCalled();
+    });
+  });
+
+  describe('addIngredients', () => {
+    it('should add ingredients', () => {
+      spyOn(recipeIngredientService, 'addIngredients');
+
+      component.addIngredients();
+
+      expect(recipeIngredientService.addIngredients).toHaveBeenCalled();
+    });
+  });
+
+  describe('removeIngredients', () => {
+    it('should remove ingredients', () => {
+      spyOn(recipeIngredientService, 'removeIngredients');
+  
+      component.removeIngredients();
+  
+      expect(recipeIngredientService.removeIngredients).toHaveBeenCalled();
     });
   });
 

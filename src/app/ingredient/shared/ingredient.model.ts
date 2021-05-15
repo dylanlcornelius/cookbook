@@ -1,5 +1,5 @@
 import { Model } from '@model';
-import { UOM } from './uom.emun';
+import { UOM } from '@UOMConverson';
 
 export class Ingredient extends Model {
     name: string;
@@ -8,9 +8,10 @@ export class Ingredient extends Model {
     uom: UOM;
     calories: string;
 
-    quantity: Number;
-    pantryQuantity: Number;
-    cartQuantity: Number;
+    quantity: number;
+    pantryQuantity: number;
+    cartQuantity: number;
+    selected: Boolean;
 
     constructor (data) {
         super(data);
@@ -22,7 +23,7 @@ export class Ingredient extends Model {
     }
 
     public getObject() {
-        const {id, quantity, pantryQuantity, cartQuantity, ...ingredient} = this;
+        const {id, quantity, pantryQuantity, cartQuantity, selected, ...ingredient} = this;
         return ingredient;
     }
 }

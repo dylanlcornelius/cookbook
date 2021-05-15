@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RatingComponent } from './rating.component';
 import { Recipe } from '@recipe';
+import { SimpleChange } from '@angular/core';
 
 describe('RatingComponent', () => {
   let component: RatingComponent;
@@ -22,6 +23,19 @@ describe('RatingComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should update user rating', () => {
+    const rating = {uid: 'uid', rating: 1}
+
+    spyOn(component, 'findUserRating').and.returnValue({ rating: 1 });
+
+    component.uid = 'uid';
+    component.recipe = new Recipe({ ratings: [] });
+    component.recipe = new Recipe({ ratings: [rating] });
+    component.ngOnChanges();
+
+    expect(component.findUserRating).toHaveBeenCalled();
   });
 
   describe('findUserRating', () => {

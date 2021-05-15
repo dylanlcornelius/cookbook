@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
-import { UOMConversion, UOM } from 'src/app/ingredient/shared/uom.emun';
+import { UOMConversion, UOM } from '@UOMConverson';
 import { RecipeEditComponent } from './recipe-edit.component';
 import { RecipeService } from '@recipeService';
 import { of } from 'rxjs';

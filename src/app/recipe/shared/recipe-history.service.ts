@@ -24,7 +24,6 @@ export class RecipeHistoryService extends FirestoreService {
   add(uid: string, recipeId: string) {
     this.get(uid, recipeId).pipe(take(1)).subscribe(recipeHistory => {
       const weekStart = new Date();
-      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
       const lastDateCooked = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
 
       if (!recipeHistory.id) {

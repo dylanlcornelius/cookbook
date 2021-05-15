@@ -13,7 +13,7 @@ import {
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '@ingredientService';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { UOM, UOMConversion } from 'src/app/ingredient/shared/uom.emun';
+import { UOM, UOMConversion } from '@UOMConverson';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Subject } from 'rxjs';
 import { Recipe } from '@recipe';
