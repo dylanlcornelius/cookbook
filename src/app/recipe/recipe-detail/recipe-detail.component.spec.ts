@@ -116,7 +116,7 @@ describe('RecipeDetailComponent', () => {
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
       const userIngredient = new UserIngredient({});
-      const recipeHistories = new RecipeHistory({});
+      const recipeHistories = new RecipeHistory({ lastDateCooked: '17/5/2021' });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
