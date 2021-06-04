@@ -6,10 +6,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NumberService } from 'src/app/util/number.service';
 
 describe('IngredientModalComponent', () => {
   let component: IngredientModalComponent;
   let fixture: ComponentFixture<IngredientModalComponent>;
+  let numberService: NumberService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -34,6 +36,7 @@ describe('IngredientModalComponent', () => {
     fixture = TestBed.createComponent(IngredientModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    numberService = TestBed.inject(NumberService);
   });
 
   it('should create', () => {
@@ -61,6 +64,8 @@ describe('IngredientModalComponent', () => {
         }
       };
 
+      spyOn(numberService, 'toFormattedFraction');
+
       component.Params = {
         function: (_self) => {},
         self: controller,
@@ -74,6 +79,7 @@ describe('IngredientModalComponent', () => {
 
       component.confirm();
 
+      expect(numberService.toFormattedFraction).toHaveBeenCalled();
       expect(component.params.function).toHaveBeenCalled();
       expect(component.modal.close).toHaveBeenCalled();
     });

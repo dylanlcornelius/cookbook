@@ -5,6 +5,7 @@ import { Ingredient } from '@ingredient';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
+import { NumberService } from 'src/app/util/number.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class IngredientService extends FirestoreService {
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
+    private numberService: NumberService,
   ) {
     super(currentUserService, actionService);
   }
@@ -51,7 +53,7 @@ export class IngredientService extends FirestoreService {
           id: currentIngredient.id,
           name: currentIngredient.name,
           uom: addedIngredient.uom || '',
-          quantity: addedIngredient.quantity || '',
+          quantity: this.numberService.toFormattedFraction(addedIngredient.quantity),
         });
       }
       return result;

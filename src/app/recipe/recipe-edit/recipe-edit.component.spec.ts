@@ -78,6 +78,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -85,6 +86,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
     });
 
@@ -105,6 +107,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -112,6 +115,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -136,6 +140,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').and.returnValue(of(recipe));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -143,6 +148,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -160,6 +166,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get');
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -167,6 +174,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).not.toHaveBeenCalled();
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
   });

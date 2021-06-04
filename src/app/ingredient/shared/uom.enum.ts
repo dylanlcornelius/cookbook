@@ -91,7 +91,7 @@ export class UOMConversion {
         }
     };
 
-    convert(fromUOM: UOM, toUOM: UOM, value: number) {
+    convert(fromUOM: UOM, toUOM: UOM, value: number): number | boolean {
         if (fromUOM === toUOM) {
             return value;
         }

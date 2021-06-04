@@ -5,6 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NotificationService } from '@notificationService';
 import { SuccessNotification } from '@notification';
+import { NumberService } from 'src/app/util/number.service';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -15,13 +17,14 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
   validationModalParams;
-  ingredient;
+  ingredient: Ingredient;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private ingredientService: IngredientService,
     private notificationService: NotificationService,
+    private numberService: NumberService,
   ) { }
 
   ngOnInit() {
@@ -36,6 +39,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   load() {
     this.ingredientService.get(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       this.ingredient = data;
+      this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
       this.loading = false;
     });
   }
