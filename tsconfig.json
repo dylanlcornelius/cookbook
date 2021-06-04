@@ -50,8 +50,5 @@
       "@actions": ["src/app/profile/shared/action.enum"],
       "@actionService": ["src/app/profile/shared/action.service"]
     }
-  },
-  "angularCompilerOptions": {
-    "strictTemplates": true
   }
 }
