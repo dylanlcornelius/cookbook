@@ -230,7 +230,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   initIngredient() {
     return this.formBuilder.group({
       id: [null],
-      quantity: [null, [Validators.required, Validators.min(0.00001), Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      quantity: [null, [Validators.required, Validators.min(0.00001), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]],
       uom: [null, [Validators.required]],
       name: [null],
     });

@@ -11,6 +11,7 @@ import { UserIngredient } from '@userIngredient';
 import { Ingredient } from '@ingredient';
 import { CurrentUserService } from '@currentUserService';
 import { RouterModule } from '@angular/router';
+import { NumberService } from 'src/app/util/number.service';
 
 describe('IngredientListComponent', () => {
   let component: IngredientListComponent;
@@ -18,6 +19,7 @@ describe('IngredientListComponent', () => {
   let currentUserService: CurrentUserService;
   let userIngredientService: UserIngredientService;
   let ingredientService: IngredientService;
+  let numberService: NumberService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -40,6 +42,7 @@ describe('IngredientListComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     userIngredientService = TestBed.inject(UserIngredientService);
     ingredientService = TestBed.inject(IngredientService);
+    numberService = TestBed.inject(NumberService);
   });
 
   it('should create', () => {
@@ -60,12 +63,14 @@ describe('IngredientListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(numberService.toFormattedFraction).toHaveBeenCalled();
     });
   });
 

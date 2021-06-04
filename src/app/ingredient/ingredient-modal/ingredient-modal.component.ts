@@ -20,6 +20,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { NumberService } from 'src/app/util/number.service';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
@@ -40,7 +41,7 @@ export class IngredientModalComponent implements OnInit {
     this.params = params;
     if (this.params) {
       this.ingredientModalForm.patchValue({
-        pantryQuantity: this.params.data.pantryQuantity
+        pantryQuantity: this.numberService.toFormattedFraction(this.params.data.pantryQuantity)
       });
     }
   }
@@ -49,12 +50,13 @@ export class IngredientModalComponent implements OnInit {
   modal: ModalComponent;
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private numberService: NumberService,
   ) {}
 
   ngOnInit() {
     this.ingredientModalForm = this.formBuilder.group({
-      'pantryQuantity': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,16})?$/)]]
+      'pantryQuantity': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]]
     });
   }
 

@@ -52,7 +52,7 @@ describe('IngredientsDetailComponent', () => {
       component = fixture.componentInstance;
       fixture.detectChanges();
 
-      component.ingredient = {name: 'name'};
+      component.ingredient = new Ingredient({ name: 'name' });
 
       component.deleteIngredient('id');
 

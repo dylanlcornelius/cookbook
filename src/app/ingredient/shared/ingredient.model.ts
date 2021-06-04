@@ -9,7 +9,7 @@ export class Ingredient extends Model {
     calories: string;
 
     quantity: number;
-    pantryQuantity: number;
+    pantryQuantity: number | string;
     cartQuantity: number;
     selected: Boolean;
 

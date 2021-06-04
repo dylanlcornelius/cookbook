@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { UOM, UOMConversion } from '@UOMConverson';
+import { NumberService } from 'src/app/util/number.service';
 
 @Component({
   selector: 'app-uom-table',
@@ -11,52 +12,24 @@ export class UomTableComponent {
   uoms: Array<UOM>;
   uomValue = 1;
 
-  constructor(private uomConversion: UOMConversion) {
+  constructor(
+    private numberService: NumberService,
+    private uomConversion: UOMConversion
+  ) {
     this.uoms = Object.values(UOM);
   }
 
-  toDecimal(x) {
-    const i = x.indexOf('/');
-    return Number(x.slice(0, i)) / Number(x.slice(i + 1));
-  }
-  
-  toFraction(x) {
-    let num = 1;
-    let den = 1;
-    let r = 1;
-    while (Math.abs((r - x) / x) > 0.001) {
-      if (r < x) {
-        num++;
-      } else {
-        den++;
-      }
-
-      r = num / den;
-    }
-
-    return { whole: Math.floor(num / den), num: (num % den), den };
-  }
-
-  isValid(value) {
-    if (isNaN(Number(value))) {
-      const fractionValue = this.toDecimal(value);
-      if (isNaN(fractionValue)) {
-        return false;
-      }
-      return Number(fractionValue.toFixed(4));
-    }
-
-    const number = Number(value);
-    if (number <= 0 || number > 999) {
-      return false;
-    }
-    return Number(number.toFixed(6));
-  }
+  toDecimal = this.numberService.toDecimal;
+  isValid = this.numberService.isValid;
 
   convert(from: UOM, to: UOM, value: number) {
-    const decimal = this.isValid(value);
-    if (!decimal) {
+    let decimal = this.isValid(value);
+    if (decimal === false) {
       return '-';
+    }
+
+    if (decimal <= 0.0001) {
+      decimal = 0;
     }
 
     const result = this.uomConversion.convert(from, to, decimal);
@@ -64,13 +37,6 @@ export class UomTableComponent {
       return '-';
     }
 
-    const { whole, num, den } = this.toFraction(result);
-    if (den === 1) {
-      return `${whole}`;
-    }
-    if (whole === 0) {
-      return `${num}/${den}`;
-    }
-    return `${whole} ${num}/${den}`;
+    return this.numberService.toFraction(result);
   }
 }

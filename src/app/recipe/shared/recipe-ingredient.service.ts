@@ -8,6 +8,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { Recipe } from '@recipe';
 import { UserIngredient } from '@userIngredient';
+import { NumberService } from 'src/app/util/number.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class RecipeIngredientService {
     private notificationService: NotificationService,
     private recipeHistoryService: RecipeHistoryService,
     private userIngredientService: UserIngredientService,
+    private numberService: NumberService,
   ) { }
 
   getModal() {
@@ -46,7 +48,9 @@ export class RecipeIngredientService {
       ingredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
           ingredientCount++;
-          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+          
+          const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
+          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value && (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
             recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
           }
@@ -80,9 +84,10 @@ export class RecipeIngredientService {
       let hasIngredient = false;
       ingredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
-          const value = self.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+          const quantity = self.numberService.toDecimal(recipeIngredient.quantity);
+          const value = self.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value) {
-            ingredient.cartQuantity += ingredient.amount * Math.ceil(Number(value) / ingredient.amount);
+            ingredient.cartQuantity += ingredient.amount * Math.ceil(value / ingredient.amount);
           } else {
             self.notificationService.setNotification(new FailureNotification('Calculation error!'));
           }
@@ -107,9 +112,10 @@ export class RecipeIngredientService {
       recipe.ingredients.forEach(recipeIngredient => {
         ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
-            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, Number(recipeIngredient.quantity));
+            const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
+            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
             if (value) {
-              ingredient.pantryQuantity = Math.max(ingredient.pantryQuantity - Number(value), 0);
+              ingredient.pantryQuantity = Math.max(Number(ingredient.pantryQuantity) - Number(value), 0);
             } else {
               this.notificationService.setNotification(new FailureNotification('Calculation error!'));
             }

@@ -4,11 +4,13 @@ import { UomTableComponent } from './uom-table.component';
 import { UOM, UOMConversion } from '@UOMConverson';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { NumberService } from 'src/app/util/number.service';
 
 describe('UomTableComponent', () => {
   let component: UomTableComponent;
   let fixture: ComponentFixture<UomTableComponent>;
   let uomConversion: UOMConversion;
+  let numberService: NumberService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -27,132 +29,64 @@ describe('UomTableComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     uomConversion = TestBed.inject(UOMConversion);
+    numberService = TestBed.inject(NumberService);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('toDecimal', () => {
-    it('should convert a fraction to a decimal', () => {
-      const result = component.toDecimal('1/2');
-
-      expect(result).toEqual(0.5);
-    });
-  });
-
-  describe('toFraction', () => {
-    it('should convert a decimal to a fraction', () => {
-      const result = component.toFraction(1.5);
-
-      expect(result.whole).toEqual(1);
-      expect(result.num).toEqual(1);
-      expect(result.den).toEqual(2);
-    });
-  });
-
-  describe('isValid', () => {
-    it('should handle an invalid fraction', () => {
-      spyOn(component, 'toDecimal').and.returnValue(NaN);
-
-      const result = component.isValid('@/1');
-
-      expect(result).toEqual(false);
-      expect(component.toDecimal).toHaveBeenCalled();
-    });
-    
-    it('should return a valid fraction', () => {
-      spyOn(component, 'toDecimal').and.returnValue(0.55555);
-    
-      const result = component.isValid('1/2');
-
-      expect(result).toEqual(0.5555);
-      expect(component.toDecimal).toHaveBeenCalled();
-    });
-
-    it('should handle an invalid decimal', () => {
-      spyOn(component, 'toDecimal');
-     
-      const result = component.isValid('-1.5');
-   
-      expect(result).toEqual(false);
-      expect(component.toDecimal).not.toHaveBeenCalled();
-    });
-
-    it('should return a valid decimal', () => {
-      spyOn(component, 'toDecimal');
-     
-      const result = component.isValid('0.5555555');
-
-      expect(result).toEqual(0.555555);
-      expect(component.toDecimal).not.toHaveBeenCalled();
-    });
-  });
-
   describe('convert', () => {
     it('should handle invalid values', () => {
       spyOn(component, 'isValid').and.returnValue(false);
       spyOn(uomConversion, 'convert');
-      spyOn(component, 'toFraction');
+      spyOn(numberService, 'toFraction');
 
       const result = component.convert(UOM.CUP, UOM.TABLESPOON, 0.5);
 
       expect(result).toEqual('-');
       expect(component.isValid).toHaveBeenCalled();
       expect(uomConversion.convert).not.toHaveBeenCalled();
-      expect(component.toFraction).not.toHaveBeenCalled();
+      expect(numberService.toFraction).not.toHaveBeenCalled();
     });
 
     it('should handle invalid conversions', () => {
       spyOn(component, 'isValid').and.returnValue(0.5);
       spyOn(uomConversion, 'convert').and.returnValue(false);
-      spyOn(component, 'toFraction');
+      spyOn(numberService, 'toFraction');
 
       const result = component.convert(UOM.CUP, UOM.TABLESPOON, 0.5);
 
       expect(result).toEqual('-');
       expect(component.isValid).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
-      expect(component.toFraction).not.toHaveBeenCalled();
+      expect(numberService.toFraction).not.toHaveBeenCalled();
     });
 
-    it('should handle whole numbers', () => {
-      spyOn(component, 'isValid').and.returnValue(0.5);
-      spyOn(uomConversion, 'convert').and.returnValue(0.3);
-      spyOn(component, 'toFraction').and.returnValue({ whole: 3, num: 1, den: 1 });
+    it('should handle small numbers', () => {
+      spyOn(component, 'isValid').and.returnValue(0.00001);
+      spyOn(uomConversion, 'convert').and.returnValue(0);
+      spyOn(numberService, 'toFraction').and.returnValue('0');
 
-      const result = component.convert(UOM.CUP, UOM.TABLESPOON, 0.5);
+      const result = component.convert(UOM.CUP, UOM.TABLESPOON, 0.00001);
 
-      expect(result).toEqual('3');
+      expect(result).toEqual('0');
       expect(component.isValid).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
-      expect(component.toFraction).toHaveBeenCalled();
+      expect(numberService.toFraction).toHaveBeenCalled();
     });
 
-    it('should fractions', () => {
+    it('should handle fractions', () => {
       spyOn(component, 'isValid').and.returnValue(0.5);
       spyOn(uomConversion, 'convert').and.returnValue(0.3);
-      spyOn(component, 'toFraction').and.returnValue({ whole: 0, num: 1, den: 2 });
+      spyOn(numberService, 'toFraction').and.returnValue('1/2');
 
       const result = component.convert(UOM.CUP, UOM.TABLESPOON, 0.5);
 
       expect(result).toEqual('1/2');
       expect(component.isValid).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
-      expect(component.toFraction).toHaveBeenCalled();
-    });
-
-    it('should proper fractions', () => {
-      spyOn(component, 'isValid').and.returnValue(0.5);
-      spyOn(uomConversion, 'convert').and.returnValue(0.3);
-      spyOn(component, 'toFraction').and.returnValue({ whole: 3, num: 1, den: 2 });
-
-      const result = component.convert(UOM.CUP, UOM.TABLESPOON, 0.5);
-
-      expect(result).toEqual('3 1/2');
-      expect(component.isValid).toHaveBeenCalled();
-      expect(uomConversion.convert).toHaveBeenCalled();
-      expect(component.toFraction).toHaveBeenCalled();
+      expect(numberService.toFraction).toHaveBeenCalled();
     });
   });
 });

@@ -8,6 +8,7 @@ import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '@user';
+import { NumberService } from 'src/app/util/number.service';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -34,6 +35,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
+    private numberService: NumberService,
   ) {}
 
   ngOnInit() {
@@ -56,9 +58,11 @@ export class IngredientListComponent implements OnInit, OnDestroy {
       
         const myIngredients = [];
         ingredients.forEach(ingredient => {
+          ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
+
           userIngredient.ingredients.forEach(myIngredient => {
             if (myIngredient.id === ingredient.id) {
-              ingredient.pantryQuantity = myIngredient.pantryQuantity;
+              ingredient.pantryQuantity = this.numberService.toFormattedFraction(myIngredient.pantryQuantity);
               ingredient.cartQuantity = myIngredient.cartQuantity;
 
               myIngredients.push({
