@@ -7,11 +7,13 @@ import { IngredientDetailComponent } from './ingredient-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
+import { NumberService } from 'src/app/util/number.service';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
   let fixture: ComponentFixture<IngredientDetailComponent>;
   let ingredientService: IngredientService;
+  let numberService: NumberService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -30,6 +32,7 @@ describe('IngredientsDetailComponent', () => {
     })
     .compileComponents();
     ingredientService = TestBed.inject(IngredientService);
+    numberService = TestBed.inject(NumberService);
   }));
 
   it('should create', () => {
@@ -37,12 +40,14 @@ describe('IngredientsDetailComponent', () => {
     route.snapshot.params = {id: 'testId'};
 
     spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+    spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
     
     fixture = TestBed.createComponent(IngredientDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
     expect(ingredientService.get).toHaveBeenCalled();
+    expect(numberService.toFormattedFraction).toHaveBeenCalled();
     expect(component).toBeTruthy();
   });
 
