@@ -8,6 +8,7 @@ import { UOMConversion } from '@UOMConverson';
 
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from 'src/app/util/number.service';
+import { Ingredient } from '@ingredient';
 
 describe('RecipeIngredientService', () => {
   let service: RecipeIngredientService;
@@ -231,7 +232,7 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{}]
+        ingredients: [new Ingredient({})]
       });
 
       spyOn(service, 'setModal');
@@ -258,32 +259,9 @@ describe('RecipeIngredientService', () => {
       expect(service.setModal).not.toHaveBeenCalled();
       expect(notificationService.setNotification).toHaveBeenCalled();
     });
-
-    it('should do nothing if recipe count is NaN', () => {
-      const recipe = new Recipe({
-        id: 'id',
-        ingredients: [{}]
-      });
-      recipe.count = NaN;
-
-      spyOn(service, 'setModal');
-      spyOn(notificationService, 'setNotification');
-
-      service.addIngredients(recipe, new UserIngredient({}), '');
-
-      expect(service.setModal).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
-    });
   });
 
   describe('addIngredientsEvent', () => {
-    beforeEach(() => {
-      const recipe = new Recipe({
-        id: 'id',
-        count: 0
-      });
-    });
-
     it('should add an ingredient to the cart', () => {
       const ingredients = [{
         id: 'ingredientId',
@@ -366,6 +344,41 @@ describe('RecipeIngredientService', () => {
   });
 
   describe('removeIngredients', () => {
+    it('should reset pantry quantity to zero', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        count: 1,
+        ingredients: [{
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10
+        }]
+      });
+
+      const userIngredient = new UserIngredient({
+        ingredients: [{
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+          pantryQuantity: NaN
+        }]
+      });
+
+      spyOn(numberService, 'toDecimal').and.returnValue(10);
+      spyOn(uomConversion, 'convert').and.returnValue(5);
+      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(notificationService, 'setNotification');
+      spyOn(recipeHistoryService, 'add');
+
+      service.removeIngredients(recipe, userIngredient, '');
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomConversion.convert).toHaveBeenCalled();
+      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(recipeHistoryService.add).toHaveBeenCalled();
+    });
+
     it('should remove an ingredient from the pantry', () => {
       const recipe = new Recipe({
         id: 'id',

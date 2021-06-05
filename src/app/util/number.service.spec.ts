@@ -15,6 +15,12 @@ describe('NumberService', () => {
   });
 
   describe('toDecimal', () => {
+    it('should convert NaN to zero', () => {
+      const result = service.toDecimal(NaN);
+
+      expect(result).toEqual(0);
+    });
+
     it('should convert a integer to a decimal', () => {
       const result = service.toDecimal('1');
 
@@ -111,7 +117,7 @@ describe('NumberService', () => {
     });
 
     it('should handle whole numbers', () => {
-      spyOn(service, 'isValid').and.returnValue(0.5);
+      spyOn(service, 'isValid').and.returnValue(0.00001);
       spyOn(service, 'toFraction').and.returnValue('3');
 
       const result = service.toFormattedFraction(0.5);

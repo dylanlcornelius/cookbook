@@ -21,7 +21,7 @@
   </div>
 
   <mat-form-field class="search-bar">
-    <input matInput (keyup)="applyFilter($event.target.value)"/>
+    <input matInput (keyup)="applySearchFilter($event.target.value)" [value]="searchFilter"/>
     <mat-placeholder>
       <mat-icon>search</mat-icon>
     </mat-placeholder>

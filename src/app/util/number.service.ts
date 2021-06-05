@@ -5,6 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class NumberService {
   toDecimal(x) {
+    if (Number.isNaN(x)) {
+      return 0;
+    }
+
     const wholeIndex = x.indexOf(' ');
     const f = x.slice(wholeIndex + 1)
     const i = f.indexOf('/');

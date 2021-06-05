@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from '@recipeFilterService';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE } from '@recipeFilterService';
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 
@@ -97,7 +97,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           });
         });
 
-        const filters = this.recipeFilterService.selectedFilters.slice();
+        const filters = this.recipeFilterService.selectedFilters;
 
         recipes = recipes.sort(this.sortRecipesByName);
         recipes = recipes.sort(this.sortRecipesByImages);
@@ -110,7 +110,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             displayValue += '★';
           }
           
-          const checked = filters.find(f => f.value === rating) !== undefined;
+          const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
           ratings.push({ displayName: displayValue + ' & Up', name: rating, checked: checked, filter: new RatingFilter(rating) });
         });
 
@@ -126,16 +126,19 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
           recipe.categories.forEach(({ category }) => {
             if (categories.find(c => c.name === category) === undefined) {
-              const checked = filters.find(f => f.value === category) !== undefined;
+              const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === category) !== undefined;
               categories.push({ displayName: category, name: category, checked: checked, filter: new CategoryFilter(category) });
             }
           });
 
           if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
-            const checked = filters.find(f => f.value === recipe.author) !== undefined;
+            const checked = filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !== undefined;
             authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
           }
         });
+        const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
+        this.searchFilter = searchFilter ? searchFilter.value : '';
+
         this.dataSource = new MatTableDataSource(recipes);
         this.dataSource.filterPredicate = this.recipeFilterService.recipeFilterPredicate;
 
@@ -168,25 +171,25 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   setFilters() {
-    const filters = this.recipeFilterService.selectedFilters.slice();
+    this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => FILTER_TYPE.SEARCH !== f.type);
     if (this.searchFilter) {
-      filters.push(new SearchFilter(this.searchFilter));
+      this.recipeFilterService.selectedFilters.push(new SearchFilter(this.searchFilter));
     }
-    this.dataSource.filter = filters;
+    this.dataSource.filter = this.recipeFilterService.selectedFilters;
   }
 
   filterSelected(selectedFilter) {
-    if (selectedFilter.checked) {
+  if (selectedFilter.checked) {
       this.recipeFilterService.selectedFilters.push(selectedFilter.filter);
     } else {
-      this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => selectedFilter.filter !== f );
+      this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => selectedFilter.filter.type !== f.type && selectedFilter.filter.value != f.value);
     }
 
     this.setSelectedFilterCount();
     this.setFilters();
   }
 
-  applyFilter(filterValue: string) {
+  applySearchFilter(filterValue: string) {
     this.searchFilter = filterValue.trim().toLowerCase();
     this.setFilters();
 

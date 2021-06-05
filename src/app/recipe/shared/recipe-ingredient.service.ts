@@ -66,7 +66,7 @@ export class RecipeIngredientService {
   }
 
   addIngredients(recipe: Recipe, userIngredient, defaultShoppingList) {
-    if (!Number.isNaN(recipe.count) && recipe.ingredients && recipe.ingredients.length > 0) {
+    if (recipe.ingredients.length > 0) {
       this.setModal(new RecipeIngredientModal(
         this.addIngredientsEvent,
         recipe.ingredients,
@@ -74,7 +74,7 @@ export class RecipeIngredientService {
         defaultShoppingList,
         this
       ));
-    } else if (recipe.ingredients && recipe.ingredients.length === 0) {
+    } else {
       this.notificationService.setNotification(new InfoNotification('Recipe has no ingredients'));
     }
   }
@@ -114,7 +114,9 @@ export class RecipeIngredientService {
           if (recipeIngredient.id === ingredient.id) {
             const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
             const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
-            if (value) {
+            if (Number.isNaN(ingredient.pantryQuantity)) {
+              ingredient.pantryQuantity = 0;
+            } else if (value !== false) {
               ingredient.pantryQuantity = Math.max(Number(ingredient.pantryQuantity) - Number(value), 0);
             } else {
               this.notificationService.setNotification(new FailureNotification('Calculation error!'));
