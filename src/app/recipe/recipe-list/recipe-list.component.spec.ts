@@ -4,7 +4,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { UOMConversion } from '@UOMConverson';
 import { RecipeService } from '@recipeService';
-import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter } from '@recipeFilterService';
+import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter, SearchFilter } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { IngredientService } from '@ingredientService';
@@ -105,7 +105,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author')];
+      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search')];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -288,11 +288,13 @@ describe('RecipeListComponent', () => {
 
     it('should unapply a filter', () => {
       const filter = new CategoryFilter('test');
-      recipeFilterService.selectedFilters = [filter];
+      const filter2 = new AuthorFilter('author');
+      recipeFilterService.selectedFilters = [filter, filter2];
 
       component.filterSelected({checked: false, name: 'test', filter});
 
       expect(recipeFilterService.selectedFilters).not.toContain(filter);
+      expect(recipeFilterService.selectedFilters).toContain(filter2);
     });
 
     afterEach(() => {
@@ -301,13 +303,13 @@ describe('RecipeListComponent', () => {
     });
   });
 
-  describe('applyFilter', () => {
+  describe('applySearchFilter', () => {
     it('should apply a filter', () => {
       component.dataSource = new MatTableDataSource([]);
 
       spyOn(component, 'setFilters');
 
-      component.applyFilter(' VALUE ');
+      component.applySearchFilter(' VALUE ');
 
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
@@ -319,7 +321,7 @@ describe('RecipeListComponent', () => {
       spyOn(component, 'setFilters');
       spyOn(component.dataSource.paginator, 'firstPage');
 
-      component.applyFilter(' VALUE ');
+      component.applySearchFilter(' VALUE ');
 
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();

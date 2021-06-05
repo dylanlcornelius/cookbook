@@ -18,6 +18,13 @@ export class RecipeFilterService {
   }
 }
 
+export enum FILTER_TYPE {
+  AUTHOR = 'AUTHOR',
+  CATEGORY = 'CATEGORY',
+  RATING = 'RATING',
+  SEARCH = 'SEARCH',
+}
+
 abstract class Filter {
   value: any;
 
@@ -33,22 +40,27 @@ abstract class Filter {
     return a && a.toLowerCase().includes(b.toLowerCase());
   }
 
+  abstract type: string;
   abstract filterPredicate: (recipe: Recipe) => boolean;
 }
 
 export class AuthorFilter extends Filter {
+  type = FILTER_TYPE.AUTHOR;
   filterPredicate = (recipe) => this.contains(recipe.author, this.value); // may need to flip this to equals
 }
 
 export class CategoryFilter extends Filter {
+  type = FILTER_TYPE.CATEGORY;
   filterPredicate = (recipe) => !!recipe.categories.find(({ category }) => this.contains(category, this.value)); // may need to flip this to equals
 }
 
 export class RatingFilter extends Filter {
+  type = FILTER_TYPE.RATING;
   filterPredicate = (recipe) => recipe.meanRating >= this.value;
 }
 
 export class SearchFilter extends Filter {
+  type = FILTER_TYPE.SEARCH;
   filterPredicate = (recipe) => {
     return this.contains(recipe.name, this.value)
       || this.contains(recipe.description, this.value)
