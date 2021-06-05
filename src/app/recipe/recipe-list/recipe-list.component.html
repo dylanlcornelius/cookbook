@@ -41,11 +41,6 @@
 
       <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt=""/>
 
-      <mat-card-content *ngIf="!user.simplifiedView">
-        Preparation Time: {{recipe.time}}<br/>
-        Servings: {{recipe.servings}}<br/>
-        Calories: {{recipe.calories}}<br/>
-      </mat-card-content>
       <mat-card-actions (click)="$event.stopPropagation()">
           <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
           <button mat-button color="warn" (click)="removeIngredients(recipe.id)">
