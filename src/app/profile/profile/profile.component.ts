@@ -93,7 +93,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         defaultShoppingList: [user.defaultShoppingList],
         role: [user.role],
         theme: [user.theme],
-        simplifiedView: [user.simplifiedView],
         hasImage: [user.hasImage],
         id: [user.id],
       });

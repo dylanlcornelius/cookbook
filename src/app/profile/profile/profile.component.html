@@ -60,17 +60,6 @@
                   <mat-icon>brightness_3</mat-icon>
                 </span>
               </div>
-
-              <div>
-                <mat-slide-toggle matInput formControlName="simplifiedView" ngDefaultControl [checked]="userForm.get('simplifiedView').value">
-                </mat-slide-toggle>
-                <span *ngIf="!userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Expanded View">
-                  <mat-icon>view_compact</mat-icon>
-                </span>
-                <span *ngIf="userForm.get('simplifiedView').value" class="theme-icon" matTooltip="Simplified View">
-                  <mat-icon>view_comfy</mat-icon>
-                </span>
-              </div>
             </div>
             
             <div class="button-row">

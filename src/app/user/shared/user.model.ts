@@ -7,7 +7,6 @@ export class User extends Model {
     defaultShoppingList: string;
     role: string;
     theme: boolean;
-    simplifiedView: boolean;
     hasImage: boolean;
 
     isAdmin: boolean;
@@ -24,7 +23,6 @@ export class User extends Model {
         this.defaultShoppingList = data.defaultShoppingList || data.uid || '';
         this.role = data.role || '';
         this.theme = data.theme || false;
-        this.simplifiedView = data.simplifiedView || false;
         this.hasImage = data.hasImage || false;
         this.isAdmin = data.role === 'admin';
         this.isPending = data.role === 'pending';
