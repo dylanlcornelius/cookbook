@@ -1,0 +1,19 @@
+<app-modal [params]="params">
+  <div style="text-align: center;">
+    <h4>{{params?.text}}</h4>
+  </div>
+  <br/>
+  <form class="center" [formGroup]="form">
+    <mat-form-field>
+      <input type="number" matInput placeholder="Times Cooked" formControlName="timesCooked" [errorStateMatcher]="matcher"/>
+      <mat-error>
+        <span *ngIf="!form.get('timesCooked').valid && form.get('timesCooked').touched">Please enter a valid amount for Times Cooked</span>
+      </mat-error>
+    </mat-form-field>
+  </form>
+  <br/>
+  <div class="center">
+    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="confirm()"  style="margin-right: 20px;">Confirm</button>
+    <button mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+  </div>
+</app-modal>

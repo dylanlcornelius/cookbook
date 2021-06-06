@@ -28,6 +28,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   loading = true;
   validationModalParams;
+  recipeHistoryModalParams;
 
   user: User;
   recipe: Recipe;
@@ -161,5 +162,21 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   onRate(rating, recipe) {
     this.recipeService.rateRecipe(rating, this.user.uid, recipe);
+  }
+
+  updateTimesCooked(recipe) {
+    this.recipeHistoryModalParams = {
+      function: this.updateRecipeHistoryEvent,
+      recipeId: recipe.id,
+      uid: this.user.defaultShoppingList,
+      timesCooked: this.timesCooked,
+      self: this,
+      text: 'Edit times cooked for ' + recipe.name
+    };
+  }
+
+  updateRecipeHistoryEvent(self, recipeId, uid, timesCooked) {
+    self.recipeHistoryService.set(uid, recipeId, timesCooked);
+    self.notificationService.setNotification(new SuccessNotification('Recipe updated!'));
   }
 }

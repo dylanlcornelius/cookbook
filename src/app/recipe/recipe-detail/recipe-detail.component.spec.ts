@@ -320,4 +320,26 @@ describe('RecipeDetailComponent', () => {
       expect(recipeService.rateRecipe).toHaveBeenCalled();
     });
   });
+
+  describe('updateTimesCooked', () => {
+    it('should open a modal to update recipe history', () => {
+      component.user = new User({});
+
+      component.updateTimesCooked(new Recipe({}));
+
+      expect(component.recipeHistoryModalParams).toBeDefined();
+    });
+  });
+
+  describe('updateRecipeHistoryEvent', () => {
+    it('should delete a recipe', () => {
+      spyOn(recipeHistoryService, 'set');
+      spyOn(notificationService, 'setNotification');
+
+      component.updateRecipeHistoryEvent(component, 'id', 'uid', 10);
+
+      expect(recipeHistoryService.set).toHaveBeenCalled();
+      expect(notificationService.setNotification).toHaveBeenCalled();
+    });
+  });
 });
