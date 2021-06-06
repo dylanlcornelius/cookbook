@@ -14,6 +14,7 @@ import { RatingComponent } from './rating/rating.component';
 
 import { SharedModule } from '@sharedModule';
 import { IngredientModule } from '../ingredient/ingredient.module';
+import { RecipeHistoryModalComponent } from './recipe-history-modal/recipe-history-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { IngredientModule } from '../ingredient/ingredient.module';
     RecipeDetailComponent,
     RecipeEditComponent,
     RatingComponent,
+    RecipeHistoryModalComponent,
   ],
   imports: [
     CommonModule,

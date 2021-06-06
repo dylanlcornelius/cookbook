@@ -47,6 +47,36 @@ describe('RecipeHistoryService', () => {
     });
   });
 
+  describe('set', () => {
+    it('should create a recipe history with a value', () => {
+      const recipeHistory = new RecipeHistory({});
+
+      spyOn(service, 'get').and.returnValue(of(recipeHistory));
+      spyOn(service, 'create');
+      spyOn(service, 'update');
+      
+      service.set('uid', 'recipeId', 10);
+
+      expect(service.get).toHaveBeenCalled();
+      expect(service.create).toHaveBeenCalled();
+      expect(service.update).not.toHaveBeenCalled();
+    });
+
+    it('should update a recipe history with a value', () => {
+      const recipeHistory = new RecipeHistory({id: 'id'});
+
+      spyOn(service, 'get').and.returnValue(of(recipeHistory));
+      spyOn(service, 'create');
+      spyOn(service, 'update');
+      
+      service.set('uid', 'recipeId', 10);
+
+      expect(service.get).toHaveBeenCalled();
+      expect(service.create).not.toHaveBeenCalled();
+      expect(service.update).toHaveBeenCalled();
+    });
+  });
+
   describe('get', () => {
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'getRef');

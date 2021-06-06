@@ -23,8 +23,8 @@ export class RecipeHistoryService extends FirestoreService {
 
   add(uid: string, recipeId: string) {
     this.get(uid, recipeId).pipe(take(1)).subscribe(recipeHistory => {
-      const weekStart = new Date();
-      const lastDateCooked = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
+      const today = new Date();
+      const lastDateCooked = (today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear()).toString();
 
       if (!recipeHistory.id) {
         this.create(new RecipeHistory({uid: uid, recipeId: recipeId, history: [lastDateCooked], timesCooked: 1, lastDateCooked: lastDateCooked}));
@@ -35,6 +35,16 @@ export class RecipeHistoryService extends FirestoreService {
       recipeHistory.timesCooked++;
       recipeHistory.lastDateCooked = lastDateCooked;
       this.update(recipeHistory);
+    });
+  }
+
+  set(uid: string, recipeId: string, timesCooked: number) {
+    this.get(uid, recipeId).pipe(take(1)).subscribe(recipeHistory => {
+      if (!recipeHistory.id) {
+        this.create(new RecipeHistory({uid: uid, recipeId: recipeId, timesCooked}));
+      } else {
+        this.update(new RecipeHistory({ ...recipeHistory, timesCooked }));
+      }
     });
   }
 

@@ -1,5 +1,6 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 <app-validation-modal [params]="validationModalParams"></app-validation-modal>
+<app-recipe-history-modal [Params]="recipeHistoryModalParams"></app-recipe-history-modal>
 
 <div *ngIf="!loading">
   <div class="button-row">
@@ -74,7 +75,9 @@
           </span>
 
           <dt>Times Cooked</dt>
-          <dd>{{timesCooked}}</dd>
+          <dd>
+            <button mat-button color="primary" (click)="updateTimesCooked(recipe)">{{timesCooked}}</button>
+          </dd>
 
           <span *ngIf="lastDateCooked">
             <dt>Last Date Cooked</dt>
