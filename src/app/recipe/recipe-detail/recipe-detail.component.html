@@ -67,7 +67,7 @@
             <dt>Categories</dt>
             <dd>
               <mat-chip-list class="center">
-                <mat-chip *ngFor="let category of recipe.categories; let i = index" (click)="setCategoryFilter(category.category)">
+                <mat-chip *ngFor="let category of recipe.categories" (click)="setCategoryFilter(category.category)">
                   {{category.category}}
                 </mat-chip>
               </mat-chip-list>

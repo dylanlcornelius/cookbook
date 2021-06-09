@@ -48,6 +48,12 @@
             <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
           </button>
       </mat-card-actions>
+
+      <mat-chip-list class="categories">
+        <mat-chip *ngFor="let category of recipe.categories" (click)="setCategoryFilter(category.category)">
+          {{category.category}}
+        </mat-chip>
+      </mat-chip-list>
     </mat-card>
   </div>
 
