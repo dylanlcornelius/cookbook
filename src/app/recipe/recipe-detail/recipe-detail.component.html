@@ -7,7 +7,7 @@
     <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']"><mat-icon>list</mat-icon></a>
   </div>
 
-  <mat-card class="detail-card primary-text-color">
+  <mat-card class="detail-card primary-text-color mat-elevation-z8">
     <mat-progress-bar class="image-progress" mode="determinate" [value]="recipeImageProgress" [hidden]="!recipeImageProgress"></mat-progress-bar>
 
     <mat-card-header class="center center-text">
@@ -29,18 +29,20 @@
         <dd>{{recipe.description}}</dd>
       </mat-card-subtitle>
     </mat-card-header>
-    
-    <img mat-card-image *ngIf="recipeImage" [src]="recipeImage" alt=""/>
-
-    <mat-card-actions>
-      <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
-      <button mat-button color="warn" (click)="removeIngredients()">
-        <span>Cook</span>
-        <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
-      </button>
-    </mat-card-actions>
 
     <div class="container">
+      <mat-card-content>
+        <img mat-card-image *ngIf="recipeImage" [src]="recipeImage" alt=""/>
+
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
+          <button mat-button color="warn" (click)="removeIngredients()">
+            <span>Cook</span>
+            <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
+          </button>
+        </mat-card-actions>
+      </mat-card-content>
+
       <mat-card-content class="center-text">
         <dl>
           <span *ngIf="recipe.time">

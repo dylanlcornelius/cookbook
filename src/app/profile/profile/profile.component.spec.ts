@@ -188,8 +188,7 @@ describe('ProfileComponent', () => {
 
       component.loadHistory();
 
-      expect(component.history[0].name).toEqual(undefined);
-      expect(component.history[0].value).toEqual(2);
+      expect(component.history.length).toEqual(0);
       expect(recipeService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
     });

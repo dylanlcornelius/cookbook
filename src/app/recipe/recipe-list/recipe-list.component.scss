@@ -17,10 +17,9 @@
     width: 300px;
     margin: 10px;
     text-align: center;
-}
-.mat-card-header {
-    flex-grow: 1;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .mat-card-header .mat-card-subtitle {
     width: min-content;

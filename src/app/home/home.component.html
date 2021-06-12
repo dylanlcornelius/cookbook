@@ -1,10 +1,6 @@
 <div class="home-container">
   <h2>Welcome to the Cookbook!</h2>
 
-  <div class="center">
-    <h4>Click an icon to get started</h4>
-  </div>
-
   <div class="container center">
     <div *ngFor="let nav of navs" class="nav-tile" routerLink="{{nav.link}}">
       <mat-icon class="nav-icon">{{nav.icon}}</mat-icon>

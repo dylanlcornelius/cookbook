@@ -158,10 +158,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const recipeHistory$ = this.recipeHistoryService.get(this.user.defaultShoppingList);
 
     combineLatest([recipes$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, histories]) => {
-      this.history = histories.map(recipeHistory => ({
-        name: recipes.find(recipe => recipe.id === recipeHistory.recipeId)?.name,
-        value: recipeHistory.timesCooked
-      }));
+      this.history = histories
+        .reduce((list, recipeHistory) => {
+          const recipe = recipes.find(recipe => recipe.id === recipeHistory.recipeId);
+
+          if (recipe) {
+            list.push({name: recipe.name, value: recipeHistory.timesCooked});
+          }
+          return list;
+          }, [])
+        .sort((a, b) => a.name.localeCompare(b.name));
     });
   }
 
