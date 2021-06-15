@@ -31,6 +31,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   searchFilter = '';
 
   dataSource;
+  recipes = [];
   userIngredient: UserIngredient;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -101,6 +102,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
         recipes = recipes.sort(this.sortRecipesByName);
         recipes = recipes.sort(this.sortRecipesByImages);
+        this.recipes = recipes;
         this.dataSource = new MatTableDataSource(recipes);
         const ratings = [];
         [1, 2, 3].forEach(ratingOption => {
@@ -117,7 +119,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const categories = [];
         const authors = [];
         recipes.forEach(recipe => {
-          recipe.count = this.recipeIngredientService.getRecipeCount(recipe, this.userIngredient);
+          recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
           this.imageService.download(recipe).then(url => {
             if (url) {
               recipe.image = url;
@@ -225,11 +227,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   addIngredients(id: string) {
-    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
   removeIngredients(id: string) {
-    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
   onRate(rating, recipe) {

@@ -10,6 +10,7 @@ export enum UOM {
     OUNCE = 'oz',
     POUND = 'lbs',
     OTHER = 'other',
+    RECIPE = 'recipe',
 }
 
 @Injectable()
@@ -88,6 +89,9 @@ export class UOMConversion {
         },
         other: {
             other: 1
+        },
+        recipe: {
+            recipe: 1
         }
     };
 

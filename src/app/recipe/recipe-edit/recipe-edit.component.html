@@ -3,15 +3,6 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <div class="button-row">
-    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="route.snapshot.params['id']">
-      <mat-icon>arrow_back</mat-icon>
-    </a>
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']" *ngIf="!route.snapshot.params['id']">
-      <mat-icon>list</mat-icon>
-    </a>
-  </div>
-
   <form [formGroup]="recipesForm">
     <ng-template #recipeStep>
       <mat-form-field class="form-field">
@@ -102,7 +93,7 @@
                   <span>Invalid</span>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field>
+              <mat-form-field *ngIf="ingredient.get('uom').value !== 'other' && ingredient.get('uom').value !== 'recipe'">
                 <mat-select placeholder="UOM" formControlName="uom" [errorStateMatcher]="matcher">
                   <mat-option *ngFor="let uom of getUOMs(ingredient.get('uom').value)" [value]="uom">{{uom}}</mat-option>
                 </mat-select>
@@ -220,4 +211,13 @@
       </div>
     </mat-step>
   </mat-vertical-stepper>
+
+  <div class="button-row">
+    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="route.snapshot.params['id']">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <a mat-mini-fab matTooltip="Recipes List" color="primary" routerLink="/recipe/list" *ngIf="!route.snapshot.params['id']">
+      <mat-icon>list</mat-icon>
+    </a>
+  </div>
 </div>

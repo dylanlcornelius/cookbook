@@ -7,7 +7,7 @@
           <mat-icon>person</mat-icon>
         </button>
         <mat-menu #profileMenu="matMenu">
-          <a *ngFor="let nav of profileNavs" mat-menu-item routerLink="{{nav.link}}">
+          <a *ngFor="let nav of profileNavs" mat-menu-item [routerLink]="nav.link">
             <mat-icon>{{nav.icon}}</mat-icon>
             <span>{{nav.name}}</span>
           </a>
@@ -26,11 +26,11 @@
     <div style="clear: both;"></div>
 
     <div class="desktop" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending" [@fadeInAnimation]>
-      <a *ngFor="let nav of desktopNavs" mat-raised-button color="primary" class="nav-button" routerLink="{{nav.link}}" [ngClass]="{'selected': route === nav.link}">{{nav.name}}</a>
+      <a *ngFor="let nav of desktopNavs" mat-raised-button color="primary" class="nav-button" [routerLink]="nav.link" [ngClass]="{'selected': route === nav.link}">{{nav.name}}</a>
       
       <button mat-raised-button color="primary" class="nav-button" [matMenuTriggerFor]="profileMenu">Tools</button>
       <mat-menu #profileMenu="matMenu">
-        <a *ngFor="let nav of toolNavs" mat-menu-item routerLink="{{nav.link}}">
+        <a *ngFor="let nav of toolNavs" mat-menu-item [routerLink]="nav.link">
           <mat-icon>{{nav.icon}}</mat-icon>
           <span>{{nav.name}}</span>
         </a>
@@ -41,7 +41,7 @@
 
     <div class="mobile-nav-container mobile" *ngIf="(isLoggedIn | async) && !(user | async)?.isPending && showNav" (click)="toggleNav()" [@fadeInFastAnimation]>
       <div class="mobile-nav" [@slideInOutAnimation]>
-        <a *ngFor="let nav of mobileNavs" mat-button class="mobile-nav-button" routerLink="{{nav.link}}">
+        <a *ngFor="let nav of mobileNavs" mat-button class="mobile-nav-button" [routerLink]="nav.link">
           <mat-icon>{{nav.icon}}</mat-icon>
           <span class="mobile-nav-text">{{nav.name}}</span>
         </a>

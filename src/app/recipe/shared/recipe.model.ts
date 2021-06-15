@@ -1,5 +1,6 @@
 import { Model } from '@model';
 import { Ingredient } from '@ingredient';
+import { UOM } from '@UOMConverson';
 
 export class Recipe extends Model {
     name: string;
@@ -27,6 +28,8 @@ export class Recipe extends Model {
 
     count: number;
     image: string;
+    amount = '1';
+    uom = UOM.RECIPE;
 
     constructor(data) {
         super(data);
@@ -48,7 +51,7 @@ export class Recipe extends Model {
     }
 
     public getObject() {
-        const {id, count, image, ...recipe} = this;
+        const {id, count, image, amount, uom, ...recipe} = this;
         return recipe;
     }
 }
