@@ -34,6 +34,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipe: Recipe;
   userIngredient: UserIngredient;
   ingredients = [];
+  recipes = [];
   recipeImage: string;
   recipeImageProgress;
   timesCooked: number;
@@ -70,10 +71,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       
       const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
       const ingredients$ = this.ingredientService.get();
+      const recipes$ = this.recipeService.get();
       const userIngredient$ = this.userIngredientService.get(this.user.defaultShoppingList);
       const recipeHistory$ = this.recipeHistoryService.get(user.defaultShoppingList, this.route.snapshot.params['id']);
 
-      combineLatest([recipe$, ingredients$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, userIngredient, recipeHistory]) => {
+      combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
         this.recipe = recipe;
         this.userIngredient = userIngredient;
 
@@ -83,6 +85,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
               myIngredient.uom = ingredient.uom;
               myIngredient.amount = ingredient.amount;
             }
+          });
+
+          recipes.forEach(recipe => {
+            recipe.ingredients.forEach(recipeIngredient => {
+              if (ingredient.id === recipeIngredient.id) {
+                recipeIngredient.amount = ingredient.amount;
+                recipeIngredient.name = ingredient.name;
+              }
+            });
           });
         });
 
@@ -98,9 +109,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.lastDateCooked = new Date(Number.parseInt(date[2]), Number.parseInt(date[1]) - 1, Number.parseInt(date[0])).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, ingredients);
+        this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+        this.recipes = recipes;
         this.recipe.ingredients = this.ingredients;
-        this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, this.userIngredient);
+        this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
         this.loading = false;
       });
     });
@@ -153,11 +165,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
 
   addIngredients() {
-    this.recipeIngredientService.addIngredients(this.recipe, this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
   removeIngredients() {
-    this.recipeIngredientService.removeIngredients(this.recipe, this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
   onRate(rating, recipe) {

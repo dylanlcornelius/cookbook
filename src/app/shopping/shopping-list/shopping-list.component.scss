@@ -1,50 +1,39 @@
+.short-container {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
 .item-form {
     display: flex;
     justify-content: center;
 }
 .item-form-field {
-    max-width: 400px;
     width: 100%;
     padding-right: 15px;
 }
 .table-container {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 .ingredients-table .mat-row:last-child,
 .items-table .mat-row:last-child {
     border: none;
 }
-.mobile-label {
-    display: none;
-}
-.buy-icon {
-    vertical-align: middle;
-    font-size: 25px;
-}
-.mat-button {
-    padding: 0;
-    min-width: 30px;
-}
-
-.simplified {
-    flex-grow: 1;
-    max-width: 450px;
-}
-.simplified .mat-row {
+.table-container .mat-row {
     flex-direction: unset;
     align-items: center;
     padding: 5px 10px;
 }
-.simplified .mat-cell {
+.table-container .mat-cell {
     width: 100%;
     display: block;
     min-height: 0;
 }
-.simplified .mat-cell:first-of-type, .mat-cell:last-of-type {
+.table-container .mat-cell:first-of-type, .mat-cell:last-of-type {
     padding: 0;
 }
-.simplified .mat-cell:last-of-type {
+.table-container .mat-cell:last-of-type {
     text-align: end;
 }
 
@@ -59,15 +48,6 @@
     }
     .mat-row:after {
         min-height: 0;
-    }
-    .mobile-label {
-        display: inline;
-    }
-    .mobile-value {
-        float: right;
-    }
-    .mat-header-row {
-        display: none;
     }
     .mat-row {
         flex-direction: column;

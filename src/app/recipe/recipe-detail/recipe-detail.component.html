@@ -3,11 +3,7 @@
 <app-recipe-history-modal [Params]="recipeHistoryModalParams"></app-recipe-history-modal>
 
 <div *ngIf="!loading">
-  <div class="button-row">
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" [routerLink]="['/recipe/list']"><mat-icon>list</mat-icon></a>
-  </div>
-
-  <mat-card class="detail-card primary-text-color mat-elevation-z8">
+  <mat-card class="primary-text-color mat-elevation-z8">
     <mat-progress-bar class="image-progress" mode="determinate" [value]="recipeImageProgress" [hidden]="!recipeImageProgress"></mat-progress-bar>
 
     <mat-card-header class="center center-text">
@@ -24,16 +20,11 @@
         <h2 *ngIf="recipe.link">
           <a class="recipe-link" href="{{recipe.link}}" target="_blank" rel="noreferrer">{{recipe.name}}</a>
         </h2>
+
+        <img *ngIf="recipeImage" class="mobile" mat-card-image [src]="recipeImage" alt=""/>
       </mat-card-title>
       <mat-card-subtitle>
-        <dd>{{recipe.description}}</dd>
-      </mat-card-subtitle>
-    </mat-card-header>
-
-    <div class="container">
-      <mat-card-content>
-        <img mat-card-image *ngIf="recipeImage" [src]="recipeImage" alt=""/>
-
+        <span>{{recipe.description}}</span>
         <mat-card-actions>
           <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
           <button mat-button color="warn" (click)="removeIngredients()">
@@ -41,6 +32,12 @@
             <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
           </button>
         </mat-card-actions>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <div class="container">
+      <mat-card-content *ngIf="recipeImage" class="desktop">
+        <img mat-card-image [src]="recipeImage" alt=""/>
       </mat-card-content>
 
       <mat-card-content class="center-text">
@@ -105,7 +102,13 @@
 
           <div class="list">
             <div class="box" *ngFor="let ingredient of ingredients">
+              <a class="author-link" [routerLink]="['/recipe/detail/', ingredient.id]" *ngIf="ingredient.uom === 'recipe'">
+                {{ingredient.quantity}} - {{ingredient.name}}
+              </a>
+
+              <a class="author-link" [routerLink]="['/ingredient/detail/', ingredient.id]" *ngIf="ingredient.uom !== 'recipe'">
                 {{ingredient.quantity}}  {{ingredient.uom === 'other'? '' : ingredient.uom}} - {{ingredient.name}}
+              </a>
             </div>
           </div>
         </dl>
@@ -124,4 +127,8 @@
       </a>
     </mat-card-actions>
   </mat-card>
+
+  <div class="button-row">
+    <a mat-mini-fab matTooltip="Recipes List" color="primary" routerLink="/recipe/list"><mat-icon>list</mat-icon></a>
+  </div>
 </div>

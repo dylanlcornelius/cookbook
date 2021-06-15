@@ -8,6 +8,7 @@ dd {
 }
 .container {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  column-gap: 25px;
 }
 .center-text {
   text-align: center;
@@ -31,9 +32,6 @@ dd {
   padding: 0;
   min-width: 30px;
 }
-.detail-card {
-  margin: 0 5%;
-}
 .mat-card-title {
   margin-top: 15px;
 }
@@ -47,6 +45,7 @@ dd {
 .mat-card-image {
   object-fit: cover;
   margin: 0 -16px;
+  max-width: 750px;
 }
 .step-header {
   font-size: 14px;

@@ -3,15 +3,6 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <div class="button-row" *ngIf="!isQuickView">
-    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="route.snapshot.params['ingredient-id']">
-      <mat-icon> arrow_back </mat-icon>
-    </a>
-    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient/list']" *ngIf="!route.snapshot.params['ingredient-id']">
-      <mat-icon> list </mat-icon>
-    </a>
-  </div>
-
   <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onFormSubmit(ingredientsForm, formDirective)">
     <mat-form-field class="form-field">
       <input matInput placeholder="Name*" formControlName="name" [errorStateMatcher]="matcher">
@@ -55,7 +46,16 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="button-row">
+    <div class="button-row between">
+      <div *ngIf="!isQuickView">
+        <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="route.snapshot.params['ingredient-id']">
+          <mat-icon> arrow_back </mat-icon>
+        </a>
+        <a mat-mini-fab matTooltip="Ingredients List" color="primary" routerLink="/ingredient/list" *ngIf="!route.snapshot.params['ingredient-id']">
+          <mat-icon> list </mat-icon>
+        </a>
+      </div>
+
       <button mat-mini-fab matTooltip="Save Ingredient" type="submit" [disabled]="!ingredientsForm.valid" color="primary">
         <mat-icon>done</mat-icon>
       </button>

@@ -9,6 +9,7 @@ import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { Recipe } from '@recipe';
 import { UserIngredient } from '@userIngredient';
 import { NumberService } from 'src/app/util/number.service';
+import { Ingredient } from '@ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -32,13 +33,29 @@ export class RecipeIngredientService {
     this.modal.next(modal);
   }
 
-  getRecipeCount(recipe, { ingredients }) {
+  findRecipeIngredients(recipe: Recipe, recipes: Recipe[]): Ingredient[] {
+    return recipe.ingredients.reduce((ingredients, ingredient) => {
+      const ingredientRecipe = recipes.find(({ id }) => id === ingredient.id);
+
+      if (ingredientRecipe) {
+        ingredients = ingredients.concat(this.findRecipeIngredients(ingredientRecipe, recipes));
+      } else {
+        ingredients.push(ingredient);
+      }
+
+      return ingredients;
+    }, []);
+  }
+
+  getRecipeCount(recipe, recipes, { ingredients }) {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
+
     let recipeCount;
     let ingredientCount = 0;
-    if (recipe.ingredients.length === 0 || ingredients.length === 0) {
+    if (recipeIngredients.length === 0 || ingredients.length === 0) {
       return 0;
     }
-    recipe.ingredients.forEach(recipeIngredient => {
+    recipeIngredients.forEach(recipeIngredient => {
       // handle deleted ingredients
       if (recipeIngredient.name === null) {
         ingredientCount++;
@@ -59,17 +76,19 @@ export class RecipeIngredientService {
     });
 
     // user doesn't have all recipe ingredients
-    if (ingredientCount !== recipe.ingredients.length || recipeCount === undefined) {
+    if (ingredientCount !== recipeIngredients.length || recipeCount === undefined) {
       return 0;
     }
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, userIngredient, defaultShoppingList) {
-    if (recipe.ingredients.length > 0) {
+  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient, defaultShoppingList) {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
+
+    if (recipeIngredients.length > 0) {
       this.setModal(new RecipeIngredientModal(
         this.addIngredientsEvent,
-        recipe.ingredients,
+        recipeIngredients,
         userIngredient,
         defaultShoppingList,
         this
@@ -107,9 +126,11 @@ export class RecipeIngredientService {
     self.notificationService.setNotification(new SuccessNotification('Added to list!'));
   }
 
-  removeIngredients(recipe: Recipe, { id, ingredients }: UserIngredient, defaultShoppingList: string) {
-    if (recipe.ingredients && recipe.ingredients.length) {
-      recipe.ingredients.forEach(recipeIngredient => {
+  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string) {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
+
+    if (recipeIngredients.length) {
+      recipeIngredients.forEach(recipeIngredient => {
         ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
             const quantity = this.numberService.toDecimal(recipeIngredient.quantity);

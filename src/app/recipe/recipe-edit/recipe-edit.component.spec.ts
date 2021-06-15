@@ -71,11 +71,19 @@ describe('RecipeEditComponent', () => {
         }]
       });
 
-      const ingredients = [new Ingredient({
-        id: 'id'
-      })]
+      const ingredients = [
+        new Ingredient({
+          id: 'id'
+        }),
+        new Ingredient({
+          id: 'id2'
+        }),
+        new Ingredient({
+          id: 'id3'
+        })
+      ]
 
-      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
@@ -104,7 +112,7 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })]
 
-      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
@@ -112,7 +120,7 @@ describe('RecipeEditComponent', () => {
 
       component.load();
 
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
@@ -137,7 +145,7 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })]
 
-      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(ingredientService, 'buildRecipeIngredients');
@@ -145,7 +153,7 @@ describe('RecipeEditComponent', () => {
 
       component.load();
 
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
@@ -153,17 +161,19 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load ingredients for a new recipe', () => {
-      const recipe = new Recipe({
-        ingredients: [{
+      const ingredients = [
+        new Ingredient({
+          id: 'id'
+        }),
+        new Ingredient({
           id: 'id2'
-        }]
-      });
+        }),
+        new Ingredient({
+          id: 'id3'
+        })
+      ]
 
-      const ingredients = [new Ingredient({
-        id: 'id'
-      })]
-
-      spyOn(recipeService, 'get');
+      spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(ingredientService, 'buildRecipeIngredients');
@@ -171,7 +181,7 @@ describe('RecipeEditComponent', () => {
 
       component.load();
 
-      expect(recipeService.get).not.toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(1);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();

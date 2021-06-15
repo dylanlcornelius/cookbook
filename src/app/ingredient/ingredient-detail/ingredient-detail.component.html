@@ -2,10 +2,6 @@
 <app-validation-modal [params]="validationModalParams"></app-validation-modal>
 
 <div *ngIf="!loading">
-  <div class="button-row">
-    <a mat-mini-fab matTooltip="Ingredients List" color="primary" [routerLink]="['/ingredient/list']"><mat-icon>list</mat-icon></a>
-  </div>
-
   <mat-card class="detail-card">
     <mat-card-header class="center">
       <mat-card-title class="center">
@@ -52,4 +48,8 @@
       </a>
     </mat-card-actions>
   </mat-card>
+
+  <div class="button-row">
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" routerLink="/ingredient/list"><mat-icon>list</mat-icon></a>
+  </div>
 </div>

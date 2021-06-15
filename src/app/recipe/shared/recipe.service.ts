@@ -24,7 +24,7 @@ export class RecipeService extends FirestoreService {
 
   get(id: string): Observable<Recipe>;
   get(): Observable<Recipe[]>;
-  get(): Observable<Recipe | Recipe[]>; // type for spyOn
+  get(id?: string): Observable<Recipe | Recipe[]>; // type for spyOn
   get(id?: string): Observable<Recipe | Recipe[]> {
     return new Observable(observer => {
       if (id) {

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 
 import { RecipeDetailComponent } from './recipe-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -72,24 +72,32 @@ describe('RecipeDetailComponent', () => {
   });
 
   describe('load', () => {
+    beforeEach(() => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.snapshot.params = {id: 'testId'};
+    });
+
     it('should load a recipe with an image', fakeAsync(() => {
       const user = new User({});
-      const recipe = new Recipe({});
+      const recipes = [
+        new Recipe({
+          ingredients: [
+            { id: 'ingredient' },
+            { id: 'ingredient3' }
+          ]
+        })
+      ];
       const ingredients = [new Ingredient({id: 'ingredient'})];
       const userIngredient = new UserIngredient({
         ingredients: [
-          {
-            id: 'ingredient'
-          },
-          {
-            id: 'ingredient2'
-          }
+          { id: 'ingredient' },
+          { id: 'ingredient2' }
         ]
       });
       const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
-      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipes[0])).withArgs().and.returnValue(of(recipes));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
@@ -102,7 +110,7 @@ describe('RecipeDetailComponent', () => {
       tick();
       expect(component.recipeImage).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
@@ -119,7 +127,7 @@ describe('RecipeDetailComponent', () => {
       const recipeHistories = new RecipeHistory({ lastDateCooked: '17/5/2021' });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
-      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
@@ -132,7 +140,7 @@ describe('RecipeDetailComponent', () => {
       tick();
       expect(component.recipeImage).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
@@ -149,7 +157,7 @@ describe('RecipeDetailComponent', () => {
       const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
-      spyOn(recipeService, 'get').and.returnValue(of(recipe));
+      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
@@ -162,7 +170,7 @@ describe('RecipeDetailComponent', () => {
       tick();
       expect(component.recipeImage).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();

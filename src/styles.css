@@ -76,10 +76,12 @@ dt {
 
 .button-row {
   margin: 10px auto;
-  width: 90%;
+}
+.button-row .row-button:first-child {
+  margin-left: 0;
 }
 .search-bar {
-  display: inline !important;
+  display: contents !important;
   padding: 0 5%;
 }
 .mat-progress-bar,
@@ -93,7 +95,6 @@ dt {
 .mat-card-header-text {
   margin: 0 !important;
   width: 100%;
-  overflow: hidden;
 }
 .mat-card-header .mat-card-title {
   font-size: 18px !important;
