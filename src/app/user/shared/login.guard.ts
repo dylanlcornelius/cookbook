@@ -38,7 +38,7 @@ export class LoginGuard implements CanActivate, CanActivateChild {
             this.pageLoad = state.url;
           }
 
-          this.router.navigate(['/login']);
+          this.router.navigate(['/login'], { skipLocationChange: true });
           return false;
         })
       );

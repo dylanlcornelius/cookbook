@@ -49,10 +49,11 @@ export class AuthService {
   
         this.actionService.commitAction(user.uid, Action.LOGIN, 1);
   
+        // use replace url to pop empty route from history
         if (this.redirectUrl) {
-          this.router.navigate([this.redirectUrl]);
+          this.router.navigate([this.redirectUrl], { replaceUrl: true });
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/home'], { replaceUrl: true });
         }
       });
     });
