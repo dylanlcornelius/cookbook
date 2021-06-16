@@ -30,7 +30,7 @@ export class UserPendingGuard implements CanActivate, CanActivateChild {
             return true;
           }
 
-          this.router.navigate(['/user-pending']);
+          this.router.navigate(['/user-pending'], { skipLocationChange: true });
           return false;
         })
       );
