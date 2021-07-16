@@ -140,6 +140,7 @@ describe('RecipeEditComponent', () => {
           id: 'id'
         }]
       });
+      component.recipe = recipe;
 
       const ingredients = [new Ingredient({
         id: 'id'
