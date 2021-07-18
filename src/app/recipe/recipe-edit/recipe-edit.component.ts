@@ -123,7 +123,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.allAvailableIngredients = [...ingredients, ...recipes]
           .reduce((result, ingredient) => {
             const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
-            if (!currentIngredient) {
+            if (!currentIngredient && ingredient.id !== this.recipe.id) {
               result.push({
                 ...ingredient,
                 quantity: 0

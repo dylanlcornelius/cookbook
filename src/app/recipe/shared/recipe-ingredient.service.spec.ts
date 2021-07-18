@@ -4,7 +4,7 @@ import { Recipe } from '@recipe';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { UserIngredient } from '@userIngredient';
 import { UserIngredientService } from '@userIngredientService';
-import { UOMConversion } from '@UOMConverson';
+import { UOM, UOMConversion } from '@UOMConverson';
 
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from 'src/app/util/number.service';
@@ -44,22 +44,58 @@ describe('RecipeIngredientService', () => {
       const recipes = [
         new Recipe({
           id: '1',
+          uom: UOM.RECIPE,
           ingredients: [
             new Ingredient({id: 'a'}),
-            new Ingredient({id: '2'})
+            new Ingredient({id: '2', uom: UOM.RECIPE})
           ]
         }),
         new Recipe({
           id: '2',
+          uom: UOM.RECIPE,
           ingredients: [
             new Ingredient({id: 'b'}),
-            new Ingredient({id: '3'})
+            new Ingredient({id: '3', uom: UOM.RECIPE})
           ]
         }),
         new Recipe({
           id: '3',
+          uom: UOM.RECIPE,
           ingredients: [
             new Ingredient({id: 'c'})
+          ]
+        })
+      ];
+
+      const result = service.findRecipeIngredients(recipes[0], recipes);
+
+      expect(result.length).toEqual(3);
+    });
+
+    it('should handle circularly dependent recipe ingredients', () => {
+      const recipes = [
+        new Recipe({
+          id: '1',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'a'}),
+            new Ingredient({id: '2', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '2',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'b'}),
+            new Ingredient({id: '3', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '3',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'c'}),
+            new Ingredient({id: '2', uom: UOM.RECIPE})
           ]
         })
       ];

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { UOMConversion } from '@UOMConverson';
+import { UOM, UOMConversion } from '@UOMConverson';
 import { FailureNotification, InfoNotification, SuccessNotification } from '@notification';
 import { NotificationService } from '@notificationService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -33,18 +33,32 @@ export class RecipeIngredientService {
     this.modal.next(modal);
   }
 
+  /**
+   * Iterative version of finding recipe ingredients
+   * Doesn't combine duplicate ingredient quantities (buyable amounts should handle quantities)
+   * @param recipe recipe to find ingredients for
+   * @param recipes all recipes
+   * @returns ingredients
+   */
   findRecipeIngredients(recipe: Recipe, recipes: Recipe[]): Ingredient[] {
-    return recipe.ingredients.reduce((ingredients, ingredient) => {
-      const ingredientRecipe = recipes.find(({ id }) => id === ingredient.id);
+    const addedIngredients = [];
 
-      if (ingredientRecipe) {
-        ingredients = ingredients.concat(this.findRecipeIngredients(ingredientRecipe, recipes));
-      } else {
-        ingredients.push(ingredient);
+    let startingIngredients = [...recipe.ingredients];
+    while (startingIngredients.length) {
+      const ingredient = startingIngredients.pop();
+
+      const isAdded = addedIngredients.find(({ id }) => id === ingredient.id);
+      if (!isAdded) {
+        addedIngredients.push(ingredient);
+
+        const ingredientRecipe = recipes.find(({ id }) => id === ingredient.id);
+        if (ingredientRecipe) {
+          startingIngredients = startingIngredients.concat(ingredientRecipe.ingredients);
+        }
       }
+    }
 
-      return ingredients;
-    }, []);
+    return addedIngredients.filter(({ uom }) => uom !== UOM.RECIPE);
   }
 
   getRecipeCount(recipe, recipes, { ingredients }) {
