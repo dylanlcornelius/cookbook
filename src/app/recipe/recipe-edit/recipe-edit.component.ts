@@ -140,13 +140,16 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     } else {
       combineLatest([ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes]) => {
         this.allAvailableIngredients = [...ingredients, ...recipes]
-          .map(ingredient => ({
-            id: ingredient.id,
-            name: ingredient.name,
-            amount: ingredient.amount,
-            uom: ingredient.uom,
-            quantity: 0
-          }))
+          .reduce((result, ingredient) => {
+            const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
+            if (!currentIngredient) {
+              result.push({
+                ...ingredient,
+                quantity: 0
+              })
+            }
+            return result;
+          }, [])
           .sort((a, b) => a.name.localeCompare(b.name));
 
         this.availableIngredients = this.allAvailableIngredients;
