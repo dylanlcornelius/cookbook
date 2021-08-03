@@ -74,7 +74,7 @@ export abstract class FirestoreService {
     this.commitAction(action);
 
     const newDoc = ref?.doc();
-    newDoc.set(data);
+    newDoc.set({ ...data, creationDate: new Date() });
     return newDoc.id;
   }
 

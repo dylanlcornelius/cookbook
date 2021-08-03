@@ -31,7 +31,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   originalConfigs: Config[];
   configContext = {
     title: 'Configurations',
-    displayedColumns: ['id', 'name', 'value'],
+    displayedColumns: ['id', 'name', 'value', 'creationDate'],
     dataSource: [],
     add: this.addConfig,
     remove: this.removeConfig,
@@ -41,7 +41,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   originalNavs: Navigation[];
   navigationContext = {
     title: 'Navs',
-    displayedColumns: ['id', 'name', 'link', 'icon', 'order', 'subMenu', 'isNavOnly'],
+    displayedColumns: ['id', 'name', 'link', 'icon', 'order', 'subMenu', 'isNavOnly', 'creationDate'],
     dataSource: [],
     add: this.addNav,
     remove: this.removeNav,
@@ -51,7 +51,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   originalUsers: User[];
   userContext = {
     title: 'Users',
-    displayedColumns: ['id', 'firstName', 'lastName', 'role', 'theme'],
+    displayedColumns: ['id', 'firstName', 'lastName', 'role', 'theme', 'creationDate'],
     dataSource: [],
     remove: this.removeUser,
     self: this,
@@ -60,28 +60,28 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   originalRecipes: Recipe[];
   recipeContext = {
     title: 'Recipes',
-    displayedColumns: ['id', 'name', 'link', 'categories', 'steps', 'meanRating', 'uid', 'author'],
+    displayedColumns: ['id', 'name', 'link', 'categories', 'steps', 'meanRating', 'uid', 'author', 'creationDate'],
     dataSource: []
   };
 
   originalIngredients: Ingredient[];
   ingredientContext = {
     title: 'Ingredients',
-    displayedColumns: ['id', 'name', 'category', 'amount', 'uom'],
+    displayedColumns: ['id', 'name', 'category', 'amount', 'uom', 'creationDate'],
     dataSource: []
   };
 
   originalUserIngredients: UserIngredient[];
   userIngredientContext = {
     title: 'User Ingredients',
-    displayedColumns: ['id', 'uid', 'ingredients'],
+    displayedColumns: ['id', 'uid', 'ingredients', 'creationDate'],
     dataSource: []
   };
 
   originalUserItems: UserItem[];
   userItemContext = {
     title: 'User Items',
-    displayedColumns: ['id', 'uid', 'items'],
+    displayedColumns: ['id', 'uid', 'items', 'creationDate'],
     dataSource: []
   };
 
