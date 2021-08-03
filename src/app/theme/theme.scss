@@ -22,6 +22,9 @@
     .highlight-box {
         background-color: map-get($theme, "highlight-background");
     }
+    .indicator {
+        color: map-get($theme, 'indicator-color');
+    }
     .footer {
         background-image: map-get($theme, "footer-background");
         box-shadow: map-get($theme, 'shadow');
@@ -37,6 +40,7 @@ $light-theme: (
     selected-background: rgb(47, 60, 136),
     page-background: lightgray,
     text-color: black,
+    indicator-color: #bdbdbd,
     block-background: #eeeeee,
     highlight-background: #373BA6,
     footer-background: linear-gradient(45deg, #373BA6, #212463)
@@ -55,6 +59,7 @@ $dark-theme: (
     selected-background: #075da3,
     page-background: #252525,
     text-color: #dddddd,
+    indicator-color: #5e5e5e,
     block-background: #3d3d3d,
     highlight-background: rgba(2,158,245,1),
     footer-background: linear-gradient(-60deg, rgba(2,158,245,1) -10%, rgba(71,56,115,1) 90%),
