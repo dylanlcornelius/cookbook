@@ -103,7 +103,8 @@
           <div class="list">
             <div class="box" *ngFor="let ingredient of ingredients">
               <a class="author-link" [routerLink]="['/recipe/detail/', ingredient.id]" *ngIf="ingredient.uom === 'recipe'">
-                {{ingredient.quantity}} - {{ingredient.name}}
+                <span>{{ingredient.quantity}} - {{ingredient.name}}</span>
+                <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
               </a>
 
               <a class="author-link" [routerLink]="['/ingredient/detail/', ingredient.id]" *ngIf="ingredient.uom !== 'recipe'">

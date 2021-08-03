@@ -86,7 +86,10 @@
           [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
             <div class="container box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i = index"
                 cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
-              <mat-label>{{ingredient.get('name')? ingredient.get('name').value : ''}}</mat-label>
+              <mat-label>
+                {{ingredient.get('name')? ingredient.get('name').value : ''}}
+                <mat-icon class="indicator" matTooltip="This is a recipe" *ngIf="ingredient.get('uom').value === 'recipe'">r_mobiledata</mat-icon>
+              </mat-label>
               <mat-form-field>
                 <input matInput placeholder="QTY" formControlName="quantity" [errorStateMatcher]="matcher"/>
                 <mat-error *ngIf="!ingredient.get('quantity').valid">
@@ -121,7 +124,10 @@
           <div class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
               [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="dropAvailable($event)">
             <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag [cdkDragData]="ingredient">
-              <mat-label class="col-12">{{ingredient.name}}</mat-label>
+              <mat-label class="col-12">
+                {{ingredient.name}}
+                <mat-icon class="indicator" matTooltip="This is a recipe" *ngIf="ingredient.uom === 'recipe'">r_mobiledata</mat-icon>
+              </mat-label>
             </div>
             <div class="box box-bottom" *ngIf="availableIngredients == 0">
               <mat-label class="col-12">No Ingredients</mat-label>
