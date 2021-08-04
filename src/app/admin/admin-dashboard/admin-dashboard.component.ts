@@ -14,7 +14,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { takeUntil } from 'rxjs/operators';
 import { SuccessNotification } from '@notification';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
 
@@ -26,7 +26,6 @@ import { NavigationService } from '@navigationService';
 export class AdminDashboardComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
-  validationModalParams;
 
   originalConfigs: Config[];
   configContext = {
@@ -93,6 +92,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private userIngredientService: UserIngredientService,
     private userItemService: UserItemService,
     private navigationService: NavigationService,
+    private validationService: ValidationService,
     private notificationService: NotificationService,
   ) {}
 
@@ -155,12 +155,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       name = 'NO NAME';
     }
 
-    self.validationModalParams = {
+    this.validationService.setModal({
       function: self.removeConfigEvent,
       id: id,
       self: self,
       text: `Are you sure you want to delete config ${name}?`
-    };
+    });
   }
 
   removeConfigEvent(self, id) {
@@ -176,12 +176,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       name = 'NO NAME';
     }
 
-    self.validationModalParams = {
+    this.validationService.setModal({
       function: self.removeNavEvent,
       id: id,
       self: self,
       text: `Are you sure you want to delete nav ${name}?`
-    }
+    });
   }
 
   removeNavEvent(self, id) {
@@ -194,12 +194,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       lastName = 'NAME';
     }
     
-    self.validationModalParams = {
+    this.validationService.setModal({
       function: self.removeUserEvent,
       id: id,
       self: self,
       text: `Are you sure you want to delete user ${firstName} ${lastName}?`
-    };
+    });
   }
 
   removeUserEvent(self, id) {
@@ -207,11 +207,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   revert() {
-    this.validationModalParams = {
+    this.validationService.setModal({
       function: this.revertEvent,
       self: this,
       text: 'Are you sure you want to revert your changes?'
-    };
+    });
   }
 
   revertEvent(self) {
@@ -223,11 +223,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.userIngredientContext.dataSource = self.originalUserIngredients;
     self.userItemContext.dataSource = self.originalUserItems;
 
-    self.notificationService.setNotification(new SuccessNotification('Changes reverted'));
+    self.notificationService.setModal(new SuccessNotification('Changes reverted'));
   }
 
   save() {
-    this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
+    this.validationService.setModal({
+      function: this.saveEvent,
+      self: this,
+      text: 'Are you sure you want to save your changes?'
+    });
   }
 
   saveEvent(self) {
@@ -239,6 +243,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     self.userIngredientService.update(self.userIngredientContext.dataSource);
     self.userItemService.update(self.userItemContext.dataSource);
 
-    self.notificationService.setNotification(new SuccessNotification('Changes saved!'));
+    self.notificationService.setModal(new SuccessNotification('Changes saved!'));
   }
 }

@@ -7,7 +7,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurrentUserService } from '@currentUserService';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { User } from '@user';
 
@@ -19,7 +19,6 @@ import { User } from '@user';
 export class ShoppingListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading = true;
-  validationModalParams;
   isCompleted = false;
 
   user: User;
@@ -40,6 +39,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
     private notificationService: NotificationService,
+    private validationService: ValidationService,
   ) {}
 
   ngOnInit() {
@@ -124,7 +124,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
       this.userIngredientService.buyUserIngredient(1, isCompleted);
       this.applyFilter();
-      this.notificationService.setNotification(new SuccessNotification('Ingredient added!'));
+      this.notificationService.setModal(new SuccessNotification('Ingredient added!'));
       if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0) {
         this.isCompleted = true;
       }
@@ -139,7 +139,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.userItemService.formattedUpdate([...this.itemsDataSource.data, { name: form.name.toString().trim() }], this.user.defaultShoppingList, this.itemsId);
 
     this.itemForm.reset();
-    this.notificationService.setNotification(new SuccessNotification('Item added!'));
+    this.notificationService.setModal(new SuccessNotification('Item added!'));
   }
 
   removeItem(index) {
@@ -148,15 +148,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
     this.userItemService.formattedUpdate(this.itemsDataSource.data, this.user.defaultShoppingList, this.itemsId);
     this.userItemService.buyUserItem(1, this.isCompleted);
-    this.notificationService.setNotification(new SuccessNotification('Item removed!'));
+    this.notificationService.setModal(new SuccessNotification('Item removed!'));
   }
 
   addAllToPantry() {
-    this.validationModalParams = {
+    this.validationService.setModal({
       function: this.addAllToPantryEvent,
       self: this,
       text: 'Complete shopping list?'
-    };
+    });
   }
 
   addAllToPantryEvent(self) {
@@ -175,7 +175,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     self.userItemService.buyUserItem(itemsCount, false);
 
     self.applyFilter();
-    self.notificationService.setNotification(new SuccessNotification('List completed!'));
+    self.notificationService.setModal(new SuccessNotification('List completed!'));
     self.isCompleted = true;
   }
 }

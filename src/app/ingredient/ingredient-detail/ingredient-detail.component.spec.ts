@@ -8,12 +8,14 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
 import { NumberService } from 'src/app/util/number.service';
+import { ValidationService } from '@modalService';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
   let fixture: ComponentFixture<IngredientDetailComponent>;
   let ingredientService: IngredientService;
   let numberService: NumberService;
+  let validationService: ValidationService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -33,6 +35,7 @@ describe('IngredientsDetailComponent', () => {
     .compileComponents();
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
+    validationService = TestBed.inject(ValidationService);
   }));
 
   it('should create', () => {
@@ -59,9 +62,11 @@ describe('IngredientsDetailComponent', () => {
 
       component.ingredient = new Ingredient({ name: 'name' });
 
+      spyOn(validationService, 'setModal');
+
       component.deleteIngredient('id');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 

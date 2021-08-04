@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NotificationService } from '@notificationService';
+import { NotificationService } from '@modalService';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Notification } from '@notification';
@@ -11,7 +11,7 @@ import { Notification } from '@notification';
 })
 export class NotificationModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
-  notification: Notification;
+  params: Notification;
 
   constructor(
     private notificationService: NotificationService
@@ -27,15 +27,15 @@ export class NotificationModalComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    this.notificationService.getNotification().pipe(takeUntil(this.unsubscribe$)).subscribe(notification => {
+    this.notificationService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((notification: Notification) => {
       if (!notification) {
         return;
       }
 
-      this.notification = notification;
+      this.params = notification;
       setTimeout(() => {
-        this.notificationService.setNotification(undefined);
-        this.notification = undefined;
+        this.notificationService.setModal(undefined);
+        this.params = undefined;
       }, 3000);
     });
   }

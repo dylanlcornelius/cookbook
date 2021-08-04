@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
@@ -16,7 +16,6 @@ import { Ingredient } from '@ingredient';
 export class IngredientDetailComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading: Boolean = true;
-  validationModalParams;
   ingredient: Ingredient;
 
   constructor(
@@ -25,6 +24,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private notificationService: NotificationService,
     private numberService: NumberService,
+    private validationService: ValidationService,
   ) { }
 
   ngOnInit() {
@@ -45,18 +45,18 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteIngredient(id) {
-    this.validationModalParams = {
+    this.validationService.setModal({
       id: id,
       self: this,
       text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
       function: this.deleteIngredientEvent
-    };
+    });
   }
 
   deleteIngredientEvent(self, id) {
     if (id) {
       self.ingredientService.delete(id);
-      self.notificationService.setNotification(new SuccessNotification('Ingredient deleted!'));
+      self.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));
       self.router.navigate(['/ingredient/list']);
     }
   }

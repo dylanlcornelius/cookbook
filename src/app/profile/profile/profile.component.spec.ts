@@ -12,7 +12,7 @@ import { User } from '@user';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NotificationService } from '@notificationService';
+import { NotificationService } from '@modalService';
 import { ImageService } from '@imageService';
 import { RecipeService } from '@recipeService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -169,11 +169,12 @@ describe('ProfileComponent', () => {
     it('should load histories', () => {
       component.user = new User({ defaultShoppingList: 'default' });
 
-      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
-      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 })]));
+      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' }), new Recipe({ id: 'id2', name: 'recipe' })]));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 }), new RecipeHistory({ recipeId: 'id2', timesCooked: 1 })]));
 
       component.loadHistory();
 
+      expect(component.history.length).toEqual(2);
       expect(component.history[0].name).toEqual('recipe');
       expect(component.history[0].value).toEqual(2);
       expect(recipeService.get).toHaveBeenCalled();
@@ -264,13 +265,13 @@ describe('ProfileComponent', () => {
     it('should update a user record', () => {
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.onFormSubmit({});
 
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

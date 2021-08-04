@@ -12,7 +12,7 @@ import { IngredientService } from '@ingredientService';
 import { User } from '@user';
 import { Ingredient } from '@ingredient';
 import { CurrentUserService } from '@currentUserService';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeHistory } from '@recipeHistory';
 import { UtilService } from '@utilService';
@@ -33,6 +33,7 @@ describe('RecipeDetailComponent', () => {
   let utilService: UtilService;
   let userIngredientService: UserIngredientService;
   let recipeIngredientService: RecipeIngredientService;
+  let validationService: ValidationService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -65,6 +66,7 @@ describe('RecipeDetailComponent', () => {
     utilService = TestBed.inject(UtilService);
     userIngredientService = TestBed.inject(UserIngredientService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
+    validationService = TestBed.inject(ValidationService);
   });
 
   it('should create', () => {
@@ -212,13 +214,13 @@ describe('RecipeDetailComponent', () => {
 
       spyOn(imageService, 'upload').and.returnValue(of('url'));
       spyOn(recipeService, 'update');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.upload).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.recipeImage).toEqual('url');
       expect(component.recipeImageProgress).toBeUndefined();
     });
@@ -244,9 +246,11 @@ describe('RecipeDetailComponent', () => {
     it('should open a modal to delete a recipe', () => {
       component.recipe = new Recipe({});
 
+      spyOn(validationService, 'setModal');
+
       component.deleteRecipe('id');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -254,13 +258,13 @@ describe('RecipeDetailComponent', () => {
     it('should not attempt to delete a recipe without an id', () => {
       spyOn(recipeService, 'delete');
       spyOn(component, 'deleteFile');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.deleteRecipeEvent(component, '');
 
       expect(recipeService.delete).not.toHaveBeenCalled();
       expect(component.deleteFile).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
     });
 
     it('should delete a recipe', () => {
@@ -268,13 +272,13 @@ describe('RecipeDetailComponent', () => {
       spyOn(router, 'navigate');
       spyOn(recipeService, 'delete');
       spyOn(component, 'deleteFile');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.deleteRecipeEvent(component, 'id');
 
       expect(recipeService.delete).toHaveBeenCalled();
       expect(component.deleteFile).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
   });
@@ -342,12 +346,12 @@ describe('RecipeDetailComponent', () => {
   describe('updateRecipeHistoryEvent', () => {
     it('should delete a recipe', () => {
       spyOn(recipeHistoryService, 'set');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.updateRecipeHistoryEvent(component, 'id', 'uid', 10);
 
       expect(recipeHistoryService.set).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

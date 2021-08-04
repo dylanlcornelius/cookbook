@@ -2,16 +2,16 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Ingredient } from '@ingredient';
 import { UserIngredient } from '@userIngredient';
 import { UOMConversion } from '@UOMConverson';
-import { RecipeIngredientService } from '@recipeIngredientService';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 
 import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.component';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
+import { RecipeIngredientModalService } from '@modalService';
 
 describe('RecipeIngredientModalComponent', () => {
   let component: RecipeIngredientModalComponent;
   let fixture: ComponentFixture<RecipeIngredientModalComponent>;
-  let recipeIngredientServce: RecipeIngredientService;
+  let recipeIngredientModalService: RecipeIngredientModalService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -30,7 +30,7 @@ describe('RecipeIngredientModalComponent', () => {
     fixture = TestBed.createComponent(RecipeIngredientModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    recipeIngredientServce = TestBed.inject(RecipeIngredientService);
+    recipeIngredientModalService = TestBed.inject(RecipeIngredientModalService);
   });
 
   it('should create', () => {
@@ -67,9 +67,9 @@ describe('RecipeIngredientModalComponent', () => {
         defaultShoppingList,
         this
       );
-      recipeIngredientServce.setModal(recipeIngredientModal);
+      recipeIngredientModalService.setModal(recipeIngredientModal);
 
-      spyOn(recipeIngredientServce, 'getModal');
+      spyOn(recipeIngredientModalService, 'getModal');
     });
 
     it('should use all ingredients', () => {

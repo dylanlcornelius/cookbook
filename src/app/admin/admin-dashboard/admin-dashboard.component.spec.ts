@@ -12,7 +12,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { of } from 'rxjs';
 import { Config } from '@config';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { NavigationService } from '@navigationService';
 
 describe('AdminDashboardComponent', () => {
@@ -25,6 +25,7 @@ describe('AdminDashboardComponent', () => {
   let ingredientService: IngredientService;
   let userIngredientService: UserIngredientService;
   let userItemService: UserItemService;
+  let validationService: ValidationService;
   let notificationService: NotificationService;
 
   beforeEach(waitForAsync(() => {
@@ -53,6 +54,7 @@ describe('AdminDashboardComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     userIngredientService = TestBed.inject(UserIngredientService);
     userItemService = TestBed.inject(UserItemService);
+    validationService = TestBed.inject(ValidationService);
     notificationService = TestBed.inject(NotificationService);
   });
 
@@ -108,15 +110,19 @@ describe('AdminDashboardComponent', () => {
 
   describe('removeConfig', () => {
     it('should delete a config with a name', () => {
+      spyOn(validationService, 'setModal');
+
       component.removeConfig(component, 'id', 'name');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
 
     it('should delete a config without a name', () => {
+      spyOn(validationService, 'setModal');
+     
       component.removeConfig(component, 'id', undefined);
       
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
   
@@ -142,15 +148,19 @@ describe('AdminDashboardComponent', () => {
 
   describe('removeNav', () => {
     it('should delete a navigation without a name', () => {
+      spyOn(validationService, 'setModal');
+     
       component.removeNav(component, '', '');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
 
     it('should handle a navigation deletion', () => {
+      spyOn(validationService, 'setModal');
+     
       component.removeNav(component, '', 'name');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -166,15 +176,19 @@ describe('AdminDashboardComponent', () => {
 
   describe('removeUser', () => {
     it('should remove a user with a first or last name', () => {
+      spyOn(validationService, 'setModal');
+     
       component.removeUser(component, 'id', undefined, 'last');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
 
     it('should remove a user without a first or last name', () => {
+      spyOn(validationService, 'setModal');
+     
       component.removeUser(component, 'id', undefined, undefined);
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -190,9 +204,11 @@ describe('AdminDashboardComponent', () => {
 
   describe('revert', () => {
     it('should revert all changes', () => {
+      spyOn(validationService, 'setModal');
+     
       component.revert();
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -200,20 +216,22 @@ describe('AdminDashboardComponent', () => {
     it('should revert all changes', () => {
       component.originalConfigs = [new Config({})];
 
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.revertEvent(component);
 
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.configContext.dataSource).toEqual(component.originalConfigs);
     });
   });
 
   describe('save', () => {
     it('should save all changes', () => {
+      spyOn(validationService, 'setModal');
+     
       component.save();
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -226,7 +244,7 @@ describe('AdminDashboardComponent', () => {
       spyOn(ingredientService, 'update');
       spyOn(userIngredientService, 'update');
       spyOn(userItemService, 'update');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.saveEvent(component);
 
@@ -237,7 +255,7 @@ describe('AdminDashboardComponent', () => {
       expect(ingredientService.update).toHaveBeenCalled();
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(userItemService.update).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

@@ -1,20 +1,8 @@
-/*
-** DROP THIS IN HTML **
-<app-validation-modal [params]="validationModalParams"></app-validation-modal>
-
-** DROP THIS IN TYPESCRIPT **
--- id is optional --
-validationModalParams;
-
-this.validationModalParams = {
-  function: this.removeConfigEvent,
-  id: id,
-  self: this,
-  text: 'Are you sure you want to delete config ' + name + '?'
-};
-*/
-
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ValidationService } from '@modalService';
+import { Validation } from '@validation';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
@@ -23,13 +11,30 @@ import { ModalComponent } from '../modal/modal.component';
   styleUrls: ['./validation-modal.component.scss']
 })
 export class ValidationModalComponent {
-  @Input()
-  params;
+  private unsubscribe$ = new Subject();
+  params: Validation;
 
   @ViewChild(ModalComponent)
   modal: ModalComponent;
 
-  constructor() {}
+  constructor(
+    private validationService: ValidationService
+  ) {}
+
+  ngOnInit() {
+    this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+  
+  load() {
+    this.validationService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((validation: Validation) => {
+      this.params = validation;
+    });
+  }
 
   cancel() {
     this.modal.close();

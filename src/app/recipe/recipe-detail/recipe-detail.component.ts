@@ -7,7 +7,7 @@ import { Observable, combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -27,7 +27,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   online$: Observable<boolean>;
 
   loading = true;
-  validationModalParams;
   recipeHistoryModalParams;
 
   user: User;
@@ -52,6 +51,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
     private userIngredientService: UserIngredientService,
+    private validationService: ValidationService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -127,7 +127,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
           this.recipe.hasImage = true;
           this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-          this.notificationService.setNotification(new SuccessNotification('Image uploaded!'));
+          this.notificationService.setModal(new SuccessNotification('Image uploaded!'));
         } else {
           this.recipeImageProgress = progress;
         }
@@ -144,19 +144,19 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteRecipe(id) {
-    this.validationModalParams = {
+    this.validationService.setModal({
       id: id,
       self: this,
       text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?',
       function: this.deleteRecipeEvent
-    };
+    });
   }
 
   deleteRecipeEvent(self, id) {
     if (id) {
       self.recipeService.delete(id);
       self.deleteFile(id);
-      self.notificationService.setNotification(new SuccessNotification('Recipe deleted!'));
+      self.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
       self.router.navigate(['/recipe/list']);
     }
   }
@@ -189,6 +189,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   updateRecipeHistoryEvent(self, recipeId, uid, timesCooked) {
     self.recipeHistoryService.set(uid, recipeId, timesCooked);
-    self.notificationService.setNotification(new SuccessNotification('Recipe updated!'));
+    self.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   }
 }

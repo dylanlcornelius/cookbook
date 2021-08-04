@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NotificationService } from '@notificationService';
+import { NotificationService, RecipeIngredientModalService } from '@modalService';
 import { Recipe } from '@recipe';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { UserIngredient } from '@userIngredient';
@@ -12,6 +12,7 @@ import { Ingredient } from '@ingredient';
 
 describe('RecipeIngredientService', () => {
   let service: RecipeIngredientService;
+  let recipeIngredientModalService: RecipeIngredientModalService;
   let uomConversion: UOMConversion;
   let notificationService: NotificationService;
   let userIngredientService: UserIngredientService;
@@ -28,6 +29,7 @@ describe('RecipeIngredientService', () => {
 
   beforeEach(() => {
     service = TestBed.inject(RecipeIngredientService);
+    recipeIngredientModalService = TestBed.inject(RecipeIngredientModalService);
     uomConversion = TestBed.inject(UOMConversion);
     notificationService = TestBed.inject(NotificationService);
     userIngredientService = TestBed.inject(UserIngredientService);
@@ -314,14 +316,14 @@ describe('RecipeIngredientService', () => {
       });
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
-      spyOn(service, 'setModal');
-      spyOn(notificationService, 'setNotification');
+      spyOn(recipeIngredientModalService, 'setModal');
+      spyOn(notificationService, 'setModal');
 
       service.addIngredients(recipe, [], new UserIngredient({}), '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
-      expect(service.setModal).toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
+      expect(recipeIngredientModalService.setModal).toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
     });
 
     it('should show an error if the uom conversion is invalid', () => {
@@ -332,14 +334,14 @@ describe('RecipeIngredientService', () => {
       });
       
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
-      spyOn(service, 'setModal');
-      spyOn(notificationService, 'setNotification');
+      spyOn(recipeIngredientModalService, 'setModal');
+      spyOn(notificationService, 'setModal');
 
       service.addIngredients(recipe, [], new UserIngredient({}), '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
-      expect(service.setModal).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(recipeIngredientModalService.setModal).not.toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -362,14 +364,14 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal').and.returnValue(10);
       spyOn(uomConversion, 'convert').and.returnValue(5);
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       service.addIngredientsEvent(service, ingredients, userIngredient, '');
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
 
     it('should show an error if the uom conversion is invalid', () => {
@@ -388,14 +390,14 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal').and.returnValue(null);
       spyOn(uomConversion, 'convert').and.returnValue(false);
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       service.addIngredientsEvent(service, ingredients, userIngredient, '');
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
 
     it('should skip ingredients that are not available', () => {
@@ -414,14 +416,14 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal');
       spyOn(uomConversion, 'convert');
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       service.addIngredientsEvent(service, ingredients, userIngredient, '');
 
       expect(numberService.toDecimal).not.toHaveBeenCalled();
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -450,7 +452,7 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal').and.returnValue(10);
       spyOn(uomConversion, 'convert').and.returnValue(5);
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
       service.removeIngredients(recipe, [], userIngredient, '');
@@ -459,7 +461,7 @@ describe('RecipeIngredientService', () => {
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalled();
     });
 
@@ -486,7 +488,7 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal').and.returnValue(10);
       spyOn(uomConversion, 'convert').and.returnValue(5);
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
       service.removeIngredients(recipe, [], userIngredient, '');
@@ -495,7 +497,7 @@ describe('RecipeIngredientService', () => {
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalled();
     });
 
@@ -522,7 +524,7 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal').and.returnValue(null);
       spyOn(uomConversion, 'convert').and.returnValue(false);
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
       service.removeIngredients(recipe, [], userIngredient, '');
@@ -531,7 +533,7 @@ describe('RecipeIngredientService', () => {
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalled();
     });
 
@@ -558,7 +560,7 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal');
       spyOn(uomConversion, 'convert');
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
       service.removeIngredients(recipe, [], userIngredient, '');
@@ -567,7 +569,7 @@ describe('RecipeIngredientService', () => {
       expect(numberService.toDecimal).not.toHaveBeenCalled();
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalled();
     });
 
@@ -579,7 +581,7 @@ describe('RecipeIngredientService', () => {
       spyOn(numberService, 'toDecimal');
       spyOn(uomConversion, 'convert');
       spyOn(userIngredientService, 'formattedUpdate');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
       service.removeIngredients(recipe, [], userIngredient, '');
@@ -588,7 +590,7 @@ describe('RecipeIngredientService', () => {
       expect(numberService.toDecimal).not.toHaveBeenCalled();
       expect(uomConversion.convert).not.toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalled();
     });
   });

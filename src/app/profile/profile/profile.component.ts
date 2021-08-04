@@ -14,7 +14,7 @@ import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { Subject, Observable, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from '@notificationService';
+import { NotificationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { ImageService } from '@imageService';
 import { UtilService } from '@utilService';
@@ -204,6 +204,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.userService.update(user.getObject(), user.getId());
     this.currentUserService.setCurrentUser(user);
-    this.notificationService.setNotification(new SuccessNotification('Profile updated!'));
+    this.notificationService.setModal(new SuccessNotification('Profile updated!'));
   }
 }

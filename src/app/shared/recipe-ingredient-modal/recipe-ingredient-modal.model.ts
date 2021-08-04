@@ -1,7 +1,8 @@
+import { Modal } from '@modalService';
 import { Ingredient } from '@ingredient';
 import { UserIngredient } from '@userIngredient';
 
-export class RecipeIngredientModal {
+export class RecipeIngredientModal extends Modal {
     function: Function;
     ingredients: Ingredient[];
     userIngredient: UserIngredient;
@@ -15,6 +16,7 @@ export class RecipeIngredientModal {
         defaultShoppingList: string,
         self
     ) {
+        super();
         this.function = eventFunction;
         this.ingredients = ingredients;
         this.userIngredient = userIngredient;

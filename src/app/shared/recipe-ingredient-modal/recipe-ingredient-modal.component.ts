@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RecipeIngredientService } from '@recipeIngredientService';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
+import { RecipeIngredientModalService } from '@modalService';
 
 @Component({
   selector: 'app-recipe-ingredient-modal',
@@ -20,7 +20,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
   selectionCount = 0;
 
   constructor(
-    private recipeIngredientServce: RecipeIngredientService
+    private recipeIngredientModalService: RecipeIngredientModalService
   ) { }
 
   ngOnInit() {
@@ -33,7 +33,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    this.recipeIngredientServce.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe(modal => {
+    this.recipeIngredientModalService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((modal: RecipeIngredientModal) => {
       this.params = modal;
     });
   }
