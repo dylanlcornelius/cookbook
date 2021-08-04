@@ -121,7 +121,7 @@ describe('RecipeDetailComponent', () => {
 
     it('should load a recipe without an image', fakeAsync(() => {
       const user = new User({});
-      const recipe = new Recipe({});
+      const recipe = new Recipe({ creationDate: { toDate: () => {} } });
       const ingredients = [new Ingredient({})];
       const userIngredient = new UserIngredient({});
       const recipeHistories = new RecipeHistory({ lastDateCooked: '17/5/2021' });

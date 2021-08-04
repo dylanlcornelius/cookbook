@@ -4,7 +4,9 @@ export abstract class Model {
 
     constructor(data) {
         this.id = data.id || '';
-        this.creationDate = data.creationDate?.toDate();
+        if (data.creationDate && data.creationDate.toDate) {
+            this.creationDate = data.creationDate.toDate();
+        }
     }
 
     public getId() {
