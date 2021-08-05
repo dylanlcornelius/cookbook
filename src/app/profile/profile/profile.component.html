@@ -4,15 +4,11 @@
   <mat-tab-group class="box mat-elevation-z8" dynamicHeight="true" animationDuration="1000ms" [selectedIndex]="selectedIndex">
     <mat-tab label="Profile">
       <div class="tab-body">
-        <h2>Your Profile</h2>
-
         <mat-progress-bar class="image-progress" mode="determinate" [value]="userImageProgress" [hidden]="!userImageProgress"></mat-progress-bar>
 
-        <div class="image-buttons" *ngIf="(online$ | async)">
-          <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
-          <button mat-button matTooltip="Add Image" (click)="uploadFile.click()" [hidden]="userImage"><mat-icon>add</mat-icon></button>
-          <button mat-button matTooltip="Delete Image" (click)="deleteFile(user.id)" [hidden]="!userImage"><mat-icon>close</mat-icon></button>
-        </div>
+        <h2>Your Profile</h2>
+
+        <app-image-upload [id]="user.id" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
 
         <div class="container">
           <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>

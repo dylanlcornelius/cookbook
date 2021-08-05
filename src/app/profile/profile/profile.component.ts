@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private utilService: UtilService,
     private recipeService: RecipeService,
-    private recipeHistoryService: RecipeHistoryService
+    private recipeHistoryService: RecipeHistoryService,
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
 
@@ -171,32 +171,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  readFile(event) {
-    if (event && event.target && event.target.files[0]) {
-      this.imageService.upload(this.user.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
-        if (typeof progress === 'string') {
-          this.userImage = progress;
-          this.userImageProgress = undefined;
-
-          const user = new User({ ...this.user, hasImage: true });
-
-          this.userService.update(user.getObject(), user.getId());
-          this.currentUserService.setCurrentUser(user);
-        } else {
-          this.userImageProgress = progress;
-        }
-      });
-    }
-  }
-
-  deleteFile(path) {
-    this.imageService.deleteFile(path).then(() => {
-      const user = new User({ ...this.user, hasImage: false });
-
-      this.userService.update(user.getObject(), user.getId());
-      this.currentUserService.setCurrentUser(user);
-      this.userImage = undefined;
-    });
+  updateImage = (hasImage) => {
+    this.user.hasImage = hasImage;
+    this.userService.update(this.user.getObject(), this.user.getId());
+    this.currentUserService.setCurrentUser(this.user);
   }
 
   onFormSubmit(form) {

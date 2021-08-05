@@ -118,44 +118,24 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  readFile(event) {
-    if (event && event.target && event.target.files[0]) {
-      this.imageService.upload(this.recipe.getId(), event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
-        if (typeof progress === 'string') {
-          this.recipeImage = progress;
-          this.recipeImageProgress = undefined;
-
-          this.recipe.hasImage = true;
-          this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-          this.notificationService.setModal(new SuccessNotification('Image uploaded!'));
-        } else {
-          this.recipeImageProgress = progress;
-        }
-      });
-    }
-  }
-
-  deleteFile(path) {
-    this.imageService.deleteFile(path).then(() => {
-      this.recipe.hasImage = false;
-      this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-      this.recipeImage = undefined;
-    });
+  updateImage = (hasImage) => {
+    this.recipe.hasImage = hasImage;
+    this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
   }
 
   deleteRecipe(id) {
     this.validationService.setModal({
       id: id,
       self: this,
-      text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?',
+      text: `Are you sure you want to delete recipe ${this.recipe.name}?`,
       function: this.deleteRecipeEvent
     });
   }
 
   deleteRecipeEvent(self, id) {
     if (id) {
+      self.imageService.deleteFile(id);
       self.recipeService.delete(id);
-      self.deleteFile(id);
       self.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
       self.router.navigate(['/recipe/list']);
     }

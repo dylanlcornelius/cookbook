@@ -9,11 +9,9 @@
       <div class="rating-buttons">
         <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="user.uid"></app-rating>
       </div>
-      <div class="image-buttons" *ngIf="(online$ | async)">
-        <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
-        <button mat-button matTooltip="Add Image" (click)="uploadFile.click()" [hidden]="recipeImage"><mat-icon>add</mat-icon></button>
-        <button mat-button matTooltip="Delete Image" (click)="deleteFile(recipe.id)" [hidden]="!recipeImage"><mat-icon>close</mat-icon></button>
-      </div>
+
+      <app-image-upload [id]="recipe.id" [updateImage]="updateImage" [(progress)]="recipeImageProgress" [(image)]="recipeImage"></app-image-upload>
+
       <mat-card-title>
         <h2 *ngIf="!recipe.link">{{recipe.name}}</h2>
         <h2 *ngIf="recipe.link">

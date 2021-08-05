@@ -182,64 +182,16 @@ describe('RecipeDetailComponent', () => {
     }));
   });
 
-  describe('readFile', () => {
-    it('should not upload a blank url', () => {
-      spyOn(imageService, 'upload');
-      spyOn(recipeService, 'update');
-
-      component.readFile({});
-
-      expect(imageService.upload).not.toHaveBeenCalled();
-      expect(recipeService.update).not.toHaveBeenCalled();
-      expect(component.recipeImage).toBeUndefined();
-      expect(component.recipeImageProgress).toBeUndefined();
-    });
-
-    it('should upload a file and return progress', () => {
+  describe('updateImage', () => {
+    it('should update recipe image metadata',() => {
       component.recipe = new Recipe({});
 
-      spyOn(imageService, 'upload').and.returnValue(of(1));
       spyOn(recipeService, 'update');
 
-      component.readFile({target: {files: [{}]}});
+      component.updateImage(false);
 
-      expect(imageService.upload).toHaveBeenCalled();
-      expect(recipeService.update).not.toHaveBeenCalled();
-      expect(component.recipeImage).toBeUndefined();
-      expect(component.recipeImageProgress).toEqual(1);
-    });
-
-    it('should upload a file and return a file', () => {
-      component.recipe = new Recipe({});
-
-      spyOn(imageService, 'upload').and.returnValue(of('url'));
-      spyOn(recipeService, 'update');
-      spyOn(notificationService, 'setModal');
-
-      component.readFile({target: {files: [{}]}});
-
-      expect(imageService.upload).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalled();
-      expect(notificationService.setModal).toHaveBeenCalled();
-      expect(component.recipeImage).toEqual('url');
-      expect(component.recipeImageProgress).toBeUndefined();
     });
-  });
-
-  describe('deleteFile', () => {
-    it('should delete a file', fakeAsync(() => {
-      component.recipe = new Recipe({});
-      component.recipeImage = 'url';
-
-      spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
-      spyOn(recipeService, 'update');
-
-      component.deleteFile('url');
-
-      tick();
-      expect(imageService.deleteFile).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalled();
-    }));
   });
 
   describe('deleteRecipe', () => {
@@ -256,28 +208,28 @@ describe('RecipeDetailComponent', () => {
 
   describe('deleteRecipeEvent', () => {
     it('should not attempt to delete a recipe without an id', () => {
+      spyOn(imageService, 'deleteFile');
       spyOn(recipeService, 'delete');
-      spyOn(component, 'deleteFile');
       spyOn(notificationService, 'setModal');
 
       component.deleteRecipeEvent(component, '');
 
+      expect(imageService.deleteFile).not.toHaveBeenCalled();
       expect(recipeService.delete).not.toHaveBeenCalled();
-      expect(component.deleteFile).not.toHaveBeenCalled();
       expect(notificationService.setModal).not.toHaveBeenCalled();
     });
 
     it('should delete a recipe', () => {
       const router = TestBed.inject(Router);
       spyOn(router, 'navigate');
+      spyOn(imageService, 'deleteFile');
       spyOn(recipeService, 'delete');
-      spyOn(component, 'deleteFile');
       spyOn(notificationService, 'setModal');
 
       component.deleteRecipeEvent(component, 'id');
 
+      expect(imageService.deleteFile).toHaveBeenCalled();
       expect(recipeService.delete).toHaveBeenCalled();
-      expect(component.deleteFile).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });

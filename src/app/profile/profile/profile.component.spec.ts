@@ -195,70 +195,19 @@ describe('ProfileComponent', () => {
     });
   });
 
-  describe('readFile', () => {
-    it('should not upload a blank url', () => {
-      spyOn(imageService, 'upload');
-      spyOn(userService, 'update');
-      spyOn(currentUserService, 'setCurrentUser');
-
-      component.readFile({});
-
-      expect(imageService.upload).not.toHaveBeenCalled();
-      expect(userService.update).not.toHaveBeenCalled();
-      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
-      expect(component.userImage).toBeUndefined();
-      expect(component.userImageProgress).toBeUndefined();
-    });
-
-    it('should upload a file and return progress', () => {
-      component.user = new User({});
-
-      spyOn(imageService, 'upload').and.returnValue(of(1));
-      spyOn(userService, 'update');
-      spyOn(currentUserService, 'setCurrentUser');
-
-      component.readFile({target: {files: [{}]}});
-
-      expect(imageService.upload).toHaveBeenCalled();
-      expect(userService.update).not.toHaveBeenCalled();
-      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
-      expect(component.userImage).toBeUndefined();
-      expect(component.userImageProgress).toEqual(1);
-    });
-
-    it('should upload a file and return a file', () => {
-      component.user = new User({});
-
-      spyOn(imageService, 'upload').and.returnValue(of('url'));
-      spyOn(userService, 'update');
-      spyOn(currentUserService, 'setCurrentUser');
-
-      component.readFile({target: {files: [{}]}});
-
-      expect(imageService.upload).toHaveBeenCalled();
-      expect(userService.update).toHaveBeenCalled();
-      expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-      expect(component.userImage).toEqual('url');
-      expect(component.userImageProgress).toBeUndefined();
-    });
-  });
-
   describe('deleteFile', () => {
-    it('should delete a file', fakeAsync(() => {
+    it('should delete a file', () => {
       component.user = new User({});
       component.userImage = 'url';
 
-      spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
-      component.deleteFile('url');
+      component.updateImage(true);
 
-      tick();
-      expect(imageService.deleteFile).toHaveBeenCalled();
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-    }));
+    });
   });
 
   describe('onFormSubmit', () => {
