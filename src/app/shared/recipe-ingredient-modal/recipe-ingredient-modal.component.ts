@@ -55,7 +55,6 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
     }
 
     this.params.function(
-      this.params.self,
       selectedIngredients,
       this.params.userIngredient,
       this.params.defaultShoppingList

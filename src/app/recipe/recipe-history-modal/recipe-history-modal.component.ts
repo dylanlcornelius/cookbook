@@ -10,7 +10,6 @@ this.recipeHistoryModalParams = {
   recipeId: recipe.id,
   uid: this.user.defaultShoppingList,
   timesCooked: this.timesCooked,
-  self: this,
   text: 'Edit times cooked for ' + recipe.name
 };
 */
@@ -66,7 +65,6 @@ export class RecipeHistoryModalComponent implements OnInit {
 
   confirm() {
     this.params.function(
-      this.params.self,
       this.params.recipeId,
       this.params.uid,
       this.form.get('timesCooked').value,

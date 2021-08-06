@@ -61,11 +61,10 @@ describe('RecipeIngredientModalComponent', () => {
 
     beforeEach(() => {
       const recipeIngredientModal = new RecipeIngredientModal(
-        (_self, _ingredients) => {},
+        (_ingredients) => {},
         [new Ingredient({})],
         userIngredient,
         defaultShoppingList,
-        this
       );
       recipeIngredientModalService.setModal(recipeIngredientModal);
 
@@ -80,7 +79,7 @@ describe('RecipeIngredientModalComponent', () => {
 
       component.add();
 
-      expect(component.params.function).toHaveBeenCalledWith(this, component.params.ingredients, component.params.userIngredient, component.params.defaultShoppingList);
+      expect(component.params.function).toHaveBeenCalledWith(component.params.ingredients, component.params.userIngredient, component.params.defaultShoppingList);
       expect(component.modal.close).toHaveBeenCalled();
     });
 
@@ -98,7 +97,7 @@ describe('RecipeIngredientModalComponent', () => {
 
       component.add();
 
-      expect(component.params.function).toHaveBeenCalledWith(this, [ingredient1], component.params.userIngredient, component.params.defaultShoppingList);
+      expect(component.params.function).toHaveBeenCalledWith([ingredient1], component.params.userIngredient, component.params.defaultShoppingList);
       expect(component.modal.close).toHaveBeenCalled();
     });
   });

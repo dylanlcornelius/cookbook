@@ -57,20 +57,16 @@ describe('IngredientModalComponent', () => {
 
   describe('confirm', () => {
     it('should change an ingredient pantry quantity', () => {
-      const controller = {
-        userIngredients: [{id: 'id'}],
-        dataSource: {
-          data: [{id: 'id', pantryQuatity: 10}]
-        }
-      };
-
       spyOn(numberService, 'toFormattedFraction');
 
       component.Params = {
-        function: (_self) => {},
-        self: controller,
+        function: () => {},
         data: {
           id: 'id'
+        },
+        userIngredients: [{id: 'id'}],
+        dataSource: {
+          data: [{id: 'id', pantryQuatity: 10}]
         }
       };
 

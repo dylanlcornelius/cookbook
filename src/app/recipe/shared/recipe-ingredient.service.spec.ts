@@ -366,7 +366,7 @@ describe('RecipeIngredientService', () => {
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(service, ingredients, userIngredient, '');
+      service.addIngredientsEvent(ingredients, userIngredient, '');
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
@@ -392,7 +392,7 @@ describe('RecipeIngredientService', () => {
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(service, ingredients, userIngredient, '');
+      service.addIngredientsEvent(ingredients, userIngredient, '');
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
@@ -418,7 +418,7 @@ describe('RecipeIngredientService', () => {
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(service, ingredients, userIngredient, '');
+      service.addIngredientsEvent(ingredients, userIngredient, '');
 
       expect(numberService.toDecimal).not.toHaveBeenCalled();
       expect(uomConversion.convert).not.toHaveBeenCalled();

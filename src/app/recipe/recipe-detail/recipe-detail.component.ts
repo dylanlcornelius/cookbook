@@ -126,18 +126,17 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   deleteRecipe(id) {
     this.validationService.setModal({
       id: id,
-      self: this,
       text: `Are you sure you want to delete recipe ${this.recipe.name}?`,
       function: this.deleteRecipeEvent
     });
   }
 
-  deleteRecipeEvent(self, id) {
+  deleteRecipeEvent = (id) => {
     if (id) {
-      self.imageService.deleteFile(id);
-      self.recipeService.delete(id);
-      self.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
-      self.router.navigate(['/recipe/list']);
+      this.imageService.deleteFile(id);
+      this.recipeService.delete(id);
+      this.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
+      this.router.navigate(['/recipe/list']);
     }
   }
 
@@ -162,13 +161,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       recipeId: recipe.id,
       uid: this.user.defaultShoppingList,
       timesCooked: this.timesCooked,
-      self: this,
       text: 'Edit times cooked for ' + recipe.name
     };
   }
 
-  updateRecipeHistoryEvent(self, recipeId, uid, timesCooked) {
-    self.recipeHistoryService.set(uid, recipeId, timesCooked);
-    self.notificationService.setModal(new SuccessNotification('Recipe updated!'));
+  updateRecipeHistoryEvent = (recipeId, uid, timesCooked) => {
+    this.recipeHistoryService.set(uid, recipeId, timesCooked);
+    this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   }
 }

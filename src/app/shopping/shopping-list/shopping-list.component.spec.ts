@@ -329,7 +329,7 @@ describe('ShoppingListComponent', () => {
       spyOn(component, 'applyFilter');
       spyOn(notificationService, 'setModal');
 
-      component.addAllToPantryEvent(component);
+      component.addAllToPantryEvent();
 
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();

@@ -42,9 +42,9 @@ export class ValidationModalComponent {
 
   confirm() {
     if (this.params.id) {
-      this.params.function(this.params.self, this.params.id);
+      this.params.function(this.params.id);
     } else {
-      this.params.function(this.params.self);
+      this.params.function();
     }
     this.modal.close();
   }

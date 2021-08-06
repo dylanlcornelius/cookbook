@@ -212,7 +212,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(recipeService, 'delete');
       spyOn(notificationService, 'setModal');
 
-      component.deleteRecipeEvent(component, '');
+      component.deleteRecipeEvent('');
 
       expect(imageService.deleteFile).not.toHaveBeenCalled();
       expect(recipeService.delete).not.toHaveBeenCalled();
@@ -226,7 +226,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(recipeService, 'delete');
       spyOn(notificationService, 'setModal');
 
-      component.deleteRecipeEvent(component, 'id');
+      component.deleteRecipeEvent('id');
 
       expect(imageService.deleteFile).toHaveBeenCalled();
       expect(recipeService.delete).toHaveBeenCalled();
@@ -300,7 +300,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(recipeHistoryService, 'set');
       spyOn(notificationService, 'setModal');
 
-      component.updateRecipeHistoryEvent(component, 'id', 'uid', 10);
+      component.updateRecipeHistoryEvent('id', 'uid', 10);
 
       expect(recipeHistoryService.set).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();

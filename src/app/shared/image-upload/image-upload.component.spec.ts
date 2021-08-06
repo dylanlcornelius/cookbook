@@ -97,7 +97,7 @@ describe('ImageUploadComponent', () => {
       spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
       spyOn(component, 'updateImage');
 
-      component.deleteFileEvent(component, 'url');
+      component.deleteFileEvent('url');
 
       tick();
       expect(imageService.deleteFile).toHaveBeenCalled();

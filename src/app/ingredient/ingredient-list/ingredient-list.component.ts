@@ -103,15 +103,16 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     }
 
     this.ingredientModalParams = {
-      data: data,
-      self: this,
+      data,
+      userIngredients: this.userIngredients,
+      dataSource: this.dataSource,
       text: 'Edit pantry quantity for ' + this.findIngredient(id).name,
       function: this.editIngredientEvent
     };
   }
 
-  editIngredientEvent(self) {
-    self.userIngredientService.formattedUpdate(self.userIngredients, self.user.defaultShoppingList, self.id);
+  editIngredientEvent = () => {
+    this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
   }
 
   removeIngredient(id) {

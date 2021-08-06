@@ -95,24 +95,23 @@ export class RecipeIngredientService {
         recipeIngredients,
         userIngredient,
         defaultShoppingList,
-        this
       ));
     } else {
       this.notificationService.setModal(new InfoNotification('Recipe has no ingredients'));
     }
   }
 
-  addIngredientsEvent(self, recipeIngredients, { id, ingredients }, defaultShoppingList) {
+  addIngredientsEvent = (recipeIngredients, { id, ingredients }, defaultShoppingList) => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
       ingredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
-          const quantity = self.numberService.toDecimal(recipeIngredient.quantity);
-          const value = self.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
+          const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
+          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value) {
             ingredient.cartQuantity += ingredient.amount * Math.ceil(value / ingredient.amount);
           } else {
-            self.notificationService.setModal(new FailureNotification('Calculation error!'));
+            this.notificationService.setModal(new FailureNotification('Calculation error!'));
           }
           hasIngredient = true;
         }
@@ -126,8 +125,8 @@ export class RecipeIngredientService {
       }
     });
 
-    self.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
-    self.notificationService.setModal(new SuccessNotification('Added to list!'));
+    this.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
+    this.notificationService.setModal(new SuccessNotification('Added to list!'));
   }
 
   removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string) {

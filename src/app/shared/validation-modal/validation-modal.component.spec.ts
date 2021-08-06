@@ -35,7 +35,6 @@ describe('ValidationModalComponent', () => {
     it('should close the modal', () => {
       component.params = {
         function: () => {},
-        self: component,
         text: 'text'
       }
 
@@ -52,7 +51,6 @@ describe('ValidationModalComponent', () => {
       component.params = {
         function: () => {},
         id: 'id',
-        self: component,
         text: 'text'
       };
 
@@ -66,7 +64,6 @@ describe('ValidationModalComponent', () => {
     it('should execute a function and close the modal', () => {
       component.params = {
         function: () => {},
-        self: component,
         text: 'text'
       };
 

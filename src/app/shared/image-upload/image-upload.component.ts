@@ -70,17 +70,16 @@ export class ImageUploadComponent implements OnInit {
   deleteFile(path) {
     this.validationService.setModal({
       id: path,
-      self: this,
       text: 'Are you sure you want to remove this image?',
       function: this.deleteFileEvent
     });
   }
 
-  deleteFileEvent(self, path) {
-    self.imageService.deleteFile(path).then(() => {
-      self.updateImage(false);
-      self.image = undefined;
-      self.imageChange.emit(self.image);
+  deleteFileEvent = (path) => {
+    this.imageService.deleteFile(path).then(() => {
+      this.updateImage(false);
+      this.image = undefined;
+      this.imageChange.emit(this.image);
     });
   }
 }

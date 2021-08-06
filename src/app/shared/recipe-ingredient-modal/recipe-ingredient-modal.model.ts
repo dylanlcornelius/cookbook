@@ -7,20 +7,17 @@ export class RecipeIngredientModal extends Modal {
     ingredients: Ingredient[];
     userIngredient: UserIngredient;
     defaultShoppingList: string;
-    self;
 
     constructor(
         eventFunction: Function,
         ingredients: Ingredient[],
         userIngredient: UserIngredient,
         defaultShoppingList: string,
-        self
     ) {
         super();
         this.function = eventFunction;
         this.ingredients = ingredients;
         this.userIngredient = userIngredient;
         this.defaultShoppingList = defaultShoppingList;
-        this.self = self;
     }
 }

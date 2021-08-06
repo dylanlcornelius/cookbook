@@ -7,8 +7,9 @@ ingredientModalParams;
 
 this.ingredientModalParams = {
   function: this.editIngredientEvent,
-  data: data,
-  self: this,
+  data,
+  userIngredients,
+  dataSource,
   text: 'Edit pantry quantity for ' + ingredient.name
 };
 */
@@ -65,11 +66,11 @@ export class IngredientModalComponent implements OnInit {
   }
 
   confirm() {
-    this.params.self.userIngredients.find(x => x.id === this.params.data.id)
+    this.params.userIngredients.find(x => x.id === this.params.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.params.self.dataSource.data.find(x => x.id === this.params.data.id)
+    this.params.dataSource.data.find(x => x.id === this.params.data.id)
       .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.params.function(this.params.self);
+    this.params.function();
     this.modal.close();
   }
 }

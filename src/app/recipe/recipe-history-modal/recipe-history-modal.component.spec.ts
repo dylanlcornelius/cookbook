@@ -55,7 +55,7 @@ describe('RecipeHistoryModalComponent', () => {
   describe('confirm', () => {
     it('should change an ingredient pantry quantity', () => {
       component.Params = {
-        function: (_self) => {},
+        function: () => {},
         id: 'id',
         uid: 'uid',
       };

@@ -81,7 +81,7 @@ describe('IngredientsDetailComponent', () => {
       
       spyOn(ingredientService, 'delete');
 
-      component.deleteIngredientEvent(component, 'id');
+      component.deleteIngredientEvent('id');
 
       expect(ingredientService.delete).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
@@ -94,7 +94,7 @@ describe('IngredientsDetailComponent', () => {
       
       spyOn(ingredientService, 'delete');
 
-      component.deleteIngredientEvent(component, undefined);
+      component.deleteIngredientEvent(undefined);
 
       expect(ingredientService.delete).not.toHaveBeenCalled();
     });

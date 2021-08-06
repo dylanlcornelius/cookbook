@@ -154,28 +154,27 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   addAllToPantry() {
     this.validationService.setModal({
       function: this.addAllToPantryEvent,
-      self: this,
       text: 'Complete shopping list?'
     });
   }
 
-  addAllToPantryEvent(self) {
-    self.ingredientsDataSource.data.forEach(ingredient => {
+  addAllToPantryEvent = () => {
+    this.ingredientsDataSource.data.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
         ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
         ingredient.cartQuantity = 0;
       }
     });
-    self.userIngredientService.formattedUpdate(self.ingredientsDataSource.data, self.user.defaultShoppingList, self.id);
-    self.userIngredientService.buyUserIngredient(self.ingredientsDataSource.filteredData.length, false);
+    this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
+    this.userIngredientService.buyUserIngredient(this.ingredientsDataSource.filteredData.length, false);
 
-    const itemsCount = self.itemsDataSource.data.length;
-    self.itemsDataSource.data = [];
-    self.userItemService.formattedUpdate(self.itemsDataSource.data, self.user.defaultShoppingList, self.itemsId);
-    self.userItemService.buyUserItem(itemsCount, false);
+    const itemsCount = this.itemsDataSource.data.length;
+    this.itemsDataSource.data = [];
+    this.userItemService.formattedUpdate(this.itemsDataSource.data, this.user.defaultShoppingList, this.itemsId);
+    this.userItemService.buyUserItem(itemsCount, false);
 
-    self.applyFilter();
-    self.notificationService.setModal(new SuccessNotification('List completed!'));
-    self.isCompleted = true;
+    this.applyFilter();
+    this.notificationService.setModal(new SuccessNotification('List completed!'));
+    this.isCompleted = true;
   }
 }

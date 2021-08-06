@@ -171,7 +171,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     control.push(this.initCategory(category));
   }
 
-  addCategoryEvent(event) {
+  addCategoryEvent = (event) => {
     const input = event.input;
     const value = event.value;
 

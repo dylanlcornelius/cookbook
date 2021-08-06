@@ -102,7 +102,7 @@ describe('AdminDashboardComponent', () => {
     it('should create a new config', () => {
       spyOn(configService, 'create');
 
-      component.addConfig(component);
+      component.addConfig();
 
       expect(configService.create).toHaveBeenCalled();
     });
@@ -112,7 +112,7 @@ describe('AdminDashboardComponent', () => {
     it('should delete a config with a name', () => {
       spyOn(validationService, 'setModal');
 
-      component.removeConfig(component, 'id', 'name');
+      component.removeConfig('id', 'name');
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -120,7 +120,7 @@ describe('AdminDashboardComponent', () => {
     it('should delete a config without a name', () => {
       spyOn(validationService, 'setModal');
      
-      component.removeConfig(component, 'id', undefined);
+      component.removeConfig('id', undefined);
       
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -130,7 +130,7 @@ describe('AdminDashboardComponent', () => {
     it('should delete a config', () => {
       spyOn(configService, 'delete');
 
-      component.removeConfigEvent(component, 'id');
+      component.removeConfigEvent('id');
 
       expect(configService.delete).toHaveBeenCalled();
     });
@@ -140,7 +140,7 @@ describe('AdminDashboardComponent', () => {
     it('should create a new navigation', () => {
       spyOn(navigationService, 'create');
 
-      component.addNav(component);
+      component.addNav();
 
       expect(navigationService.create).toHaveBeenCalled();
     });
@@ -150,7 +150,7 @@ describe('AdminDashboardComponent', () => {
     it('should delete a navigation without a name', () => {
       spyOn(validationService, 'setModal');
      
-      component.removeNav(component, '', '');
+      component.removeNav('', '');
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -158,7 +158,7 @@ describe('AdminDashboardComponent', () => {
     it('should handle a navigation deletion', () => {
       spyOn(validationService, 'setModal');
      
-      component.removeNav(component, '', 'name');
+      component.removeNav('', 'name');
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -168,7 +168,7 @@ describe('AdminDashboardComponent', () => {
     it('should create a new navigation', () => {
       spyOn(navigationService, 'delete');
 
-      component.removeNavEvent(component, '');
+      component.removeNavEvent('');
 
       expect(navigationService.delete).toHaveBeenCalled();
     });
@@ -178,7 +178,7 @@ describe('AdminDashboardComponent', () => {
     it('should remove a user with a first or last name', () => {
       spyOn(validationService, 'setModal');
      
-      component.removeUser(component, 'id', undefined, 'last');
+      component.removeUser('id', undefined, 'last');
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -186,7 +186,7 @@ describe('AdminDashboardComponent', () => {
     it('should remove a user without a first or last name', () => {
       spyOn(validationService, 'setModal');
      
-      component.removeUser(component, 'id', undefined, undefined);
+      component.removeUser('id', undefined, undefined);
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -196,7 +196,7 @@ describe('AdminDashboardComponent', () => {
     it('should remove a user', () => {
       spyOn(userService, 'delete');
 
-      component.removeUserEvent(component, 'id');
+      component.removeUserEvent('id');
 
       expect(userService.delete).toHaveBeenCalled();
     });
@@ -218,7 +218,7 @@ describe('AdminDashboardComponent', () => {
 
       spyOn(notificationService, 'setModal');
 
-      component.revertEvent(component);
+      component.revertEvent();
 
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.configContext.dataSource).toEqual(component.originalConfigs);
@@ -246,7 +246,7 @@ describe('AdminDashboardComponent', () => {
       spyOn(userItemService, 'update');
       spyOn(notificationService, 'setModal');
 
-      component.saveEvent(component);
+      component.saveEvent();
 
       expect(configService.update).toHaveBeenCalled();
       expect(navigationService.update).toHaveBeenCalled();

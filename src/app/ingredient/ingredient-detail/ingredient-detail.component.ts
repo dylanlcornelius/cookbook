@@ -47,17 +47,16 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   deleteIngredient(id) {
     this.validationService.setModal({
       id: id,
-      self: this,
       text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
       function: this.deleteIngredientEvent
     });
   }
 
-  deleteIngredientEvent(self, id) {
+  deleteIngredientEvent = (id) => {
     if (id) {
-      self.ingredientService.delete(id);
-      self.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));
-      self.router.navigate(['/ingredient/list']);
+      this.ingredientService.delete(id);
+      this.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));
+      this.router.navigate(['/ingredient/list']);
     }
   }
 }
