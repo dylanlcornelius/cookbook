@@ -5,7 +5,6 @@ import {
   FormGroupDirective,
   FormBuilder,
   FormGroup,
-  NgForm,
   Validators
 } from '@angular/forms';
 import { UOM } from '@UOMConverson';
@@ -41,7 +40,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
   ) {
@@ -85,7 +84,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFormSubmit(form: NgForm, formDirective: FormGroupDirective): void {
+  onFormSubmit(form: FormGroup, formDirective: FormGroupDirective): void {
     if (this.route.snapshot.params['ingredient-id']) {
       this.ingredientService.update(form.value, this.id);
       this.router.navigate(['/ingredient/detail/', this.id]);

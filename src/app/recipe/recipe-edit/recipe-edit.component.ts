@@ -40,10 +40,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   uoms: Array<UOM>;
 
   matcher = new ErrorMatcher();
+  selectable;
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
