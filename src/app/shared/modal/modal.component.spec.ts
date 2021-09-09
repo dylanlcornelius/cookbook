@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { assert } from 'console';
 
 import { ModalComponent } from './modal.component';
 

@@ -51,7 +51,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.itemForm = this.formBuilder.group({
       'name': [null],
     });
@@ -92,11 +92,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     });
   }
 
-  applyFilter() {
+  applyFilter(): void {
     this.ingredientsDataSource.filter = '0';
   }
 
-  removeIngredient(id) {
+  removeIngredient(id: string): void {
     const data = this.ingredientsDataSource.data.find(x => x.id === id);
     const ingredient = this.ingredients.find(x => x.id === id);
     if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
@@ -105,7 +105,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
   }
 
-  addIngredient(id) {
+  addIngredient(id: string): void {
     const data = this.ingredientsDataSource.data.find(x => x.id === id);
     const ingredient = this.ingredients.find(x => x.id === id);
     if (ingredient && ingredient.amount) {
@@ -114,7 +114,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
   }
 
-  addIngredientToPantry(id) {
+  addIngredientToPantry(id: string): void {
     this.applyFilter();
     const isCompleted = this.ingredientsDataSource.data.filter(x => x.cartQuantity > 0).length === 1;
     const data = this.ingredientsDataSource.data.find(x => x.id === id);
@@ -131,7 +131,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
   }
 
-  addItem(form) {
+  addItem(form: any): void {
     if (!form.name || !form.name.toString().trim()) {
       return;
     }
@@ -142,7 +142,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.notificationService.setModal(new SuccessNotification('Item added!'));
   }
 
-  removeItem(index) {
+  removeItem(index: number): void {
     this.itemsDataSource.data = this.itemsDataSource.data.filter((_x, i) =>  i !== index);
     this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0;
 
@@ -151,14 +151,14 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.notificationService.setModal(new SuccessNotification('Item removed!'));
   }
 
-  addAllToPantry() {
+  addAllToPantry(): void {
     this.validationService.setModal({
       function: this.addAllToPantryEvent,
       text: 'Complete shopping list?'
     });
   }
 
-  addAllToPantryEvent = () => {
+  addAllToPantryEvent = (): void => {
     this.ingredientsDataSource.data.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
         ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);

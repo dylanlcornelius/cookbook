@@ -25,84 +25,76 @@ describe('UserService', () => {
 
   describe('get', () => {
     it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
 
     it('should get one document based on an id', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'get');
 
       service.get('id').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
     });
 
     it('should handle a user id that does not match any documents', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get');
 
       service.get('id').subscribe(doc => {
         expect(doc).toBeUndefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a new document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'create');
 
       service.create(new User({}));
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'update');
+      spyOn(FirestoreService.prototype, 'updateOne');
 
-      service.update(new User({}));
+      service.update(new User({}), 'id');
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.updateOne).toHaveBeenCalled();
     });
 
     it('should update a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'updateAll');
 
       service.update([new User({})]);
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
     });
   });
 
   describe('delete', () => {
     it('should delete a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'delete');
 
       service.delete('id');
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.delete).toHaveBeenCalled();
     });
   });

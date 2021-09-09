@@ -4,6 +4,7 @@ import { UtilService } from '@utilService';
 import { Router, RouterModule } from '@angular/router';
 import { AuthorFilter, RecipeFilterService } from '@recipeFilterService';
 import { RecipeListComponent } from '../recipe/recipe-list/recipe-list.component';
+import { User } from '@user';
 
 describe('UtilService', () => {
   let service: UtilService;
@@ -27,9 +28,9 @@ describe('UtilService', () => {
 
   describe('identify', () => {
     it('should return an id', () => {
-      const result = service.identify(0, {id: 1});
+      const result = service.identify(0, new User({ id: '1' }));
 
-      expect(result).toEqual(1);
+      expect(result).toEqual('1');
     });
   });
 

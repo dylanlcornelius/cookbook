@@ -29,7 +29,7 @@ import { RecipeService } from '@recipeService';
 export class ProfileComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   online$: Observable<boolean>;
-  loading: Boolean = true;
+  loading = true;
 
   selectedIndex = 0;
 
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   matcher = new ErrorMatcher();
 
-  @ViewChild('weekPaginator') weekPaginator: any;
+  @ViewChild(MatPaginator) weekPaginator: any;
 
   history = [];
 
@@ -78,7 +78,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     const user$ = this.currentUserService.getCurrentUser();
     const users$ = this.userService.get();
 
@@ -110,7 +110,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadActions() {
+  loadActions(): void {
     this.actionService.get(this.user.uid)?.then((userAction) => {
       const sortedActions = this.sortActions(userAction.actions);
 
@@ -121,7 +121,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         return {
           data: actionData,
-          date: action.month + '/' + action.day + '/' + action.year,
+          date: `${action.month}/${action.day}/${action.year}`,
         };
       });
 
@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  sortActions(userActions) {
+  sortActions(userActions: any): { day: number, month: number, year: number, data: any }[] {
     const dateArray = Object.keys(userActions).map(key => {
       return key.split('/').map(Number);
     });
@@ -148,12 +148,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         day: date[0],
         month: date[1],
         year: date[2],
-        data: userActions[date[0] + '/' + date[1] + '/' + date[2]]
+        data: userActions[`${date[0]}/${date[1]}/${date[2]}`]
       };
     });
   }
 
-  loadHistory() {
+  loadHistory(): void {
     const recipes$ = this.recipeService.get();
     const recipeHistory$ = this.recipeHistoryService.get(this.user.defaultShoppingList);
 
@@ -171,13 +171,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateImage = (hasImage) => {
+  updateImage = (hasImage: boolean): void => {
     this.user.hasImage = hasImage;
     this.userService.update(this.user.getObject(), this.user.getId());
     this.currentUserService.setCurrentUser(this.user);
   }
 
-  onFormSubmit(form) {
+  onFormSubmit(form: any): void {
     const user = new User(form);
 
     this.userService.update(user.getObject(), user.getId());

@@ -9,15 +9,11 @@ import { ActionService } from '@actionService';
   providedIn: 'root'
 })
 export class ConfigService extends FirestoreService {
-  get ref() {
-    return super.getRef('configs');
-  }
-
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super(currentUserService, actionService);
+    super('configs', currentUserService, actionService);
   }
 
   get(name: string): Observable<Config>;
@@ -25,18 +21,18 @@ export class ConfigService extends FirestoreService {
   get(name?: string): Observable<Config | Config[]> {
     return new Observable(observer => {
       if (name) {
-        super.get(this.ref?.where('name', '==', name)).subscribe(docs => {
+        super.getMany(this.ref?.where('name', '==', name)).subscribe(docs => {
           observer.next(new Config(docs[0]));
         });
       } else {
-        super.get(this.ref).subscribe(docs => {
+        super.get().subscribe(docs => {
           observer.next(docs.map(doc => new Config(doc)));
         });
       }
     });
 }
 
-  create = (data: Config): string => super.create(this.ref, data);
-  update = (data: Config[]) => super.updateAll(this.ref, data);
-  delete = (id: string) => super.delete(this.ref, id);
+  create = (data: Config): string => super.create(data);
+  update = (data: Config[]): void => super.updateAll(data);
+  delete = (id: string): void => super.delete(id);
 }

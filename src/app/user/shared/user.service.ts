@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '@user';
+import { User, UserObject } from '@user';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
@@ -9,15 +9,11 @@ import { ActionService } from '@actionService';
   providedIn: 'root'
 })
 export class UserService extends FirestoreService {
-  get ref() {
-    return super.getRef('users');
-  }
-
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super(currentUserService, actionService);
+    super('users', currentUserService, actionService);
   }
 
   get(uid: string): Observable<User>;
@@ -25,18 +21,18 @@ export class UserService extends FirestoreService {
   get(uid?: string): Observable<User | User[]> {
     return new Observable(observer => {
       if (uid) {
-        super.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           observer.next(docs[0] ? new User(docs[0]) : undefined);
         });
       } else {
-          super.get(this.ref).subscribe(docs => {
-            observer.next(docs.map(doc => new User(doc)));
-          });
+        super.get().subscribe(docs => {
+          observer.next(docs.map(doc => new User(doc)));
+        });
       }
     });
 }
 
-  create = (data: User): string => super.create(this.ref, data.getObject());
-  update = (data, id?: string) => super.update(this.ref, data, id);
-  delete = (id: string) => super.delete(this.ref, id);
+  create = (data: User): string => super.create(data.getObject());
+  update = (data: UserObject | UserObject[], id?: string): void => super.update(data, id);
+  delete = (id: string): void => super.delete(id);
 }

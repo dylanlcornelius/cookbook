@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
@@ -22,7 +21,6 @@ import { SharedModule } from '@sharedModule';
     ProfileRoutingModule,
     MatTabsModule,
     MatSlideToggleModule,
-    MatPaginatorModule,
     MatProgressBarModule,
     NgxChartsModule,
     SharedModule,

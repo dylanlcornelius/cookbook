@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { RecipeFilterService } from '@recipeFilterService';
+import { Filter, RecipeFilterService } from '@recipeFilterService';
 import { Router } from '@angular/router';
 import { Observable, merge, of, fromEvent } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
+import { User } from '@user';
+import { Recipe } from '@recipe';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +23,11 @@ export class UtilService {
     );
   }
 
-  public identify(_index, item) {
+  public identify(_index: number, item: User | Recipe): string {
     return item.id;
   }
 
-  public setListFilter(filter) {
+  public setListFilter(filter: Filter): void {
     this.recipeFilterService.selectedFilters = [filter];
     this.router.navigate(['/recipe/list']);
   }

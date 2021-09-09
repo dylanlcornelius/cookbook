@@ -12,8 +12,6 @@ import { CurrentUserService } from '@currentUserService';
 describe('UserPendingComponent', () => {
   let component: UserPendingComponent;
   let fixture: ComponentFixture<UserPendingComponent>;
-  let currentUserService: CurrentUserService
-  let authService: AuthService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -38,7 +36,7 @@ describe('UserPendingComponent', () => {
   });
 
   it('should redirect a pending user', () => {
-    let currentUserService = TestBed.inject(CurrentUserService);
+    const currentUserService = TestBed.inject(CurrentUserService);
 
     spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'pending'})));
 
@@ -50,7 +48,7 @@ describe('UserPendingComponent', () => {
   });
 
   it('should not redirect a pending user', () => {
-    let currentUserService = TestBed.inject(CurrentUserService);
+    const currentUserService = TestBed.inject(CurrentUserService);
 
     spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'admin'})));
 
@@ -66,7 +64,7 @@ describe('UserPendingComponent', () => {
       fixture = TestBed.createComponent(UserPendingComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-      let authService = TestBed.inject(AuthService);
+      const authService = TestBed.inject(AuthService);
 
       spyOn(authService, 'logout');
 

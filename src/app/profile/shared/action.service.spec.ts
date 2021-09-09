@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
@@ -19,9 +19,9 @@ describe('ActionService', () => {
     it('should update an existing action', fakeAsync(() => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
+      const week = (`${weekStart.getDate()}/${weekStart.getMonth() + 1}/${weekStart.getFullYear()}`).toString();
 
-      const userActions = { actions: { [week]: {[Action.BUY_INGREDIENT]: 1}}};
+      const userActions = { uid: '', actions: { [week]: {[Action.BUY_INGREDIENT]: 1}}};
 
       spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
       spyOn(service, 'create');
@@ -38,9 +38,9 @@ describe('ActionService', () => {
     it('should update a non-existing action', fakeAsync(() => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
+      const week = (`${weekStart.getDate()}/${weekStart.getMonth() + 1}/${weekStart.getFullYear()}`).toString();
 
-      const userActions = { actions: { [week]: {[Action.COMPLETE_SHOPPING_LIST]: 1}}};
+      const userActions = { uid: '', actions: { [week]: {[Action.COMPLETE_SHOPPING_LIST]: 1}}};
 
       spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
       spyOn(service, 'create');
@@ -55,7 +55,7 @@ describe('ActionService', () => {
     }));
 
     it('should update a non-existing week actions', fakeAsync(() => {
-      const userActions = { actions: { ['different-week']: {[Action.BUY_INGREDIENT]: 1}}};
+      const userActions = { uid: '', actions: { ['different-week']: {[Action.BUY_INGREDIENT]: 1}}};
 
       spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
       spyOn(service, 'create');

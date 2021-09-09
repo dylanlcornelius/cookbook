@@ -11,9 +11,9 @@ export class Ingredient extends Model {
     quantity: number;
     pantryQuantity: number | string;
     cartQuantity: number;
-    selected: Boolean;
+    selected: boolean;
 
-    constructor (data) {
+    constructor (data: any) {
         super(data);
         this.name = data.name || '';
         this.category = data.category || '';
@@ -22,8 +22,11 @@ export class Ingredient extends Model {
         this.calories = data.calories || '';
     }
 
-    public getObject() {
+    public getObject(): IngredientObject {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {id, quantity, pantryQuantity, cartQuantity, selected, ...ingredient} = this;
         return ingredient;
     }
 }
+
+export type IngredientObject = Omit<Ingredient, 'id' | 'quantity' | 'pantryQuantity' | 'cartQuantity' | 'selected'>;

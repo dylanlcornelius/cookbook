@@ -19,72 +19,60 @@ describe('RecipeService', () => {
 
   describe('get', () => {
     it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
 
     it('should get one document based on an id', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of({}));
 
       service.get('id').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a new document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create({});
+      service.create(new Recipe({}));
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'update');
+      spyOn(FirestoreService.prototype, 'updateOne');
 
-      service.update({}, 'id');
+      service.update(new Recipe({}).getObject(), 'id');
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.updateOne).toHaveBeenCalled();
     });
 
     it('should update a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'updateAll');
 
       service.update([new Recipe({})]);
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
     });
   });
 
   describe('delete', () => {
     it('should delete a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'delete');
 
       service.delete('id');
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.delete).toHaveBeenCalled();
     });
   });

@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnChanges } from '@angular/core';
 import { Recipe } from '@recipe';
 
 @Component({
@@ -6,7 +6,7 @@ import { Recipe } from '@recipe';
   templateUrl: './rating.component.html',
   styleUrls: ['./rating.component.scss']
 })
-export class RatingComponent {
+export class RatingComponent implements OnChanges {
   @Input() recipe: Recipe = new Recipe({});
   @Input() uid: string;
 
@@ -18,12 +18,12 @@ export class RatingComponent {
     this.userRating = this.findUserRating();
   }
 
-  findUserRating() {
+  findUserRating(): { uid?: string, rating: number } {
     const rating = this.recipe.ratings.find(rating => rating.uid === this.uid);
     return rating ? rating : {rating: 0};
   }
 
-  handleRate(newRating) {
+  handleRate(newRating: number): void {
     if (!this.userRating || this.userRating && this.userRating.rating !== newRating) {
       this.rate.emit(newRating);
     } else {

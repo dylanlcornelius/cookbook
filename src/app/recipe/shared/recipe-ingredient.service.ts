@@ -51,7 +51,7 @@ export class RecipeIngredientService {
     return addedIngredients.filter(({ uom }) => uom !== UOM.RECIPE);
   }
 
-  getRecipeCount(recipe, recipes, { ingredients }) {
+  getRecipeCount(recipe: Recipe, recipes: Recipe[], { ingredients }: UserIngredient): number {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     let recipeCount;
@@ -86,7 +86,7 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient, defaultShoppingList) {
+  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, defaultShoppingList: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length > 0) {
@@ -101,7 +101,7 @@ export class RecipeIngredientService {
     }
   }
 
-  addIngredientsEvent = (recipeIngredients, { id, ingredients }, defaultShoppingList) => {
+  addIngredientsEvent = (recipeIngredients: Ingredient[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
       ingredients.forEach(ingredient => {
@@ -109,7 +109,7 @@ export class RecipeIngredientService {
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
           const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value) {
-            ingredient.cartQuantity += ingredient.amount * Math.ceil(value / ingredient.amount);
+            ingredient.cartQuantity += Number(ingredient.amount) * Math.ceil(value / Number(ingredient.amount));
           } else {
             this.notificationService.setModal(new FailureNotification('Calculation error!'));
           }
@@ -117,11 +117,11 @@ export class RecipeIngredientService {
         }
       });
       if (!hasIngredient) {
-        ingredients.push({
+        ingredients.push(new Ingredient({
           id: String(recipeIngredient.id),
           pantryQuantity: 0,
           cartQuantity: Number(recipeIngredient.amount)
-        });
+        }));
       }
     });
 
@@ -129,7 +129,7 @@ export class RecipeIngredientService {
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
   }
 
-  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string) {
+  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length) {

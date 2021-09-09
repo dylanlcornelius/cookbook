@@ -1,9 +1,9 @@
-<div class="app-loading" *ngIf="!(isLoggedIn | async) && !(isGuest | async)">
+<div class="app-loading" *ngIf="(isLoggedIn | async) === false && (isGuest | async) === false">
 	<div class="spinner"></div>
 	<div class="loading-message">Loading user settings</div>
 </div>
 
-<div class="app" [ngClass]="{'dark': (user | async)?.theme}" [hidden]="!(isLoggedIn | async) && !(isGuest | async)"> 
+<div class="app" [ngClass]="{'dark': (user | async)?.theme}" [hidden]="(isLoggedIn | async) === false && (isGuest | async) === false"> 
 	<div class="page">
 		<app-header></app-header>
 

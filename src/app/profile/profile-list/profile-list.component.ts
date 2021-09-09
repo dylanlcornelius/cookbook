@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,9 +15,9 @@ import { AuthorFilter } from '@recipeFilterService';
   templateUrl: './profile-list.component.html',
   styleUrls: ['./profile-list.component.scss']
 })
-export class ProfileListComponent implements OnInit {
+export class ProfileListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
-  loading: Boolean = true;
+  loading = true;
 
   dataSource;
   id: string;
@@ -33,7 +33,7 @@ export class ProfileListComponent implements OnInit {
   ) { }
 
   identify = this.utilService.identify;
-  setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
+  setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
 
   ngOnInit() {
     this.load();
@@ -44,7 +44,7 @@ export class ProfileListComponent implements OnInit {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     const users$ = this.userService.get();
     const recipes$ = this.recipeService.get();
 
@@ -76,8 +76,8 @@ export class ProfileListComponent implements OnInit {
       });
 
       users.sort((a, b) => {
-        const aName = (a.firstName + ' ' + a.lastName).toLowerCase();
-        const bName = (b.firstName + ' ' + b.lastName).toLowerCase();
+        const aName = (`${a.firstName} ${a.lastName}`).toLowerCase();
+        const bName = (`${b.firstName} ${b.lastName}`).toLowerCase();
         return aName < bName ? -1 : 1;
       })
 
@@ -88,7 +88,7 @@ export class ProfileListComponent implements OnInit {
     });
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { CollectionReference } from '@firebase/firestore-types';
 import { Action } from '@actions';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { Action } from '@actions';
 })
 export class ActionService {
   _ref;
-  get ref() {
+  get ref(): CollectionReference {
     if (!this._ref && firebase.apps.length > 0) {
       this._ref = firebase.firestore().collection('user-actions');
     }
@@ -17,22 +18,19 @@ export class ActionService {
 
   constructor() {}
 
-  // TODO: rework action data model
-  commitAction(uid: string, action: Action, number: Number) {
-    const self = this;
-
+  commitAction(uid: string, action: Action, number: number): void {
     if (!uid) {
       return;
     }
 
-    this.get(uid).then((userAction) => {
+    this.get(uid).then(userAction => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      const week = (weekStart.getDate() + '/' + (weekStart.getMonth() + 1) + '/' + weekStart.getFullYear()).toString();
+      const week = (`${weekStart.getDate()}/${weekStart.getMonth() + 1}/${weekStart.getFullYear()}`).toString();
 
       if (!userAction) {
         userAction = {'uid': uid, 'actions': {[week]: {[action]: number}}};
-        self.create(userAction);
+        this.create(userAction);
         return;
       }
         
@@ -50,11 +48,11 @@ export class ActionService {
       } else {
         userAction.actions[week] = {[action]: number};
       }
-      self.update(userAction);
+      this.update(userAction);
     });
   }
 
-  get(uid: string) {
+  get(uid: string): Promise<{ id?: string, uid: string, actions: any }> {
     return this.ref?.where('uid', '==', uid).get().then(function(querySnapshot) {
       const action = [];
       querySnapshot.forEach((doc) => {
@@ -69,6 +67,10 @@ export class ActionService {
     });
   }
 
-  create = (data) => this.ref?.add(data);
-  update = (data) => this.ref?.doc(data.id).set(data);
+  create = (data: any): void => {
+    this.ref?.add(data)
+  };
+  update = (data: any): void => {
+    this.ref?.doc(data.id).set(data)
+  };
 }

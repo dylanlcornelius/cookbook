@@ -26,7 +26,7 @@ export class NotificationModalComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.notificationService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((notification: Notification) => {
       if (!notification) {
         return;

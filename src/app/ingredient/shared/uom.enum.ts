@@ -105,7 +105,7 @@ export class UOMConversion {
         return false;
     }
 
-    relatedUOMs(ingredientUOM: UOM) {
+    relatedUOMs(ingredientUOM: UOM): string[] {
         if (this.uoms[ingredientUOM]) {
             return Object.keys(this.uoms[ingredientUOM]);
         }
