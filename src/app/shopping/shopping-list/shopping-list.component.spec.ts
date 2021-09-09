@@ -147,7 +147,7 @@ describe('ShoppingListComponent', () => {
   describe('removeIngredient', () => {
     it('should update user ingredients', () => {
       component.ingredientsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 10}]);
-      component.ingredients = [{id: 'id', amount: 5}]
+      component.ingredients = [{id: 'id', amount: 5}];
 
       spyOn(userIngredientService, 'formattedUpdate');
 
@@ -158,7 +158,7 @@ describe('ShoppingListComponent', () => {
 
     it('should not update user ingredients', () => {
       component.ingredientsDataSource = new MatTableDataSource([{id: 'id', cartQuantity: 1}]);
-      component.ingredients = [{id: 'id'}]
+      component.ingredients = [{id: 'id'}];
 
       spyOn(userIngredientService, 'formattedUpdate');
 
@@ -171,7 +171,7 @@ describe('ShoppingListComponent', () => {
   describe('addIngredient', () => {
     it('should update user ingredients', () => {
       component.ingredientsDataSource = new MatTableDataSource([{id: 'id'}]);
-      component.ingredients = [{id: 'id', amount: 5}]
+      component.ingredients = [{id: 'id', amount: 5}];
 
       spyOn(userIngredientService, 'formattedUpdate');
 
@@ -182,7 +182,7 @@ describe('ShoppingListComponent', () => {
 
     it('should not update user ingredients', () => {
       component.ingredientsDataSource = new MatTableDataSource([{id: 'id'}]);
-      component.ingredients = [{id: 'id'}]
+      component.ingredients = [{id: 'id'}];
 
       spyOn(userIngredientService, 'formattedUpdate');
 

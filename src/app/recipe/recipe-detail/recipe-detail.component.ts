@@ -121,7 +121,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   updateImage = (hasImage: boolean): void => {
     this.recipe.hasImage = hasImage;
     this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-  }
+  };
 
   deleteRecipe(id: string): void {
     this.validationService.setModal({
@@ -138,7 +138,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
       this.router.navigate(['/recipe/list']);
     }
-  }
+  };
 
   setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
@@ -168,5 +168,5 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   updateRecipeHistoryEvent = (recipeId: string, uid: string, timesCooked: number): void => {
     this.recipeHistoryService.set(uid, recipeId, timesCooked);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
-  }
+  };
 }

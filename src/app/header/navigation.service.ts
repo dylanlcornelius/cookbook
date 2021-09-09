@@ -20,7 +20,7 @@ export class NavigationService extends FirestoreService {
     return new Observable(observer => {
       super.get().subscribe(docs => {
         observer.next(docs.map(doc => new Navigation(doc)).sort(this.sort));
-      })
+      });
     });
   }
 

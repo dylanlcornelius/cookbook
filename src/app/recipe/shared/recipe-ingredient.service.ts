@@ -127,7 +127,7 @@ export class RecipeIngredientService {
 
     this.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
-  }
+  };
 
   removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);

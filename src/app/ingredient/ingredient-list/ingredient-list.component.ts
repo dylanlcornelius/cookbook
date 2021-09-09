@@ -114,7 +114,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
   editIngredientEvent = (): void => {
     this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
-  }
+  };
 
   removeIngredient(id: string): void {
     const data = this.userIngredients.find(x => x.id === id);

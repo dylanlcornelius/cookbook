@@ -58,5 +58,5 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       this.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));
       this.router.navigate(['/ingredient/list']);
     }
-  }
+  };
 }

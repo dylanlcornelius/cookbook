@@ -43,7 +43,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     dataSource: [],
     add: this.addNav,
     remove: this.removeNav,
-  }
+  };
 
   originalUsers: User[];
   userContext = {
@@ -161,7 +161,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   removeConfigEvent = (id: string): void => {
     this.configService.delete(id);
-  }
+  };
 
   addNav(): void {
     this.navigationService.create(new Navigation({}));
@@ -181,7 +181,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   removeNavEvent= (id: string): void => {
     this.navigationService.delete(id);
-  }
+  };
 
   removeUser(id: string, firstName: string, lastName: string): void {
     if (!firstName && !lastName) {
@@ -198,7 +198,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   removeUserEvent = (id: string): void => {
     this.userService.delete(id);
-  }
+  };
 
   revert(): void {
     this.validationService.setModal({
@@ -217,7 +217,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.userItemContext.dataSource = this.originalUserItems;
 
     this.notificationService.setModal(new SuccessNotification('Changes reverted'));
-  }
+  };
 
   save(): void {
     this.validationService.setModal({
@@ -236,5 +236,5 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.userItemService.update(this.userItemContext.dataSource);
 
     this.notificationService.setModal(new SuccessNotification('Changes saved!'));
-  }
+  };
 }

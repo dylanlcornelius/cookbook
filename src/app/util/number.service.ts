@@ -14,7 +14,7 @@ export class NumberService {
     }
 
     const wholeIndex = x.indexOf(' ');
-    const f = x.slice(wholeIndex + 1)
+    const f = x.slice(wholeIndex + 1);
     const i = f.indexOf('/');
 
     if (i === -1) {

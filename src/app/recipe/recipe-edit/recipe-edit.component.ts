@@ -133,7 +133,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
               result.push({
                 ...ingredient,
                 quantity: 0
-              })
+              });
             }
             return result;
           }, [])
@@ -152,7 +152,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
               result.push({
                 ...ingredient,
                 quantity: 0
-              })
+              });
             }
             return result;
           }, [])
@@ -188,7 +188,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     if (input) {
       input.value = '';
     }
-  }
+  };
 
   removeCategory(i: number): void {
     const control = <FormArray>this.recipesForm.controls['categories'];

@@ -116,7 +116,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       this.actions = sortedActions.map(action => {
         const actionData = Object.keys(action.data).map(key => {
-          return { name: ActionLabel[key], value: action.data[key] }
+          return { name: ActionLabel[key], value: action.data[key] };
         });
 
         return {
@@ -175,7 +175,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.user.hasImage = hasImage;
     this.userService.update(this.user.getObject(), this.user.getId());
     this.currentUserService.setCurrentUser(this.user);
-  }
+  };
 
   onFormSubmit(form: any): void {
     const user = new User(form);

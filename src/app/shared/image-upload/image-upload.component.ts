@@ -79,5 +79,5 @@ export class ImageUploadComponent implements OnDestroy {
       this.image = undefined;
       this.imageChange.emit(this.image);
     });
-  }
+  };
 }

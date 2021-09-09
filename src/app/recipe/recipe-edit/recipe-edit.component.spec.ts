@@ -81,7 +81,7 @@ describe('RecipeEditComponent', () => {
         new Ingredient({
           id: 'id3'
         })
-      ]
+      ];
 
       spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
@@ -144,7 +144,7 @@ describe('RecipeEditComponent', () => {
 
       const ingredients = [new Ingredient({
         id: 'id'
-      })]
+      })];
 
       spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
@@ -174,7 +174,7 @@ describe('RecipeEditComponent', () => {
         new Ingredient({
           id: 'id3'
         })
-      ]
+      ];
 
       spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');

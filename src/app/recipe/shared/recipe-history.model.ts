@@ -2,7 +2,7 @@ import { Model } from '@model';
 
 export class RecipeHistory extends Model {
     uid: string;
-    recipeId: string
+    recipeId: string;
     history: Array<string>;
     timesCooked: number;
     lastDateCooked: string;

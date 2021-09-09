@@ -36,7 +36,7 @@ describe('ValidationModalComponent', () => {
       component.params = {
         function: () => {},
         text: 'text'
-      }
+      };
 
       spyOn(component.modal, 'close');
       

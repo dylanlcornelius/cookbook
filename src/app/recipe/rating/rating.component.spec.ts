@@ -25,7 +25,7 @@ describe('RatingComponent', () => {
   });
 
   it('should update user rating', () => {
-    const rating = {uid: 'uid', rating: 1}
+    const rating = {uid: 'uid', rating: 1};
 
     spyOn(component, 'findUserRating').and.returnValue({ rating: 1 });
 
@@ -39,7 +39,7 @@ describe('RatingComponent', () => {
 
   describe('findUserRating', () => {
     it('should return a user rating', () => {
-      const rating = {uid: 'uid', rating: 1}
+      const rating = {uid: 'uid', rating: 1};
       component.recipe = new Recipe({ratings: [rating]});
       component.uid = 'uid';
 

@@ -176,5 +176,5 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.applyFilter();
     this.notificationService.setModal(new SuccessNotification('List completed!'));
     this.isCompleted = true;
-  }
+  };
 }

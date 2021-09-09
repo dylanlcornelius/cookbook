@@ -63,7 +63,7 @@ describe('NavigationService', () => {
     it('should sort two navs', () => {
       const result = service.sort(new Navigation({ order: 2 }), new Navigation({ order: 1 }));
 
-      expect(result).toEqual(1)
+      expect(result).toEqual(1);
     });
   });
 });
