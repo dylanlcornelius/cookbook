@@ -72,7 +72,7 @@
       <div class="tab-body">
         <h2>Your Analytics</h2>
 
-        <mat-paginator #weekPaginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
+        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
         <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
 
         <div class="chart-container">

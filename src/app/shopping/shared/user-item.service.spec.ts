@@ -25,22 +25,22 @@ describe('UserItemService', () => {
 
   describe('get', () => {
     it('should return an existing user item record', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'get');
       spyOn(service, 'create');
 
       service.get('uid').subscribe(doc => {
         expect(doc).toBeDefined();
       });
-
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+-
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
       expect(service.create).not.toHaveBeenCalled();
     });
 
     it('should create a user item record and return it', fakeAsync(() => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get');
       spyOn(service, 'create');
 
       service.get('uid').subscribe(doc => {
@@ -48,54 +48,48 @@ describe('UserItemService', () => {
       });
 
       tick();
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
       expect(service.create).toHaveBeenCalled();
     }));
 
     it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a user item record', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'create');
 
       service.create(new UserItem({}));
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a user item record', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'update');
+      spyOn(FirestoreService.prototype, 'updateOne');
 
-      service.update(new UserItem({}));
+      service.update(new UserItem({}), 'id');
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.updateOne).toHaveBeenCalled();
     });
 
     it('should update user item records', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'updateAll');
 
       service.update([new UserItem({})]);
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
     });
   });
@@ -104,7 +98,7 @@ describe('UserItemService', () => {
     it('should update with formatted data', () => {
       spyOn(service, 'update');
 
-      service.formattedUpdate([{}], '', '');
+      service.formattedUpdate([{ name: undefined }], '', '');
 
       expect(service.update).toHaveBeenCalled();
     });

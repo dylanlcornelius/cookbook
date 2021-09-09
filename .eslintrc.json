@@ -15,10 +15,31 @@
         "createDefaultProgram": true
       },
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+				"prefer-template": "error",
+        "@typescript-eslint/explicit-module-boundary-types": [
+          "warn",
+          {
+            "allowedNames": ["ngOnInit", "ngOnDestroy", "ngAfterViewInit", "ngOnChanges"],
+            "allowArgumentsExplicitlyTypedAsAny": true
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": ["off"],
+        "@typescript-eslint/no-empty-function": ["off"],
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            "types": {
+              "Function": false,
+              "object": false
+            }
+          }
+        ],
         "@angular-eslint/component-selector": [
           "error",
           {

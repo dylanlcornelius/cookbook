@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { User } from '@user';
+import { Ingredient } from '@ingredient';
 
 describe('UserIngredientService', () => {
   let service: UserIngredientService;
@@ -26,22 +27,22 @@ describe('UserIngredientService', () => {
 
   describe('get', () => {
     it('should get one document based on an id', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'get');
       spyOn(service, 'create');
 
       service.get('uid').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
       expect(service.create).not.toHaveBeenCalled();
     });
 
     it('should create a document if none are found', fakeAsync(() => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get');
       spyOn(service, 'create').and.returnValue('id');
 
       service.get('uid').subscribe(doc => {
@@ -49,54 +50,48 @@ describe('UserIngredientService', () => {
       });
 
       tick();
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
       expect(service.create).toHaveBeenCalled();
     }));
 
     it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
+      spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a new document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'create');
 
       service.create(new UserIngredient({}));
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a document', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
-      spyOn(FirestoreService.prototype, 'update');
+      spyOn(FirestoreService.prototype, 'updateOne');
 
-      service.update(new UserIngredient({}));
+      service.update(new UserIngredient({}), 'id');
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
-      expect(FirestoreService.prototype.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.updateOne).toHaveBeenCalled();
     });
 
     it('should update user ingredients', () => {
-      spyOn(FirestoreService.prototype, 'getRef');
       spyOn(FirestoreService.prototype, 'updateAll');
 
       service.update([new UserIngredient({})]);
 
-      expect(FirestoreService.prototype.getRef).toHaveBeenCalled();
       expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
     });
   });
@@ -105,7 +100,7 @@ describe('UserIngredientService', () => {
     it('should update with formatted data', () => {
       spyOn(service, 'update');
 
-      service.formattedUpdate([{}], '', '');
+      service.formattedUpdate([new Ingredient({})], '', '');
 
       expect(service.update).toHaveBeenCalled();
     });

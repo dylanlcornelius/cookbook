@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
   Router,
   CanActivateChild,
 } from '@angular/router';
@@ -24,7 +22,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
     private currentUserService: CurrentUserService,
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     return this.currentUserService.getCurrentUser()
       .pipe(
         take(1),
@@ -37,7 +35,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
       );
   }
 
-  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.canActivate(route, state);
+  canActivateChild(): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate();
   }
 }

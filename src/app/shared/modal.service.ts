@@ -12,12 +12,12 @@ export abstract class Modal {}
 export abstract class ModalService {
   modal: BehaviorSubject<Modal>;
 
-  getModal() {
+  getModal(): BehaviorSubject<Modal> {
     return this.modal;
-  };
-  setModal(options: Modal) {
+  }
+  setModal(options: Modal): void {
     this.modal.next(options);
-  };
+  }
 }
 
 @Injectable({

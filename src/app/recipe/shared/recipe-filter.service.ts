@@ -13,7 +13,7 @@ export class RecipeFilterService {
 
   constructor() { }
 
-  recipeFilterPredicate(data, filters: Array<Filter>): boolean {
+  recipeFilterPredicate(data: Recipe, filters: Array<Filter>): boolean {
     return filters.reduce((hasAll, filter) => hasAll && filter.filterPredicate(data), true);
   }
 }
@@ -25,10 +25,10 @@ export enum FILTER_TYPE {
   SEARCH = 'SEARCH',
 }
 
-abstract class Filter {
+export abstract class Filter {
   value: any;
 
-  constructor(value) {
+  constructor(value: any) {
     this.value = value;
   }
 
@@ -46,22 +46,22 @@ abstract class Filter {
 
 export class AuthorFilter extends Filter {
   type = FILTER_TYPE.AUTHOR;
-  filterPredicate = (recipe) => this.contains(recipe.author, this.value); // may need to flip this to equals
+  filterPredicate = (recipe: Recipe): boolean => this.contains(recipe.author, this.value); // may need to flip this to equals
 }
 
 export class CategoryFilter extends Filter {
   type = FILTER_TYPE.CATEGORY;
-  filterPredicate = (recipe) => !!recipe.categories.find(({ category }) => this.contains(category, this.value)); // may need to flip this to equals
+  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.contains(category, this.value)); // may need to flip this to equals
 }
 
 export class RatingFilter extends Filter {
   type = FILTER_TYPE.RATING;
-  filterPredicate = (recipe) => recipe.meanRating >= this.value;
+  filterPredicate = (recipe: Recipe): boolean => recipe.meanRating >= this.value;
 }
 
 export class SearchFilter extends Filter {
   type = FILTER_TYPE.SEARCH;
-  filterPredicate = (recipe) => {
+  filterPredicate = (recipe: Recipe): boolean => {
     return this.contains(recipe.name, this.value)
       || this.contains(recipe.description, this.value)
       || new CategoryFilter(this.value).filterPredicate(recipe)

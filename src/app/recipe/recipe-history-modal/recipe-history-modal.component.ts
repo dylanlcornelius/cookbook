@@ -37,7 +37,7 @@ export class RecipeHistoryModalComponent implements OnInit {
   params;
 
   @Input()
-  set Params(params) {
+  set Params(params: { function: Function, recipeId: string, uid: string, timesCooked: number, text: string }) {
     this.params = params;
     if (this.params) {
       this.form.patchValue({
@@ -59,11 +59,11 @@ export class RecipeHistoryModalComponent implements OnInit {
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.modal.close();
   }
 
-  confirm() {
+  confirm(): void {
     this.params.function(
       this.params.recipeId,
       this.params.uid,

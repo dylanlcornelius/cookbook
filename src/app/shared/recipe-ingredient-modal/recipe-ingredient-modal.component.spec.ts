@@ -61,7 +61,7 @@ describe('RecipeIngredientModalComponent', () => {
 
     beforeEach(() => {
       const recipeIngredientModal = new RecipeIngredientModal(
-        (_ingredients) => {},
+        () => {},
         [new Ingredient({})],
         userIngredient,
         defaultShoppingList,

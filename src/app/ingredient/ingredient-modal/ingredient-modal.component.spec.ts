@@ -67,7 +67,8 @@ describe('IngredientModalComponent', () => {
         userIngredients: [{id: 'id'}],
         dataSource: {
           data: [{id: 'id', pantryQuatity: 10}]
-        }
+        },
+        text: ''
       };
 
       spyOn(component.params, 'function');

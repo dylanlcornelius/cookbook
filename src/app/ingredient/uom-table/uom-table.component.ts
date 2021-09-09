@@ -22,7 +22,7 @@ export class UomTableComponent {
   toDecimal = this.numberService.toDecimal;
   isValid = this.numberService.isValid;
 
-  convert(from: UOM, to: UOM, value: number) {
+  convert(from: UOM, to: UOM, value: number): string {
     let decimal = this.isValid(value);
     if (decimal === false) {
       return '-';

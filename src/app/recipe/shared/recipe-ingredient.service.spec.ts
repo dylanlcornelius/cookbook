@@ -347,11 +347,11 @@ describe('RecipeIngredientService', () => {
 
   describe('addIngredientsEvent', () => {
     it('should add an ingredient to the cart', () => {
-      const ingredients = [{
+      const ingredients = [new Ingredient({
         id: 'ingredientId',
         uom: 'x',
         quantity: 10
-      }];
+      })];
 
       const userIngredient = new UserIngredient({
         ingredients: [{
@@ -375,11 +375,11 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should show an error if the uom conversion is invalid', () => {
-       const ingredients =  [{
+       const ingredients =  [new Ingredient({
         id: 'ingredientId',
         uom: 'x',
         quantity: 10
-      }];
+      })];
 
       const userIngredient = new UserIngredient({
         ingredients: [{
@@ -401,11 +401,11 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should skip ingredients that are not available', () => {
-      const ingredients = [{
+      const ingredients = [new Ingredient({
         id: 'ingredientId',
         uom: 'x',
         quantity: 10
-      }];
+      })];
 
       const userIngredient = new UserIngredient({
         ingredients: [{

@@ -46,11 +46,13 @@ describe('ImageUploadComponent', () => {
     it('should not upload a blank url', () => {
       spyOn(imageService, 'upload');
       spyOn(component, 'updateImage');
+      spyOn(notificationService, 'setModal');
 
       component.readFile({});
 
       expect(imageService.upload).not.toHaveBeenCalled();
       expect(component.updateImage).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
       expect(component.image).toBeUndefined();
       expect(component.progress).toBeUndefined();
     });
@@ -58,11 +60,13 @@ describe('ImageUploadComponent', () => {
     it('should upload a file and return progress', () => {
       spyOn(imageService, 'upload').and.returnValue(of(1));
       spyOn(component, 'updateImage');
+      spyOn(notificationService, 'setModal');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.upload).toHaveBeenCalled();
       expect(component.updateImage).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
       expect(component.image).toBeUndefined();
       expect(component.progress).toEqual(1);
     });
@@ -70,11 +74,13 @@ describe('ImageUploadComponent', () => {
     it('should upload a file and return a file', () => {
       spyOn(imageService, 'upload').and.returnValue(of('url'));
       spyOn(component, 'updateImage');
+      spyOn(notificationService, 'setModal');
 
       component.readFile({target: {files: [{}]}});
 
       expect(imageService.upload).toHaveBeenCalled();
       expect(component.updateImage).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.image).toEqual('url');
       expect(component.progress).toBeUndefined();
     });

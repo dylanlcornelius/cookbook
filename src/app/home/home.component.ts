@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
 
@@ -7,7 +7,7 @@ import { NavigationService } from '@navigationService';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   navs: Navigation[] = [];
 
   constructor(
@@ -18,7 +18,7 @@ export class HomeComponent {
     this.load();
   }
 
-  load() {
+  load(): void {
     this.navigationService.get().subscribe(navs => {
       this.navs = navs.filter(({ isNavOnly }) => !isNavOnly);
     });

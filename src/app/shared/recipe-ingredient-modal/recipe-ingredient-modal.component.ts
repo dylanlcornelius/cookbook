@@ -32,17 +32,17 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.recipeIngredientModalService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((modal: RecipeIngredientModal) => {
       this.params = modal;
     });
   }
 
-  select(isSelected) {
+  select(isSelected: boolean): void {
     this.selectionCount += isSelected ? 1 : -1;
   }
 
-  add() {
+  add(): void {
     let selectedIngredients = [];
     this.params.ingredients.forEach(ingredient => {
       if (ingredient.selected) {
@@ -64,7 +64,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
     this.modal.close();
   }
 
-  cancel() {
+  cancel(): void {
     this.modal.close();
   }
 }

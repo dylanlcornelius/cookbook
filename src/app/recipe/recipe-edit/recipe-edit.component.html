@@ -71,7 +71,7 @@
             <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" (click)="removeStep(i)">
               <mat-icon>close</mat-icon>
             </button>
-            <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length == 1"></div>
+            <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length === 1"></div>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="container box box-bottom" *ngIf="addedIngredients.length == 0">
+            <div class="container box box-bottom" *ngIf="addedIngredients.length === 0">
               <mat-label>No Ingredients</mat-label>
             </div>
           </div>
@@ -129,7 +129,7 @@
                 <mat-icon class="indicator" matTooltip="This is a recipe" *ngIf="ingredient.uom === 'recipe'">r_mobiledata</mat-icon>
               </mat-label>
             </div>
-            <div class="box box-bottom" *ngIf="availableIngredients == 0">
+            <div class="box box-bottom" *ngIf="availableIngredients === 0">
               <mat-label class="col-12">No Ingredients</mat-label>
             </div>
           </div>

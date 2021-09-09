@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ValidationService } from '@modalService';
 import { Validation } from '@validation';
 import { Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { ModalComponent } from '../modal/modal.component';
   templateUrl: './validation-modal.component.html',
   styleUrls: ['./validation-modal.component.scss']
 })
-export class ValidationModalComponent {
+export class ValidationModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   params: Validation;
 
@@ -30,17 +30,17 @@ export class ValidationModalComponent {
     this.unsubscribe$.complete();
   }
   
-  load() {
+  load(): void {
     this.validationService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((validation: Validation) => {
       this.params = validation;
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.modal.close();
   }
 
-  confirm() {
+  confirm(): void {
     if (this.params.id) {
       this.params.function(this.params.id);
     } else {

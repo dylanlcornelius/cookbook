@@ -112,7 +112,9 @@ describe('ProfileComponent', () => {
         { day: 0, month: 3, year: 0, data: {'2': 2} }
       ];
 
-      spyOn(actionService, 'get').and.returnValue(Promise.resolve(true));
+      const action = { uid: '', actions: {} };
+
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(action));
       spyOn(component, 'sortActions').and.returnValue(actions);
 
       component.loadActions();
@@ -133,7 +135,9 @@ describe('ProfileComponent', () => {
         { day: 0, month: 3, year: 0, data: {'2': 2} }
       ];
 
-      spyOn(actionService, 'get').and.returnValue(Promise.resolve(true));
+      const action = { uid: '', actions: {} };
+
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(action));
       spyOn(component, 'sortActions').and.returnValue(actions);
 
       component.loadActions();

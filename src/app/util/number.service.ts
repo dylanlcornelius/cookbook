@@ -4,9 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class NumberService {
-  toDecimal(x) {
+  toDecimal(x: string | number): number {
     if (Number.isNaN(x)) {
       return 0;
+    }
+
+    if (typeof x !== 'string') {
+      return x;
     }
 
     const wholeIndex = x.indexOf(' ');
@@ -22,7 +26,7 @@ export class NumberService {
     return Number(x.slice(0, wholeIndex)) + (Number(f.slice(0, i)) / Number(f.slice(i + 1)));
   }
   
-  toFraction(x) {
+  toFraction(x: number): string {
     if (x === 0) {
       return '0';
     }
@@ -52,8 +56,8 @@ export class NumberService {
     return `${whole} ${num}/${den}`;
   }
 
-  isValid(value: number | string) {
-    if (isNaN(Number(value))) {
+  isValid(value: number | string): false | number {
+    if (typeof value === 'string' && isNaN(Number(value))) {
       const fractionValue = this.toDecimal(value);
       if (isNaN(fractionValue)) {
         return false;
@@ -68,7 +72,7 @@ export class NumberService {
     return Number(number.toFixed(6));
   }
 
-  toFormattedFraction(value: number | string) {
+  toFormattedFraction(value: number | string): string {
     let decimal = this.isValid(value);
     if (decimal === false) {
       return '-';

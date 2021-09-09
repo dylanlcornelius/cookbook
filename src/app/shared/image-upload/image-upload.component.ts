@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ImageService } from '@imageService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './image-upload.component.html',
   styleUrls: ['./image-upload.component.scss']
 })
-export class ImageUploadComponent implements OnInit {
+export class ImageUploadComponent implements OnDestroy {
   private unsubscribe$ = new Subject();
   online$: Observable<boolean>;
 
@@ -40,14 +40,12 @@ export class ImageUploadComponent implements OnInit {
     this.online$ = this.utilService.online$;
   }
 
-  ngOnInit(): void {}
-
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  readFile(event) {
+  readFile(event: any): void {
     if (event && event.target && event.target.files[0]) {
       this.imageService.upload(this.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
         if (typeof progress === 'string') {
@@ -67,7 +65,7 @@ export class ImageUploadComponent implements OnInit {
     }
   }
 
-  deleteFile(path) {
+  deleteFile(path: string): void {
     this.validationService.setModal({
       id: path,
       text: 'Are you sure you want to remove this image?',
@@ -75,7 +73,7 @@ export class ImageUploadComponent implements OnInit {
     });
   }
 
-  deleteFileEvent = (path) => {
+  deleteFileEvent = (path: string): void => {
     this.imageService.deleteFile(path).then(() => {
       this.updateImage(false);
       this.image = undefined;

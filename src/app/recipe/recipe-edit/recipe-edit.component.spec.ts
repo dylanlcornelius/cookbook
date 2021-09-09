@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray } from '@angular/forms';
 import { UOMConversion, UOM } from '@UOMConverson';
 import { RecipeEditComponent } from './recipe-edit.component';
 import { RecipeService } from '@recipeService';
@@ -12,7 +12,6 @@ import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
-import * as cdk from '@angular/cdk/drag-drop';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -347,9 +346,9 @@ describe('RecipeEditComponent', () => {
     it('should add a control', () => {
       spyOn(component, 'initIngredient').and.returnValue(formBuilder.group({}));
 
-      component.addIngredient(0, {
+      component.addIngredient(0, new Ingredient({
         id: 'id'
-      });
+      }));
 
       const control = <FormArray>component.recipesForm.controls['ingredients'];
       expect(control.length).toEqual(1);
@@ -434,14 +433,14 @@ describe('RecipeEditComponent', () => {
       component.submitForm(false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalledWith({
+      expect(recipeService.update).toHaveBeenCalledWith(new Recipe({
         ingredients: [{}],
         uid: '',
         author: '3',
         hasImage: true,
         meanRating: 0.33,
         ratings: []
-      }, 'testId');
+      }).getObject(), 'testId');
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -457,7 +456,7 @@ describe('RecipeEditComponent', () => {
       component.submitForm(false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.create).toHaveBeenCalledWith({
+      expect(recipeService.create).toHaveBeenCalledWith(new Recipe({
         name: null,
         link: null,
         description: null,
@@ -469,7 +468,7 @@ describe('RecipeEditComponent', () => {
         ingredients: [],
         uid: '',
         author: '1 2',
-      });
+      }));
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -490,14 +489,14 @@ describe('RecipeEditComponent', () => {
       component.submitForm(true);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalledWith({
+      expect(recipeService.update).toHaveBeenCalledWith(new Recipe({
         ingredients: [{}],
         uid: '',
         author: '3',
         hasImage: true,
         meanRating: 0.33,
         ratings: []
-      }, 'testId');
+      }).getObject(), 'testId');
       expect(router.navigate).toHaveBeenCalledWith(['/recipe/edit']);
     });
   });

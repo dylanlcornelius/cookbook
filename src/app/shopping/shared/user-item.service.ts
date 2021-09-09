@@ -5,20 +5,17 @@ import { Action } from '@actions';
 import { UserItem } from '@userItem';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
+import { ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserItemService extends FirestoreService{
-  get ref() {
-    return super.getRef('user-items');
-  }
-
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super(currentUserService, actionService);
+    super('user-items', currentUserService, actionService);
   }
 
   get(uid: string): Observable<UserItem>;
@@ -27,7 +24,7 @@ export class UserItemService extends FirestoreService{
   get(uid?: string): Observable<UserItem | UserItem[]> {
     return new Observable((observer) => {
       if (uid) {
-        super.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new UserItem(docs[0]));
           } else {
@@ -37,7 +34,7 @@ export class UserItemService extends FirestoreService{
           }
         });
       } else {
-        super.get(this.ref).subscribe(docs => {
+        super.get().subscribe(docs => {
           observer.next(docs.map(doc => {
             return new UserItem(doc);
           }));
@@ -46,16 +43,16 @@ export class UserItemService extends FirestoreService{
     });
   }
 
-  create = (data: UserItem): string => super.create(this.ref, data.getObject());
-  update = (data, id?: string) => super.update(this.ref, data, id);
+  create = (data: UserItem): string => super.create(data.getObject());
+  update = (data: ModelObject | ModelObject[], id?: string): void => super.update(data, id);
 
-  formattedUpdate(data, uid, id) {
+  formattedUpdate(data: UserItem["items"], uid: string, id: string): void {
     const items = data.map(({ name = '' }) => ({ name }));
     const userIngredient = new UserItem({ uid, items, id });
     this.update(userIngredient.getObject(), userIngredient.getId());
   }
 
-  buyUserItem(actions: Number, isCompleted: boolean) {
+  buyUserItem(actions: number, isCompleted: boolean): void {
     this.currentUserService.getCurrentUser().subscribe(user => {
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {

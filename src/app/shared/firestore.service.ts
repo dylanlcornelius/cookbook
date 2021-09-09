@@ -1,29 +1,27 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { CollectionReference, Query } from '@firebase/firestore-types';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
+import { ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root'
 })
 export abstract class FirestoreService {
-  private _ref;
-
-  abstract get ref();
+  ref: CollectionReference;
 
   constructor(
+    collection: string,
     protected currentUserService: CurrentUserService,
     protected actionService: ActionService,
-  ) { }
-
-  getRef(collection: string) {
-    if (firebase.apps.length > 0 && !this._ref) {
-      this._ref = firebase.firestore().collection(collection);
+  ) {
+    if (firebase.apps.length > 0 && !this.ref && collection) {
+      this.ref = firebase.firestore().collection(collection);
     }
-    return this._ref;
   }
 
   private commitAction(action) {
@@ -36,9 +34,9 @@ export abstract class FirestoreService {
     });
   }
 
-  getOne(ref, id: string): Observable<any> {
+  getOne(id: string): Observable<any> {
     return new Observable(observable => {
-      ref?.doc(id).onSnapshot(doc => {
+      this.ref?.doc(id).onSnapshot(doc => {
         observable.next({
           ...doc.data(),
           id: doc.id
@@ -47,9 +45,9 @@ export abstract class FirestoreService {
     });
   }
 
-  getMany(ref): Observable<any> {
+  getMany(ref?: Query): Observable<any> {
     return new Observable(observable => {
-      ref?.onSnapshot(querySnapshot => {
+      (ref || this.ref)?.onSnapshot(querySnapshot => {
         const docs = [];
         querySnapshot.forEach(doc => {
           docs.push({
@@ -62,45 +60,45 @@ export abstract class FirestoreService {
     });
   }
 
-  get(ref, id?: string): Observable<any> {
+  get(id?: string): Observable<any> {
     if (id) {
-      return this.getOne(ref, id);
+      return this.getOne(id);
     } else {
-      return this.getMany(ref);
+      return this.getMany();
     }
   }
 
-  create(ref, data, action?): string {
+  create(data: ModelObject, action?: Action): string {
     this.commitAction(action);
 
-    const newDoc = ref?.doc();
+    const newDoc = this.ref?.doc();
     newDoc.set({ ...data, creationDate: new Date() });
     return newDoc.id;
   }
 
-  updateOne(ref, data, id: string, action?) {
+  updateOne(data: ModelObject, id: string, action?: Action): void {
     this.commitAction(action);
 
-    ref?.doc(id).set(data);
+    this.ref?.doc(id).set(data);
   }
 
-  updateAll(ref, data) {
+  updateAll(data: ModelObject[]): void {
     data.forEach(d => {
-      ref.doc(d.getId()).set(d.getObject());
+      this.ref.doc(d.getId()).set(d.getObject());
     });
   }
 
-  update(ref, data, id?: string, action?: Action) {
-    if (id) {
-      this.updateOne(ref, data, id, action);
-    } else {
-      this.updateAll(ref, data);
+  update(data: ModelObject | ModelObject[], id?: string, action?: Action): void {
+    if (id && !Array.isArray(data)) {
+      this.updateOne(data, id, action);
+    } else if (Array.isArray(data)) {
+      this.updateAll(data);
     }
   }
 
-  delete(ref, id: string, action?) {
+  delete(id: string, action?: Action): void {
     this.commitAction(action);
     
-    ref?.doc(id).delete();
+    this.ref?.doc(id).delete();
   }
 }
