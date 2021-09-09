@@ -1,7 +1,8 @@
 {
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictDomEventTypes": false
   },
   "compileOnSave": false,
   "compilerOptions": {

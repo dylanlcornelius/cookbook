@@ -43,7 +43,7 @@
   
       <mat-form-field class="form-field">
         <mat-chip-list #categoryList>
-          <mat-chip *ngFor="let category of recipesForm.controls.categories.controls; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">
+          <mat-chip *ngFor="let category of recipesForm.get('categories')['controls']; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">
             {{category.value.category}}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip>
@@ -63,7 +63,7 @@
         </button>
         <div class="mobile" style="margin-bottom: 20px;"></div>
 
-        <div *ngFor="let step of recipesForm.controls.steps.controls; let i = index">
+        <div *ngFor="let step of recipesForm.get('steps')['controls']; let i = index">
           <div class="center" [formGroupName]="i">
             <mat-form-field style="width: 80%;">
                 <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
@@ -71,7 +71,7 @@
             <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" (click)="removeStep(i)">
               <mat-icon>close</mat-icon>
             </button>
-            <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.controls.steps.controls.length === 1"></div>
+            <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.get('steps')['controls'].length === 1"></div>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
       
           <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
           [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
-            <div class="container box" *ngFor="let ingredient of recipesForm.controls.ingredients.controls; let i = index"
+            <div class="container box" *ngFor="let ingredient of recipesForm.get('ingredients')['controls']; let i = index"
                 cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
               <mat-label>
                 {{ingredient.get('name')? ingredient.get('name').value : ''}}
@@ -129,7 +129,7 @@
                 <mat-icon class="indicator" matTooltip="This is a recipe" *ngIf="ingredient.uom === 'recipe'">r_mobiledata</mat-icon>
               </mat-label>
             </div>
-            <div class="box box-bottom" *ngIf="availableIngredients === 0">
+            <div class="box box-bottom" *ngIf="availableIngredients.length === 0">
               <mat-label class="col-12">No Ingredients</mat-label>
             </div>
           </div>

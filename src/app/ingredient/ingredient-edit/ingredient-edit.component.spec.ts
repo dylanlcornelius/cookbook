@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, NgForm, FormGroupDirective } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroupDirective, FormBuilder } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +16,7 @@ describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
   let fixture: ComponentFixture<IngredientEditComponent>;
   let ingredientService: IngredientService;
+  let formBuilder: FormBuilder;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -42,6 +43,7 @@ describe('IngredientEditComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     ingredientService = TestBed.inject(IngredientService);
+    formBuilder = TestBed.inject(FormBuilder);
   });
 
   it('should create', () => {
@@ -61,11 +63,9 @@ describe('IngredientEditComponent', () => {
   });
 
   describe('onFormSubmit', () => {
-    const form = new NgForm([], []);
     const formDirective = new FormGroupDirective([], []);
 
     beforeEach(() => {
-      spyOn(form, 'reset');
       spyOn(formDirective, 'resetForm');
     });
 
@@ -79,7 +79,7 @@ describe('IngredientEditComponent', () => {
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(form, formDirective);
+      component.onFormSubmit(formBuilder.group({}), formDirective);
 
       expect(ingredientService.update).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
@@ -93,7 +93,7 @@ describe('IngredientEditComponent', () => {
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(form, formDirective);
+      component.onFormSubmit(formBuilder.group({}), formDirective);
 
       expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
@@ -108,7 +108,7 @@ describe('IngredientEditComponent', () => {
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(form, formDirective);
+      component.onFormSubmit(formBuilder.group({}), formDirective);
 
       expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).toHaveBeenCalled();
@@ -116,7 +116,6 @@ describe('IngredientEditComponent', () => {
     });
 
     afterEach(() => {
-      expect(form.reset).toHaveBeenCalled();
       expect(formDirective.resetForm).toHaveBeenCalled();
     });
   });
