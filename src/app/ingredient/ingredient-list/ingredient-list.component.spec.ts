@@ -123,7 +123,7 @@ describe('IngredientListComponent', () => {
     it('should update a user ingredient', () => {
       spyOn(userIngredientService, 'formattedUpdate');
 
-      component.editIngredientEvent(component);
+      component.editIngredientEvent();
 
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
     });

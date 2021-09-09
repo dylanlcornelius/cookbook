@@ -12,7 +12,7 @@ import { User } from '@user';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NotificationService } from '@notificationService';
+import { NotificationService } from '@modalService';
 import { ImageService } from '@imageService';
 import { RecipeService } from '@recipeService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -112,7 +112,9 @@ describe('ProfileComponent', () => {
         { day: 0, month: 3, year: 0, data: {'2': 2} }
       ];
 
-      spyOn(actionService, 'get').and.returnValue(Promise.resolve(true));
+      const action = { uid: '', actions: {} };
+
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(action));
       spyOn(component, 'sortActions').and.returnValue(actions);
 
       component.loadActions();
@@ -133,7 +135,9 @@ describe('ProfileComponent', () => {
         { day: 0, month: 3, year: 0, data: {'2': 2} }
       ];
 
-      spyOn(actionService, 'get').and.returnValue(Promise.resolve(true));
+      const action = { uid: '', actions: {} };
+
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(action));
       spyOn(component, 'sortActions').and.returnValue(actions);
 
       component.loadActions();
@@ -169,11 +173,12 @@ describe('ProfileComponent', () => {
     it('should load histories', () => {
       component.user = new User({ defaultShoppingList: 'default' });
 
-      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
-      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 })]));
+      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' }), new Recipe({ id: 'id2', name: 'recipe' })]));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 }), new RecipeHistory({ recipeId: 'id2', timesCooked: 1 })]));
 
       component.loadHistory();
 
+      expect(component.history.length).toEqual(2);
       expect(component.history[0].name).toEqual('recipe');
       expect(component.history[0].value).toEqual(2);
       expect(recipeService.get).toHaveBeenCalled();
@@ -194,83 +199,32 @@ describe('ProfileComponent', () => {
     });
   });
 
-  describe('readFile', () => {
-    it('should not upload a blank url', () => {
-      spyOn(imageService, 'upload');
-      spyOn(userService, 'update');
-      spyOn(currentUserService, 'setCurrentUser');
-
-      component.readFile({});
-
-      expect(imageService.upload).not.toHaveBeenCalled();
-      expect(userService.update).not.toHaveBeenCalled();
-      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
-      expect(component.userImage).toBeUndefined();
-      expect(component.userImageProgress).toBeUndefined();
-    });
-
-    it('should upload a file and return progress', () => {
-      component.user = new User({});
-
-      spyOn(imageService, 'upload').and.returnValue(of(1));
-      spyOn(userService, 'update');
-      spyOn(currentUserService, 'setCurrentUser');
-
-      component.readFile({target: {files: [{}]}});
-
-      expect(imageService.upload).toHaveBeenCalled();
-      expect(userService.update).not.toHaveBeenCalled();
-      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
-      expect(component.userImage).toBeUndefined();
-      expect(component.userImageProgress).toEqual(1);
-    });
-
-    it('should upload a file and return a file', () => {
-      component.user = new User({});
-
-      spyOn(imageService, 'upload').and.returnValue(of('url'));
-      spyOn(userService, 'update');
-      spyOn(currentUserService, 'setCurrentUser');
-
-      component.readFile({target: {files: [{}]}});
-
-      expect(imageService.upload).toHaveBeenCalled();
-      expect(userService.update).toHaveBeenCalled();
-      expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-      expect(component.userImage).toEqual('url');
-      expect(component.userImageProgress).toBeUndefined();
-    });
-  });
-
   describe('deleteFile', () => {
-    it('should delete a file', fakeAsync(() => {
+    it('should delete a file', () => {
       component.user = new User({});
       component.userImage = 'url';
 
-      spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
-      component.deleteFile('url');
+      component.updateImage(true);
 
-      tick();
-      expect(imageService.deleteFile).toHaveBeenCalled();
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-    }));
+    });
   });
 
   describe('onFormSubmit', () => {
     it('should update a user record', () => {
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.onFormSubmit({});
 
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

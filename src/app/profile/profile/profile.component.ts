@@ -14,7 +14,7 @@ import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { Subject, Observable, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from '@notificationService';
+import { NotificationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { ImageService } from '@imageService';
 import { UtilService } from '@utilService';
@@ -29,7 +29,7 @@ import { RecipeService } from '@recipeService';
 export class ProfileComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   online$: Observable<boolean>;
-  loading: Boolean = true;
+  loading = true;
 
   selectedIndex = 0;
 
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   matcher = new ErrorMatcher();
 
-  @ViewChild('weekPaginator') weekPaginator: any;
+  @ViewChild(MatPaginator) weekPaginator: any;
 
   history = [];
 
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private utilService: UtilService,
     private recipeService: RecipeService,
-    private recipeHistoryService: RecipeHistoryService
+    private recipeHistoryService: RecipeHistoryService,
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
 
@@ -78,7 +78,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     const user$ = this.currentUserService.getCurrentUser();
     const users$ = this.userService.get();
 
@@ -110,7 +110,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadActions() {
+  loadActions(): void {
     this.actionService.get(this.user.uid)?.then((userAction) => {
       const sortedActions = this.sortActions(userAction.actions);
 
@@ -121,7 +121,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         return {
           data: actionData,
-          date: action.month + '/' + action.day + '/' + action.year,
+          date: `${action.month}/${action.day}/${action.year}`,
         };
       });
 
@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  sortActions(userActions) {
+  sortActions(userActions: any): { day: number, month: number, year: number, data: any }[] {
     const dateArray = Object.keys(userActions).map(key => {
       return key.split('/').map(Number);
     });
@@ -148,12 +148,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         day: date[0],
         month: date[1],
         year: date[2],
-        data: userActions[date[0] + '/' + date[1] + '/' + date[2]]
+        data: userActions[`${date[0]}/${date[1]}/${date[2]}`]
       };
     });
   }
 
-  loadHistory() {
+  loadHistory(): void {
     const recipes$ = this.recipeService.get();
     const recipeHistory$ = this.recipeHistoryService.get(this.user.defaultShoppingList);
 
@@ -171,39 +171,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  readFile(event) {
-    if (event && event.target && event.target.files[0]) {
-      this.imageService.upload(this.user.id, event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
-        if (typeof progress === 'string') {
-          this.userImage = progress;
-          this.userImageProgress = undefined;
-
-          const user = new User({ ...this.user, hasImage: true });
-
-          this.userService.update(user.getObject(), user.getId());
-          this.currentUserService.setCurrentUser(user);
-        } else {
-          this.userImageProgress = progress;
-        }
-      });
-    }
+  updateImage = (hasImage: boolean): void => {
+    this.user.hasImage = hasImage;
+    this.userService.update(this.user.getObject(), this.user.getId());
+    this.currentUserService.setCurrentUser(this.user);
   }
 
-  deleteFile(path) {
-    this.imageService.deleteFile(path).then(() => {
-      const user = new User({ ...this.user, hasImage: false });
-
-      this.userService.update(user.getObject(), user.getId());
-      this.currentUserService.setCurrentUser(user);
-      this.userImage = undefined;
-    });
-  }
-
-  onFormSubmit(form) {
+  onFormSubmit(form: any): void {
     const user = new User(form);
 
     this.userService.update(user.getObject(), user.getId());
     this.currentUserService.setCurrentUser(user);
-    this.notificationService.setNotification(new SuccessNotification('Profile updated!'));
+    this.notificationService.setModal(new SuccessNotification('Profile updated!'));
   }
 }

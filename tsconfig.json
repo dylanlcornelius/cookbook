@@ -1,4 +1,8 @@
 {
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictTemplates": true
+  },
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
@@ -23,8 +27,9 @@
       "@model": ["src/app/shared/model"],
       "@utilService": ["src/app/shared/util.service"],
       "@firestoreService": ["src/app/shared/firestore.service"],
+      "@modalService": ["src/app/shared/modal.service"],
       "@notification": ["src/app/shared/notification-modal/notification.model"],
-      "@notificationService": ["src/app/shared/notification-modal/notification.service"],
+      "@validation": ["src/app/shared/validation-modal/validation.model"],
       "@config": ["src/app/admin/shared/config.model"],
       "@configService": ["src/app/admin/shared/config.service"],
       "@imageService": ["src/app/util/image.service"],

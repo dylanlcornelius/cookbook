@@ -6,7 +6,7 @@ export class UserItem extends Model {
         name: string
     }>;
 
-    constructor(data) {
+    constructor(data: any) {
         super(data);
         this.uid = data.uid;
         this.items = data.items || [];

@@ -19,12 +19,12 @@ export class IngredientQuickCreateComponent {
 
   constructor() { }
 
-  open() {
+  open(): void {
     this.edit.load();
     this.modal.open();
   }
 
-  close() {
+  close(): void {
     this.modal.close();
   }
 }

@@ -26,7 +26,7 @@ export class AuthService {
     }
   }
 
-  load() {
+  load(): void {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         this.currentUserService.setIsGuest(true);
@@ -59,12 +59,12 @@ export class AuthService {
     });
   }
 
-  googleLogin() {
+  googleLogin(): void {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
   }
 
-  logout() {
+  logout(): void {
     firebase.auth().signOut().then(() => {
       this.currentUserService.setCurrentUser(new User({}));
       this.currentUserService.setIsLoggedIn(false);

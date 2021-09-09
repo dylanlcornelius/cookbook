@@ -20,7 +20,7 @@ export class LoginComponent {
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
   }
 
-  signIn() {
+  signIn(): void {
     this.authService.googleLogin();
   }
 }

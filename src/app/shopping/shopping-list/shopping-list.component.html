@@ -1,5 +1,4 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
-<app-validation-modal [params]="validationModalParams"></app-validation-modal>
 
 <h2>Your Shopping List</h2>
 
@@ -61,7 +60,7 @@
   </div>
 </div>
 
-<div *ngIf="!loading && ingredientsDataSource.filteredData.length == 0 && itemsDataSource.filteredData.length == 0" style="text-align: center;">
+<div *ngIf="!loading && ingredientsDataSource.filteredData.length === 0 && itemsDataSource.filteredData.length === 0" style="text-align: center;">
   <br/>
   <h4 [hidden]="isCompleted">No ingredients or items have been added to your shopping list</h4>
   <h4 [hidden]="!isCompleted">Shopping list completed!</h4>

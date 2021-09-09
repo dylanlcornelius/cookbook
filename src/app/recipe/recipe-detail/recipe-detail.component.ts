@@ -7,7 +7,7 @@ import { Observable, combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -27,7 +27,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   online$: Observable<boolean>;
 
   loading = true;
-  validationModalParams;
   recipeHistoryModalParams;
 
   user: User;
@@ -52,6 +51,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
     private userIngredientService: UserIngredientService,
+    private validationService: ValidationService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -65,7 +65,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
       
@@ -118,77 +118,55 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  readFile(event) {
-    if (event && event.target && event.target.files[0]) {
-      this.imageService.upload(this.recipe.getId(), event.target.files[0]).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
-        if (typeof progress === 'string') {
-          this.recipeImage = progress;
-          this.recipeImageProgress = undefined;
-
-          this.recipe.hasImage = true;
-          this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-          this.notificationService.setNotification(new SuccessNotification('Image uploaded!'));
-        } else {
-          this.recipeImageProgress = progress;
-        }
-      });
-    }
+  updateImage = (hasImage: boolean): void => {
+    this.recipe.hasImage = hasImage;
+    this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
   }
 
-  deleteFile(path) {
-    this.imageService.deleteFile(path).then(() => {
-      this.recipe.hasImage = false;
-      this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-      this.recipeImage = undefined;
+  deleteRecipe(id: string): void {
+    this.validationService.setModal({
+      id: id,
+      text: `Are you sure you want to delete recipe ${this.recipe.name}?`,
+      function: this.deleteRecipeEvent
     });
   }
 
-  deleteRecipe(id) {
-    this.validationModalParams = {
-      id: id,
-      self: this,
-      text: 'Are you sure you want to delete recipe ' + this.recipe.name + '?',
-      function: this.deleteRecipeEvent
-    };
-  }
-
-  deleteRecipeEvent(self, id) {
+  deleteRecipeEvent = (id: string): void => {
     if (id) {
-      self.recipeService.delete(id);
-      self.deleteFile(id);
-      self.notificationService.setNotification(new SuccessNotification('Recipe deleted!'));
-      self.router.navigate(['/recipe/list']);
+      this.imageService.deleteFile(id);
+      this.recipeService.delete(id);
+      this.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
+      this.router.navigate(['/recipe/list']);
     }
   }
 
-  setCategoryFilter = (filter) => this.utilService.setListFilter(new CategoryFilter(filter));
-  setAuthorFilter = (filter) => this.utilService.setListFilter(new AuthorFilter(filter));
+  setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
+  setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
 
-  addIngredients() {
+  addIngredients(): void {
     this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
-  removeIngredients() {
+  removeIngredients(): void {
     this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
-  onRate(rating, recipe) {
+  onRate(rating: number, recipe: Recipe): void {
     this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
 
-  updateTimesCooked(recipe) {
+  updateTimesCooked(recipe: Recipe): void {
     this.recipeHistoryModalParams = {
       function: this.updateRecipeHistoryEvent,
       recipeId: recipe.id,
       uid: this.user.defaultShoppingList,
       timesCooked: this.timesCooked,
-      self: this,
-      text: 'Edit times cooked for ' + recipe.name
+      text: `Edit times cooked for ${recipe.name}`
     };
   }
 
-  updateRecipeHistoryEvent(self, recipeId, uid, timesCooked) {
-    self.recipeHistoryService.set(uid, recipeId, timesCooked);
-    self.notificationService.setNotification(new SuccessNotification('Recipe updated!'));
+  updateRecipeHistoryEvent = (recipeId: string, uid: string, timesCooked: number): void => {
+    this.recipeHistoryService.set(uid, recipeId, timesCooked);
+    this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   }
 }

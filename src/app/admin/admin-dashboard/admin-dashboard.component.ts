@@ -14,7 +14,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { takeUntil } from 'rxjs/operators';
 import { SuccessNotification } from '@notification';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
 
@@ -25,8 +25,7 @@ import { NavigationService } from '@navigationService';
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
-  loading: Boolean = true;
-  validationModalParams;
+  loading = true;
 
   originalConfigs: Config[];
   configContext = {
@@ -35,7 +34,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     dataSource: [],
     add: this.addConfig,
     remove: this.removeConfig,
-    self: this,
   };
 
   originalNavs: Navigation[];
@@ -45,7 +43,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     dataSource: [],
     add: this.addNav,
     remove: this.removeNav,
-    self: this,
   }
 
   originalUsers: User[];
@@ -54,7 +51,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     displayedColumns: ['id', 'firstName', 'lastName', 'role', 'theme', 'creationDate'],
     dataSource: [],
     remove: this.removeUser,
-    self: this,
   };
 
   originalRecipes: Recipe[];
@@ -93,6 +89,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private userIngredientService: UserIngredientService,
     private userItemService: UserItemService,
     private navigationService: NavigationService,
+    private validationService: ValidationService,
     private notificationService: NotificationService,
   ) {}
 
@@ -105,7 +102,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     const configs$ = this.configService.get();
     const navs$ = this.navigationService.get();
     const users$ = this.userService.get();
@@ -142,103 +139,102 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  isArray(obj) {
+  isArray(obj: any): boolean {
     return Array.isArray(obj);
   }
 
-  addConfig(self) {
-    self.configService.create({});
+  addConfig(): void {
+    this.configService.create(new Config({}));
   }
 
-  removeConfig(self, id, name) {
+  removeConfig(id: string, name: string): void {
     if (!name) {
       name = 'NO NAME';
     }
 
-    self.validationModalParams = {
-      function: self.removeConfigEvent,
+    this.validationService.setModal({
+      function: this.removeConfigEvent,
       id: id,
-      self: self,
       text: `Are you sure you want to delete config ${name}?`
-    };
+    });
   }
 
-  removeConfigEvent(self, id) {
-    self.configService.delete(id);
+  removeConfigEvent = (id: string): void => {
+    this.configService.delete(id);
   }
 
-  addNav(self) {
-    self.navigationService.create({});
+  addNav(): void {
+    this.navigationService.create(new Navigation({}));
   }
 
-  removeNav(self, id, name) {
+  removeNav(id: string, name: string): void {
     if (!name) {
       name = 'NO NAME';
     }
 
-    self.validationModalParams = {
-      function: self.removeNavEvent,
+    this.validationService.setModal({
+      function: this.removeNavEvent,
       id: id,
-      self: self,
       text: `Are you sure you want to delete nav ${name}?`
-    }
+    });
   }
 
-  removeNavEvent(self, id) {
-    self.navigationService.delete(id);
+  removeNavEvent= (id: string): void => {
+    this.navigationService.delete(id);
   }
 
-  removeUser(self, id, firstName, lastName) {
+  removeUser(id: string, firstName: string, lastName: string): void {
     if (!firstName && !lastName) {
       firstName = 'NO';
       lastName = 'NAME';
     }
     
-    self.validationModalParams = {
-      function: self.removeUserEvent,
+    this.validationService.setModal({
+      function: this.removeUserEvent,
       id: id,
-      self: self,
       text: `Are you sure you want to delete user ${firstName} ${lastName}?`
-    };
+    });
   }
 
-  removeUserEvent(self, id) {
-    self.userService.delete(id);
+  removeUserEvent = (id: string): void => {
+    this.userService.delete(id);
   }
 
-  revert() {
-    this.validationModalParams = {
+  revert(): void {
+    this.validationService.setModal({
       function: this.revertEvent,
-      self: this,
       text: 'Are you sure you want to revert your changes?'
-    };
+    });
   }
 
-  revertEvent(self) {
-    self.configContext.dataSource = self.originalConfigs;
-    self.navigationContext.dataSource = self.originalNavs;
-    self.userContext.dataSource = self.originalUsers;
-    self.recipeContext.dataSource = self.originalRecipes;
-    self.ingredientContext.dataSource = self.originalIngredients;
-    self.userIngredientContext.dataSource = self.originalUserIngredients;
-    self.userItemContext.dataSource = self.originalUserItems;
+  revertEvent = (): void => {
+    this.configContext.dataSource = this.originalConfigs;
+    this.navigationContext.dataSource = this.originalNavs;
+    this.userContext.dataSource = this.originalUsers;
+    this.recipeContext.dataSource = this.originalRecipes;
+    this.ingredientContext.dataSource = this.originalIngredients;
+    this.userIngredientContext.dataSource = this.originalUserIngredients;
+    this.userItemContext.dataSource = this.originalUserItems;
 
-    self.notificationService.setNotification(new SuccessNotification('Changes reverted'));
+    this.notificationService.setModal(new SuccessNotification('Changes reverted'));
   }
 
-  save() {
-    this.validationModalParams = {function: this.saveEvent, self: this, text: 'Are you sure you want to save your changes?'};
+  save(): void {
+    this.validationService.setModal({
+      function: this.saveEvent,
+      text: 'Are you sure you want to save your changes?'
+    });
   }
 
-  saveEvent(self) {
-    self.configService.update(self.configContext.dataSource);
-    self.navigationService.update(self.navigationContext.dataSource);
-    self.userService.update(self.userContext.dataSource);
-    self.recipeService.update(self.recipeContext.dataSource);
-    self.ingredientService.update(self.ingredientContext.dataSource);
-    self.userIngredientService.update(self.userIngredientContext.dataSource);
-    self.userItemService.update(self.userItemContext.dataSource);
+  saveEvent = (): void => {
+    this.configService.update(this.configContext.dataSource);
+    this.navigationService.update(this.navigationContext.dataSource);
+    this.userService.update(this.userContext.dataSource);
+    this.recipeService.update(this.recipeContext.dataSource);
+    this.ingredientService.update(this.ingredientContext.dataSource);
+    this.userIngredientService.update(this.userIngredientContext.dataSource);
+    this.userItemService.update(this.userItemContext.dataSource);
 
-    self.notificationService.setNotification(new SuccessNotification('Changes saved!'));
+    this.notificationService.setModal(new SuccessNotification('Changes saved!'));
   }
 }

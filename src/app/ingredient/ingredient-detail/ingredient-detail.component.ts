@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
@@ -15,8 +15,7 @@ import { Ingredient } from '@ingredient';
 })
 export class IngredientDetailComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
-  loading: Boolean = true;
-  validationModalParams;
+  loading = true;
   ingredient: Ingredient;
 
   constructor(
@@ -25,6 +24,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private notificationService: NotificationService,
     private numberService: NumberService,
+    private validationService: ValidationService,
   ) { }
 
   ngOnInit() {
@@ -36,7 +36,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.ingredientService.get(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       this.ingredient = data;
       this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
@@ -44,20 +44,19 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteIngredient(id) {
-    this.validationModalParams = {
+  deleteIngredient(id: string): void {
+    this.validationService.setModal({
       id: id,
-      self: this,
-      text: 'Are you sure you want to delete ingredient ' + this.ingredient.name + '?',
+      text: `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
       function: this.deleteIngredientEvent
-    };
+    });
   }
 
-  deleteIngredientEvent(self, id) {
+  deleteIngredientEvent = (id: string): void => {
     if (id) {
-      self.ingredientService.delete(id);
-      self.notificationService.setNotification(new SuccessNotification('Ingredient deleted!'));
-      self.router.navigate(['/ingredient/list']);
+      this.ingredientService.delete(id);
+      this.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));
+      this.router.navigate(['/ingredient/list']);
     }
   }
 }

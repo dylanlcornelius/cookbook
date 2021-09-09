@@ -12,7 +12,7 @@ import { IngredientService } from '@ingredientService';
 import { User } from '@user';
 import { Ingredient } from '@ingredient';
 import { CurrentUserService } from '@currentUserService';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeHistory } from '@recipeHistory';
 import { UtilService } from '@utilService';
@@ -33,6 +33,7 @@ describe('RecipeDetailComponent', () => {
   let utilService: UtilService;
   let userIngredientService: UserIngredientService;
   let recipeIngredientService: RecipeIngredientService;
+  let validationService: ValidationService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -65,6 +66,7 @@ describe('RecipeDetailComponent', () => {
     utilService = TestBed.inject(UtilService);
     userIngredientService = TestBed.inject(UserIngredientService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
+    validationService = TestBed.inject(ValidationService);
   });
 
   it('should create', () => {
@@ -180,101 +182,55 @@ describe('RecipeDetailComponent', () => {
     }));
   });
 
-  describe('readFile', () => {
-    it('should not upload a blank url', () => {
-      spyOn(imageService, 'upload');
-      spyOn(recipeService, 'update');
-
-      component.readFile({});
-
-      expect(imageService.upload).not.toHaveBeenCalled();
-      expect(recipeService.update).not.toHaveBeenCalled();
-      expect(component.recipeImage).toBeUndefined();
-      expect(component.recipeImageProgress).toBeUndefined();
-    });
-
-    it('should upload a file and return progress', () => {
+  describe('updateImage', () => {
+    it('should update recipe image metadata',() => {
       component.recipe = new Recipe({});
 
-      spyOn(imageService, 'upload').and.returnValue(of(1));
       spyOn(recipeService, 'update');
 
-      component.readFile({target: {files: [{}]}});
+      component.updateImage(false);
 
-      expect(imageService.upload).toHaveBeenCalled();
-      expect(recipeService.update).not.toHaveBeenCalled();
-      expect(component.recipeImage).toBeUndefined();
-      expect(component.recipeImageProgress).toEqual(1);
-    });
-
-    it('should upload a file and return a file', () => {
-      component.recipe = new Recipe({});
-
-      spyOn(imageService, 'upload').and.returnValue(of('url'));
-      spyOn(recipeService, 'update');
-      spyOn(notificationService, 'setNotification');
-
-      component.readFile({target: {files: [{}]}});
-
-      expect(imageService.upload).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
-      expect(component.recipeImage).toEqual('url');
-      expect(component.recipeImageProgress).toBeUndefined();
     });
-  });
-
-  describe('deleteFile', () => {
-    it('should delete a file', fakeAsync(() => {
-      component.recipe = new Recipe({});
-      component.recipeImage = 'url';
-
-      spyOn(imageService, 'deleteFile').and.returnValue(Promise.resolve());
-      spyOn(recipeService, 'update');
-
-      component.deleteFile('url');
-
-      tick();
-      expect(imageService.deleteFile).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalled();
-    }));
   });
 
   describe('deleteRecipe', () => {
     it('should open a modal to delete a recipe', () => {
       component.recipe = new Recipe({});
 
+      spyOn(validationService, 'setModal');
+
       component.deleteRecipe('id');
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
   describe('deleteRecipeEvent', () => {
     it('should not attempt to delete a recipe without an id', () => {
+      spyOn(imageService, 'deleteFile');
       spyOn(recipeService, 'delete');
-      spyOn(component, 'deleteFile');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
-      component.deleteRecipeEvent(component, '');
+      component.deleteRecipeEvent('');
 
+      expect(imageService.deleteFile).not.toHaveBeenCalled();
       expect(recipeService.delete).not.toHaveBeenCalled();
-      expect(component.deleteFile).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
     });
 
     it('should delete a recipe', () => {
       const router = TestBed.inject(Router);
       spyOn(router, 'navigate');
+      spyOn(imageService, 'deleteFile');
       spyOn(recipeService, 'delete');
-      spyOn(component, 'deleteFile');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
-      component.deleteRecipeEvent(component, 'id');
+      component.deleteRecipeEvent('id');
 
+      expect(imageService.deleteFile).toHaveBeenCalled();
       expect(recipeService.delete).toHaveBeenCalled();
-      expect(component.deleteFile).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
   });
@@ -342,12 +298,12 @@ describe('RecipeDetailComponent', () => {
   describe('updateRecipeHistoryEvent', () => {
     it('should delete a recipe', () => {
       spyOn(recipeHistoryService, 'set');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
-      component.updateRecipeHistoryEvent(component, 'id', 'uid', 10);
+      component.updateRecipeHistoryEvent('id', 'uid', 10);
 
       expect(recipeHistoryService.set).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

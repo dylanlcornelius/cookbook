@@ -10,21 +10,17 @@ import { RecipeHistory } from '@recipeHistory';
   providedIn: 'root'
 })
 export class RecipeHistoryService extends FirestoreService {
-  get ref() {
-    return super.getRef('recipe-histories');
-  }
-
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super(currentUserService, actionService);
+    super('recipe-histories', currentUserService, actionService);
   }
 
-  add(uid: string, recipeId: string) {
+  add(uid: string, recipeId: string): void {
     this.get(uid, recipeId).pipe(take(1)).subscribe(recipeHistory => {
       const today = new Date();
-      const lastDateCooked = (today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear()).toString();
+      const lastDateCooked = (`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`).toString();
 
       if (!recipeHistory.id) {
         this.create(new RecipeHistory({uid: uid, recipeId: recipeId, history: [lastDateCooked], timesCooked: 1, lastDateCooked: lastDateCooked}));
@@ -38,7 +34,7 @@ export class RecipeHistoryService extends FirestoreService {
     });
   }
 
-  set(uid: string, recipeId: string, timesCooked: number) {
+  set(uid: string, recipeId: string, timesCooked: number): void {
     this.get(uid, recipeId).pipe(take(1)).subscribe(recipeHistory => {
       if (!recipeHistory.id) {
         this.create(new RecipeHistory({uid: uid, recipeId: recipeId, timesCooked}));
@@ -54,17 +50,17 @@ export class RecipeHistoryService extends FirestoreService {
   get(uid: string, recipeId?: string): Observable<RecipeHistory | RecipeHistory[]> {
     return new Observable(observable => {
       if (recipeId) {
-        super.get(this.ref?.where('uid', '==', uid).where('recipeId', '==', recipeId)).subscribe(docs => {
+        super.getMany(this.ref?.where('uid', '==', uid).where('recipeId', '==', recipeId)).subscribe(docs => {
           observable.next(new RecipeHistory(docs[0]));
         });
       } else {
-        super.get(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
           observable.next(docs.map(doc => new RecipeHistory(doc)));
         });
       }
     });
   }
 
-  create = (data: RecipeHistory): string => super.create(this.ref, data.getObject());
-  update = (data: RecipeHistory) => super.update(this.ref, data.getObject(), data.getId());
+  create = (data: RecipeHistory): string => super.create(data.getObject());
+  update = (data: RecipeHistory): void => super.update(data.getObject(), data.getId());
 }

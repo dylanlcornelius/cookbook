@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { firebase } from '@firebase/app';
 import '@firebase/storage';
+import { Reference  } from '@firebase/storage-types';
+import { Recipe } from '@recipe';
+import { User } from '@user';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,22 +11,20 @@ import { Observable } from 'rxjs';
 })
 export class ImageService {
   _ref;
-  get ref() {
+  get ref(): Reference {
     if (!this._ref && firebase.apps.length > 0) {
       this._ref = firebase.storage().ref();
     }
     return this._ref;
   }
 
-  constructor() {}
-
-  get(path: string) {
+  get(path: string): Promise<string | void> {
     return this.ref.child(path).getDownloadURL().then(url => {
       return url;
     }, () => {});
   }
 
-  upload(path: string, file: File): Observable<Number | String | void> {
+  upload(path: string, file: File): Observable<number | string | void> {
     const uploadTask = this.ref.child(path).put(file, { cacheControl: 'public,max-age=31557600' });
 
     return new Observable(observer => {
@@ -40,7 +41,7 @@ export class ImageService {
     });
   }
 
-  download(doc) {
+  download(doc: Recipe | User): Promise<never | string | void> {
     if (!doc.hasImage) {
       return Promise.reject();
     }
@@ -48,7 +49,7 @@ export class ImageService {
     return this.get(doc.id);
   }
 
-  deleteFile(path: string) {
+  deleteFile(path: string): Promise<void> {
     return this.ref.child(path).delete();
   }
 }

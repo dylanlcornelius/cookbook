@@ -13,7 +13,7 @@ import { UserItem } from '@userItem';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CurrentUserService } from '@currentUserService';
-import { NotificationService } from '@notificationService';
+import { NotificationService, ValidationService } from '@modalService';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -23,6 +23,7 @@ describe('ShoppingListComponent', () => {
   let currentUserService: CurrentUserService;
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
+  let validationService: ValidationService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,6 +49,7 @@ describe('ShoppingListComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
+    validationService = TestBed.inject(ValidationService);
   });
 
   it('should create', () => {
@@ -198,14 +200,14 @@ describe('ShoppingListComponent', () => {
       spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(userIngredientService, 'buyUserIngredient');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.addIngredientToPantry('id');
 
       expect(component.applyFilter).toHaveBeenCalledTimes(2);
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
 
     it('should complete the shopping list', () => {
@@ -216,14 +218,14 @@ describe('ShoppingListComponent', () => {
       spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(userIngredientService, 'buyUserIngredient');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.addIngredientToPantry('id');
 
       expect(component.applyFilter).toHaveBeenCalledTimes(2);
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.isCompleted).toBeTrue();
     });
 
@@ -234,14 +236,14 @@ describe('ShoppingListComponent', () => {
       spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(userIngredientService, 'buyUserIngredient');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.addIngredientToPantry('id');
 
       expect(component.applyFilter).toHaveBeenCalledTimes(1);
       expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).not.toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
     });
   });
 
@@ -274,13 +276,13 @@ describe('ShoppingListComponent', () => {
 
       spyOn(userItemService, 'formattedUpdate');
       spyOn(userItemService, 'buyUserItem');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.removeItem(1);
 
       expect(userItemService.formattedUpdate).toHaveBeenCalled();
       expect(userItemService.buyUserItem).toHaveBeenCalled();
-      expect(notificationService.setNotification);
+      expect(notificationService.setModal);
     });
 
     it('should complete the shopping list', () => {
@@ -290,21 +292,23 @@ describe('ShoppingListComponent', () => {
       
       spyOn(userItemService, 'formattedUpdate');
       spyOn(userItemService, 'buyUserItem');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
       component.removeItem(0);
 
       expect(userItemService.buyUserItem).toHaveBeenCalled();
       expect(component.isCompleted).toBeTrue();
-      expect(notificationService.setNotification);
+      expect(notificationService.setModal);
     });
   });
 
   describe('addAllToPantry', () => {
     it('should open a modal to add all to pantry', () => {
+      spyOn(validationService, 'setModal');
+
       component.addAllToPantry();
 
-      expect(component.validationModalParams).toBeDefined();
+      expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
@@ -323,16 +327,16 @@ describe('ShoppingListComponent', () => {
       spyOn(userItemService, 'formattedUpdate');
       spyOn(userItemService, 'buyUserItem');
       spyOn(component, 'applyFilter');
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'setModal');
 
-      component.addAllToPantryEvent(component);
+      component.addAllToPantryEvent();
 
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
       expect(userItemService.formattedUpdate).toHaveBeenCalled();
       expect(userItemService.buyUserItem).toHaveBeenCalled();
       expect(component.applyFilter).toHaveBeenCalled();
-      expect(notificationService.setNotification).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

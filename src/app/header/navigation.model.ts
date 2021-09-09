@@ -4,11 +4,11 @@ export class Navigation extends Model {
     name: string;
     link: string;
     icon: string;
-    order: Number;
+    order: number;
     subMenu: NavigationMenu;
     isNavOnly: boolean;
 
-    constructor (data) {
+    constructor (data: any) {
         super(data);
         this.name = data.name || '';
         this.link = data.link || '/';

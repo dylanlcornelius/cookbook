@@ -9,6 +9,7 @@ import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '@user';
 import { NumberService } from 'src/app/util/number.service';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -47,7 +48,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
@@ -83,7 +84,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     });
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
@@ -91,11 +92,11 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     }
   }
 
-  findIngredient(id) {
+  findIngredient(id: string): Ingredient {
     return this.dataSource.data.find(x => x.id === id);
   }
 
-  editIngredient(id) {
+  editIngredient(id: string): void {
     let data = this.userIngredients.find(x => x.id === id);
     if (!data) {
       this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: 0});
@@ -103,18 +104,19 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     }
 
     this.ingredientModalParams = {
-      data: data,
-      self: this,
-      text: 'Edit pantry quantity for ' + this.findIngredient(id).name,
+      data,
+      userIngredients: this.userIngredients,
+      dataSource: this.dataSource,
+      text: `Edit pantry quantity for ${this.findIngredient(id).name}`,
       function: this.editIngredientEvent
     };
   }
 
-  editIngredientEvent(self) {
-    self.userIngredientService.formattedUpdate(self.userIngredients, self.user.defaultShoppingList, self.id);
+  editIngredientEvent = (): void => {
+    this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
   }
 
-  removeIngredient(id) {
+  removeIngredient(id: string): void {
     const data = this.userIngredients.find(x => x.id === id);
     const ingredient = this.findIngredient(id);
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
@@ -124,7 +126,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     }
   }
 
-  addIngredient(id) {
+  addIngredient(id: string): void {
     const data = this.userIngredients.find(x => x.id === id);
     const ingredient = this.findIngredient(id);
     if (ingredient.amount) {

@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { NotificationModalComponent } from './notification-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NotificationService } from '@notificationService';
+import { NotificationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { BehaviorSubject } from 'rxjs';
 
@@ -38,28 +38,28 @@ describe('NotificationModalComponent', () => {
 
   describe('load', () => {
     it('should listen to the notification service and handle a value', fakeAsync(() => {
-      spyOn(notificationService, 'getNotification').and.returnValue(new BehaviorSubject(new SuccessNotification('text')));
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'getModal').and.returnValue(new BehaviorSubject(new SuccessNotification('text')));
+      spyOn(notificationService, 'setModal');
 
       component.load();
 
       tick(4000);
-      expect(notificationService.getNotification).toHaveBeenCalled();
+      expect(notificationService.getModal).toHaveBeenCalled();
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(notificationService.setNotification).toHaveBeenCalled();
+        expect(notificationService.setModal).toHaveBeenCalled();
       });
     }));
 
     it('should listen to the notification service and handle an undefined value', fakeAsync(() => {
-      spyOn(notificationService, 'getNotification').and.returnValue(new BehaviorSubject(undefined));
-      spyOn(notificationService, 'setNotification');
+      spyOn(notificationService, 'getModal').and.returnValue(new BehaviorSubject(undefined));
+      spyOn(notificationService, 'setModal');
 
       component.load();
 
       tick();
-      expect(notificationService.getNotification).toHaveBeenCalled();
-      expect(notificationService.setNotification).not.toHaveBeenCalled();
+      expect(notificationService.getModal).toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
     }));
   });
 });

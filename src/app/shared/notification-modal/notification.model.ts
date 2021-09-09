@@ -1,9 +1,12 @@
-export class Notification {
+import { Modal } from "../modal.service";
+
+export class Notification extends Modal {
     type: string;
     icon: string;
     text: string;
 
     constructor(text: string) {
+        super();
         this.text = text;
     }
 }

@@ -7,6 +7,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { fadeComponentAnimation } from 'src/app/theme/animations';
 import { User } from '@user';
 import { CurrentUserService } from '@currentUserService';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  routeTransition(outlet) {
-    return outlet.isActivated ? outlet.activatedRoute : '';
+  routeTransition(outlet: RouterOutlet): ActivatedRoute {
+    return outlet.isActivated && outlet.activatedRoute;
   }
 }

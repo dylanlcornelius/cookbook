@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { UOM, UOMConversion } from '@UOMConverson';
 import { FailureNotification, InfoNotification, SuccessNotification } from '@notification';
-import { NotificationService } from '@notificationService';
+import { NotificationService, RecipeIngredientModalService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
@@ -15,23 +14,14 @@ import { Ingredient } from '@ingredient';
   providedIn: 'root'
 })
 export class RecipeIngredientService {
-  modal = new BehaviorSubject<RecipeIngredientModal>(undefined);
-
   constructor(
+    private recipeIngredientModalService: RecipeIngredientModalService,
     private uomConversion: UOMConversion,
     private notificationService: NotificationService,
     private recipeHistoryService: RecipeHistoryService,
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
   ) { }
-
-  getModal() {
-    return this.modal;
-  }
-
-  setModal(modal: RecipeIngredientModal) {
-    this.modal.next(modal);
-  }
 
   /**
    * Iterative version of finding recipe ingredients
@@ -61,7 +51,7 @@ export class RecipeIngredientService {
     return addedIngredients.filter(({ uom }) => uom !== UOM.RECIPE);
   }
 
-  getRecipeCount(recipe, recipes, { ingredients }) {
+  getRecipeCount(recipe: Recipe, recipes: Recipe[], { ingredients }: UserIngredient): number {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     let recipeCount;
@@ -96,51 +86,50 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient, defaultShoppingList) {
+  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, defaultShoppingList: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length > 0) {
-      this.setModal(new RecipeIngredientModal(
+      this.recipeIngredientModalService.setModal(new RecipeIngredientModal(
         this.addIngredientsEvent,
         recipeIngredients,
         userIngredient,
         defaultShoppingList,
-        this
       ));
     } else {
-      this.notificationService.setNotification(new InfoNotification('Recipe has no ingredients'));
+      this.notificationService.setModal(new InfoNotification('Recipe has no ingredients'));
     }
   }
 
-  addIngredientsEvent(self, recipeIngredients, { id, ingredients }, defaultShoppingList) {
+  addIngredientsEvent = (recipeIngredients: Ingredient[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
       ingredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
-          const quantity = self.numberService.toDecimal(recipeIngredient.quantity);
-          const value = self.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
+          const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
+          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value) {
-            ingredient.cartQuantity += ingredient.amount * Math.ceil(value / ingredient.amount);
+            ingredient.cartQuantity += Number(ingredient.amount) * Math.ceil(value / Number(ingredient.amount));
           } else {
-            self.notificationService.setNotification(new FailureNotification('Calculation error!'));
+            this.notificationService.setModal(new FailureNotification('Calculation error!'));
           }
           hasIngredient = true;
         }
       });
       if (!hasIngredient) {
-        ingredients.push({
+        ingredients.push(new Ingredient({
           id: String(recipeIngredient.id),
           pantryQuantity: 0,
           cartQuantity: Number(recipeIngredient.amount)
-        });
+        }));
       }
     });
 
-    self.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
-    self.notificationService.setNotification(new SuccessNotification('Added to list!'));
+    this.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
+    this.notificationService.setModal(new SuccessNotification('Added to list!'));
   }
 
-  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string) {
+  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length) {
@@ -154,7 +143,7 @@ export class RecipeIngredientService {
             } else if (value !== false) {
               ingredient.pantryQuantity = Math.max(Number(ingredient.pantryQuantity) - Number(value), 0);
             } else {
-              this.notificationService.setNotification(new FailureNotification('Calculation error!'));
+              this.notificationService.setModal(new FailureNotification('Calculation error!'));
             }
           }
         });
@@ -163,6 +152,6 @@ export class RecipeIngredientService {
     }
 
     this.recipeHistoryService.add(defaultShoppingList, recipe.id);
-    this.notificationService.setNotification(new SuccessNotification('Recipe cooked!'));
+    this.notificationService.setModal(new SuccessNotification('Recipe cooked!'));
   }
 }

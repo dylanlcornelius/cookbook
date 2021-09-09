@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
     this.load();
   }
 
-  load() {
+  load(): void {
     this.navigationService.get().subscribe(navs => {
       this.desktopNavs = navs.filter(({ subMenu }) => !subMenu);
       this.mobileNavs = navs.filter(({ subMenu }) => subMenu !== NavigationMenu.PROFILE);
@@ -62,11 +62,11 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  toggleNav() {
+  toggleNav(): void {
     this.showNav = !this.showNav;
   }
 
-  signOut() {
+  signOut(): void {
     this.authService.logout();
   }
 }

@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE } from '@recipeFilterService';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter } from '@recipeFilterService';
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 
@@ -23,7 +23,7 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
-  loading: Boolean = true;
+  loading = true;
 
   user: User;
 
@@ -61,7 +61,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
@@ -113,7 +113,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           }
           
           const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
-          ratings.push({ displayName: displayValue + ' & Up', name: rating, checked: checked, filter: new RatingFilter(rating) });
+          ratings.push({ displayName: `${displayValue} & Up`, name: rating, checked: checked, filter: new RatingFilter(rating) });
         });
 
         const categories = [];
@@ -160,7 +160,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     });
   }
 
-  setSelectedFilterCount() {
+  setSelectedFilterCount(): void {
     this.filtersList.forEach(filterList => {
       let i = 0;
       filterList.values.forEach(filter => {
@@ -172,7 +172,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     });
   }
 
-  setFilters() {
+  setFilters(): void {
     this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => FILTER_TYPE.SEARCH !== f.type);
     if (this.searchFilter) {
       this.recipeFilterService.selectedFilters.push(new SearchFilter(this.searchFilter));
@@ -180,7 +180,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.dataSource.filter = this.recipeFilterService.selectedFilters;
   }
 
-  filterSelected(selectedFilter) {
+  filterSelected(selectedFilter: { filter: Filter, checked: boolean, name: string }): void {
   if (selectedFilter.checked) {
       this.recipeFilterService.selectedFilters.push(selectedFilter.filter);
     } else {
@@ -191,7 +191,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.setFilters();
   }
 
-  applySearchFilter(filterValue: string) {
+  applySearchFilter(filterValue: string): void {
     this.searchFilter = filterValue.trim().toLowerCase();
     this.setFilters();
 
@@ -200,13 +200,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     }
   }
 
-  setCategoryFilter = (filter) => this.utilService.setListFilter(new CategoryFilter(filter));
+  setCategoryFilter = (filter: Filter): void => this.utilService.setListFilter(new CategoryFilter(filter));
 
-  sortRecipesByName(a: Recipe, b: Recipe) {
+  sortRecipesByName(a: Recipe, b: Recipe): number {
     return a.name.localeCompare(b.name);
   }
 
-  sortRecipesByImages(a: Recipe, b: Recipe) {
+  sortRecipesByImages(a: Recipe, b: Recipe): number {
     if (a.hasImage && b.hasImage) {
       return 0;
     }
@@ -222,19 +222,19 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  findRecipe(id: string) {
+  findRecipe(id: string): Recipe {
     return this.dataSource.data.find(x => x.id === id);
   }
 
-  addIngredients(id: string) {
+  addIngredients(id: string): void {
     this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
-  removeIngredients(id: string) {
+  removeIngredients(id: string): void {
     this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.defaultShoppingList);
   }
 
-  onRate(rating, recipe) {
+  onRate(rating: number, recipe: Recipe): void {
     this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
 }

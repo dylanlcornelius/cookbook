@@ -15,7 +15,7 @@ export class User extends Model {
     ratingCount: number;
     image: string;
 
-    constructor(data) {
+    constructor(data: any) {
         super(data);
         this.uid = data.uid || '';
         this.firstName = data.firstName || '';
@@ -28,8 +28,11 @@ export class User extends Model {
         this.isPending = data.role === 'pending';
     }
 
-    public getObject() {
+    public getObject(): UserObject {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {id, isAdmin, isPending, recipeCount, ratingCount, image, ...user} = this;
         return user;
     }
 }
+
+export type UserObject = Omit<User, 'id' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;

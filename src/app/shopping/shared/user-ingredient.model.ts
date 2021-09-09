@@ -5,7 +5,7 @@ export class UserIngredient extends Model {
     uid: string;
     ingredients: Array<Ingredient>;
 
-    constructor(data) {
+    constructor(data: any) {
         super(data);
         this.uid = data.uid;
         this.ingredients = data.ingredients || [];

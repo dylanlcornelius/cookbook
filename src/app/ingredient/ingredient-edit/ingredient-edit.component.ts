@@ -34,7 +34,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   matcher = new ErrorMatcher();
 
   @Input()
-  isQuickView: boolean = false;
+  isQuickView = false;
 
   @Output()
   handleIngredientCreate: EventEmitter<boolean> = new EventEmitter();
@@ -65,7 +65,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  public load() {
+  public load(): void {
     if (this.route.snapshot.params['ingredient-id']) {
       this.ingredientService.get(this.route.snapshot.params['ingredient-id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
         this.id = data.id;
@@ -85,7 +85,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFormSubmit(form: NgForm, formDirective: FormGroupDirective) {
+  onFormSubmit(form: NgForm, formDirective: FormGroupDirective): void {
     if (this.route.snapshot.params['ingredient-id']) {
       this.ingredientService.update(form.value, this.id);
       this.router.navigate(['/ingredient/detail/', this.id]);

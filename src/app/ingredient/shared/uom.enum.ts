@@ -95,7 +95,7 @@ export class UOMConversion {
         }
     };
 
-    convert(fromUOM: UOM, toUOM: UOM, value: number): number | boolean {
+    convert(fromUOM: UOM, toUOM: UOM, value: number): number | false {
         if (fromUOM === toUOM) {
             return value;
         }
@@ -105,7 +105,7 @@ export class UOMConversion {
         return false;
     }
 
-    relatedUOMs(ingredientUOM: UOM) {
+    relatedUOMs(ingredientUOM: UOM): string[] {
         if (this.uoms[ingredientUOM]) {
             return Object.keys(this.uoms[ingredientUOM]);
         }

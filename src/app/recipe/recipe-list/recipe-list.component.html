@@ -9,7 +9,7 @@
     </a>
 
     <span *ngFor="let filters of filtersList" class="row-button">
-      <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected == 0 ? '' : filters.numberOfSelected}}">{{filters.displayName}}</button>
+      <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected === 0 ? '' : filters.numberOfSelected}}">{{filters.displayName}}</button>
       <mat-menu #menu="matMenu">
         <mat-checkbox class="mat-menu-item" *ngFor="let filter of filters.values"
                       [(ngModel)]="filter.checked" (click)="$event.stopPropagation()"

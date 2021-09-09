@@ -55,9 +55,11 @@ describe('RecipeHistoryModalComponent', () => {
   describe('confirm', () => {
     it('should change an ingredient pantry quantity', () => {
       component.Params = {
-        function: (_self) => {},
-        id: 'id',
+        function: () => {},
+        recipeId: 'id',
         uid: 'uid',
+        timesCooked: 0,
+        text: ''
       };
 
       spyOn(component.params, 'function');

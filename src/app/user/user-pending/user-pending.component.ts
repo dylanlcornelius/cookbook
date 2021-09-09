@@ -31,7 +31,7 @@ export class UserPendingComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  load() {
+  load(): void {
     this.user = this.currentUserService.getCurrentUser();
     this.user.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       if (!user.isPending) {
@@ -40,7 +40,7 @@ export class UserPendingComponent implements OnInit, OnDestroy {
     });
   }
 
-  signOut() {
+  signOut(): void {
     this.authService.logout();
   }
 }

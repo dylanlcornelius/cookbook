@@ -31,7 +31,7 @@ export class Recipe extends Model {
     amount = '1';
     uom = UOM.RECIPE;
 
-    constructor(data) {
+    constructor(data: any) {
         super(data);
         this.name = data.name || '';
         this.link = data.link || '';
@@ -50,8 +50,11 @@ export class Recipe extends Model {
         this.author = data.author || '';
     }
 
-    public getObject() {
+    public getObject(): RecipeObject {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {id, count, image, amount, uom, ...recipe} = this;
         return recipe;
     }
 }
+
+export type RecipeObject = Omit<Recipe, 'id' | 'count' | 'image' | 'amount' | 'uom'>;

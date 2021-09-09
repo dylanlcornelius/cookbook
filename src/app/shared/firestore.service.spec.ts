@@ -6,7 +6,11 @@ describe('FirestoreService', () => {
   let service: FirestoreService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: String, useValue: 'test' }
+      ]
+    });
     service = TestBed.inject(FirestoreService);
   });
 
@@ -19,7 +23,7 @@ describe('FirestoreService', () => {
       spyOn(service, 'getOne');
       spyOn(service, 'getMany');
 
-      service.get({}, 'id');
+      service.get('id');
 
       expect(service.getOne).toHaveBeenCalled();
       expect(service.getMany).not.toHaveBeenCalled();
@@ -29,7 +33,7 @@ describe('FirestoreService', () => {
       spyOn(service, 'getOne');
       spyOn(service, 'getMany');
 
-      service.get({});
+      service.get();
 
       expect(service.getOne).not.toHaveBeenCalled();
       expect(service.getMany).toHaveBeenCalled();
