@@ -62,6 +62,6 @@
 
 <div *ngIf="!loading && ingredientsDataSource.filteredData.length === 0 && itemsDataSource.filteredData.length === 0" style="text-align: center;">
   <br/>
-  <h4 [hidden]="isCompleted">No ingredients or items have been added to your shopping list</h4>
-  <h4 [hidden]="!isCompleted">Shopping list completed!</h4>
+  <h4 [hidden]="isCompleted">Your shopping list is empty</h4>
+  <h4 [hidden]="!isCompleted">Your shopping list is completed!</h4>
 </div>

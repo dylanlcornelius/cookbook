@@ -1,9 +1,10 @@
 .header {
     padding: calc(5px + 1vh) calc(10px + 1vw);
-    position: relative;
+    position: sticky;
     top: 0;
     display: flex;
     justify-content: center;
+    z-index: 3;
 }
 @media screen and (max-width: 767px) {
     .nav-bar {
