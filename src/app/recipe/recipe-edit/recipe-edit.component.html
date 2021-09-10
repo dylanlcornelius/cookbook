@@ -8,7 +8,8 @@
       <mat-form-field class="form-field">
         <input matInput placeholder="Name*" formControlName="name" [errorStateMatcher]="matcher"/>
         <mat-error>
-          <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched">Please enter Recipe Name</span>
+          <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched && !recipesForm.get('name').errors?.wrongCase">Please enter Recipe Name</span>
+          <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched && recipesForm.get('name').errors?.wrongCase">Recipe Name is not in title case: {{recipesForm.get('name').errors?.wrongCase}}</span>
         </mat-error>
       </mat-form-field>
 

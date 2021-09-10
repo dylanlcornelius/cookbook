@@ -63,6 +63,7 @@ describe('RecipeEditComponent', () => {
       route.snapshot.params = {id: 'testId'};
 
       const recipe = new Recipe({
+        name: 'Title',
         categories: [{}],
         steps: [{}],
         ingredients: [{
@@ -109,7 +110,7 @@ describe('RecipeEditComponent', () => {
 
       const ingredients = [new Ingredient({
         id: 'id'
-      })]
+      })];
 
       spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
@@ -161,6 +162,8 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load ingredients for a new recipe', () => {
+      component.addedIngredients = [new Ingredient({ id: 'id2' })];
+
       const ingredients = [
         new Ingredient({
           id: 'id'
