@@ -6,7 +6,9 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  FormArray
+  FormArray,
+  ValidatorFn,
+  AbstractControl
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '@ingredientService';
@@ -17,6 +19,11 @@ import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
+import { titleCase } from 'title-case';
+
+function TitleCaseValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
+}
 
 @Component({
   selector: 'app-recipe-edit',
@@ -67,7 +74,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   init(): void {
     this.recipesForm = this.formBuilder.group({
-      name: [null, Validators.required],
+      name: [null, [Validators.required, TitleCaseValidator()]],
       link: [null],
       description: [null],
       time: [''],
