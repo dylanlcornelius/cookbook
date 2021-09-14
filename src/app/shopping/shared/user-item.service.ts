@@ -35,9 +35,7 @@ export class UserItemService extends FirestoreService{
         });
       } else {
         super.get().subscribe(docs => {
-          observer.next(docs.map(doc => {
-            return new UserItem(doc);
-          }));
+          observer.next(docs.map(doc => new UserItem(doc)));
         });
       }
     });

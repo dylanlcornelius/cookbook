@@ -3,6 +3,7 @@ import { ImageService } from '@imageService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
+import { Validation } from '@validation';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -66,11 +67,11 @@ export class ImageUploadComponent implements OnDestroy {
   }
 
   deleteFile(path: string): void {
-    this.validationService.setModal({
-      id: path,
-      text: 'Are you sure you want to remove this image?',
-      function: this.deleteFileEvent
-    });
+    this.validationService.setModal(new Validation(
+      'Are you sure you want to remove this image?',
+      this.deleteFileEvent,
+      [path]
+    ));
   }
 
   deleteFileEvent = (path: string): void => {

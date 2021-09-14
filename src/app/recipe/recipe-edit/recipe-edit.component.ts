@@ -302,7 +302,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.recipeService.update(new Recipe(form).getObject(), this.recipe.id);
       } else {
         form.uid = user.uid;
-        form.author = `${user.firstName} ${user.lastName}`;
+        form.author = user.name;
 
         recipeId = this.recipeService.create(new Recipe(form));
       }

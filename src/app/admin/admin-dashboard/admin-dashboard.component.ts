@@ -17,6 +17,7 @@ import { SuccessNotification } from '@notification';
 import { NotificationService, ValidationService } from '@modalService';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
+import { Validation } from '@validation';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -152,11 +153,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       name = 'NO NAME';
     }
 
-    this.validationService.setModal({
-      function: this.removeConfigEvent,
-      id: id,
-      text: `Are you sure you want to delete config ${name}?`
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete config ${name}?`,
+      this.removeConfigEvent,
+      [id]
+    ));
   }
 
   removeConfigEvent = (id: string): void => {
@@ -172,11 +173,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       name = 'NO NAME';
     }
 
-    this.validationService.setModal({
-      function: this.removeNavEvent,
-      id: id,
-      text: `Are you sure you want to delete nav ${name}?`
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete nav ${name}?`,
+      this.removeNavEvent,
+      [id]
+    ));
   }
 
   removeNavEvent= (id: string): void => {
@@ -189,11 +190,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       lastName = 'NAME';
     }
     
-    this.validationService.setModal({
-      function: this.removeUserEvent,
-      id: id,
-      text: `Are you sure you want to delete user ${firstName} ${lastName}?`
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete user ${firstName} ${lastName}?`,
+      this.removeUserEvent,
+      [id]
+    ));
   }
 
   removeUserEvent = (id: string): void => {
@@ -201,10 +202,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   };
 
   revert(): void {
-    this.validationService.setModal({
-      function: this.revertEvent,
-      text: 'Are you sure you want to revert your changes?'
-    });
+    this.validationService.setModal(new Validation(
+      'Are you sure you want to revert your changes?',
+      this.revertEvent
+    ));
   }
 
   revertEvent = (): void => {
@@ -220,10 +221,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   };
 
   save(): void {
-    this.validationService.setModal({
-      function: this.saveEvent,
-      text: 'Are you sure you want to save your changes?'
-    });
+    this.validationService.setModal(new Validation(
+      'Are you sure you want to save your changes?',
+      this.saveEvent
+    ));
   }
 
   saveEvent = (): void => {

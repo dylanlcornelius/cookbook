@@ -9,6 +9,7 @@ export class User extends Model {
     theme: boolean;
     hasImage: boolean;
 
+    name: string;
     isAdmin: boolean;
     isPending: boolean;
     recipeCount: number;
@@ -20,6 +21,7 @@ export class User extends Model {
         this.uid = data.uid || '';
         this.firstName = data.firstName || '';
         this.lastName = data.lastName || '';
+        this.name = `${this.firstName} ${this.lastName}`;
         this.defaultShoppingList = data.defaultShoppingList || data.uid || '';
         this.role = data.role || '';
         this.theme = data.theme || false;
@@ -30,9 +32,9 @@ export class User extends Model {
 
     public getObject(): UserObject {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {id, isAdmin, isPending, recipeCount, ratingCount, image, ...user} = this;
+        const {id, name, isAdmin, isPending, recipeCount, ratingCount, image, ...user} = this;
         return user;
     }
 }
 
-export type UserObject = Omit<User, 'id' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;
+export type UserObject = Omit<User, 'id' | 'name' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;

@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { User } from '@user';
+import { Validation } from '@validation';
 
 @Component({
   selector: 'app-shopping-list',
@@ -152,10 +153,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addAllToPantry(): void {
-    this.validationService.setModal({
-      function: this.addAllToPantryEvent,
-      text: 'Complete shopping list?'
-    });
+    this.validationService.setModal(new Validation(
+      'Complete shopping list?',
+      this.addAllToPantryEvent
+    ));
   }
 
   addAllToPantryEvent = (): void => {

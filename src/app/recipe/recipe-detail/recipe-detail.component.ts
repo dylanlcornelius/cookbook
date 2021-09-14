@@ -16,6 +16,7 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
+import { Validation } from '@validation';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -124,11 +125,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   };
 
   deleteRecipe(id: string): void {
-    this.validationService.setModal({
-      id: id,
-      text: `Are you sure you want to delete recipe ${this.recipe.name}?`,
-      function: this.deleteRecipeEvent
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete recipe ${this.recipe.name}?`,
+      this.deleteRecipeEvent,
+      [id]
+    ));
   }
 
   deleteRecipeEvent = (id: string): void => {

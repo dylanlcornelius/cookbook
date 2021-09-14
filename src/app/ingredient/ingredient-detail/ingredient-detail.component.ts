@@ -7,6 +7,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
+import { Validation } from '@validation';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -45,11 +46,11 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteIngredient(id: string): void {
-    this.validationService.setModal({
-      id: id,
-      text: `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
-      function: this.deleteIngredientEvent
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
+      this.deleteIngredientEvent,
+      [id]
+    ));
   }
 
   deleteIngredientEvent = (id: string): void => {

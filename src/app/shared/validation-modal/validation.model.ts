@@ -1,14 +1,14 @@
 import { Modal } from "../modal.service";
 
 export class Validation extends Modal {
-    function: Function;
-    id?: string;
     text: string;
+    function: Function;
+    args: Array<any>;
 
-    constructor(eventFunction: Function, id: string, text: string) {
+    constructor(text: string, event: Function, args?: Array<any>) {
         super();
-        this.function = eventFunction;
-        this.id = id;
         this.text = text;
+        this.function = event;
+        this.args = args || [];
     }
 }
