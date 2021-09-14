@@ -54,7 +54,9 @@
       "@userService": ["src/app/user/shared/user.service"],
       "@currentUserService": ["src/app/user/shared/current-user.service"],
       "@actions": ["src/app/profile/shared/action.enum"],
-      "@actionService": ["src/app/profile/shared/action.service"]
+      "@actionService": ["src/app/profile/shared/action.service"],
+      "@household": ["src/app/profile/shared/household.model"],
+      "@householdService": ["src/app/profile/shared/household.service"]
     }
   }
 }

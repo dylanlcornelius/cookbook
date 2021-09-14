@@ -31,17 +31,6 @@
                 </mat-error>
               </mat-form-field>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Default Shopping List</mat-label>
-                <mat-select formControlName="defaultShoppingList">
-                  <mat-option *ngFor="let user of users" [value]="user.uid">
-                    {{user.firstName + ' ' + user.lastName}}
-                  </mat-option>
-                </mat-select>
-                <mat-error>
-                  <span *ngIf="!userForm.get('defaultShoppingList').valid && userForm.get('defaultShoppingList').touched">Please Select a default shopping list</span>
-                </mat-error>
-              </mat-form-field>
             </div>
             <br/>
 
@@ -65,6 +54,10 @@
             </div>
           </form>
         </div>
+
+        <hr />
+
+        <app-household></app-household>
       </div>
     </mat-tab>
 

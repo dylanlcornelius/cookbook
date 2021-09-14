@@ -1,0 +1,52 @@
+<app-household-invite-modal [Params]="householdInviteModalParams"></app-household-invite-modal>
+
+<h2>Household Preferences</h2>
+<p>Households are used to share recipes and shopping lists with other people.</p>
+
+<div *ngIf="!loading">
+  <div class="button-row">
+    <button mat-button color="primary" style="float: right;" (click)="createHousehold()">Create Household</button>
+    <button mat-button color="primary" style="float: right;" (click)="sendInvite()">Send Invite</button>
+  </div>
+
+  <div *ngIf="household">
+    <h3>{{household.name}}</h3>
+
+    <div class="table-container mat-elevation-z8">
+      <div>
+        <div class="row" *ngFor="let invite of household.invites">
+          <span class="cell">{{invite.name}}</span>
+          <span class="cell">Invitation Sent!</span>
+        </div>
+
+        <div class="row" *ngFor="let member of household.members">
+          <span class="cell">{{member.name}}</span>
+          <span class="cell">
+            <button mat-button color="warn" (click)="removeMember(member)">Remove</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="household && myInvites.length > 0">
+    <br />
+    <br />
+  </div>
+
+  <div *ngIf="myInvites.length > 0">
+    <h3>Household Invitations</h3>
+
+    <div class="table-container mat-elevation-z8">
+      <div class="row" *ngFor="let invite of myInvites">
+        <span class="cell">{{invite.name}} from {{getInviterName(invite)}}</span>
+
+        <span class="cell">
+          <button mat-raised-button color="primary" (click)="acceptInvite(invite)">
+            <mat-icon>done</mat-icon>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
