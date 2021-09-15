@@ -15,6 +15,7 @@ import { User } from '@user';
 import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter } from '@recipeFilterService';
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
+import { HouseholdService } from '@householdService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -26,6 +27,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   loading = true;
 
   user: User;
+  householdId: string;
 
   filtersList = [];
   searchFilter = '';
@@ -44,6 +46,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private imageService: ImageService,
     private currentUserService: CurrentUserService,
+    private householdService: HouseholdService,
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService
   ) {
@@ -65,97 +68,101 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      const recipes$ = this.recipeService.get();
-      const ingredients$ = this.ingredientService.get();
-      const userIngredient$ = this.userIngredientService.get(this.user.defaultShoppingList);
+      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
+        this.householdId = householdId;
 
-      combineLatest([recipes$, ingredients$, userIngredient$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, ingredients, userIngredient]) => {
-        this.userIngredient = userIngredient;
-        ingredients.forEach(ingredient => {
-          userIngredient.ingredients.forEach(myIngredient => {
-            if (ingredient.id === myIngredient.id) {
-              myIngredient.uom = ingredient.uom;
-              myIngredient.amount = ingredient.amount;
-            }
+        const recipes$ = this.recipeService.get();
+        const ingredients$ = this.ingredientService.get();
+        const userIngredient$ = this.userIngredientService.get(this.householdId);
+
+        combineLatest([recipes$, ingredients$, userIngredient$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, ingredients, userIngredient]) => {
+          this.userIngredient = userIngredient;
+          ingredients.forEach(ingredient => {
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (ingredient.id === myIngredient.id) {
+                myIngredient.uom = ingredient.uom;
+                myIngredient.amount = ingredient.amount;
+              }
+            });
+
+            recipes.forEach(recipe => {
+              recipe.ingredients.forEach(recipeIngredient => {
+                if (ingredient.id === recipeIngredient.id) {
+                  recipeIngredient.amount = ingredient.amount;
+                  recipeIngredient.name = ingredient.name;
+                }
+              });
+            });
           });
 
+          // account for deleted ingredients
           recipes.forEach(recipe => {
             recipe.ingredients.forEach(recipeIngredient => {
-              if (ingredient.id === recipeIngredient.id) {
-                recipeIngredient.amount = ingredient.amount;
-                recipeIngredient.name = ingredient.name;
+              if (!recipeIngredient.name) {
+                recipeIngredient.name = null;
               }
             });
           });
-        });
 
-        // account for deleted ingredients
-        recipes.forEach(recipe => {
-          recipe.ingredients.forEach(recipeIngredient => {
-            if (!recipeIngredient.name) {
-              recipeIngredient.name = null;
+          const filters = this.recipeFilterService.selectedFilters;
+
+          recipes = recipes.sort(this.sortRecipesByName);
+          recipes = recipes.sort(this.sortRecipesByImages);
+          this.recipes = recipes;
+          this.dataSource = new MatTableDataSource(recipes);
+          const ratings = [];
+          [1, 2, 3].forEach(ratingOption => {
+            const rating = ratingOption / 3 * 100;
+            let displayValue = '';
+            for (let i = 0; i < ratingOption; i++) {
+              displayValue += '★';
             }
-          });
-        });
-
-        const filters = this.recipeFilterService.selectedFilters;
-
-        recipes = recipes.sort(this.sortRecipesByName);
-        recipes = recipes.sort(this.sortRecipesByImages);
-        this.recipes = recipes;
-        this.dataSource = new MatTableDataSource(recipes);
-        const ratings = [];
-        [1, 2, 3].forEach(ratingOption => {
-          const rating = ratingOption / 3 * 100;
-          let displayValue = '';
-          for (let i = 0; i < ratingOption; i++) {
-            displayValue += '★';
-          }
-          
-          const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
-          ratings.push({ displayName: `${displayValue} & Up`, name: rating, checked: checked, filter: new RatingFilter(rating) });
-        });
-
-        const categories = [];
-        const authors = [];
-        recipes.forEach(recipe => {
-          recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
-          this.imageService.download(recipe).then(url => {
-            if (url) {
-              recipe.image = url;
-            }
-          }, () => {});
-
-          recipe.categories.forEach(({ category }) => {
-            if (categories.find(c => c.name === category) === undefined) {
-              const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === category) !== undefined;
-              categories.push({ displayName: category, name: category, checked: checked, filter: new CategoryFilter(category) });
-            }
+            
+            const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
+            ratings.push({ displayName: `${displayValue} & Up`, name: rating, checked: checked, filter: new RatingFilter(rating) });
           });
 
-          if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
-            const checked = filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !== undefined;
-            authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
-          }
+          const categories = [];
+          const authors = [];
+          recipes.forEach(recipe => {
+            recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+            this.imageService.download(recipe).then(url => {
+              if (url) {
+                recipe.image = url;
+              }
+            }, () => {});
+
+            recipe.categories.forEach(({ category }) => {
+              if (categories.find(c => c.name === category) === undefined) {
+                const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === category) !== undefined;
+                categories.push({ displayName: category, name: category, checked: checked, filter: new CategoryFilter(category) });
+              }
+            });
+
+            if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
+              const checked = filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !== undefined;
+              authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
+            }
+          });
+          const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
+          this.searchFilter = searchFilter ? searchFilter.value : '';
+
+          this.dataSource = new MatTableDataSource(recipes);
+          this.dataSource.filterPredicate = this.recipeFilterService.recipeFilterPredicate;
+
+          authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+          categories.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+          this.filtersList = [
+            { displayName: 'Authors', name: 'author', values: authors },
+            { displayName: 'Categories', name: 'categories', values: categories },
+            { displayName: 'Ratings', name: 'ratings', values: ratings }
+          ];
+          this.setSelectedFilterCount();
+          this.dataSource.filter = filters;
+          this.dataSource.paginator = this.paginator;
+
+          this.loading = false;
         });
-        const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
-        this.searchFilter = searchFilter ? searchFilter.value : '';
-
-        this.dataSource = new MatTableDataSource(recipes);
-        this.dataSource.filterPredicate = this.recipeFilterService.recipeFilterPredicate;
-
-        authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
-        categories.sort(({ name: a }, { name: b }) => a.localeCompare(b));
-        this.filtersList = [
-          { displayName: 'Authors', name: 'author', values: authors },
-          { displayName: 'Categories', name: 'categories', values: categories },
-          { displayName: 'Ratings', name: 'ratings', values: ratings }
-        ];
-        this.setSelectedFilterCount();
-        this.dataSource.filter = filters;
-        this.dataSource.paginator = this.paginator;
-
-        this.loading = false;
       });
     });
   }
@@ -227,11 +234,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   addIngredients(id: string): void {
-    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.householdId);
   }
 
   removeIngredients(id: string): void {
-    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.uid, this.householdId);
   }
 
   onRate(rating: number, recipe: Recipe): void {

@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { User } from '@user';
 import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
+import { HouseholdService } from '@householdService';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -28,12 +29,14 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   userIngredients = [];
 
   user: User;
+  householdId: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private currentUserService: CurrentUserService,
+    private householdService: HouseholdService,
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
@@ -52,34 +55,38 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      const userIngredients$ = this.userIngredientService.get(this.user.defaultShoppingList);
-      const ingredients$ = this.ingredientService.get();
-      combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
-        this.id = userIngredient.id;
-      
-        const myIngredients = [];
-        ingredients.forEach(ingredient => {
-          ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
+      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
+        this.householdId = householdId;
 
-          userIngredient.ingredients.forEach(myIngredient => {
-            if (myIngredient.id === ingredient.id) {
-              ingredient.pantryQuantity = this.numberService.toFormattedFraction(myIngredient.pantryQuantity);
-              ingredient.cartQuantity = myIngredient.cartQuantity;
+        const userIngredients$ = this.userIngredientService.get(this.householdId);
+        const ingredients$ = this.ingredientService.get();
+        combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
+          this.id = userIngredient.id;
+        
+          const myIngredients = [];
+          ingredients.forEach(ingredient => {
+            ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
-              myIngredients.push({
-                id: myIngredient.id,
-                pantryQuantity: myIngredient.pantryQuantity,
-                cartQuantity: myIngredient.cartQuantity
-              });
-            }
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (myIngredient.id === ingredient.id) {
+                ingredient.pantryQuantity = this.numberService.toFormattedFraction(myIngredient.pantryQuantity);
+                ingredient.cartQuantity = myIngredient.cartQuantity;
+
+                myIngredients.push({
+                  id: myIngredient.id,
+                  pantryQuantity: myIngredient.pantryQuantity,
+                  cartQuantity: myIngredient.cartQuantity
+                });
+              }
+            });
           });
-        });
 
-        this.dataSource = new MatTableDataSource(ingredients);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.userIngredients = myIngredients;
-        this.loading = false;
+          this.dataSource = new MatTableDataSource(ingredients);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.userIngredients = myIngredients;
+          this.loading = false;
+        });
       });
     });
   }
@@ -113,7 +120,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   editIngredientEvent = (): void => {
-    this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
+    this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
   };
 
   removeIngredient(id: string): void {
@@ -122,7 +129,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
+      this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
     }
   }
 
@@ -137,7 +144,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
         ingredient.cartQuantity = Number(ingredient.amount);
       }
-      this.userIngredientService.formattedUpdate(this.userIngredients, this.user.defaultShoppingList, this.id);
+      this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
     }
   }
 }

@@ -11,6 +11,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { User } from '@user';
 import { Validation } from '@validation';
+import { HouseholdService } from '@householdService';
 
 @Component({
   selector: 'app-shopping-list',
@@ -23,6 +24,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   isCompleted = false;
 
   user: User;
+  householdId: string;
 
   itemForm: FormGroup;
 
@@ -36,6 +38,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private currentUserService: CurrentUserService,
+    private householdService: HouseholdService,
     private userIngredientService: UserIngredientService,
     private ingredientService: IngredientService,
     private userItemService: UserItemService,
@@ -59,34 +62,38 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
+      
+      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
+        this.householdId = householdId;
 
-      this.userIngredientService.get(this.user.defaultShoppingList).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
-        this.id = userIngredients.id;
-        this.ingredientService.get().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
-          const myIngredients = [];
-
-          ingredients.forEach(ingredient => {
-            userIngredients.ingredients.forEach(myIngredient => {
-              if (myIngredient.id === ingredient.id) {
-                myIngredients.push({
-                  id: myIngredient.id,
-                  name: ingredient.name,
-                  uom: ingredient.uom,
-                  pantryQuantity: myIngredient.pantryQuantity,
-                  cartQuantity: myIngredient.cartQuantity
-                });
-              }
+        this.userIngredientService.get(this.householdId).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
+          this.id = userIngredients.id;
+          this.ingredientService.get().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
+            const myIngredients = [];
+  
+            ingredients.forEach(ingredient => {
+              userIngredients.ingredients.forEach(myIngredient => {
+                if (myIngredient.id === ingredient.id) {
+                  myIngredients.push({
+                    id: myIngredient.id,
+                    name: ingredient.name,
+                    uom: ingredient.uom,
+                    pantryQuantity: myIngredient.pantryQuantity,
+                    cartQuantity: myIngredient.cartQuantity
+                  });
+                }
+              });
             });
-          });
-          this.ingredientsDataSource = new MatTableDataSource(myIngredients);
-          this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-          this.applyFilter();
-          this.ingredients = ingredients;
-
-          this.userItemService.get(this.user.defaultShoppingList).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
-            this.itemsId = userItems.id;
-            this.itemsDataSource = new MatTableDataSource(userItems.items);
-            this.loading = false;
+            this.ingredientsDataSource = new MatTableDataSource(myIngredients);
+            this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+            this.applyFilter();
+            this.ingredients = ingredients;
+  
+            this.userItemService.get(this.householdId).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
+              this.itemsId = userItems.id;
+              this.itemsDataSource = new MatTableDataSource(userItems.items);
+              this.loading = false;
+            });
           });
         });
       });
@@ -102,7 +109,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const ingredient = this.ingredients.find(x => x.id === id);
     if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
+      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.id);
     }
   }
 
@@ -111,7 +118,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const ingredient = this.ingredients.find(x => x.id === id);
     if (ingredient && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
-      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
+      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.id);
     }
   }
 
@@ -122,7 +129,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     if (Number(data.cartQuantity > 0)) {
       data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
       data.cartQuantity = 0;
-      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
+      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.id);
       this.userIngredientService.buyUserIngredient(1, isCompleted);
       this.applyFilter();
       this.notificationService.setModal(new SuccessNotification('Ingredient added!'));
@@ -137,7 +144,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.userItemService.formattedUpdate([...this.itemsDataSource.data, { name: form.name.toString().trim() }], this.user.defaultShoppingList, this.itemsId);
+    this.userItemService.formattedUpdate([...this.itemsDataSource.data, { name: form.name.toString().trim() }], this.householdId, this.itemsId);
 
     this.itemForm.reset();
     this.notificationService.setModal(new SuccessNotification('Item added!'));
@@ -147,7 +154,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.itemsDataSource.data = this.itemsDataSource.data.filter((_x, i) =>  i !== index);
     this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0;
 
-    this.userItemService.formattedUpdate(this.itemsDataSource.data, this.user.defaultShoppingList, this.itemsId);
+    this.userItemService.formattedUpdate(this.itemsDataSource.data, this.householdId, this.itemsId);
     this.userItemService.buyUserItem(1, this.isCompleted);
     this.notificationService.setModal(new SuccessNotification('Item removed!'));
   }
@@ -166,12 +173,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         ingredient.cartQuantity = 0;
       }
     });
-    this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.user.defaultShoppingList, this.id);
+    this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.id);
     this.userIngredientService.buyUserIngredient(this.ingredientsDataSource.filteredData.length, false);
 
     const itemsCount = this.itemsDataSource.data.length;
     this.itemsDataSource.data = [];
-    this.userItemService.formattedUpdate(this.itemsDataSource.data, this.user.defaultShoppingList, this.itemsId);
+    this.userItemService.formattedUpdate(this.itemsDataSource.data, this.householdId, this.itemsId);
     this.userItemService.buyUserItem(itemsCount, false);
 
     this.applyFilter();

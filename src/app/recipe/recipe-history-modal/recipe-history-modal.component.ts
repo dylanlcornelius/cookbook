@@ -8,7 +8,8 @@ recipeHistoryModalParams;
 this.recipeHistoryModalParams = {
   function: this.updateRecipeHistoryEvent,
   recipeId: recipe.id,
-  uid: this.user.defaultShoppingList,
+  uid: this.user.uid,
+  householdId: this.householdId
   timesCooked: this.timesCooked,
   text: 'Edit times cooked for ' + recipe.name
 };
@@ -37,7 +38,7 @@ export class RecipeHistoryModalComponent implements OnInit {
   params;
 
   @Input()
-  set Params(params: { function: Function, recipeId: string, uid: string, timesCooked: number, text: string }) {
+  set Params(params: { function: Function, recipeId: string, uid: string, householdId: string, timesCooked: number, text: string }) {
     this.params = params;
     if (this.params) {
       this.form.patchValue({
@@ -67,6 +68,7 @@ export class RecipeHistoryModalComponent implements OnInit {
     this.params.function(
       this.params.recipeId,
       this.params.uid,
+      this.params.householdId,
       this.form.get('timesCooked').value,
     );
     this.modal.close();

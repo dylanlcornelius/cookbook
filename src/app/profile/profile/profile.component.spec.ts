@@ -18,12 +18,14 @@ import { RecipeService } from '@recipeService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { Recipe } from '@recipe';
 import { RecipeHistory } from '@recipeHistory';
+import { HouseholdService } from '@householdService';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
   let userService: UserService;
   let currentUserService: CurrentUserService;
+  let householdService: HouseholdService;
   let actionService: ActionService;
   let notificationService: NotificationService;
   let imageService: ImageService;
@@ -57,6 +59,7 @@ describe('ProfileComponent', () => {
     fixture.detectChanges();
     userService = TestBed.inject(UserService);
     currentUserService = TestBed.inject(CurrentUserService);
+    householdService = TestBed.inject(HouseholdService);
     actionService = TestBed.inject(ActionService);
     notificationService = TestBed.inject(NotificationService);
     imageService = TestBed.inject(ImageService);
@@ -71,6 +74,7 @@ describe('ProfileComponent', () => {
   describe('load', () => {
     it('should load data with an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'getId').and.returnValue(of('id'));
       spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
@@ -79,6 +83,7 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.getId).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
@@ -86,6 +91,7 @@ describe('ProfileComponent', () => {
 
     it('should load data without an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'getId').and.returnValue(of('id'));
       spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
@@ -94,6 +100,7 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.getId).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
@@ -171,7 +178,7 @@ describe('ProfileComponent', () => {
 
   describe('loadHistory', () => {
     it('should load histories', () => {
-      component.user = new User({ defaultShoppingList: 'default' });
+      component.user = new User({});
 
       spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' }), new Recipe({ id: 'id2', name: 'recipe' })]));
       spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 }), new RecipeHistory({ recipeId: 'id2', timesCooked: 1 })]));
@@ -186,7 +193,7 @@ describe('ProfileComponent', () => {
     });
 
     it('should load histories with missing recipes', () => {
-      component.user = new User({ defaultShoppingList: 'default' });
+      component.user = new User({});
 
       spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
       spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id2', timesCooked: 2 })]));

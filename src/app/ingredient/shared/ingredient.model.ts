@@ -20,6 +20,8 @@ export class Ingredient extends Model {
         this.amount = data.amount || '';
         this.uom = data.uom || '';
         this.calories = data.calories || '';
+        this.pantryQuantity = data.pantryQuantity;
+        this.cartQuantity = data.cartQuantity;
     }
 
     public getObject(): IngredientObject {

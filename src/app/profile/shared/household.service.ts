@@ -5,6 +5,7 @@ import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
 import { ModelObject } from '@model';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,10 @@ export class HouseholdService extends FirestoreService {
     actionService: ActionService
   ) {
     super('households', currentUserService, actionService);
+  }
+
+  getId(uid: string): Observable<string> {
+    return this.get(uid).pipe(map(household => household ? household.id : uid));
   }
 
   get(uid: string): Observable<Household> {

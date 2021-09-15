@@ -4,7 +4,6 @@ export class User extends Model {
     uid: string;
     firstName: string;
     lastName: string;
-    defaultShoppingList: string;
     role: string;
     theme: boolean;
     hasImage: boolean;
@@ -22,7 +21,6 @@ export class User extends Model {
         this.firstName = data.firstName || '';
         this.lastName = data.lastName || '';
         this.name = `${this.firstName} ${this.lastName}`;
-        this.defaultShoppingList = data.defaultShoppingList || data.uid || '';
         this.role = data.role || '';
         this.theme = data.theme || false;
         this.hasImage = data.hasImage || false;

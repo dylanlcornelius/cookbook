@@ -455,7 +455,7 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '');
+      service.removeIngredients(recipe, [], userIngredient, '', '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();
@@ -491,7 +491,7 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '');
+      service.removeIngredients(recipe, [], userIngredient, '', '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();
@@ -527,7 +527,7 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '');
+      service.removeIngredients(recipe, [], userIngredient, '', '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();
@@ -563,7 +563,7 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '');
+      service.removeIngredients(recipe, [], userIngredient, '', '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).not.toHaveBeenCalled();
@@ -584,7 +584,7 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '');
+      service.removeIngredients(recipe, [], userIngredient, '', '');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).not.toHaveBeenCalled();

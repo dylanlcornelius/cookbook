@@ -57,7 +57,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
     this.params.function(
       selectedIngredients,
       this.params.userIngredient,
-      this.params.defaultShoppingList
+      this.params.householdId
     );
 
     this.selectionCount = 0;

@@ -86,7 +86,7 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, defaultShoppingList: string): void {
+  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, householdId: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length > 0) {
@@ -94,14 +94,14 @@ export class RecipeIngredientService {
         this.addIngredientsEvent,
         recipeIngredients,
         userIngredient,
-        defaultShoppingList,
+        householdId,
       ));
     } else {
       this.notificationService.setModal(new InfoNotification('Recipe has no ingredients'));
     }
   }
 
-  addIngredientsEvent = (recipeIngredients: Ingredient[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void => {
+  addIngredientsEvent = (recipeIngredients: Ingredient[], { id, ingredients }: UserIngredient, householdId: string): void => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
       ingredients.forEach(ingredient => {
@@ -125,11 +125,11 @@ export class RecipeIngredientService {
       }
     });
 
-    this.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
+    this.userIngredientService.formattedUpdate(ingredients, householdId, id);
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
   };
 
-  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, defaultShoppingList: string): void {
+  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, uid: string, householdId: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length) {
@@ -148,10 +148,11 @@ export class RecipeIngredientService {
           }
         });
       });
-      this.userIngredientService.formattedUpdate(ingredients, defaultShoppingList, id);
+      this.userIngredientService.formattedUpdate(ingredients, householdId, id);
     }
 
-    this.recipeHistoryService.add(defaultShoppingList, recipe.id);
+    this.recipeHistoryService.add(uid, recipe.id);
+    this.recipeHistoryService.add(householdId, recipe.id);
     this.notificationService.setModal(new SuccessNotification('Recipe cooked!'));
   }
 }

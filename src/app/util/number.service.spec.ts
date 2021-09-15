@@ -21,6 +21,12 @@ describe('NumberService', () => {
       expect(result).toEqual(0);
     });
 
+    it('should not convert integers', () => {
+      const result = service.toDecimal(1);
+
+      expect(result).toEqual(1);
+    });
+
     it('should convert a integer to a decimal', () => {
       const result = service.toDecimal('1');
 
