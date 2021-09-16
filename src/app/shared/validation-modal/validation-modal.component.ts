@@ -41,11 +41,7 @@ export class ValidationModalComponent implements OnInit, OnDestroy {
   }
 
   confirm(): void {
-    if (this.params.id) {
-      this.params.function(this.params.id);
-    } else {
-      this.params.function();
-    }
+    this.params.function(...this.params.args);
     this.modal.close();
   }
 }

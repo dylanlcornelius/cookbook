@@ -17,6 +17,7 @@ import { SuccessNotification } from '@notification';
 import { NotificationService, ValidationService } from '@modalService';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
+import { Validation } from '@validation';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -43,7 +44,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     dataSource: [],
     add: this.addNav,
     remove: this.removeNav,
-  }
+  };
 
   originalUsers: User[];
   userContext = {
@@ -152,16 +153,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       name = 'NO NAME';
     }
 
-    this.validationService.setModal({
-      function: this.removeConfigEvent,
-      id: id,
-      text: `Are you sure you want to delete config ${name}?`
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete config ${name}?`,
+      this.removeConfigEvent,
+      [id]
+    ));
   }
 
   removeConfigEvent = (id: string): void => {
     this.configService.delete(id);
-  }
+  };
 
   addNav(): void {
     this.navigationService.create(new Navigation({}));
@@ -172,16 +173,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       name = 'NO NAME';
     }
 
-    this.validationService.setModal({
-      function: this.removeNavEvent,
-      id: id,
-      text: `Are you sure you want to delete nav ${name}?`
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete nav ${name}?`,
+      this.removeNavEvent,
+      [id]
+    ));
   }
 
   removeNavEvent= (id: string): void => {
     this.navigationService.delete(id);
-  }
+  };
 
   removeUser(id: string, firstName: string, lastName: string): void {
     if (!firstName && !lastName) {
@@ -189,22 +190,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       lastName = 'NAME';
     }
     
-    this.validationService.setModal({
-      function: this.removeUserEvent,
-      id: id,
-      text: `Are you sure you want to delete user ${firstName} ${lastName}?`
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete user ${firstName} ${lastName}?`,
+      this.removeUserEvent,
+      [id]
+    ));
   }
 
   removeUserEvent = (id: string): void => {
     this.userService.delete(id);
-  }
+  };
 
   revert(): void {
-    this.validationService.setModal({
-      function: this.revertEvent,
-      text: 'Are you sure you want to revert your changes?'
-    });
+    this.validationService.setModal(new Validation(
+      'Are you sure you want to revert your changes?',
+      this.revertEvent
+    ));
   }
 
   revertEvent = (): void => {
@@ -217,13 +218,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.userItemContext.dataSource = this.originalUserItems;
 
     this.notificationService.setModal(new SuccessNotification('Changes reverted'));
-  }
+  };
 
   save(): void {
-    this.validationService.setModal({
-      function: this.saveEvent,
-      text: 'Are you sure you want to save your changes?'
-    });
+    this.validationService.setModal(new Validation(
+      'Are you sure you want to save your changes?',
+      this.saveEvent
+    ));
   }
 
   saveEvent = (): void => {
@@ -236,5 +237,5 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.userItemService.update(this.userItemContext.dataSource);
 
     this.notificationService.setModal(new SuccessNotification('Changes saved!'));
-  }
+  };
 }

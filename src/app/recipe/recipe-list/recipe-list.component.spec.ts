@@ -17,17 +17,21 @@ import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { RecipeIngredientService } from '@recipeIngredientService';
+import { HouseholdService } from '@householdService';
+import { UtilService } from '@utilService';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
   let fixture: ComponentFixture<RecipeListComponent>;
   let currentUserService: CurrentUserService;
+  let householdService: HouseholdService;
   let recipeService: RecipeService;
   let recipeFilterService: RecipeFilterService;
   let userIngredientService: UserIngredientService;
   let ingredientService: IngredientService;
   let imageService: ImageService;
   let recipeIngredientService: RecipeIngredientService;
+  let utilService: UtilService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -59,12 +63,14 @@ describe('RecipeListComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     currentUserService = TestBed.inject(CurrentUserService);
+    householdService = TestBed.inject(HouseholdService);
     recipeService = TestBed.inject(RecipeService);
     recipeFilterService = TestBed.inject(RecipeFilterService);
     userIngredientService = TestBed.inject(UserIngredientService);
     ingredientService = TestBed.inject(IngredientService);
     imageService = TestBed.inject(ImageService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
+    utilService = TestBed.inject(UtilService);
   });
 
   it('should create', () => {
@@ -108,6 +114,7 @@ describe('RecipeListComponent', () => {
       recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search')];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'getId').and.returnValue(of('id'));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
@@ -120,6 +127,7 @@ describe('RecipeListComponent', () => {
       tick();
       expect(component.dataSource.data[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.getId).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
@@ -162,6 +170,7 @@ describe('RecipeListComponent', () => {
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'getId').and.returnValue(of('id'));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
@@ -174,6 +183,7 @@ describe('RecipeListComponent', () => {
       tick();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.getId).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
@@ -209,6 +219,7 @@ describe('RecipeListComponent', () => {
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'getId').and.returnValue(of('id'));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
@@ -221,6 +232,7 @@ describe('RecipeListComponent', () => {
       tick();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.getId).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
@@ -326,6 +338,16 @@ describe('RecipeListComponent', () => {
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
       expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
+    });
+  });
+
+  describe('setCategoryFilter', () => {
+    it('should call a filter function', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setCategoryFilter(new CategoryFilter('1'));
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
     });
   });
 

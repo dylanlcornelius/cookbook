@@ -133,7 +133,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
               result.push({
                 ...ingredient,
                 quantity: 0
-              })
+              });
             }
             return result;
           }, [])
@@ -152,7 +152,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
               result.push({
                 ...ingredient,
                 quantity: 0
-              })
+              });
             }
             return result;
           }, [])
@@ -188,7 +188,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     if (input) {
       input.value = '';
     }
-  }
+  };
 
   removeCategory(i: number): void {
     const control = <FormArray>this.recipesForm.controls['categories'];
@@ -302,7 +302,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.recipeService.update(new Recipe(form).getObject(), this.recipe.id);
       } else {
         form.uid = user.uid;
-        form.author = `${user.firstName} ${user.lastName}`;
+        form.author = user.name;
 
         recipeId = this.recipeService.create(new Recipe(form));
       }

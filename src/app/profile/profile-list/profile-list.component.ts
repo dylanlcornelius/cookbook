@@ -66,7 +66,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
             sum++;
           }
           return sum;
-        }, 0)
+        }, 0);
 
         this.imageService.download(user).then(url => {
           if (url) {
@@ -75,11 +75,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
         }, () => {});
       });
 
-      users.sort((a, b) => {
-        const aName = (`${a.firstName} ${a.lastName}`).toLowerCase();
-        const bName = (`${b.firstName} ${b.lastName}`).toLowerCase();
-        return aName < bName ? -1 : 1;
-      })
+      users.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1);
 
       this.dataSource = new MatTableDataSource(users);
       this.dataSource.paginator = this.paginator;

@@ -68,9 +68,9 @@ export class ActionService {
   }
 
   create = (data: any): void => {
-    this.ref?.add(data)
+    this.ref?.add(data);
   };
   update = (data: any): void => {
-    this.ref?.doc(data.id).set(data)
+    this.ref?.doc(data.id).set(data);
   };
 }

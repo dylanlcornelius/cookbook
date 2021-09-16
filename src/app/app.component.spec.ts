@@ -34,7 +34,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should get user data', () => {
+  it('should not get user data', () => {
     spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
     spyOn(currentUserService, 'getIsLoggedIn').and.returnValue(of(true));
     spyOn(currentUserService, 'getIsGuest').and.returnValue(of(false));
@@ -46,8 +46,20 @@ describe('AppComponent', () => {
     expect(currentUserService.getIsGuest).toHaveBeenCalled();
   });
 
+  it('should get user data', () => {
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid' })));
+    spyOn(currentUserService, 'getIsLoggedIn').and.returnValue(of(true));
+    spyOn(currentUserService, 'getIsGuest').and.returnValue(of(false));
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+    expect(currentUserService.getIsLoggedIn).toHaveBeenCalled();
+    expect(currentUserService.getIsGuest).toHaveBeenCalled();
+  });
+
   it('should get user data with dark mode', () => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ theme: true })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ theme: true, uid: 'uid' })));
     spyOn(currentUserService, 'getIsLoggedIn').and.returnValue(of(true));
     spyOn(currentUserService, 'getIsGuest').and.returnValue(of(false));
 

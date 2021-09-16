@@ -58,6 +58,7 @@ describe('RecipeHistoryModalComponent', () => {
         function: () => {},
         recipeId: 'id',
         uid: 'uid',
+        householdId: 'householdId',
         timesCooked: 0,
         text: ''
       };

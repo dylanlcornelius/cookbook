@@ -28,7 +28,7 @@ export class IngredientService extends FirestoreService {
       if (id) {
         super.get(id).subscribe(doc => {
           observer.next(new Ingredient(doc));
-        })
+        });
       } else {
         super.get().subscribe(docs => {
           observer.next(docs.map(doc => new Ingredient(doc)).sort(this.sort));

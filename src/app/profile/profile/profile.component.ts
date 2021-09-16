@@ -20,6 +20,7 @@ import { ImageService } from '@imageService';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeService } from '@recipeService';
+import { HouseholdService } from '@householdService';
 
 @Component({
   selector: 'app-profile',
@@ -35,6 +36,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   userForm: FormGroup;
   user: User;
+  householdId: string;
   id: string;
 
   userImage: string;
@@ -56,6 +58,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private currentUserService: CurrentUserService,
+    private householdService: HouseholdService,
     private userService: UserService,
     private actionService: ActionService,
     private notificationService: NotificationService,
@@ -86,27 +89,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.users = users;
 
       this.user = user;
-      this.userForm = this.formBuilder.group({
-        uid: [user.uid],
-        firstName : [user.firstName, Validators.required],
-        lastName : [user.lastName, Validators.required],
-        defaultShoppingList: [user.defaultShoppingList],
-        role: [user.role],
-        theme: [user.theme],
-        hasImage: [user.hasImage],
-        id: [user.id],
+
+      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
+        this.householdId = householdId;
+
+        this.userForm = this.formBuilder.group({
+          uid: [user.uid],
+          firstName : [user.firstName, Validators.required],
+          lastName : [user.lastName, Validators.required],
+          role: [user.role],
+          theme: [user.theme],
+          hasImage: [user.hasImage],
+          id: [user.id],
+        });
+  
+        this.imageService.download(user).then(url => {
+          if (url) {
+            this.userImage = url;
+          }
+        }, () => {});
+  
+        this.loading = false;
+  
+        this.loadActions();
+        this.loadHistory();
       });
-
-      this.imageService.download(user).then(url => {
-        if (url) {
-          this.userImage = url;
-        }
-      }, () => {});
-
-      this.loading = false;
-
-      this.loadActions();
-      this.loadHistory();
     });
   }
 
@@ -116,7 +123,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       this.actions = sortedActions.map(action => {
         const actionData = Object.keys(action.data).map(key => {
-          return { name: ActionLabel[key], value: action.data[key] }
+          return { name: ActionLabel[key], value: action.data[key] };
         });
 
         return {
@@ -155,7 +162,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   loadHistory(): void {
     const recipes$ = this.recipeService.get();
-    const recipeHistory$ = this.recipeHistoryService.get(this.user.defaultShoppingList);
+    const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
 
     combineLatest([recipes$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, histories]) => {
       this.history = histories
@@ -175,7 +182,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.user.hasImage = hasImage;
     this.userService.update(this.user.getObject(), this.user.getId());
     this.currentUserService.setCurrentUser(this.user);
-  }
+  };
 
   onFormSubmit(form: any): void {
     const user = new User(form);

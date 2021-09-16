@@ -16,6 +16,8 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
+import { Validation } from '@validation';
+import { HouseholdService } from '@householdService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -30,6 +32,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipeHistoryModalParams;
 
   user: User;
+  householdId: string;
   recipe: Recipe;
   userIngredient: UserIngredient;
   ingredients = [];
@@ -43,6 +46,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private currentUserService: CurrentUserService,
+    private householdService: HouseholdService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private recipeHistoryService: RecipeHistoryService,
@@ -68,52 +72,56 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   load(): void {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
-      
-      const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
-      const ingredients$ = this.ingredientService.get();
-      const recipes$ = this.recipeService.get();
-      const userIngredient$ = this.userIngredientService.get(this.user.defaultShoppingList);
-      const recipeHistory$ = this.recipeHistoryService.get(user.defaultShoppingList, this.route.snapshot.params['id']);
 
-      combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
-        this.recipe = recipe;
-        this.userIngredient = userIngredient;
+      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
+        this.householdId = householdId;
 
-        ingredients.forEach(ingredient => {
-          userIngredient.ingredients.forEach(myIngredient => {
-            if (ingredient.id === myIngredient.id) {
-              myIngredient.uom = ingredient.uom;
-              myIngredient.amount = ingredient.amount;
-            }
-          });
+        const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
+        const ingredients$ = this.ingredientService.get();
+        const recipes$ = this.recipeService.get();
+        const userIngredient$ = this.userIngredientService.get(this.householdId);
+        const recipeHistory$ = this.recipeHistoryService.get(this.householdId, this.route.snapshot.params['id']);
 
-          recipes.forEach(recipe => {
-            recipe.ingredients.forEach(recipeIngredient => {
-              if (ingredient.id === recipeIngredient.id) {
-                recipeIngredient.amount = ingredient.amount;
-                recipeIngredient.name = ingredient.name;
+        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
+          this.recipe = recipe;
+          this.userIngredient = userIngredient;
+
+          ingredients.forEach(ingredient => {
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (ingredient.id === myIngredient.id) {
+                myIngredient.uom = ingredient.uom;
+                myIngredient.amount = ingredient.amount;
               }
             });
+
+            recipes.forEach(recipe => {
+              recipe.ingredients.forEach(recipeIngredient => {
+                if (ingredient.id === recipeIngredient.id) {
+                  recipeIngredient.amount = ingredient.amount;
+                  recipeIngredient.name = ingredient.name;
+                }
+              });
+            });
           });
-        });
 
-        this.imageService.download(this.recipe).then(url => {
-          if (url) {
-            this.recipeImage = url;
+          this.imageService.download(this.recipe).then(url => {
+            if (url) {
+              this.recipeImage = url;
+            }
+          }, () => {});
+
+          this.timesCooked = recipeHistory.timesCooked;
+          const date = recipeHistory.lastDateCooked.split('/');
+          if (date.length === 3) {
+            this.lastDateCooked = new Date(Number.parseInt(date[2]), Number.parseInt(date[1]) - 1, Number.parseInt(date[0])).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
           }
-        }, () => {});
 
-        this.timesCooked = recipeHistory.timesCooked;
-        const date = recipeHistory.lastDateCooked.split('/');
-        if (date.length === 3) {
-          this.lastDateCooked = new Date(Number.parseInt(date[2]), Number.parseInt(date[1]) - 1, Number.parseInt(date[0])).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
-        }
-
-        this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
-        this.recipes = recipes;
-        this.recipe.ingredients = this.ingredients;
-        this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
-        this.loading = false;
+          this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+          this.recipes = recipes;
+          this.recipe.ingredients = this.ingredients;
+          this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+          this.loading = false;
+        });
       });
     });
   }
@@ -121,14 +129,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   updateImage = (hasImage: boolean): void => {
     this.recipe.hasImage = hasImage;
     this.recipeService.update(this.recipe.getObject(), this.recipe.getId());
-  }
+  };
 
   deleteRecipe(id: string): void {
-    this.validationService.setModal({
-      id: id,
-      text: `Are you sure you want to delete recipe ${this.recipe.name}?`,
-      function: this.deleteRecipeEvent
-    });
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to delete recipe ${this.recipe.name}?`,
+      this.deleteRecipeEvent,
+      [id]
+    ));
   }
 
   deleteRecipeEvent = (id: string): void => {
@@ -138,17 +146,17 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
       this.router.navigate(['/recipe/list']);
     }
-  }
+  };
 
   setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
 
   addIngredients(): void {
-    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.householdId);
   }
 
   removeIngredients(): void {
-    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredient, this.user.defaultShoppingList);
+    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredient, this.user.uid, this.householdId);
   }
 
   onRate(rating: number, recipe: Recipe): void {
@@ -159,14 +167,16 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeHistoryModalParams = {
       function: this.updateRecipeHistoryEvent,
       recipeId: recipe.id,
-      uid: this.user.defaultShoppingList,
+      uid: this.user.uid,
+      householdId: this.householdId,
       timesCooked: this.timesCooked,
       text: `Edit times cooked for ${recipe.name}`
     };
   }
 
-  updateRecipeHistoryEvent = (recipeId: string, uid: string, timesCooked: number): void => {
+  updateRecipeHistoryEvent = (recipeId: string, uid: string, householdId: string, timesCooked: number): void => {
     this.recipeHistoryService.set(uid, recipeId, timesCooked);
+    this.recipeHistoryService.set(householdId, recipeId, timesCooked);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
-  }
+  };
 }

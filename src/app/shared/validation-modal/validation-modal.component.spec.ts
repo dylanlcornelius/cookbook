@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ValidationModalComponent } from './validation-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
+import { Validation } from '@validation';
 
 describe('ValidationModalComponent', () => {
   let component: ValidationModalComponent;
@@ -33,10 +34,7 @@ describe('ValidationModalComponent', () => {
 
   describe('cancel', () => {
     it('should close the modal', () => {
-      component.params = {
-        function: () => {},
-        text: 'text'
-      }
+      component.params = new Validation('text', () => {});
 
       spyOn(component.modal, 'close');
       
@@ -48,11 +46,7 @@ describe('ValidationModalComponent', () => {
 
   describe('confirm', () => {
     it('should execute a function and close the modal', () => {
-      component.params = {
-        function: () => {},
-        id: 'id',
-        text: 'text'
-      };
+      component.params = new Validation('text', () => {}, ['id']);
 
       spyOn(component.modal, 'close');
 
@@ -62,10 +56,7 @@ describe('ValidationModalComponent', () => {
     });
 
     it('should execute a function and close the modal', () => {
-      component.params = {
-        function: () => {},
-        text: 'text'
-      };
+      component.params = new Validation('text', () => {});
 
       spyOn(component.modal, 'close');
 

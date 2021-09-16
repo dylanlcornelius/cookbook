@@ -9,6 +9,7 @@ import { LoginGuard } from './user/shared/login.guard';
 import { UserPendingGuard } from './user/shared/user-pending.guard';
 import { AdminGuard } from './admin/shared/admin.guard';
 
+// LoginGuard: any component without a guard will need to check for a user id
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},

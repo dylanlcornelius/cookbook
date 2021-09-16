@@ -6,18 +6,18 @@ export class RecipeIngredientModal extends Modal {
     function: Function;
     ingredients: Ingredient[];
     userIngredient: UserIngredient;
-    defaultShoppingList: string;
+    householdId: string;
 
     constructor(
         eventFunction: Function,
         ingredients: Ingredient[],
         userIngredient: UserIngredient,
-        defaultShoppingList: string,
+        householdId: string,
     ) {
         super();
         this.function = eventFunction;
         this.ingredients = ingredients;
         this.userIngredient = userIngredient;
-        this.defaultShoppingList = defaultShoppingList;
+        this.householdId = householdId;
     }
 }

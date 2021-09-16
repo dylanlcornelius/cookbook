@@ -1,0 +1,74 @@
+<app-household-invite-modal [Params]="householdInviteModalParams"></app-household-invite-modal>
+
+<h2>Household Preferences</h2>
+<p>Households are used to share recipes and shopping lists with other people.</p>
+
+<div *ngIf="!loading">
+  <div class="button-row">
+    <button mat-button color="primary" style="float: right;" (click)="createHousehold()">Create Household</button>
+    <button mat-button color="primary" style="float: right;" (click)="sendInvite()">Send Invite</button>
+  </div>
+
+  <div *ngIf="household">
+    <h3>{{household.name}}</h3>
+
+    <div class="table-container mat-elevation-z8">
+      <mat-table #table [dataSource]="householdInvitesDataSource">
+        <ng-container matColumnDef="name">
+          <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-cell *matCellDef="let element">Invitation Sent!</mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'status'];"></mat-row>
+      </mat-table>
+
+      <mat-table #table [dataSource]="householdMembersDataSource" class="bottom-container">
+        <ng-container matColumnDef="name">
+          <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-cell *matCellDef="let element">
+            <button mat-button matTooltip="Remove Member" color="warn" (click)="removeMember(element)">Remove</button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'status'];"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+
+  <div *ngIf="household && myInvitesDataSource.filteredData.length > 0">
+    <br />
+    <br />
+  </div>
+
+  <div *ngIf="myInvitesDataSource.filteredData.length > 0">
+    <h3>Household Invitations</h3>
+
+    <div class="table-container mat-elevation-z8">
+      <mat-table #table [dataSource]="myInvitesDataSource" class="bottom-container">
+        <ng-container matColumnDef="name">
+          <mat-cell *matCellDef="let element">{{element.name}} from {{getInviterName(element)}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-cell *matCellDef="let element">
+            <button mat-raised-button matTooltip="Reject Invite" color="warn" (click)="rejectInvite(element)" style="margin-right: 5px;">
+              <mat-icon>close</mat-icon>
+            </button>
+
+            <button mat-raised-button matTooltip="Accept Invite" color="primary" (click)="acceptInvite(element)">
+              <mat-icon>done</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'status'];"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+</div>

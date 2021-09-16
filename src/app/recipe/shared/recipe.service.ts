@@ -26,7 +26,7 @@ export class RecipeService extends FirestoreService {
       if (id) {
         super.get(id).subscribe(doc => {
           observer.next(new Recipe(doc));
-        })
+        });
       } else {
         super.get().subscribe(docs => {
           observer.next(docs.map(doc => new Recipe(doc)));
@@ -48,7 +48,7 @@ export class RecipeService extends FirestoreService {
   }
 
   rateRecipe(rating: number, uid: string, recipe: Recipe): void {
-    recipe.ratings = recipe.ratings.filter(value => value.uid !== uid)
+    recipe.ratings = recipe.ratings.filter(value => value.uid !== uid);
     if (rating !== 0) {
       recipe.ratings.push({uid: uid, rating: rating});
     }
