@@ -10,8 +10,8 @@ import {
 
 export const fadeComponentAnimation = trigger('fadeComponentAnimation', [
     transition('* <=> *', [
-        query(':leave', style({position: 'absolute', opacity: 1, width: '90%'}), {optional: true}),
-        query(':enter', style({position: 'absolute', opacity: 0, width: '90%'}), {optional: true}),
+        query(':leave', style({position: 'fixed', opacity: 1, width: '90%'}), {optional: true}),
+        query(':enter', style({position: 'fixed', opacity: 0, width: '90%'}), {optional: true}),
         query(':leave', animate('0.0s', style({opacity: 0})), {optional: true}),
         query(':enter', animate('0.6s', style({opacity: 1})), {optional: true})
     ])
