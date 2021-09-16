@@ -1,12 +1,13 @@
 @import './theme/theme';
 
 .app-loading {
-    position: relative;
+    position: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
+    width: 100%;
 }
 .app-loading .spinner {
     position: absolute;
@@ -41,7 +42,9 @@
 
 .app {
     height: 100%;
-    position: relative;
+    width: 100%;
+    position: fixed;
+    overflow-y: auto;
 }
 .page {
     min-height: 100%;
