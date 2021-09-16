@@ -111,7 +111,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           this.recipes = recipes;
           this.dataSource = new MatTableDataSource(recipes);
           const ratings = [];
-          [1, 2, 3].forEach(ratingOption => {
+          [0, 1, 2, 3].forEach(ratingOption => {
             const rating = ratingOption / 3 * 100;
             let displayValue = '';
             for (let i = 0; i < ratingOption; i++) {
@@ -119,7 +119,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             }
             
             const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
-            ratings.push({ displayName: `${displayValue} & Up`, name: rating, checked: checked, filter: new RatingFilter(rating) });
+            ratings.push({ displayName: `${displayValue}`, name: rating, checked: checked, filter: new RatingFilter(rating) });
           });
 
           const categories = [];
