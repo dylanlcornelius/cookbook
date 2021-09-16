@@ -13,6 +13,7 @@ import { ProfileListComponent } from './profile-list/profile-list.component';
 import { SharedModule } from '@sharedModule';
 import { HouseholdComponent } from './household/household.component';
 import { HouseholdInviteModalComponent } from './household-invite-modal/household-invite-modal.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { HouseholdInviteModalComponent } from './household-invite-modal/househol
     MatSlideToggleModule,
     MatProgressBarModule,
     MatAutocompleteModule,
+    MatTableModule,
     NgxChartsModule,
     SharedModule,
   ]

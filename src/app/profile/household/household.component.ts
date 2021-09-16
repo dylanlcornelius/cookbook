@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { CurrentUserService } from '@currentUserService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
@@ -22,8 +23,10 @@ export class HouseholdComponent implements OnInit, OnDestroy {
   user: User;
   household: Household;
 
+  householdInvitesDataSource;
+  householdMembersDataSource;
+  myInvitesDataSource;
   filteredUsers: User[];
-  myInvites: Household[];
 
   householdInviteModalParams;
 
@@ -55,6 +58,8 @@ export class HouseholdComponent implements OnInit, OnDestroy {
       combineLatest([users$, household$, invites$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([users, household, invites]) => {
         if (household) {
           this.household = this.initializeHouseholdNames(household, users);
+          this.householdInvitesDataSource = new MatTableDataSource(this.household.invites);
+          this.householdMembersDataSource = new MatTableDataSource(this.household.members);
         } else {
           this.household = undefined;
         }
@@ -64,7 +69,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
             && !this.household?.inviteIds.some(inviteId => uid === inviteId);
         });
 
-        this.myInvites = invites.map(invite => this.initializeHouseholdNames(invite, users));
+        this.myInvitesDataSource = new MatTableDataSource(invites.map(invite => this.initializeHouseholdNames(invite, users)));
         this.loading = false;
       });
     });
@@ -148,6 +153,13 @@ export class HouseholdComponent implements OnInit, OnDestroy {
 
   getInviterName(household: Household): string {
     return household.invites.find(({ uid }) => uid === this.user.uid)?.inviterName;
+  }
+
+  rejectInvite(household: Household): void {
+    household.invites = household.invites.filter(({ uid }) => uid !== this.user.uid);
+    household.inviteIds = household.inviteIds.filter(uid => uid !== this.user.uid);
+    this.householdService.update(household.getObject(), household.getId());
+    this.notificationService.setModal(new SuccessNotification('Invitation rejected'));
   }
 
   acceptInvite(household: Household): void {

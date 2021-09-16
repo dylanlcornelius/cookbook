@@ -36,10 +36,12 @@ export class AppComponent implements OnInit {
     this.isGuest = this.currentUserService.getIsGuest();
 
     this.user.subscribe(user => {
-      if (user.theme) {
-        this.overlayContainer.getContainerElement().classList.add('dark');
-      } else {
-        this.overlayContainer.getContainerElement().classList.remove('dark');
+      if (user.uid) {
+        if (user.theme) {
+          this.overlayContainer.getContainerElement().classList.add('dark');
+        } else {
+          this.overlayContainer.getContainerElement().classList.remove('dark');
+        }
       }
     });
   }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { AuthService } from '../user/shared/auth.service';
@@ -9,6 +9,8 @@ import { User } from '@user';
 import { CurrentUserService } from '@currentUserService';
 import { NavigationService } from '@navigationService';
 import { Navigation, NavigationMenu } from '@navigation';
+import { takeUntil } from 'rxjs/operators';
+import { HouseholdService } from '@householdService';
 
 @Component({
   selector: 'app-header',
@@ -16,9 +18,10 @@ import { Navigation, NavigationMenu } from '@navigation';
   styleUrls: ['./header.component.scss'],
   animations: [fadeInAnimation, fadeInFastAnimation, slideInOutAnimation]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   title: string;
-  user: Observable<User>;
+  user: User;
   isLoggedIn: Observable<boolean>;
   route: string;
   showNav = false;
@@ -26,11 +29,13 @@ export class HeaderComponent implements OnInit {
   mobileNavs: Navigation[] = [];
   profileNavs: Navigation[] = [];
   toolNavs: Navigation[] = [];
+  householdNotifications: number;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private currentUserService: CurrentUserService,
+    private householdService: HouseholdService,
     private navigationService: NavigationService,
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
@@ -47,10 +52,14 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.title = environment.config.title;
-    this.user = this.currentUserService.getCurrentUser();
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
 
     this.load();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   load(): void {
@@ -59,6 +68,16 @@ export class HeaderComponent implements OnInit {
       this.mobileNavs = navs.filter(({ subMenu }) => subMenu !== NavigationMenu.PROFILE);
       this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
       this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+    });
+
+    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+      this.user = user;
+
+      if (this.user.uid) {
+        this.householdService.getInvites(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(households => {
+          this.householdNotifications = households.length ? households.length : undefined;
+        });
+      }
     });
   }
 

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { UserItemService } from '@userItemService';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CurrentUserService } from '@currentUserService';
-import { Subject } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
@@ -66,35 +66,35 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
         this.householdId = householdId;
 
-        this.userIngredientService.get(this.householdId).pipe(takeUntil(this.unsubscribe$)).subscribe(userIngredients => {
+        const userIngredients$ = this.userIngredientService.get(this.householdId);
+        const userItems$ = this.userItemService.get(this.householdId);
+        const ingredients$ = this.ingredientService.get();
+
+        combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, userItems, ingredients]) => {
           this.id = userIngredients.id;
-          this.ingredientService.get().pipe(takeUntil(this.unsubscribe$)).subscribe(ingredients => {
-            const myIngredients = [];
-  
-            ingredients.forEach(ingredient => {
-              userIngredients.ingredients.forEach(myIngredient => {
-                if (myIngredient.id === ingredient.id) {
-                  myIngredients.push({
-                    id: myIngredient.id,
-                    name: ingredient.name,
-                    uom: ingredient.uom,
-                    pantryQuantity: myIngredient.pantryQuantity,
-                    cartQuantity: myIngredient.cartQuantity
-                  });
-                }
-              });
-            });
-            this.ingredientsDataSource = new MatTableDataSource(myIngredients);
-            this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-            this.applyFilter();
-            this.ingredients = ingredients;
-  
-            this.userItemService.get(this.householdId).pipe(takeUntil(this.unsubscribe$)).subscribe(userItems => {
-              this.itemsId = userItems.id;
-              this.itemsDataSource = new MatTableDataSource(userItems.items);
-              this.loading = false;
+
+          const myIngredients = [];
+          ingredients.forEach(ingredient => {
+            userIngredients.ingredients.forEach(myIngredient => {
+              if (myIngredient.id === ingredient.id) {
+                myIngredients.push({
+                  id: myIngredient.id,
+                  name: ingredient.name,
+                  uom: ingredient.uom,
+                  pantryQuantity: myIngredient.pantryQuantity,
+                  cartQuantity: myIngredient.cartQuantity
+                });
+              }
             });
           });
+          this.ingredientsDataSource = new MatTableDataSource(myIngredients);
+          this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
+          this.applyFilter();
+          this.ingredients = ingredients;
+
+          this.itemsId = userItems.id;
+          this.itemsDataSource = new MatTableDataSource(userItems.items);
+          this.loading = false;
         });
       });
     });

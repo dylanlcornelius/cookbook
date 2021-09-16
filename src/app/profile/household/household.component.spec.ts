@@ -263,6 +263,20 @@ describe('HouseholdComponent', () => {
     });
   });
 
+  describe('rejectInvite', () => {
+    it('should update a household', () => {
+      const household = new Household({ invites: [{ uid: 'uid' }], inviteIds: ['uid'] });
+
+      spyOn(householdService, 'update');
+      spyOn(notificationService, 'setModal');
+
+      component.rejectInvite(household);
+
+      expect(householdService.update).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
+
   describe('acceptInvite', () => {
     it('should fire a validation modal', () => {
       component.household = new Household({});
