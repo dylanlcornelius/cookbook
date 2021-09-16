@@ -47,7 +47,7 @@ describe('RecipeFilterService', () => {
     });
 
     it('should filter by rating', () => {
-      const result = service.recipeFilterPredicate(new Recipe({meanRating: 2}), [new RatingFilter(1)]);
+      const result = service.recipeFilterPredicate(new Recipe({meanRating: 83.3333333}), [new RatingFilter(100)]);
 
       expect(result).toBeTrue();
     });

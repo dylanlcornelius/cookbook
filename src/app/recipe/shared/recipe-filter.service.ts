@@ -14,7 +14,23 @@ export class RecipeFilterService {
   constructor() { }
 
   recipeFilterPredicate(data: Recipe, filters: Array<Filter>): boolean {
-    return filters.reduce((hasAll, filter) => hasAll && filter.filterPredicate(data), true);
+    if (!filters.length) {
+      return true;
+    }
+
+    let valid = true;
+    for (const filterType of Object.values(FILTER_TYPE)) {
+      const filtersByType = filters.filter(({ type }) => type === filterType);
+
+      if (filtersByType.length) {
+        if (filterType === FILTER_TYPE.RATING) {
+          valid = valid && filtersByType.reduce((hasSome, filter) => hasSome || filter.filterPredicate(data), false);
+        } else {
+          valid = valid && filtersByType.reduce((hasAll, filter) => hasAll && filter.filterPredicate(data), true);
+        }
+      }
+    }
+    return valid;
   }
 }
 
@@ -56,7 +72,7 @@ export class CategoryFilter extends Filter {
 
 export class RatingFilter extends Filter {
   type = FILTER_TYPE.RATING;
-  filterPredicate = (recipe: Recipe): boolean => recipe.meanRating >= this.value;
+  filterPredicate = (recipe: Recipe): boolean => this.value - recipe.meanRating >= 0 && this.value - recipe.meanRating < (1 / 3 * 100);
 }
 
 export class SearchFilter extends Filter {
