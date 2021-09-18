@@ -56,7 +56,9 @@
       "@actions": ["src/app/profile/shared/action.enum"],
       "@actionService": ["src/app/profile/shared/action.service"],
       "@household": ["src/app/profile/shared/household.model"],
-      "@householdService": ["src/app/profile/shared/household.service"]
+      "@householdService": ["src/app/profile/shared/household.service"],
+      "@comment": ["src/app/recipe/shared/comment.model"],
+      "@commentService": ["src/app/recipe/shared/comment.service"],
     }
   }
 }

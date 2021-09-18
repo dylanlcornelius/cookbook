@@ -1,0 +1,39 @@
+<div class="comment-list" *ngFor="let comment of parentComments; let i = index;">
+  <ng-template [ngTemplateOutlet]="existingComment" [ngTemplateOutletContext]="{comment: comment}"></ng-template>
+
+  <div *ngFor="let childComment of childCommentsByParentId[comment.id]">
+    <ng-template [ngTemplateOutlet]="existingComment" [ngTemplateOutletContext]="{comment: childComment}"></ng-template>
+  </div>
+
+  <ng-template [ngTemplateOutlet]="newComment" [ngTemplateOutletContext]="{control: controls[i], parent: comment}"></ng-template>
+</div>
+<ng-template [ngTemplateOutlet]="newComment" [ngTemplateOutletContext]="{control: controls[controls.length - 1]}"></ng-template>
+
+<ng-template #existingComment let-comment="comment">
+  <div class="mat-card comment" [ngClass]="{'sub-comment': comment.parent}">
+    <span>{{comment.authorName}}</span>
+
+    <div class="comment-text">
+      <span>{{comment.text}}</span>
+    </div>
+
+    <div class="button-row">
+      <button mat-button color="primary" (click)="resolveComment(comment)" *ngIf="!comment.parent">Resolve</button>
+      <button mat-button color="primary" (click)="editComment(comment, '')">Edit</button>
+      <button mat-button color="warn" (click)="deleteComment(comment)">Delete</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #newComment let-control="control" let-parent="parent">
+  <form class="mat-card comment" [ngClass]="{'sub-comment': parent}" *ngIf="control">
+    <mat-form-field appearance="outline">
+      <mat-label>Add a comment</mat-label>
+      <textarea matInput [formControl]="control"></textarea>
+    </mat-form-field>
+
+    <div class="button-row">
+      <button mat-button color="primary" (click)="addComment(control.value, parent?.id)">Save</button>
+    </div>
+  </form>
+</ng-template>

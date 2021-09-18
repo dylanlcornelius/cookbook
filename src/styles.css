@@ -108,6 +108,9 @@ dt {
   justify-content: center;
   padding: 0 !important;
 }
+app-comment-list .mat-form-field-wrapper {
+  padding: 0 !important;
+}
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {
     padding: 5px !important;
