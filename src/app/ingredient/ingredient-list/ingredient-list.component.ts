@@ -55,8 +55,8 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
-        this.householdId = householdId;
+      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
+        this.householdId = household.id;
 
         const userIngredients$ = this.userIngredientService.get(this.householdId);
         const ingredients$ = this.ingredientService.get();

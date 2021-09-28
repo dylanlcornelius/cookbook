@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
+import { Recipe } from '@recipe';
+import { User } from '@user';
 import { of } from 'rxjs';
 
 import { HouseholdService } from './household.service';
@@ -17,28 +19,6 @@ describe('HouseholdService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getId', () => {
-    it('should get a household id', () => {
-      spyOn(service, 'get').and.returnValue(of(new Household({ id: 'householdId' })));
-
-      service.getId('uid').subscribe(householdId => {
-        expect(householdId).toEqual('householdId');
-      });
-
-      expect(service.get).toHaveBeenCalled();
-    });
-
-    it('should default a household id', () => {
-      spyOn(service, 'get').and.returnValue(of(undefined));
-
-      service.getId('uid').subscribe(householdId => {
-        expect(householdId).toEqual('uid');
-      });
-
-      expect(service.get).toHaveBeenCalled();
-    });
-  });
-
   describe('get', () => {
     it('should get docs based on an id', () => {
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
@@ -50,11 +30,11 @@ describe('HouseholdService', () => {
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
     });
 
-    it('should get no docs based on an id', () => {
+    it('should get a default household based on an id', () => {
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
 
       service.get('id').subscribe(doc => {
-        expect(doc).toBeUndefined();
+        expect(doc.id).toEqual('id');
       });
 
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
@@ -108,6 +88,28 @@ describe('HouseholdService', () => {
       service.delete('id');
 
       expect(FirestoreService.prototype.delete).toHaveBeenCalled();
+    });
+  });
+
+  describe('hasPermission', () => {
+    it('should return true when the household has the current user', () => {
+      const household = new Household({ memberIds: 'uid'});
+      const user = new User({ uid: 'uid' });
+      const recipe = new Recipe({});
+
+      const result = service.hasPermission(household, user, recipe);
+
+      expect(result).toBeTrue();
+    });
+
+    it('should return true when the current user is the author', () => {
+      const household = new Household({});
+      const user = new User({ uid: 'uid' });
+      const recipe = new Recipe({ uid: 'uid' });
+
+      const result = service.hasPermission(household, user, recipe);
+    
+      expect(result).toBeTrue();
     });
   });
 });

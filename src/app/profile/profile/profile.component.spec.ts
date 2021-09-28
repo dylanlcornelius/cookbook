@@ -19,6 +19,7 @@ import { RecipeHistoryService } from '@recipeHistoryService';
 import { Recipe } from '@recipe';
 import { RecipeHistory } from '@recipeHistory';
 import { HouseholdService } from '@householdService';
+import { Household } from '@household';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -74,7 +75,7 @@ describe('ProfileComponent', () => {
   describe('load', () => {
     it('should load data with an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'getId').and.returnValue(of('id'));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
@@ -83,7 +84,7 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getId).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
@@ -91,7 +92,7 @@ describe('ProfileComponent', () => {
 
     it('should load data without an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'getId').and.returnValue(of('id'));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userService, 'get').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
@@ -100,7 +101,7 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getId).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();

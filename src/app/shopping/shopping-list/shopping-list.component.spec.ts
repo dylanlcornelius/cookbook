@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
 import { HouseholdService } from '@householdService';
+import { Household } from '@household';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -76,7 +77,7 @@ describe('ShoppingListComponent', () => {
       });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'getId').and.returnValue(of('id'));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userItemService, 'get').and.returnValue(of(userItems));
@@ -84,7 +85,7 @@ describe('ShoppingListComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getId).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();
@@ -106,7 +107,7 @@ describe('ShoppingListComponent', () => {
       });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'getId').and.returnValue(of('id'));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userItemService, 'get').and.returnValue(of(userItems));
@@ -114,7 +115,7 @@ describe('ShoppingListComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getId).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();
@@ -128,7 +129,7 @@ describe('ShoppingListComponent', () => {
       const userItems = new UserItem({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'getId').and.returnValue(of('id'));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userItemService, 'get').and.returnValue(of(userItems));
@@ -136,7 +137,7 @@ describe('ShoppingListComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getId).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();

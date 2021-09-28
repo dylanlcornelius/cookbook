@@ -90,8 +90,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       this.user = user;
 
-      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
-        this.householdId = householdId;
+      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
+        this.householdId = household.id;
 
         this.userForm = this.formBuilder.group({
           uid: [user.uid],

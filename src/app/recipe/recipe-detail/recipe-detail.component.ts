@@ -33,6 +33,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
+  hasPermission: boolean;
   recipe: Recipe;
   userIngredient: UserIngredient;
   ingredients = [];
@@ -73,8 +74,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      this.householdService.getId(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(householdId => {
-        this.householdId = householdId;
+      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
+        this.householdId = household.id;
 
         const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
         const ingredients$ = this.ingredientService.get();
@@ -85,6 +86,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
           this.recipe = recipe;
           this.userIngredient = userIngredient;
+
+          this.hasPermission = this.householdService.hasPermission(household, this.user, this.recipe);
 
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
