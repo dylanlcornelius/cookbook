@@ -4,8 +4,9 @@ import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
 import { ModelObject } from '@model';
+import { Recipe } from '@recipe';
+import { User } from '@user';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,10 @@ export class HouseholdService extends FirestoreService {
     super('households', currentUserService, actionService);
   }
 
-  getId(uid: string): Observable<string> {
-    return this.get(uid).pipe(map(household => household ? household.id : uid));
-  }
-
   get(uid: string): Observable<Household> {
     return new Observable(observer => {
       super.getMany(this.ref?.where('memberIds', 'array-contains', uid)).subscribe(docs => {
-        observer.next(docs[0] ? new Household(docs[0]) : undefined);
+        observer.next(new Household(docs[0] || { id: uid }));
       });
     });
   }
@@ -41,4 +38,8 @@ export class HouseholdService extends FirestoreService {
   create = (data: Household): string => super.create(data.getObject());
   update = (data: ModelObject | ModelObject[], id? : string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
+
+  hasPermission(household: Household, user: User, recipe: Recipe): boolean {
+    return household.memberIds.includes(recipe.uid) || user.uid === recipe.uid;
+  }
 }

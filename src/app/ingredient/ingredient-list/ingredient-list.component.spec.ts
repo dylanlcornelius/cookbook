@@ -13,6 +13,7 @@ import { CurrentUserService } from '@currentUserService';
 import { RouterModule } from '@angular/router';
 import { NumberService } from 'src/app/util/number.service';
 import { HouseholdService } from '@householdService';
+import { Household } from '@household';
 
 describe('IngredientListComponent', () => {
   let component: IngredientListComponent;
@@ -64,7 +65,7 @@ describe('IngredientListComponent', () => {
       })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'getId').and.returnValue(of('id'));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
@@ -72,7 +73,7 @@ describe('IngredientListComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getId).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();

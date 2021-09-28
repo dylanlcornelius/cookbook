@@ -55,6 +55,7 @@ describe('CommentListComponent', () => {
         new Comment({ parent: 'id1', creationDate: { toDate: () => { return new Date(); } } }),
         new Comment({ parent: 'id1', creationDate: { toDate: () => { return new Date(); } } }),
         new Comment({ creationDate: { toDate: () => { return new Date(); } } }),
+        new Comment({ creationDate: { toDate: () => { return new Date(new Date().getDate() + 1); } } }),
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
@@ -66,6 +67,26 @@ describe('CommentListComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(commentService.get).toHaveBeenCalled();
       expect(userService.get).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleResolved', () => {
+    it('should toggle the resolved flag', () => {
+      const comment = new Comment({});
+
+      component.toggleResolved(comment);
+
+      expect(comment.showResolved).toBeTrue();
+    });
+  });
+
+  describe('toggleEdit', () => {
+    it('should toggle the resolved flag', () => {
+      const comment = new Comment({});
+
+      component.toggleEdit(comment);
+
+      expect(comment.isEditing).toBeTrue();
     });
   });
 

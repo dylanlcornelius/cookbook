@@ -27,7 +27,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   childCommentsByParentId;
   comments;
 
-  controls = [];
+  newCommentControls = [];
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -55,13 +55,31 @@ export class CommentListComponent implements OnInit, OnDestroy {
       this.user = user;
       
       this.comments = comments
-        .map(comment => ({ ...comment, authorName:users.find(({ uid }) => uid == comment.author)?.name }))
+        .map(comment => {
+          comment.authorName = users.find(({ uid }) => uid == comment.author)?.name;
+          comment.date = comment.creationDate?.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0) ? 'Today' : comment.creationDate?.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+          return comment;
+        })
         .sort((a, b) => a.creationDate?.getTime() - b.creationDate?.getTime())
         .sort((a, b) => a.parent && b.parent || !a.parent && !b.parent ? 0 : !a.parent ? -1 : 1);
 
-      this.parentComments = this.comments.filter(({ parent }) => !parent);
+      this.parentComments = this.comments
+        .filter(({ parent }) => !parent)
+        .map(comment => {
+          const control = new FormControl();
+          control.setValue(comment.text);
+          comment.control = control;
+          return comment;
+        });
+      
       this.childCommentsByParentId = this.comments
         .filter(({ parent }) => parent)
+        .map(comment => {
+          const control = new FormControl();
+          control.setValue(comment.text);
+          comment.control = control;
+          return comment;
+        })
         .reduce((list, comment) => {
           if (!list[comment.parent]) {
             list[comment.parent] = [comment];
@@ -71,12 +89,20 @@ export class CommentListComponent implements OnInit, OnDestroy {
           return list;
         }, {});
 
-      this.controls = [];
+      this.newCommentControls = [];
       this.parentComments.forEach(() => {
-        this.controls.push(new FormControl());
+        this.newCommentControls.push(new FormControl());
       });
-      this.controls.push(new FormControl());
+      this.newCommentControls.push(new FormControl());
     });
+  }
+
+  toggleResolved(comment: Comment): void {
+    comment.showResolved = !comment.showResolved;
+  }
+
+  toggleEdit(comment: Comment): void {
+    comment.isEditing = !comment.isEditing;
   }
 
   addComment(text: string, parent?: string): void {
@@ -87,11 +113,11 @@ export class CommentListComponent implements OnInit, OnDestroy {
   editComment(comment: Comment, text: string): void {
     comment.text = text;
     this.commentService.update(comment.getObject(), comment.getId());
-    this.notificationService.setModal(new SuccessNotification('Comment resolved!'));
+    this.notificationService.setModal(new SuccessNotification('Comment edited!'));
   }
 
   resolveComment(comment: Comment): void {
-    comment.resolved = true;
+    comment.isResolved = true;
     this.commentService.update(comment.getObject(), comment.getId());
     this.notificationService.setModal(new SuccessNotification('Comment resolved!'));
   }

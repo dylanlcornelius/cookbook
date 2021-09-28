@@ -132,5 +132,5 @@
   <br />
   <br />
 
-  <app-comment-list [id]="recipe.id"></app-comment-list>
+  <app-comment-list [id]="recipe.id" *ngIf="hasPermission"></app-comment-list>
 </div>

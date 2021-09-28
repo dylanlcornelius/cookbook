@@ -3,12 +3,24 @@
 }
 .comment {
   margin-bottom: 10px;
+  padding: 8px 16px;
+
+  .date {
+    filter: brightness(50%);
+    margin-left: 10px;
+  }
+  .resolved {
+    float: right;
+    line-height: 20px;
+  }
+  .text {
+    padding-top: 5px;
+    width: 100%;
+    font-size: 14px;
+  }
 }
 .sub-comment {
   margin-left: 30px;
-}
-.comment-text {
-  width: 100%;
 }
 .button-row {
   margin: 0 auto;
