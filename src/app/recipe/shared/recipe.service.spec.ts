@@ -3,14 +3,19 @@ import { of } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 
 import { RecipeService } from '@recipeService';
-import { Recipe } from '@recipe';
+import { Recipe, RECIPE_STATUS } from '@recipe';
+import { NotificationService, ValidationService } from '@modalService';
 
 describe('RecipeService', () => {
   let service: RecipeService;
+  let validationService: ValidationService;
+  let notificationService: NotificationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(RecipeService);
+    validationService = TestBed.inject(ValidationService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should be created', () => {
@@ -124,6 +129,38 @@ describe('RecipeService', () => {
 
       expect(service.calculateMeanRating).toHaveBeenCalled();
       expect(service.update).toHaveBeenCalled();
+    });
+  });
+  
+  describe('changeStatus', () => {
+    it('should open a validation model', () => {
+      spyOn(validationService, 'setModal');
+
+      service.changeStatus(new Recipe({}));
+
+      expect(validationService.setModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('changeStatusEvent', () => {
+    it('should set a recipe status to published', () => {
+      spyOn(service, 'update');
+      spyOn(notificationService, 'setModal');
+
+      service.changeStatusEvent(new Recipe({}));
+
+      expect(service.update).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should set a recipe status to private', () => {
+      spyOn(service, 'update');
+      spyOn(notificationService, 'setModal');
+
+      service.changeStatusEvent(new Recipe({ status: RECIPE_STATUS.PUBLISHED }));
+
+      expect(service.update).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

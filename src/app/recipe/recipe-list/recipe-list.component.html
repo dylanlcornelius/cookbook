@@ -42,6 +42,7 @@
       <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt=""/>
 
       <mat-card-actions (click)="$event.stopPropagation()">
+          <button mat-button color="accent" (click)="changeStatus(recipe)" *ngIf="recipe.hasAuthorPermission">{{recipe.status}}</button>
           <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
           <button mat-button color="warn" (click)="removeIngredients(recipe.id)">
             <span>Cook</span>

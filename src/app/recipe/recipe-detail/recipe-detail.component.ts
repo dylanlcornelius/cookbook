@@ -33,7 +33,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
-  hasPermission: boolean;
+  hasAuthorPermission: boolean;
   recipe: Recipe;
   userIngredient: UserIngredient;
   ingredients = [];
@@ -87,7 +87,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.recipe = recipe;
           this.userIngredient = userIngredient;
 
-          this.hasPermission = this.householdService.hasPermission(household, this.user, this.recipe);
+          this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
 
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
@@ -153,6 +153,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
+
+  changeStatus = (): void => this.recipeService.changeStatus(this.recipe);
 
   addIngredients(): void {
     this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.householdId);

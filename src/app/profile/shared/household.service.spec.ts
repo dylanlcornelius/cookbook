@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
-import { Recipe } from '@recipe';
+import { Recipe, RECIPE_STATUS } from '@recipe';
 import { User } from '@user';
 import { of } from 'rxjs';
 
@@ -91,13 +91,41 @@ describe('HouseholdService', () => {
     });
   });
 
-  describe('hasPermission', () => {
+  describe('hasUserPermission', () => {
+    it('should return true when user has author permissions', () => {
+      const household = new Household({});
+      const user = new User({});
+      const recipe = new Recipe({});
+
+      spyOn(service, 'hasAuthorPermission').and.returnValue(true);
+
+      const result = service.hasUserPermission(household, user, recipe);
+
+      expect(service.hasAuthorPermission).toHaveBeenCalled();
+      expect(result).toBeTrue();
+    });
+
+    it('should return true when the recipe is published', () => {
+      const household = new Household({});
+      const user = new User({});
+      const recipe = new Recipe({ status: RECIPE_STATUS.PUBLISHED });
+
+      spyOn(service, 'hasAuthorPermission').and.returnValue(false);
+      
+      const result = service.hasUserPermission(household, user, recipe);
+    
+      expect(service.hasAuthorPermission).toHaveBeenCalled();
+      expect(result).toBeTrue();
+    });
+  });
+
+  describe('hasAuthorPermission', () => {
     it('should return true when the household has the current user', () => {
       const household = new Household({ memberIds: 'uid'});
       const user = new User({ uid: 'uid' });
       const recipe = new Recipe({});
 
-      const result = service.hasPermission(household, user, recipe);
+      const result = service.hasAuthorPermission(household, user, recipe);
 
       expect(result).toBeTrue();
     });
@@ -107,7 +135,7 @@ describe('HouseholdService', () => {
       const user = new User({ uid: 'uid' });
       const recipe = new Recipe({ uid: 'uid' });
 
-      const result = service.hasPermission(household, user, recipe);
+      const result = service.hasAuthorPermission(household, user, recipe);
     
       expect(result).toBeTrue();
     });

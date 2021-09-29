@@ -4,7 +4,7 @@ import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
 import { ModelObject } from '@model';
-import { Recipe } from '@recipe';
+import { Recipe, RECIPE_STATUS } from '@recipe';
 import { User } from '@user';
 import { Observable } from 'rxjs';
 
@@ -39,7 +39,11 @@ export class HouseholdService extends FirestoreService {
   update = (data: ModelObject | ModelObject[], id? : string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
 
-  hasPermission(household: Household, user: User, recipe: Recipe): boolean {
+  hasAuthorPermission(household: Household, user: User, recipe: Recipe): boolean {
     return household.memberIds.includes(recipe.uid) || user.uid === recipe.uid;
+  }
+
+  hasUserPermission(household: Household, user: User, recipe: Recipe): boolean {
+    return this.hasAuthorPermission(household, user, recipe) || recipe.status === RECIPE_STATUS.PUBLISHED;
   }
 }

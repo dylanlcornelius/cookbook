@@ -52,7 +52,7 @@ $light-theme: (
 
 // dark theme
 $dark-primary: mat.define-palette(mat.$blue-palette);
-$dark-accent: mat.define-palette(mat.$amber-palette);
+$dark-accent: mat.define-palette(mat.$indigo-palette, 300);
 $dark-warn: mat.define-palette(mat.$red-palette);
 $dark-mat-theme: mat.define-dark-theme($dark-primary, $dark-accent, $dark-warn);
 $dark-theme: (

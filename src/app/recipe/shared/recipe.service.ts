@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { Action } from '@actions';
-import { Recipe, RecipeObject } from '@recipe';
+import { Recipe, RecipeObject, RECIPE_STATUS } from '@recipe';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
+import { Validation } from '@validation';
+import { SuccessNotification } from '@notification';
+import { NotificationService, ValidationService } from '@modalService';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +17,8 @@ export class RecipeService extends FirestoreService {
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
+    private validationService: ValidationService,
+    private notificationService: NotificationService
   ) {
     super('recipes', currentUserService, actionService);
   }
@@ -56,4 +61,22 @@ export class RecipeService extends FirestoreService {
     
     this.update(recipe.getObject(), recipe.getId());
   }
+
+  changeStatus(recipe: Recipe): void {
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to change the visibility of this recipe?`,
+      this.changeStatusEvent,
+      [recipe]
+    ));
+  }
+
+  changeStatusEvent = (recipe: Recipe): void => {
+    if (recipe.status === RECIPE_STATUS.PRIVATE) {
+      recipe.status = RECIPE_STATUS.PUBLISHED;
+    } else {
+      recipe.status = RECIPE_STATUS.PRIVATE;
+    }
+    this.update(recipe.getObject(), recipe.getId());
+    this.notificationService.setModal(new SuccessNotification('Recipe status updated!'));
+  };
 }

@@ -23,6 +23,7 @@
       <mat-card-subtitle>
         <span>{{recipe.description}}</span>
         <mat-card-actions>
+          <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">{{recipe.status}}</button>
           <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
           <button mat-button color="warn" (click)="removeIngredients()">
             <span>Cook</span>
@@ -132,5 +133,5 @@
   <br />
   <br />
 
-  <app-comment-list [id]="recipe.id" *ngIf="hasPermission"></app-comment-list>
+  <app-comment-list [id]="recipe.id" *ngIf="hasAuthorPermission"></app-comment-list>
 </div>
