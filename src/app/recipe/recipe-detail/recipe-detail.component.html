@@ -10,6 +10,9 @@
         <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="user.uid"></app-rating>
       </div>
 
+      <button mat-button class="share-button" (click)="copyShareableLink()">
+        <mat-icon>share</mat-icon>
+      </button>
       <app-image-upload [id]="recipe.id" [updateImage]="updateImage" [(progress)]="recipeImageProgress" [(image)]="recipeImage"></app-image-upload>
 
       <mat-card-title>
