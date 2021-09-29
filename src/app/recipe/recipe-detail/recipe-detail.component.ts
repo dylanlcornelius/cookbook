@@ -168,6 +168,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
 
+  copyShareableLink(): void {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      this.notificationService.setModal(new SuccessNotification('Link copied!'));
+    });
+  }
+
   updateTimesCooked(recipe: Recipe): void {
     this.recipeHistoryModalParams = {
       function: this.updateRecipeHistoryEvent,
