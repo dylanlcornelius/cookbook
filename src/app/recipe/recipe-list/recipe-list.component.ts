@@ -102,13 +102,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 recipeIngredient.name = null;
               }
             });
+
+            recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, recipe);
           });
 
           const filters = this.recipeFilterService.selectedFilters;
 
-          recipes = recipes.sort(this.sortRecipesByName);
-          recipes = recipes.sort(this.sortRecipesByImages);
-          this.recipes = recipes;
+          this.recipes = recipes
+            .filter(recipe => this.householdService.hasUserPermission(household, this.user, recipe))
+            .sort(this.sortRecipesByName)
+            .sort(this.sortRecipesByImages);
           this.dataSource = new MatTableDataSource(recipes);
           const ratings = [];
           [0, 1, 2, 3].forEach(ratingOption => {
@@ -124,7 +127,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
           const categories = [];
           const authors = [];
-          recipes.forEach(recipe => {
+          this.recipes.forEach(recipe => {
             recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
             this.imageService.download(recipe).then(url => {
               if (url) {
@@ -147,7 +150,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
           this.searchFilter = searchFilter ? searchFilter.value : '';
 
-          this.dataSource = new MatTableDataSource(recipes);
+          this.dataSource = new MatTableDataSource(this.recipes);
           this.dataSource.filterPredicate = this.recipeFilterService.recipeFilterPredicate;
 
           authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
@@ -232,6 +235,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   findRecipe(id: string): Recipe {
     return this.dataSource.data.find(x => x.id === id);
   }
+
+  changeStatus = (recipe: Recipe): void => this.recipeService.changeStatus(recipe);
 
   addIngredients(id: string): void {
     this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.householdId);

@@ -25,11 +25,13 @@ export class Recipe extends Model {
     }>;
     uid: string;
     author: string;
+    status: RECIPE_STATUS;
 
     count: number;
     image: string;
     amount = '1';
     uom = UOM.RECIPE;
+    hasAuthorPermission: boolean;
 
     constructor(data: any) {
         super(data);
@@ -48,13 +50,19 @@ export class Recipe extends Model {
         this.ratings = data.ratings || [];
         this.uid = data.uid || '';
         this.author = data.author || '';
+        this.status = data.status || RECIPE_STATUS.PRIVATE;
     }
 
     public getObject(): RecipeObject {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {id, count, image, amount, uom, ...recipe} = this;
+        const {id, count, image, amount, uom, hasAuthorPermission, ...recipe} = this;
         return recipe;
     }
 }
 
-export type RecipeObject = Omit<Recipe, 'id' | 'count' | 'image' | 'amount' | 'uom'>;
+export type RecipeObject = Omit<Recipe, 'id' | 'count' | 'image' | 'amount' | 'uom' | 'hasAuthorPermission'>;
+
+export enum RECIPE_STATUS {
+    PUBLISHED = 'Published',
+    PRIVATE = 'Private',
+}
