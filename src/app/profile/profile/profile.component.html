@@ -85,15 +85,17 @@
       <div class="tab-body">
         <h2>Your Recipe History</h2>
 
-        <div class="chart-container">
-          <ngx-charts-bar-vertical class="desktop"
+        <div class="chart-container desktop">
+          <ngx-charts-bar-vertical
             [results]="history"
             [gradient]="true"
             [xAxis]="true"
             [legend]="true"
             [showDataLabel]="true">
           </ngx-charts-bar-vertical>
-          <ngx-charts-bar-horizontal class="mobile"
+        </div>
+        <div class="chart-container mobile" [ngStyle]="{'height': history.length * 3 + 'vh'}">
+            <ngx-charts-bar-horizontal
             [results]="history"
             [gradient]="true"
             [yAxis]="true"
