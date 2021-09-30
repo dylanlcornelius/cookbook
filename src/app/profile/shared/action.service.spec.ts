@@ -97,6 +97,16 @@ describe('ActionService', () => {
     });
   });
 
+  describe('get', () => {
+    it('should get a document', () => {
+      const ref = spyOnProperty(service, 'ref');
+
+      service.get('uid');
+
+      expect(ref).toHaveBeenCalled();
+    });
+  });
+
   describe('create', () => {
     it('should add a document', () => {
       const ref = spyOnProperty(service, 'ref');

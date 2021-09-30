@@ -19,7 +19,7 @@ export class UserPendingGuard implements CanActivate, CanActivateChild {
     private currentUserService: CurrentUserService
   ) {}
 
-  canActivate(): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(): Observable<boolean> {
     return this.currentUserService.getCurrentUser()
       .pipe(
         take(1),
@@ -34,7 +34,7 @@ export class UserPendingGuard implements CanActivate, CanActivateChild {
       );
   }
 
-  canActivateChild(): Observable<boolean> | Promise<boolean> | boolean {
+  canActivateChild(): Observable<boolean> {
     return this.canActivate();
   }
 }

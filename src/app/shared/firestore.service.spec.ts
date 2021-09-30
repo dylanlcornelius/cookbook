@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { ActionService } from '@actionService';
 
 import { FirestoreService } from './firestore.service';
+import { Recipe } from '@recipe';
 
 describe('FirestoreService', () => {
   let service: FirestoreService;
@@ -49,6 +50,14 @@ describe('FirestoreService', () => {
     });
   });
 
+  describe('getOne', () => {
+    it('should get one document', () => {
+      service.getOne('id');
+
+      expect(true).toBeTrue();
+    });
+  });
+
   describe('get', () => {
     it('should call getOne', () => {
       spyOn(service, 'getOne');
@@ -68,6 +77,56 @@ describe('FirestoreService', () => {
 
       expect(service.getOne).not.toHaveBeenCalled();
       expect(service.getMany).toHaveBeenCalled();
+    });
+  });
+
+  describe('create', () => {
+    it('should create a document', () => {
+      spyOn(service, 'commitAction');
+
+      service.create(new Recipe({}).getObject());
+
+      expect(service.commitAction).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateOne', () => {
+    it('should update one document', () => {
+      spyOn(service, 'commitAction');
+
+      service.updateOne(new Recipe({}).getObject(), 'id');
+
+      expect(service.commitAction).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateAll', () => {
+    it('should update all documents', () => {
+      service.updateAll([new Recipe({}).getObject()]);
+
+      expect(true).toBeTrue();
+    });
+  });
+
+  describe('update', () => {
+    it('should not update any documents', () => {
+      spyOn(service, 'updateOne');
+      spyOn(service, 'updateAll');
+
+      service.update(null);
+
+      expect(service.updateOne).not.toHaveBeenCalled();
+      expect(service.updateAll).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a document', () => {
+      spyOn(service, 'commitAction');
+
+      service.delete('id');
+
+      expect(service.commitAction).toHaveBeenCalled();
     });
   });
 });

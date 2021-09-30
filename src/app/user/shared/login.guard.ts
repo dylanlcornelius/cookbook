@@ -16,7 +16,7 @@ import { CurrentUserService } from '@currentUserService';
   providedIn: 'root'
 })
 export class LoginGuard implements CanActivate, CanActivateChild {
-  private pageLoad;
+  pageLoad;
 
   constructor(
     private router: Router,
@@ -24,7 +24,7 @@ export class LoginGuard implements CanActivate, CanActivateChild {
     private currentUserService: CurrentUserService,
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.currentUserService.getIsLoggedIn()
       .pipe(
         take(1),
@@ -44,7 +44,7 @@ export class LoginGuard implements CanActivate, CanActivateChild {
       );
   }
 
-  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.canActivate(route, state);
   }
 }

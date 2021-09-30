@@ -15,6 +15,26 @@ describe('ImageService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('get', () => {
+    it('should get a file url', () => {
+      const ref = spyOnProperty(service, 'ref');
+    
+      service.get('path');
+
+      expect(ref).toHaveBeenCalled();
+    });
+  });
+
+  describe('upload', () => {
+    it('should upload a file', () => {
+      const ref = spyOnProperty(service, 'ref');
+    
+      service.upload('path', null);
+
+      expect(ref).toHaveBeenCalled();
+    });
+  });
+
   describe('download', () => {
     it('should handle a recipe without an image', () => {
       spyOn(service, 'get');
@@ -30,6 +50,16 @@ describe('ImageService', () => {
       service.download(new Recipe({hasImage: true}));
 
       expect(service.get).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteFile', () => {
+    it('should delete a file', () => {
+      const ref = spyOnProperty(service, 'ref');
+    
+      service.deleteFile('path');
+
+      expect(ref).toHaveBeenCalled();
     });
   });
 });
