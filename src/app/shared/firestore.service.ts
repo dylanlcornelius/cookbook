@@ -24,7 +24,7 @@ export abstract class FirestoreService {
     }
   }
 
-  private commitAction(action) {
+  commitAction(action: Action): void {
     if (!action) {
       return;
     }
@@ -72,8 +72,8 @@ export abstract class FirestoreService {
     this.commitAction(action);
 
     const newDoc = this.ref?.doc();
-    newDoc.set({ ...data, creationDate: new Date() });
-    return newDoc.id;
+    newDoc?.set({ ...data, creationDate: new Date() });
+    return newDoc?.id;
   }
 
   updateOne(data: ModelObject, id: string, action?: Action): void {
@@ -84,7 +84,7 @@ export abstract class FirestoreService {
 
   updateAll(data: ModelObject[]): void {
     data.forEach(d => {
-      this.ref.doc(d.getId()).set(d.getObject());
+      this.ref?.doc(d.getId()).set(d.getObject());
     });
   }
 

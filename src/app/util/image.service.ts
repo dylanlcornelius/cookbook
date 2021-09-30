@@ -19,16 +19,16 @@ export class ImageService {
   }
 
   get(path: string): Promise<string | void> {
-    return this.ref.child(path).getDownloadURL().then(url => {
+    return this.ref?.child(path).getDownloadURL().then(url => {
       return url;
     }, () => {});
   }
 
   upload(path: string, file: File): Observable<number | string | void> {
-    const uploadTask = this.ref.child(path).put(file, { cacheControl: 'public,max-age=31557600' });
+    const uploadTask = this.ref?.child(path).put(file, { cacheControl: 'public,max-age=31557600' });
 
     return new Observable(observer => {
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
+      uploadTask?.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         observer.next(progress);
       }, error => {
@@ -50,6 +50,6 @@ export class ImageService {
   }
 
   deleteFile(path: string): Promise<void> {
-    return this.ref.child(path).delete();
+    return this.ref?.child(path).delete();
   }
 }
