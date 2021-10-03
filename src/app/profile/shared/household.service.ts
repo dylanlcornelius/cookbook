@@ -19,11 +19,20 @@ export class HouseholdService extends FirestoreService {
     super('households', currentUserService, actionService);
   }
 
-  get(uid: string): Observable<Household> {
+  get(uid: string): Observable<Household>;
+  get(): Observable<Household[]>;
+  get(uid?: string): Observable<Household | Household[]>; // type for spyOn
+  get(uid?: string): Observable<Household | Household[]> {
     return new Observable(observer => {
-      super.getMany(this.ref?.where('memberIds', 'array-contains', uid)).subscribe(docs => {
-        observer.next(new Household(docs[0] || { id: uid }));
-      });
+      if (uid) {
+        super.getMany(this.ref?.where('memberIds', 'array-contains', uid)).subscribe(docs => {
+          observer.next(new Household(docs[0] || { id: uid }));
+        });
+      } else {
+        super.get().subscribe(docs => {
+          observer.next(docs.map(doc => new Household(doc)));
+        });
+      }
     });
   }
 

@@ -33,6 +33,7 @@
       "@validation": ["src/app/shared/validation-modal/validation.model"],
       "@config": ["src/app/admin/shared/config.model"],
       "@configService": ["src/app/admin/shared/config.service"],
+      "@context": ["src/app/admin/shared/context.model"],
       "@imageService": ["src/app/util/image.service"],
       "@UOMConverson": ["src/app/ingredient/shared/uom.enum.ts"],
       "@navigation": ["src/app/header/navigation.model"],

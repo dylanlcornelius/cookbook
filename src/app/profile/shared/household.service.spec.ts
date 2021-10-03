@@ -32,12 +32,26 @@ describe('HouseholdService', () => {
 
     it('should get a default household based on an id', () => {
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get');
 
       service.get('id').subscribe(doc => {
         expect(doc.id).toEqual('id');
       });
 
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
+    });
+
+    it('should get all documents', () => {
+      spyOn(FirestoreService.prototype, 'getMany');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+
+      service.get().subscribe(docs => {
+        expect(docs).toBeDefined();
+      });
+
+      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 

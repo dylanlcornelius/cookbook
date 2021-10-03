@@ -73,8 +73,9 @@ dt {
     display: none !important;
   }
 }
-
 .button-row {
+  display: flex;
+  gap: 15px;
   margin: 10px auto;
 }
 .button-row .row-button:first-child {
@@ -110,6 +111,9 @@ dt {
 }
 app-comment-list .mat-form-field-wrapper {
   padding: 0 !important;
+}
+app-admin-dashboard .mat-tab-label {
+  min-width: unset;
 }
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {

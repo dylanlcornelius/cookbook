@@ -46,15 +46,20 @@ export class RecipeHistoryService extends FirestoreService {
 
   get(uid: string, recipeId: string): Observable<RecipeHistory>;
   get(uid: string): Observable<RecipeHistory[]>;
-  get(uid: string): Observable<RecipeHistory | RecipeHistory[]>; // type for spyOn
-  get(uid: string, recipeId?: string): Observable<RecipeHistory | RecipeHistory[]> {
+  get(): Observable<RecipeHistory[]>;
+  get(uid?: string): Observable<RecipeHistory | RecipeHistory[]>; // type for spyOn
+  get(uid?: string, recipeId?: string): Observable<RecipeHistory | RecipeHistory[]> {
     return new Observable(observable => {
-      if (recipeId) {
+      if (uid && recipeId) {
         super.getMany(this.ref?.where('uid', '==', uid).where('recipeId', '==', recipeId)).subscribe(docs => {
           observable.next(new RecipeHistory(docs[0]));
         });
-      } else {
+      } else if (uid) {
         super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+          observable.next(docs.map(doc => new RecipeHistory(doc)));
+        });
+      } else {
+        super.get().subscribe(docs => {
           observable.next(docs.map(doc => new RecipeHistory(doc)));
         });
       }
