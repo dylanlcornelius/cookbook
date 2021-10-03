@@ -38,10 +38,12 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.ingredientService.get(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-      this.ingredient = data;
-      this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
-      this.loading = false;
+    this.route.params.subscribe(params => {
+      this.ingredientService.get(params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+        this.ingredient = data;
+        this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
+        this.loading = false;
+      });
     });
   }
 

@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: 'list', component: IngredientListComponent },
   { path: 'detail/:id', component: IngredientDetailComponent },
   { path: 'edit', redirectTo: 'edit/', pathMatch: 'full' },
-  { path: 'edit/:ingredient-id', component: IngredientEditComponent },
+  { path: 'edit/:id', component: IngredientEditComponent },
   { path: 'uom', component: UomTableComponent },
 ];
 

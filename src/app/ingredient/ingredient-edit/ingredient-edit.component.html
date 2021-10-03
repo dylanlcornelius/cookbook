@@ -48,10 +48,10 @@
 
     <div class="button-row between">
       <div *ngIf="!isQuickView">
-        <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="route.snapshot.params['ingredient-id']">
+        <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="id">
           <mat-icon>arrow_back</mat-icon>
         </a>
-        <a mat-mini-fab matTooltip="Ingredients List" color="primary" routerLink="/ingredient/list" *ngIf="!route.snapshot.params['ingredient-id']">
+        <a mat-mini-fab matTooltip="Ingredients List" color="primary" routerLink="/ingredient/list" *ngIf="!id">
           <mat-icon>list</mat-icon>
         </a>
       </div>

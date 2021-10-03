@@ -74,14 +74,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
+      const household$ = this.householdService.get(this.user.uid);
+      const params$ = this.route.params;
+
+      combineLatest([household$, params$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([household, params]) => {
+        this.loading = true;
         this.householdId = household.id;
 
-        const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
+        const recipe$ = this.recipeService.get(params['id']);
         const ingredients$ = this.ingredientService.get();
         const recipes$ = this.recipeService.get();
         const userIngredient$ = this.userIngredientService.get(this.householdId);
-        const recipeHistory$ = this.recipeHistoryService.get(this.householdId, this.route.snapshot.params['id']);
+        const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
 
         combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
           this.recipe = recipe;

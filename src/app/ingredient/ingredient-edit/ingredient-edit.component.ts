@@ -65,27 +65,31 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   public load(): void {
-    if (this.route.snapshot.params['ingredient-id']) {
-      this.ingredientService.get(this.route.snapshot.params['ingredient-id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-        this.id = data.id;
-        this.ingredientsForm.patchValue({
-          name: data.name,
-          category: data.category,
-          amount: data.amount || '',
-          uom: data.uom || '',
-          calories: data.calories
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+
+      if (this.id) {
+        this.ingredientService.get(this.id).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+          this.ingredientsForm.patchValue({
+            name: data.name,
+            category: data.category,
+            amount: data.amount || '',
+            uom: data.uom || '',
+            calories: data.calories
+          });
+          this.title = 'Edit an Ingredient';
+          this.loading = false;
         });
-        this.title = 'Edit an Ingredient';
+      } else {
+        this.id = undefined;
+        this.title = 'Add a new Ingredient';
         this.loading = false;
-      });
-    } else {
-      this.title = 'Add a new Ingredient';
-      this.loading = false;
-    }
+      }
+    });
   }
 
   onFormSubmit(form: FormGroup, formDirective: FormGroupDirective): void {
-    if (this.route.snapshot.params['ingredient-id']) {
+    if (this.id) {
       this.ingredientService.update(form.value, this.id);
       this.router.navigate(['/ingredient/detail/', this.id]);
     } else {

@@ -80,7 +80,7 @@ describe('RecipeDetailComponent', () => {
   describe('load', () => {
     beforeEach(() => {
       const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
+      route.params = of({ id: 'id' });
     });
 
     it('should load a recipe with an image', fakeAsync(() => {
@@ -104,7 +104,7 @@ describe('RecipeDetailComponent', () => {
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipes[0])).withArgs().and.returnValue(of(recipes));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipes[0])).withArgs().and.returnValue(of(recipes));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
@@ -136,7 +136,7 @@ describe('RecipeDetailComponent', () => {
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
@@ -168,7 +168,7 @@ describe('RecipeDetailComponent', () => {
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
