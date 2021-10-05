@@ -12,6 +12,7 @@ import { ErrorMatcher } from '../../util/error-matcher';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -45,6 +46,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
+    private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -107,4 +109,6 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     formDirective.resetForm();
     form.reset();
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

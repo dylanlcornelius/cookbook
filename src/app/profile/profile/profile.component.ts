@@ -22,6 +22,7 @@ import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeService } from '@recipeService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-profile',
@@ -68,6 +69,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private utilService: UtilService,
     private recipeService: RecipeService,
     private recipeHistoryService: RecipeHistoryService,
+    private tutorialService: TutorialService,
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
 
@@ -194,4 +196,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.currentUserService.setCurrentUser(user);
     this.notificationService.setModal(new SuccessNotification('Profile updated!'));
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

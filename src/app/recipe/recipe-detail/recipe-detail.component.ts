@@ -18,6 +18,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
+import { TutorialService } from '@tutorialService';
 import { LoadingService } from '@loadingService';
 
 @Component({
@@ -59,6 +60,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeIngredientService: RecipeIngredientService,
     private userIngredientService: UserIngredientService,
     private validationService: ValidationService,
+    private tutorialService: TutorialService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -196,4 +198,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeHistoryService.set(householdId, recipeId, timesCooked);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   };
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

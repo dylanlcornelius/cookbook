@@ -9,6 +9,7 @@ import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
 import { Validation } from '@validation';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -28,6 +29,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private numberService: NumberService,
     private validationService: ValidationService,
+    private tutorialService: TutorialService,
   ) { }
 
   ngOnInit() {
@@ -66,4 +68,6 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/ingredient/list']);
     }
   };
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

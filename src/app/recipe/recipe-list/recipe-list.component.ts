@@ -17,6 +17,7 @@ import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -50,7 +51,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private utilService: UtilService,
-    private recipeIngredientService: RecipeIngredientService
+    private recipeIngredientService: RecipeIngredientService,
+    private tutorialService: TutorialService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -253,4 +255,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   onRate(rating: number, recipe: Recipe): void {
     this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

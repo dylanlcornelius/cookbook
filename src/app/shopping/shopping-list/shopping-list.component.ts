@@ -13,6 +13,7 @@ import { User } from '@user';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-shopping-list',
@@ -46,6 +47,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private userItemService: UserItemService,
     private notificationService: NotificationService,
     private validationService: ValidationService,
+    private tutorialService: TutorialService,
   ) {}
 
   ngOnInit() {
@@ -189,4 +191,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.notificationService.setModal(new SuccessNotification('List completed!'));
     this.isCompleted = true;
   };
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

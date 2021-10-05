@@ -12,6 +12,7 @@ import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -42,6 +43,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
+    private tutorialService: TutorialService,
   ) {}
 
   ngOnInit() {
@@ -151,4 +153,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
       this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
     }
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

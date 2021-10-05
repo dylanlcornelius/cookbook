@@ -21,6 +21,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -60,6 +61,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
+    private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -322,4 +324,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }
