@@ -7,12 +7,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NumberService } from 'src/app/util/number.service';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TutorialService } from '@tutorialService';
 
 describe('UomTableComponent', () => {
   let component: UomTableComponent;
   let fixture: ComponentFixture<UomTableComponent>;
   let uomConversion: UOMConversion;
   let numberService: NumberService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -36,6 +38,7 @@ describe('UomTableComponent', () => {
     fixture.detectChanges();
     uomConversion = TestBed.inject(UOMConversion);
     numberService = TestBed.inject(NumberService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -93,6 +96,16 @@ describe('UomTableComponent', () => {
       expect(component.isValid).toHaveBeenCalled();
       expect(uomConversion.convert).toHaveBeenCalled();
       expect(numberService.toFraction).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

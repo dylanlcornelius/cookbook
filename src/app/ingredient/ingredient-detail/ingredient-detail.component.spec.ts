@@ -9,6 +9,7 @@ import { of } from 'rxjs';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
 import { NumberService } from 'src/app/util/number.service';
 import { ValidationService } from '@modalService';
+import { TutorialService } from '@tutorialService';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
@@ -16,6 +17,7 @@ describe('IngredientsDetailComponent', () => {
   let ingredientService: IngredientService;
   let numberService: NumberService;
   let validationService: ValidationService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -33,10 +35,17 @@ describe('IngredientsDetailComponent', () => {
       ]
     })
     .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(IngredientDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
     validationService = TestBed.inject(ValidationService);
-  }));
+    tutorialService = TestBed.inject(TutorialService);
+  });
 
   describe('load', () => {
     it('should create', () => {
@@ -46,9 +55,7 @@ describe('IngredientsDetailComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
       
-      fixture = TestBed.createComponent(IngredientDetailComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
+      component.load();
   
       expect(ingredientService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
@@ -58,10 +65,6 @@ describe('IngredientsDetailComponent', () => {
 
   describe('deleteIngredient', () => {
     it('should open a validation modal to delete an ingredient', () => {
-      fixture = TestBed.createComponent(IngredientDetailComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-
       component.ingredient = new Ingredient({ name: 'name' });
 
       spyOn(validationService, 'setModal');
@@ -74,10 +77,6 @@ describe('IngredientsDetailComponent', () => {
 
   describe('deleteIngredientEvent', () => {
     it('should delete an ingredient', () => {
-      fixture = TestBed.createComponent(IngredientDetailComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-
       const router = TestBed.inject(Router);
       spyOn(router, 'navigate');
       
@@ -90,15 +89,21 @@ describe('IngredientsDetailComponent', () => {
     });
 
     it('should not try to delete an ingredient without an id', () => {
-      fixture = TestBed.createComponent(IngredientDetailComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-      
       spyOn(ingredientService, 'delete');
 
       component.deleteIngredientEvent(undefined);
 
       expect(ingredientService.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

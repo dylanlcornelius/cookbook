@@ -104,7 +104,7 @@ describe('RecipeHistoryService', () => {
 
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([new RecipeHistory({})]));
 
       service.get().subscribe(doc => {
         expect(doc).toBeDefined();

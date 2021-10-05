@@ -12,6 +12,7 @@ import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
+import { TutorialService } from '@tutorialService';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -21,6 +22,7 @@ describe('RecipeEditComponent', () => {
   let uomConversion: UOMConversion;
   let formBuilder: FormBuilder;
   let ingredientService: IngredientService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -51,6 +53,7 @@ describe('RecipeEditComponent', () => {
     uomConversion = TestBed.inject(UOMConversion);
     formBuilder = TestBed.inject(FormBuilder);
     ingredientService = TestBed.inject(IngredientService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -465,6 +468,16 @@ describe('RecipeEditComponent', () => {
         ratings: []
       }).getObject(), 'id');
       expect(router.navigate).toHaveBeenCalledWith(['/recipe/edit']);
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

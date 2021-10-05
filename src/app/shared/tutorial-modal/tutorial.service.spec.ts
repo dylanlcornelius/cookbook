@@ -75,6 +75,14 @@ describe('TutorialService', () => {
     });
   });
 
+  describe('sort', () => {
+    it('should sort two documents', () => {
+      const result = service.sort(new Tutorial({ order: 1 }), new Tutorial({ order: 2 }));
+
+      expect(result).toEqual(-1);
+    });
+  });
+
   describe('openTutorial', () => {
     it('should open the tutorial modal', () => {
       spyOn(tutorialModalService, 'setModal');
