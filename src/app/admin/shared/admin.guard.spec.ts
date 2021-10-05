@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { CurrentUserService } from '@currentUserService';
-import { User } from '@user';
+import { ROLE, User } from '@user';
 import { of } from 'rxjs';
 
 import { AdminGuard } from './admin.guard';
@@ -21,7 +21,7 @@ describe('AdminGuard', () => {
   });
 
   it('should not activate for non-admin users', inject([AdminGuard], (guard: AdminGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'pending' })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.PENDING })));
 
     guard.canActivateChild().subscribe(result => {
       expect(result).toBeFalse();
@@ -29,7 +29,7 @@ describe('AdminGuard', () => {
   }));
 
   it('should active when the user is an admin', inject([AdminGuard], (guard: AdminGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'admin' })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.ADMIN })));
 
     guard.canActivateChild().subscribe(result => {
       expect(result).toBeTrue();

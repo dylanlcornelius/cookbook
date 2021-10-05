@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { CurrentUserService } from '@currentUserService';
-import { User } from '@user';
+import { ROLE, User } from '@user';
 import { of } from 'rxjs';
 import { UserPendingComponent } from '../user-pending/user-pending.component';
 
@@ -24,7 +24,7 @@ describe('UserPendingGuard', () => {
   });
 
   it('should not activate for non-pending users', inject([UserPendingGuard], (guard: UserPendingGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'admin' })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.ADMIN })));
 
     guard.canActivateChild().subscribe(result => {
       expect(result).toBeTrue();
@@ -32,7 +32,7 @@ describe('UserPendingGuard', () => {
   }));
 
   it('should active when the user is pending', inject([UserPendingGuard], (guard: UserPendingGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'pending' })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.PENDING })));
 
     guard.canActivateChild().subscribe(result => {
       expect(result).toBeFalse();

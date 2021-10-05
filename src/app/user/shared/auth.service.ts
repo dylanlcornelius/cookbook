@@ -4,7 +4,7 @@ import { firebase } from '@firebase/app';
 import '@firebase/auth';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
-import { User } from '@user';
+import { ROLE, User } from '@user';
 import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { first } from 'rxjs/operators';
@@ -37,7 +37,7 @@ export class AuthService {
         if (!current) {
           current = new User({
             uid: user.uid,
-            role: 'pending'
+            role: ROLE.USER
           });
 
           current.id = this.userService.create(current);
