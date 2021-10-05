@@ -5,6 +5,8 @@ import { UOM, UOMConversion } from '@UOMConverson';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NumberService } from 'src/app/util/number.service';
+import { RouterModule } from '@angular/router';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UomTableComponent', () => {
   let component: UomTableComponent;
@@ -15,11 +17,15 @@ describe('UomTableComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterModule.forRoot([]),
         FormsModule,
         MatFormFieldModule,
       ],
       providers: [ UOMConversion ],
-      declarations: [ UomTableComponent ]
+      declarations: [ UomTableComponent ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
     })
     .compileComponents();
   }));

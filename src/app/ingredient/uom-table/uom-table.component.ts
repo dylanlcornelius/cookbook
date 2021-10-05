@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { TutorialService } from '@tutorialService';
 import { UOM, UOMConversion } from '@UOMConverson';
 import { NumberService } from 'src/app/util/number.service';
 
@@ -14,7 +15,8 @@ export class UomTableComponent {
 
   constructor(
     private numberService: NumberService,
-    private uomConversion: UOMConversion
+    private uomConversion: UOMConversion,
+    private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -39,4 +41,6 @@ export class UomTableComponent {
 
     return this.numberService.toFraction(result);
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

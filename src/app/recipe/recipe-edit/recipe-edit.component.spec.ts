@@ -60,7 +60,7 @@ describe('RecipeEditComponent', () => {
   describe('load', () => {
     it('should load recipes with data', () => {
       const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
+      route.params = of({ id: 'id' });
 
       const recipe = new Recipe({
         name: 'Title',
@@ -83,7 +83,7 @@ describe('RecipeEditComponent', () => {
         })
       ];
 
-      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
@@ -100,7 +100,7 @@ describe('RecipeEditComponent', () => {
 
     it('should load recipes without data', () => {
       const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
+      route.params = of({ id: 'id' });
 
       const recipe = new Recipe({
         ingredients: [{
@@ -112,7 +112,7 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })];
 
-      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
@@ -124,40 +124,6 @@ describe('RecipeEditComponent', () => {
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
-      expect(component.addIngredient).not.toHaveBeenCalled();
-    });
-
-    it('should reload recipes with data', () => {
-      const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
-
-      component.loading = false;
-
-      const recipe = new Recipe({
-        categories: [{}],
-        steps: [{}],
-        ingredients: [{
-          id: 'id'
-        }]
-      });
-      component.recipe = recipe;
-
-      const ingredients = [new Ingredient({
-        id: 'id'
-      })];
-
-      spyOn(recipeService, 'get').withArgs('testId').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
-      spyOn(component, 'addCategory');
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(ingredientService, 'buildRecipeIngredients');
-      spyOn(component, 'addIngredient');
-
-      component.load();
-
-      expect(recipeService.get).toHaveBeenCalledTimes(2);
-      expect(component.addCategory).not.toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -420,12 +386,11 @@ describe('RecipeEditComponent', () => {
 
   describe('submitForm', () => {
     it('should update a recipe', () => {
-      component.recipe = new Recipe({id: 'testId', author: '3', hasImage: true, meanRating: 0.33});
+      component.recipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });
-      const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
+      component.id = 'id';
 
       const router = TestBed.inject(Router);
 
@@ -443,7 +408,7 @@ describe('RecipeEditComponent', () => {
         hasImage: true,
         meanRating: 0.33,
         ratings: []
-      }).getObject(), 'testId');
+      }).getObject(), 'id');
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -453,7 +418,7 @@ describe('RecipeEditComponent', () => {
       const router = TestBed.inject(Router);
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
-      spyOn(recipeService, 'create').and.returnValue('testId');
+      spyOn(recipeService, 'create').and.returnValue('id');
       spyOn(router, 'navigate');
 
       component.submitForm(false);
@@ -476,12 +441,11 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should update a recipe and redirect to creating a new recipe', () => {
-      component.recipe = new Recipe({id: 'testId', author: '3', hasImage: true, meanRating: 0.33});
+      component.recipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });
-      const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {id: 'testId'};
+      component.id = 'id';
 
       const router = TestBed.inject(Router);
 
@@ -499,7 +463,7 @@ describe('RecipeEditComponent', () => {
         hasImage: true,
         meanRating: 0.33,
         ratings: []
-      }).getObject(), 'testId');
+      }).getObject(), 'id');
       expect(router.navigate).toHaveBeenCalledWith(['/recipe/edit']);
     });
   });

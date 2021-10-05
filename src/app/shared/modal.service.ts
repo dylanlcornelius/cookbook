@@ -3,12 +3,11 @@ import { BehaviorSubject } from 'rxjs';
 import { Notification } from '@notification';
 import { Validation } from '@validation';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
+import { TutorialModal } from '@tutorial';
 
 export abstract class Modal {}
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export abstract class ModalService {
   modal: BehaviorSubject<Modal>;
 
@@ -20,23 +19,22 @@ export abstract class ModalService {
   }
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NotificationService extends ModalService {
   modal = new BehaviorSubject<Notification>(undefined);
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ValidationService extends ModalService {
   modal = new BehaviorSubject<Validation>(undefined);
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RecipeIngredientModalService extends ModalService {
   modal = new BehaviorSubject<RecipeIngredientModal>(undefined);
+}
+
+@Injectable({ providedIn: 'root' })
+export class TutorialModalService extends ModalService {
+  modal = new BehaviorSubject<TutorialModal>(undefined);
 }

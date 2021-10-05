@@ -73,8 +73,9 @@ dt {
     display: none !important;
   }
 }
-
 .button-row {
+  display: flex;
+  gap: 10px;
   margin: 10px auto;
 }
 .button-row .row-button:first-child {
@@ -84,6 +85,11 @@ dt {
   display: contents !important;
   padding: 0 5%;
 }
+.highlighted-element {
+  outline: 3px solid red !important;
+  border-radius: 5px !important;
+}
+
 .mat-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
   transition: transform 100ms ease !important;
@@ -110,6 +116,9 @@ dt {
 }
 app-comment-list .mat-form-field-wrapper {
   padding: 0 !important;
+}
+app-admin-dashboard .mat-tab-label {
+  min-width: unset;
 }
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {

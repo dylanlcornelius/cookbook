@@ -11,6 +11,8 @@ import { UOM } from '@UOMConverson';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -41,8 +43,10 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     public route: ActivatedRoute,
+    private loadingService: LoadingService,
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
+    private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -65,27 +69,32 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   public load(): void {
-    if (this.route.snapshot.params['ingredient-id']) {
-      this.ingredientService.get(this.route.snapshot.params['ingredient-id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-        this.id = data.id;
-        this.ingredientsForm.patchValue({
-          name: data.name,
-          category: data.category,
-          amount: data.amount || '',
-          uom: data.uom || '',
-          calories: data.calories
+    this.route.params.subscribe(params => {
+      this.loading = this.loadingService.set(true);
+      this.id = params['id'];
+
+      if (this.id) {
+        this.ingredientService.get(this.id).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+          this.ingredientsForm.patchValue({
+            name: data.name,
+            category: data.category,
+            amount: data.amount || '',
+            uom: data.uom || '',
+            calories: data.calories
+          });
+          this.title = 'Edit an Ingredient';
+          this.loading = this.loadingService.set(false);
         });
-        this.title = 'Edit an Ingredient';
-        this.loading = false;
-      });
-    } else {
-      this.title = 'Add a new Ingredient';
-      this.loading = false;
-    }
+      } else {
+        this.id = undefined;
+        this.title = 'Add a new Ingredient';
+        this.loading = this.loadingService.set(false);
+      }
+    });
   }
 
   onFormSubmit(form: FormGroup, formDirective: FormGroupDirective): void {
-    if (this.route.snapshot.params['ingredient-id']) {
+    if (this.id) {
       this.ingredientService.update(form.value, this.id);
       this.router.navigate(['/ingredient/detail/', this.id]);
     } else {
@@ -100,4 +109,6 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     formDirective.resetForm();
     form.reset();
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

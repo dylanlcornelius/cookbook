@@ -4,9 +4,12 @@
 
 <div [hidden]="loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Add Recipe" color="primary" routerLink="/recipe/edit" class="row-button">
+    <a mat-mini-fab matTooltip="Add Recipe" color="primary" routerLink="/recipe/edit">
       <mat-icon>add</mat-icon>
     </a>
+    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
+      <mat-icon>help</mat-icon>
+    </button>
 
     <span *ngFor="let filters of filtersList" class="row-button">
       <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected === 0 ? '' : filters.numberOfSelected}}">{{filters.displayName}}</button>

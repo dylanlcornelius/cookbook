@@ -20,6 +20,8 @@ import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
+import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -35,6 +37,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   loading = true;
   title: string;
 
+  id: string;
   recipe: Recipe;
   recipesForm: FormGroup;
 
@@ -53,10 +56,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private router: Router,
     public route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
+    private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -92,78 +97,83 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     const ingredients$ = this.ingredientService.get();
     const recipes$ = this.recipeService.get();
 
-    if (this.route.snapshot.params['id']) {
-      const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
+    this.route.params.subscribe(params => {
+      this.loading = this.loadingService.set(true);
+      this.id = params['id'];
 
-      combineLatest([recipe$, ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes]) => {
-        if (this.loading) {
-          this.recipe = recipe;
-
-          recipe.categories.forEach(() => {
-            this.addCategory();
-          });
-          recipe.steps.forEach(() => {
-            this.addStep();
-          });
-
-          // figure out already added ingredients
-          this.addedIngredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
-          for (let i = 0; i < this.addedIngredients.length; i++) {
-            this.addIngredient(i);
+      if (this.id) {
+        const recipe$ = this.recipeService.get(this.id);
+  
+        combineLatest([recipe$, ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes]) => {
+          if (this.loading) {
+            this.recipe = recipe;
+  
+            recipe.categories.forEach(() => {
+              this.addCategory();
+            });
+            recipe.steps.forEach(() => {
+              this.addStep();
+            });
+  
+            // figure out already added ingredients
+            this.addedIngredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+            for (let i = 0; i < this.addedIngredients.length; i++) {
+              this.addIngredient(i);
+            }
+  
+            this.recipesForm.patchValue({
+              name: recipe.name,
+              link: recipe.link,
+              description: recipe.description,
+              time: recipe.time,
+              servings: recipe.servings,
+              calories: recipe.calories,
+              categories: recipe.categories,
+              steps: recipe.steps,
+              ingredients: this.addedIngredients,
+            });
           }
-
-          this.recipesForm.patchValue({
-            name: recipe.name,
-            link: recipe.link,
-            description: recipe.description,
-            time: recipe.time,
-            servings: recipe.servings,
-            calories: recipe.calories,
-            categories: recipe.categories,
-            steps: recipe.steps,
-            ingredients: this.addedIngredients,
-          });
-        }
-
-        // figure out available ingredients
-        this.allAvailableIngredients = [...ingredients, ...recipes]
-          .reduce((result, ingredient) => {
-            const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
-            if (!currentIngredient && ingredient.id !== this.recipe.id) {
-              result.push({
-                ...ingredient,
-                quantity: 0
-              });
-            }
-            return result;
-          }, [])
-          .sort((a, b) => a.name.localeCompare(b.name));
-        this.availableIngredients = this.allAvailableIngredients;
-
-        this.title = 'Edit a Recipe';
-        this.loading = false;
-      });
-    } else {
-      combineLatest([ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes]) => {
-        this.allAvailableIngredients = [...ingredients, ...recipes]
-          .reduce((result, ingredient) => {
-            const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
-            if (!currentIngredient) {
-              result.push({
-                ...ingredient,
-                quantity: 0
-              });
-            }
-            return result;
-          }, [])
-          .sort((a, b) => a.name.localeCompare(b.name));
-
-        this.availableIngredients = this.allAvailableIngredients;
-
-        this.title = 'Add a new Recipe';
-        this.loading = false;
-      });
-    }
+  
+          // figure out available ingredients
+          this.allAvailableIngredients = [...ingredients, ...recipes]
+            .reduce((result, ingredient) => {
+              const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
+              if (!currentIngredient && ingredient.id !== this.recipe.id) {
+                result.push({
+                  ...ingredient,
+                  quantity: 0
+                });
+              }
+              return result;
+            }, [])
+            .sort((a, b) => a.name.localeCompare(b.name));
+          this.availableIngredients = this.allAvailableIngredients;
+  
+          this.title = 'Edit a Recipe';
+          this.loading = this.loadingService.set(false);
+        });
+      } else {
+        combineLatest([ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes]) => {
+          this.allAvailableIngredients = [...ingredients, ...recipes]
+            .reduce((result, ingredient) => {
+              const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
+              if (!currentIngredient) {
+                result.push({
+                  ...ingredient,
+                  quantity: 0
+                });
+              }
+              return result;
+            }, [])
+            .sort((a, b) => a.name.localeCompare(b.name));
+  
+          this.availableIngredients = this.allAvailableIngredients;
+  
+          this.title = 'Add a new Recipe';
+          this.loading = this.loadingService.set(false);
+        });
+      }
+    });
   }
 
   initCategory(category: string): FormGroup {
@@ -292,7 +302,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       });
 
       let recipeId = this.recipe?.id;
-      if (this.route.snapshot.params['id']) {
+      if (this.id) {
         form.uid = this.recipe.uid;
         form.author = this.recipe.author;
         form.hasImage = this.recipe.hasImage;
@@ -314,4 +324,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

@@ -16,6 +16,7 @@ import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
+import { RouterModule } from '@angular/router';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -31,6 +32,7 @@ describe('ShoppingListComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterModule.forRoot([]),
         MatTableModule,
         FormsModule,
         ReactiveFormsModule

@@ -78,24 +78,40 @@ describe('RecipeHistoryService', () => {
   });
 
   describe('get', () => {
-    it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-
-      service.get('uid').subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-    });
-
     it('should get one document based on an id', () => {
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of({}));
+      spyOn(FirestoreService.prototype, 'get');
 
       service.get('uid', 'recipeId').subscribe(doc => {
         expect(doc).toBeDefined();
       });
 
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
+    });
+
+    it('should get all documents', () => {
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'get');
+
+      service.get('uid').subscribe(docs => {
+        expect(docs).toBeDefined();
+      });
+
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
+    });
+
+    it('should get all documents', () => {
+      spyOn(FirestoreService.prototype, 'getMany');
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+
+      service.get().subscribe(doc => {
+        expect(doc).toBeDefined();
+      });
+
+      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });
   });
 

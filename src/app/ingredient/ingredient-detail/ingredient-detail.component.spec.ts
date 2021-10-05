@@ -38,20 +38,22 @@ describe('IngredientsDetailComponent', () => {
     validationService = TestBed.inject(ValidationService);
   }));
 
-  it('should create', () => {
-    const route = TestBed.inject(ActivatedRoute);
-    route.snapshot.params = {id: 'testId'};
-
-    spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
-    spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
-    
-    fixture = TestBed.createComponent(IngredientDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(ingredientService.get).toHaveBeenCalled();
-    expect(numberService.toFormattedFraction).toHaveBeenCalled();
-    expect(component).toBeTruthy();
+  describe('load', () => {
+    it('should create', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ id: 'id' });
+  
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+      spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
+      
+      fixture = TestBed.createComponent(IngredientDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+  
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(numberService.toFormattedFraction).toHaveBeenCalled();
+      expect(component).toBeTruthy();
+    });
   });
 
   describe('deleteIngredient', () => {

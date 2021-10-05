@@ -50,16 +50,18 @@ describe('IngredientEditComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get an ingredient', () => {
-    const route = TestBed.inject(ActivatedRoute);
-    route.snapshot.params = {'ingredient-id': 'testId'};
+  describe('load', () => {
+    it('should get an ingredient', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ id: 'id' });
 
-    spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
-
-    fixture = TestBed.createComponent(IngredientEditComponent);
-    fixture.detectChanges();
-
-    expect(ingredientService.get).toHaveBeenCalled();
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+  
+      fixture = TestBed.createComponent(IngredientEditComponent);
+      fixture.detectChanges();
+  
+      expect(ingredientService.get).toHaveBeenCalled();
+    });
   });
 
   describe('onFormSubmit', () => {
@@ -70,9 +72,7 @@ describe('IngredientEditComponent', () => {
     });
 
     it('should update an ingredient', () => {
-      component.id = 'testId';
-      const route = TestBed.inject(ActivatedRoute);
-      route.snapshot.params = {'ingredient-id': 'testId'};
+      component.id = 'id';
       const router = TestBed.inject(Router);
 
       spyOn(ingredientService, 'update');
@@ -89,7 +89,7 @@ describe('IngredientEditComponent', () => {
     it('should create an ingredient', () => {
       const router = TestBed.inject(Router);
 
-      spyOn(ingredientService, 'create').and.returnValue('testId');
+      spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
@@ -104,7 +104,7 @@ describe('IngredientEditComponent', () => {
       const router = TestBed.inject(Router);
       component.isQuickView = true;
 
-      spyOn(ingredientService, 'create').and.returnValue('testId');
+      spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 

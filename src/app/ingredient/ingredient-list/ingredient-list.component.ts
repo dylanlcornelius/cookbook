@@ -11,6 +11,8 @@ import { User } from '@user';
 import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
 import { HouseholdService } from '@householdService';
+import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -35,11 +37,13 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
+    private tutorialService: TutorialService,
   ) {}
 
   ngOnInit() {
@@ -52,6 +56,8 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.loading = this.loadingService.set(true);
+    
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
@@ -85,7 +91,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.userIngredients = myIngredients;
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       });
     });
@@ -147,4 +153,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
       this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
     }
   }
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

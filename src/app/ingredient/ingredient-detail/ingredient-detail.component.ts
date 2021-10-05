@@ -8,6 +8,8 @@ import { SuccessNotification } from '@notification';
 import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
 import { Validation } from '@validation';
+import { LoadingService } from '@loadingService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -22,10 +24,12 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private loadingService: LoadingService,
     private ingredientService: IngredientService,
     private notificationService: NotificationService,
     private numberService: NumberService,
     private validationService: ValidationService,
+    private tutorialService: TutorialService,
   ) { }
 
   ngOnInit() {
@@ -38,10 +42,14 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.ingredientService.get(this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-      this.ingredient = data;
-      this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
-      this.loading = false;
+    this.route.params.subscribe(params => {
+      this.loading = this.loadingService.set(true);
+      
+      this.ingredientService.get(params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+        this.ingredient = data;
+        this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
+        this.loading = this.loadingService.set(false);
+      });
     });
   }
 
@@ -60,4 +68,6 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/ingredient/list']);
     }
   };
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

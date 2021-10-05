@@ -1,4 +1,4 @@
-export abstract class Model {
+export class Model {
     id: string;
     creationDate: Date;
 

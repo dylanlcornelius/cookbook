@@ -9,6 +9,7 @@ import { UserService } from '@userService';
 import { UtilService } from '@utilService';
 import { Router } from '@angular/router';
 import { AuthorFilter } from '@recipeFilterService';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-profile-list',
@@ -26,6 +27,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private loadingService: LoadingService,
     private recipeService: RecipeService,
     private imageService: ImageService,
     private userService: UserService,
@@ -45,6 +47,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.loading = this.loadingService.set(true);
     const users$ = this.userService.get();
     const recipes$ = this.recipeService.get();
 
@@ -80,7 +83,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(users);
       this.dataSource.paginator = this.paginator;
 
-      this.loading = false;
+      this.loading = this.loadingService.set(false);
     });
   }
 

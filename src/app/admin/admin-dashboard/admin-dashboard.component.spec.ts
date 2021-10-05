@@ -5,32 +5,22 @@ import { AdminDashboardComponent } from './admin-dashboard.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { ConfigService } from '@configService';
-import { UserService } from '@userService';
-import { RecipeService } from '@recipeService';
-import { IngredientService } from '@ingredientService';
-import { UserIngredientService } from '@userIngredientService';
-import { UserItemService } from '@userItemService';
 import { of } from 'rxjs';
-import { Config } from '@config';
 import { NotificationService, ValidationService } from '@modalService';
-import { NavigationService } from '@navigationService';
+import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
 
 describe('AdminDashboardComponent', () => {
   let component: AdminDashboardComponent;
   let fixture: ComponentFixture<AdminDashboardComponent>;
   let configService: ConfigService;
-  let navigationService: NavigationService;
-  let userService: UserService;
-  let recipeService: RecipeService;
-  let ingredientService: IngredientService;
-  let userIngredientService: UserIngredientService;
-  let userItemService: UserItemService;
   let validationService: ValidationService;
   let notificationService: NotificationService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterModule.forRoot([]),
         FormsModule,
         ReactiveFormsModule,
         MatTableModule
@@ -48,12 +38,6 @@ describe('AdminDashboardComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     configService = TestBed.inject(ConfigService);
-    navigationService = TestBed.inject(NavigationService);
-    userService = TestBed.inject(UserService);
-    recipeService = TestBed.inject(RecipeService);
-    ingredientService = TestBed.inject(IngredientService);
-    userIngredientService = TestBed.inject(UserIngredientService);
-    userItemService = TestBed.inject(UserItemService);
     validationService = TestBed.inject(ValidationService);
     notificationService = TestBed.inject(NotificationService);
   });
@@ -62,25 +46,30 @@ describe('AdminDashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('load', () => {
-    it('should load every collection', () => {
+  describe('tabChanged', () => {
+    it('should not load a collection', () => {
+      const event = new MatTabChangeEvent();
+      event.tab = new MatTab(null, null);
+      event.tab.textLabel = 'Admin Dashboard';
+
+      spyOn(configService, 'get');
+
+      component.tabChanged(event);
+
+      expect(configService.get).not.toHaveBeenCalled();
+    });
+
+    it('should load a collection', () => {
+      const event = new MatTabChangeEvent();
+      event.tab = new MatTab(null, null);
+      event.tab.textLabel = 'Configurations';
+
       spyOn(configService, 'get').and.returnValue(of([]));
-      spyOn(navigationService, 'get').and.returnValue(of([]));
-      spyOn(userService, 'get').and.returnValue(of([]));
-      spyOn(recipeService, 'get').and.returnValue(of([]));
-      spyOn(ingredientService, 'get').and.returnValue(of([]));
-      spyOn(userIngredientService, 'get').and.returnValue(of([]));
-      spyOn(userItemService, 'get').and.returnValue(of([]));
 
-      component.load();
+      component.tabChanged(event);
+      component.revertEvent();
 
-      expect(configService.get).toHaveBeenCalled();
-      expect(navigationService.get).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(userItemService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -98,112 +87,38 @@ describe('AdminDashboardComponent', () => {
     });
   });
 
-  describe('addConfig', () => {
-    it('should create a new config', () => {
+  describe('add', () => {
+    it('should create a document', () => {
       spyOn(configService, 'create');
 
-      component.addConfig();
+      component.add(component.contexts[0]);
 
       expect(configService.create).toHaveBeenCalled();
     });
   });
 
-  describe('removeConfig', () => {
-    it('should delete a config with a name', () => {
-      spyOn(validationService, 'setModal');
-
-      component.removeConfig('id', 'name');
-
-      expect(validationService.setModal).toHaveBeenCalled();
-    });
-
-    it('should delete a config without a name', () => {
+  describe('remove', () => {
+    it('should remove a user with a first or last name', () => {
       spyOn(validationService, 'setModal');
      
-      component.removeConfig('id', undefined);
-      
+      component.remove(component.contexts[0], 'id');
+
       expect(validationService.setModal).toHaveBeenCalled();
     });
   });
-  
-  describe('removeConfigEvent', () => {
-    it('should delete a config', () => {
+
+  describe('removeEvent', () => {
+    it('should remove a document', () => {
       spyOn(configService, 'delete');
 
-      component.removeConfigEvent('id');
+      component.removeEvent(component.contexts[0], 'id');
 
       expect(configService.delete).toHaveBeenCalled();
     });
   });
 
-  describe('addNav', () => {
-    it('should create a new navigation', () => {
-      spyOn(navigationService, 'create');
-
-      component.addNav();
-
-      expect(navigationService.create).toHaveBeenCalled();
-    });
-  });
-
-  describe('removeNav', () => {
-    it('should delete a navigation without a name', () => {
-      spyOn(validationService, 'setModal');
-     
-      component.removeNav('', '');
-
-      expect(validationService.setModal).toHaveBeenCalled();
-    });
-
-    it('should handle a navigation deletion', () => {
-      spyOn(validationService, 'setModal');
-     
-      component.removeNav('', 'name');
-
-      expect(validationService.setModal).toHaveBeenCalled();
-    });
-  });
-
-  describe('removeNavEvent', () => {
-    it('should create a new navigation', () => {
-      spyOn(navigationService, 'delete');
-
-      component.removeNavEvent('');
-
-      expect(navigationService.delete).toHaveBeenCalled();
-    });
-  });
-
-  describe('removeUser', () => {
-    it('should remove a user with a first or last name', () => {
-      spyOn(validationService, 'setModal');
-     
-      component.removeUser('id', undefined, 'last');
-
-      expect(validationService.setModal).toHaveBeenCalled();
-    });
-
-    it('should remove a user without a first or last name', () => {
-      spyOn(validationService, 'setModal');
-     
-      component.removeUser('id', undefined, undefined);
-
-      expect(validationService.setModal).toHaveBeenCalled();
-    });
-  });
-
-  describe('removeUserEvent', () => {
-    it('should remove a user', () => {
-      spyOn(userService, 'delete');
-
-      component.removeUserEvent('id');
-
-      expect(userService.delete).toHaveBeenCalled();
-    });
-  });
-
   describe('revert', () => {
-    it('should revert all changes', () => {
+    it('should revert all collection changes', () => {
       spyOn(validationService, 'setModal');
      
       component.revert();
@@ -213,48 +128,33 @@ describe('AdminDashboardComponent', () => {
   });
 
   describe('revertEvent', () => {
-    it('should revert all changes', () => {
-      component.originalConfigs = [new Config({})];
-
+    it('should revert all collection changes', () => {
       spyOn(notificationService, 'setModal');
 
       component.revertEvent();
 
       expect(notificationService.setModal).toHaveBeenCalled();
-      expect(component.configContext.dataSource).toEqual(component.originalConfigs);
     });
   });
 
   describe('save', () => {
-    it('should save all changes', () => {
+    it('should save all collection changes', () => {
       spyOn(validationService, 'setModal');
      
-      component.save();
+      component.save(component.contexts[0]);
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
   });
 
   describe('saveEvent', () => {
-    it('should save all changes', () => {
+    it('should save all collection changes', () => {
       spyOn(configService, 'update');
-      spyOn(navigationService, 'update');
-      spyOn(userService, 'update');
-      spyOn(recipeService, 'update');
-      spyOn(ingredientService, 'update');
-      spyOn(userIngredientService, 'update');
-      spyOn(userItemService, 'update');
       spyOn(notificationService, 'setModal');
 
-      component.saveEvent();
+      component.saveEvent(component.contexts[0]);
 
       expect(configService.update).toHaveBeenCalled();
-      expect(navigationService.update).toHaveBeenCalled();
-      expect(userService.update).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalled();
-      expect(ingredientService.update).toHaveBeenCalled();
-      expect(userIngredientService.update).toHaveBeenCalled();
-      expect(userItemService.update).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
     });
   });

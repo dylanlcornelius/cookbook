@@ -49,6 +49,11 @@
   </mat-card>
 
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Ingredients List" color="primary" routerLink="/ingredient/list"><mat-icon>list</mat-icon></a>
+    <a mat-mini-fab matTooltip="Ingredients List" color="primary" routerLink="/ingredient/list">
+      <mat-icon>list</mat-icon>
+    </a>
+    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
+      <mat-icon>help</mat-icon>
+    </button>
   </div>
 </div>

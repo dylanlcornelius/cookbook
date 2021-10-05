@@ -18,6 +18,8 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
+import { TutorialService } from '@tutorialService';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -46,6 +48,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private recipeService: RecipeService,
@@ -57,6 +60,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeIngredientService: RecipeIngredientService,
     private userIngredientService: UserIngredientService,
     private validationService: ValidationService,
+    private tutorialService: TutorialService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -74,14 +78,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
-      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
+      const household$ = this.householdService.get(this.user.uid);
+      const params$ = this.route.params;
+
+      combineLatest([household$, params$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([household, params]) => {
+        this.loading = this.loadingService.set(true);
         this.householdId = household.id;
 
-        const recipe$ = this.recipeService.get(this.route.snapshot.params['id']);
+        const recipe$ = this.recipeService.get(params['id']);
         const ingredients$ = this.ingredientService.get();
         const recipes$ = this.recipeService.get();
         const userIngredient$ = this.userIngredientService.get(this.householdId);
-        const recipeHistory$ = this.recipeHistoryService.get(this.householdId, this.route.snapshot.params['id']);
+        const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
 
         combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
           this.recipe = recipe;
@@ -123,7 +131,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.recipes = recipes;
           this.recipe.ingredients = this.ingredients;
           this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       });
     });
@@ -190,4 +198,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeHistoryService.set(householdId, recipeId, timesCooked);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   };
+
+  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }
