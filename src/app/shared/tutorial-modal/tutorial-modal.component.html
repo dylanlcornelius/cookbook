@@ -1,0 +1,20 @@
+<div *ngIf="params">
+  <div class="overlay"></div>
+  <div class="modal" [ngStyle]="{'top': top, 'left': left}" [@fadeInAnimation]>
+    {{tutorial?.text}}
+  
+    <div class="between">
+      <button mat-button (click)="previous()" [disabled]="tutorialIndex === 0">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+  
+      <button mat-button (click)="next()">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+  
+  <button mat-mini-fab color="primary" class="close-button" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CurrentUserService } from '@currentUserService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
+import { LoadingService } from '@loadingService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { User } from '@user';
@@ -31,6 +32,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
   householdInviteModalParams;
 
   constructor(
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private userService: UserService,
     private householdService: HouseholdService,
@@ -48,6 +50,8 @@ export class HouseholdComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.loading = this.loadingService.set(true);
+    
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
@@ -70,7 +74,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
         });
 
         this.myInvitesDataSource = new MatTableDataSource(invites.map(invite => this.initializeHouseholdNames(invite, users)));
-        this.loading = false;
+        this.loading = this.loadingService.set(false);
       });
     });
   }

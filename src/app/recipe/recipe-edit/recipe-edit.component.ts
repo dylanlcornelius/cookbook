@@ -20,6 +20,7 @@ import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
+import { LoadingService } from '@loadingService';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -54,6 +55,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private router: Router,
     public route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
@@ -94,6 +96,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     const recipes$ = this.recipeService.get();
 
     this.route.params.subscribe(params => {
+      this.loading = this.loadingService.set(true);
       this.id = params['id'];
 
       if (this.id) {
@@ -145,7 +148,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           this.availableIngredients = this.allAvailableIngredients;
   
           this.title = 'Edit a Recipe';
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       } else {
         combineLatest([ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes]) => {
@@ -165,7 +168,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           this.availableIngredients = this.allAvailableIngredients;
   
           this.title = 'Add a new Recipe';
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       }
     });

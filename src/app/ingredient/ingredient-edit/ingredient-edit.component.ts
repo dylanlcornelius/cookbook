@@ -11,6 +11,7 @@ import { UOM } from '@UOMConverson';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -41,6 +42,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     public route: ActivatedRoute,
+    private loadingService: LoadingService,
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
   ) {
@@ -66,6 +68,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
   public load(): void {
     this.route.params.subscribe(params => {
+      this.loading = this.loadingService.set(true);
       this.id = params['id'];
 
       if (this.id) {
@@ -78,12 +81,12 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
             calories: data.calories
           });
           this.title = 'Edit an Ingredient';
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       } else {
         this.id = undefined;
         this.title = 'Add a new Ingredient';
-        this.loading = false;
+        this.loading = this.loadingService.set(false);
       }
     });
   }

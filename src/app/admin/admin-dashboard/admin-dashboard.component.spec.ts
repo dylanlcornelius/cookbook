@@ -8,6 +8,7 @@ import { ConfigService } from '@configService';
 import { of } from 'rxjs';
 import { NotificationService, ValidationService } from '@modalService';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
 
 describe('AdminDashboardComponent', () => {
   let component: AdminDashboardComponent;
@@ -19,6 +20,7 @@ describe('AdminDashboardComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterModule.forRoot([]),
         FormsModule,
         ReactiveFormsModule,
         MatTableModule

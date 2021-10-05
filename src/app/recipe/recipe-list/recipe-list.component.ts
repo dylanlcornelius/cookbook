@@ -16,6 +16,7 @@ import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, Search
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -40,6 +41,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private loadingService: LoadingService,
     private recipeService: RecipeService,
     private recipeFilterService: RecipeFilterService,
     private userIngredientService: UserIngredientService,
@@ -65,6 +67,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.loading = this.loadingService.set(true);
+
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
@@ -164,7 +168,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           this.dataSource.filter = filters;
           this.dataSource.paginator = this.paginator;
 
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       });
     });

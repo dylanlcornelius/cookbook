@@ -18,6 +18,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -46,6 +47,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private recipeService: RecipeService,
@@ -78,7 +80,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       const params$ = this.route.params;
 
       combineLatest([household$, params$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([household, params]) => {
-        this.loading = true;
+        this.loading = this.loadingService.set(true);
         this.householdId = household.id;
 
         const recipe$ = this.recipeService.get(params['id']);
@@ -127,7 +129,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.recipes = recipes;
           this.recipe.ingredients = this.ingredients;
           this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       });
     });

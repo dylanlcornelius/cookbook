@@ -12,6 +12,7 @@ import { SuccessNotification } from '@notification';
 import { User } from '@user';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-shopping-list',
@@ -37,6 +38,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private userIngredientService: UserIngredientService,
@@ -56,6 +58,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.loading = this.loadingService.set(true);
+
     this.itemForm = this.formBuilder.group({
       'name': [null],
     });
@@ -94,7 +98,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
           this.itemsId = userItems.id;
           this.itemsDataSource = new MatTableDataSource(userItems.items);
-          this.loading = false;
+          this.loading = this.loadingService.set(false);
         });
       });
     });

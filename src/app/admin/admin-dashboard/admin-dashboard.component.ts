@@ -17,6 +17,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { CommentService } from '@commentService';
 import { HouseholdService } from '@householdService';
 import { RecipeHistoryService } from '@recipeHistoryService';
+import { TutorialService } from '@tutorialService';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -31,6 +32,7 @@ export class AdminDashboardComponent implements OnDestroy {
   constructor(
     private configService: ConfigService,
     private navigationService: NavigationService,
+    private tutorialService: TutorialService,
     private userService: UserService,
     private householdService: HouseholdService,
     private recipeService: RecipeService,
@@ -123,6 +125,15 @@ export class AdminDashboardComponent implements OnDestroy {
       'Navs',
       ['name', 'link', 'icon', 'order', 'subMenu', 'isNavOnly'],
       this.navigationService,
+      this.revert,
+      this.save,
+      this.remove,
+      this.add,
+    ),
+    new Context(
+      'Tutorials',
+      ['text', 'baseUrl', 'url', 'order', 'element', 'position'],
+      this.tutorialService,
       this.revert,
       this.save,
       this.remove,

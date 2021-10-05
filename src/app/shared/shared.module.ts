@@ -22,6 +22,8 @@ import { ModalComponent } from './modal/modal.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UOMConversion } from '@UOMConverson';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { TutorialModalComponent } from './tutorial-modal/tutorial-modal.component';
+import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     ValidationModalComponent,
     ModalComponent,
     ImageUploadComponent,
+    TutorialModalComponent,
+    TutorialComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +75,7 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     ValidationModalComponent,
     ModalComponent,
     ImageUploadComponent,
+    TutorialModalComponent,
   ],
   providers: [
     UOMConversion,

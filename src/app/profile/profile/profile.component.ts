@@ -21,6 +21,7 @@ import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeService } from '@recipeService';
 import { HouseholdService } from '@householdService';
+import { LoadingService } from '@loadingService';
 
 @Component({
   selector: 'app-profile',
@@ -57,6 +58,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private userService: UserService,
@@ -82,6 +84,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.loading = this.loadingService.set(true);
     const user$ = this.currentUserService.getCurrentUser();
     const users$ = this.userService.get();
 
@@ -109,7 +112,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
         }, () => {});
   
-        this.loading = false;
+        this.loading = this.loadingService.set(false);
   
         this.loadActions();
         this.loadHistory();
