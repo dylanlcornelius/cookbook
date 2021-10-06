@@ -91,7 +91,7 @@ describe('AdminDashboardComponent', () => {
     it('should create a document', () => {
       spyOn(configService, 'create');
 
-      component.add(component.contexts[0]);
+      component.contexts[0].add();
 
       expect(configService.create).toHaveBeenCalled();
     });
@@ -101,7 +101,7 @@ describe('AdminDashboardComponent', () => {
     it('should remove a user with a first or last name', () => {
       spyOn(validationService, 'setModal');
      
-      component.remove(component.contexts[0], 'id');
+      component.contexts[0].remove('id');
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -121,7 +121,7 @@ describe('AdminDashboardComponent', () => {
     it('should revert all collection changes', () => {
       spyOn(validationService, 'setModal');
      
-      component.revert();
+      component.contexts[0].revert();
 
       expect(validationService.setModal).toHaveBeenCalled();
     });
@@ -141,7 +141,7 @@ describe('AdminDashboardComponent', () => {
     it('should save all collection changes', () => {
       spyOn(validationService, 'setModal');
      
-      component.save(component.contexts[0]);
+      component.contexts[0].save();
 
       expect(validationService.setModal).toHaveBeenCalled();
     });

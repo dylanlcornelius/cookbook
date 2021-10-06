@@ -5,7 +5,7 @@
 <div *ngIf="!loading">
   <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onFormSubmit(ingredientsForm, formDirective)">
     <mat-form-field class="form-field">
-      <input matInput placeholder="Name*" formControlName="name" [errorStateMatcher]="matcher">
+      <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required>
       <mat-error>
         <span *ngIf="!ingredientsForm.get('name').valid && ingredientsForm.get('name').touched">Please enter Ingredient Name</span>
       </mat-error>
@@ -13,15 +13,15 @@
 
     <div class="container">
       <mat-form-field>
-        <input matInput placeholder="Amount*" formControlName="amount" [errorStateMatcher]="matcher">
+        <input matInput placeholder="Amount" formControlName="amount" [errorStateMatcher]="matcher" required>
         <mat-error>
           <span *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched">Please enter a valid number for Ingredient Amount</span>
         </mat-error>
       </mat-form-field>
     
       <mat-form-field>
-        <mat-label> Unit of Measurement* </mat-label>
-        <mat-select formControlName="uom">
+        <mat-label>Unit of Measurement</mat-label>
+        <mat-select formControlName="uom" required>
           <mat-option *ngFor="let uom of uoms" [value]="uom">
             {{uom}}
           </mat-option>

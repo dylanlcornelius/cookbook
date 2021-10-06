@@ -17,7 +17,7 @@
             <div class="container">
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
-                <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher"/>
+                <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher" required/>
                 <mat-error>
                   <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
                 </mat-error>
@@ -25,7 +25,7 @@
           
               <mat-form-field appearance="outline">
                 <mat-label>Last Name</mat-label>
-                <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher"/>
+                <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher" required/>
                 <mat-error>
                   <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
                 </mat-error>

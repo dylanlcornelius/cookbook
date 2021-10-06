@@ -1,0 +1,76 @@
+<h2>New User Setup</h2>
+
+<mat-vertical-stepper [linear]="true" (selectionChange)="submit()">
+  <mat-step [stepControl]="nameGroup" [editable]="true">
+    <ng-template matStepLabel>About You</ng-template>
+
+    <form class="container">
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="First Name" [formControl]="firstNameControl" [errorStateMatcher]="matcher" required/>
+        <mat-error>
+          <span *ngIf="!firstNameControl.valid && firstNameControl.touched">Please enter your first name</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput placeholder="Last Name" [formControl]="lastNameControl" [errorStateMatcher]="matcher" required/>
+        <mat-error>
+          <span *ngIf="!lastNameControl.valid && lastNameControl.touched">Please enter your last name</span>
+        </mat-error>
+      </mat-form-field>
+    </form>
+
+    <div class="stepper-button-row">
+      <button mat-button matStepperNext type="button">Next</button>
+    </div>
+  </mat-step>
+
+  <mat-step [editable]="true" [optional]="true">
+    <ng-template matStepLabel>Upload a Picture</ng-template>
+
+    <div class="image-button">
+      <app-image-upload [id]="user.id" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
+    </div>
+    <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
+    <mat-progress-bar class="image-progress" mode="determinate" [value]="userImageProgress" [hidden]="!userImageProgress"></mat-progress-bar>
+
+    <div class="stepper-button-row">
+      <button mat-button matStepperPrevious type="button">Back</button>
+      <button mat-button matStepperNext type="button">Next</button>
+    </div>
+  </mat-step>
+
+  <mat-step [editable]="true">
+    <ng-template matStepLabel>Choose a Theme</ng-template>
+
+    <form>
+      <mat-slide-toggle matInput [formControl]="themeControl" ngDefaultControl [checked]="themeControl.value" (ngModelChange)="submit()"></mat-slide-toggle>
+      <span *ngIf="!themeControl.value" class="theme-icon" matTooltip="Light Theme">
+        <mat-icon>brightness_5</mat-icon>
+      </span>
+      <span *ngIf="themeControl.value" class="theme-icon" matTooltip="Dark Theme">
+        <mat-icon>brightness_3</mat-icon>
+      </span>
+    </form>
+
+    <div class="stepper-button-row">
+      <button mat-button matStepperPrevious type="button">Back</button>
+      <button mat-button matStepperNext type="button">Next</button>
+    </div>
+  </mat-step>
+  
+  <mat-step [editable]="true">
+    <ng-template matStepLabel>Complete Setup</ng-template>
+
+    <div class="button-row">
+      <a mat-button color="primary" [routerLink]="['/home']" [replaceUrl]="true">Save</a>
+      <a mat-button color="accent" [routerLink]="['/tutorial']" [replaceUrl]="true">Save and Start Tutorial</a>
+    </div>
+
+    <div class="stepper-button-row">
+      <button mat-button matStepperPrevious type="button">Back</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

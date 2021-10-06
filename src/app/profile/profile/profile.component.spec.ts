@@ -20,6 +20,7 @@ import { Recipe } from '@recipe';
 import { RecipeHistory } from '@recipeHistory';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
+import { TutorialService } from '@tutorialService';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -32,6 +33,7 @@ describe('ProfileComponent', () => {
   let imageService: ImageService;
   let recipeService: RecipeService;
   let recipeHistoryService: RecipeHistoryService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -66,6 +68,7 @@ describe('ProfileComponent', () => {
     imageService = TestBed.inject(ImageService);
     recipeService = TestBed.inject(RecipeService);
     recipeHistoryService = TestBed.inject(RecipeHistoryService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -233,6 +236,16 @@ describe('ProfileComponent', () => {
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

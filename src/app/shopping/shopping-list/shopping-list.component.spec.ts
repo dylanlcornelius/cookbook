@@ -17,6 +17,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { RouterModule } from '@angular/router';
+import { TutorialService } from '@tutorialService';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -28,6 +29,7 @@ describe('ShoppingListComponent', () => {
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
   let validationService: ValidationService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -56,6 +58,7 @@ describe('ShoppingListComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
     validationService = TestBed.inject(ValidationService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -349,6 +352,16 @@ describe('ShoppingListComponent', () => {
       expect(userItemService.buyUserItem).toHaveBeenCalled();
       expect(component.applyFilter).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

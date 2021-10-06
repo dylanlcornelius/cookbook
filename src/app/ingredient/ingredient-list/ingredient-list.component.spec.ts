@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { NumberService } from 'src/app/util/number.service';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
+import { TutorialService } from '@tutorialService';
 
 describe('IngredientListComponent', () => {
   let component: IngredientListComponent;
@@ -23,6 +24,7 @@ describe('IngredientListComponent', () => {
   let userIngredientService: UserIngredientService;
   let ingredientService: IngredientService;
   let numberService: NumberService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -47,6 +49,7 @@ describe('IngredientListComponent', () => {
     userIngredientService = TestBed.inject(UserIngredientService);
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -194,6 +197,16 @@ describe('IngredientListComponent', () => {
       component.addIngredient('id');
 
       expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

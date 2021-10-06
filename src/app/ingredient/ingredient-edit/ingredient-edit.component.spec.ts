@@ -11,12 +11,14 @@ import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
 import { of } from 'rxjs';
+import { TutorialService } from '@tutorialService';
 
 describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
   let fixture: ComponentFixture<IngredientEditComponent>;
   let ingredientService: IngredientService;
   let formBuilder: FormBuilder;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -44,6 +46,7 @@ describe('IngredientEditComponent', () => {
     fixture.detectChanges();
     ingredientService = TestBed.inject(IngredientService);
     formBuilder = TestBed.inject(FormBuilder);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -117,6 +120,16 @@ describe('IngredientEditComponent', () => {
 
     afterEach(() => {
       expect(formDirective.resetForm).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

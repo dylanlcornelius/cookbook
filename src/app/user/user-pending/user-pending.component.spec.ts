@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs/internal/observable/of';
 import { AuthService } from '../shared/auth.service';
-import { User } from '@user';
+import { ROLE, User } from '@user';
 import { HomeComponent } from 'src/app/home/home.component';
 
 import { UserPendingComponent } from './user-pending.component';
@@ -38,7 +38,7 @@ describe('UserPendingComponent', () => {
   it('should redirect a pending user', () => {
     const currentUserService = TestBed.inject(CurrentUserService);
 
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'pending'})));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: ROLE.PENDING})));
 
     fixture = TestBed.createComponent(UserPendingComponent);
     component = fixture.componentInstance;
@@ -50,7 +50,7 @@ describe('UserPendingComponent', () => {
   it('should not redirect a pending user', () => {
     const currentUserService = TestBed.inject(CurrentUserService);
 
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: 'admin'})));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: ROLE.ADMIN})));
 
     fixture = TestBed.createComponent(UserPendingComponent);
     component = fixture.componentInstance;

@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './user/login/login.component';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
 import { TutorialComponent } from './shared/tutorial-modal/tutorial/tutorial.component';
+import { NewUserComponent } from './user/new-user/new-user.component';
 
 import { LoginGuard } from './user/shared/login.guard';
 import { UserPendingGuard } from './user/shared/user-pending.guard';
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
-  {path: 'tutorial', component: TutorialComponent},
+  {path: 'new-user', component: NewUserComponent, canActivate: [LoginGuard]},
+  {path: 'tutorial', component: TutorialComponent, canActivate: [LoginGuard]},
   {path: 'recipe', loadChildren: () => import('./recipe/recipe.module').then(m => m.RecipeModule), canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'ingredient', loadChildren: () => import ('./ingredient/ingredient.module').then(m => m.IngredientModule), canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'shopping', loadChildren: () => import('./shopping/shopping.module').then(m => m.ShoppingModule), canActivateChild: [LoginGuard, UserPendingGuard]},

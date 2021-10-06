@@ -22,6 +22,7 @@ import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
+import { TutorialService } from '@tutorialService';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -37,6 +38,7 @@ describe('RecipeDetailComponent', () => {
   let userIngredientService: UserIngredientService;
   let recipeIngredientService: RecipeIngredientService;
   let validationService: ValidationService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -71,6 +73,7 @@ describe('RecipeDetailComponent', () => {
     userIngredientService = TestBed.inject(UserIngredientService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     validationService = TestBed.inject(ValidationService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -265,6 +268,16 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
+  describe('changeStatus', () => {
+    it('should change a recipe status', () => {
+      spyOn(recipeService, 'changeStatus');
+
+      component.changeStatus();
+
+      expect(recipeService.changeStatus).toHaveBeenCalled();
+    });
+  });
+
   describe('addIngredients', () => {
     it('should add ingredients', () => {
       spyOn(recipeIngredientService, 'addIngredients');
@@ -314,6 +327,16 @@ describe('RecipeDetailComponent', () => {
 
       expect(recipeHistoryService.set).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

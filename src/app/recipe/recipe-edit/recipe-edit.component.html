@@ -6,7 +6,7 @@
   <form [formGroup]="recipesForm">
     <ng-template #recipeStep>
       <mat-form-field class="form-field">
-        <input matInput placeholder="Name*" formControlName="name" [errorStateMatcher]="matcher"/>
+        <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required/>
         <mat-error>
           <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched && !recipesForm.get('name').errors?.wrongCase">Please enter Recipe Name</span>
           <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched && recipesForm.get('name').errors?.wrongCase">Recipe Name is not in title case: {{recipesForm.get('name').errors?.wrongCase}}</span>

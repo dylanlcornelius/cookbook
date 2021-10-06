@@ -20,6 +20,7 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { UtilService } from '@utilService';
 import { Household } from '@household';
+import { TutorialService } from '@tutorialService';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -33,6 +34,7 @@ describe('RecipeListComponent', () => {
   let imageService: ImageService;
   let recipeIngredientService: RecipeIngredientService;
   let utilService: UtilService;
+  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -72,6 +74,7 @@ describe('RecipeListComponent', () => {
     imageService = TestBed.inject(ImageService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     utilService = TestBed.inject(UtilService);
+    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -410,6 +413,16 @@ describe('RecipeListComponent', () => {
     });
   });
 
+  describe('changeStatus', () => {
+    it('should change recipe status', () => {
+      spyOn(recipeService, 'changeStatus');
+
+      component.changeStatus(new Recipe({}));
+
+      expect(recipeService.changeStatus).toHaveBeenCalled();
+    });
+  });
+
   describe('addIngredients', () => {
     it('should add ingredients', () => {
       spyOn(component, 'findRecipe').and.returnValue(new Recipe({}));
@@ -443,6 +456,16 @@ describe('RecipeListComponent', () => {
       component.onRate(1, new Recipe({}));
 
       expect(recipeService.rateRecipe).toHaveBeenCalled();
+    });
+  });
+
+  describe('openTutorial', () => {
+    it('should open the tutorial', () => {
+      spyOn(tutorialService, 'openTutorial');
+
+      component.openTutorial();
+
+      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });
