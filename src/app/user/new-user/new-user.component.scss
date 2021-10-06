@@ -1,0 +1,20 @@
+.stepper-button-row {
+  float: right;
+}
+.image-button {
+  position: relative;
+  height: 36px;
+  width: 36px;
+}
+img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: scale-down;
+  box-sizing: border-box;
+}
+.theme-icon {
+  margin-left: 20px;
+}
+.theme-icon .mat-icon {
+  vertical-align: bottom;
+}

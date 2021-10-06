@@ -18,6 +18,7 @@ export class UserService extends FirestoreService {
 
   get(uid: string): Observable<User>;
   get(): Observable<User[]>;
+  get(uid?: string): Observable<User | User[]>; // type of spyOn
   get(uid?: string): Observable<User | User[]> {
     return new Observable(observer => {
       if (uid) {
