@@ -63,6 +63,7 @@ export class Recipe extends Model {
 export type RecipeObject = Omit<Recipe, 'id' | 'count' | 'image' | 'amount' | 'uom' | 'hasAuthorPermission'>;
 
 export enum RECIPE_STATUS {
-    PUBLISHED = 'Published',
-    PRIVATE = 'Private',
+    PUBLISHED = 'published',
+    PRIVATE = 'private',
+    BLUEPRINT = 'blueprint',
 }

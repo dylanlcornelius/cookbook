@@ -14,14 +14,16 @@ import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '@ingredientService';
 import { UOM, UOMConversion } from '@UOMConverson';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
+import { StepperOrientation } from '@angular/material/stepper';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -51,11 +53,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   matcher = new ErrorMatcher();
   selectable;
+  stepperOrientation: Observable<StepperOrientation>;
 
   constructor(
     private router: Router,
     public route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private breakpointObserver: BreakpointObserver,
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
@@ -70,6 +74,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.init();
 
     this.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.init());
+
+    this.stepperOrientation = this.breakpointObserver.observe('(min-width: 768px').pipe(map(({ matches }) => matches ? 'horizontal' : 'vertical'));
   }
 
   ngOnDestroy() {

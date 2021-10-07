@@ -141,7 +141,7 @@
   </form>
 
 
-  <mat-horizontal-stepper class="desktop" #stepper>
+  <mat-stepper [orientation]="(stepperOrientation | async)!">
     <mat-step [editable]="true">
       <ng-template matStepLabel>Information</ng-template>
 
@@ -178,46 +178,7 @@
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
       </div>
     </mat-step>
-  </mat-horizontal-stepper>
-
-  <mat-vertical-stepper class="mobile" #stepper>
-    <mat-step [editable]="true">
-      <ng-template matStepLabel>Information</ng-template>
-
-      <ng-container *ngTemplateOutlet="recipeStep"></ng-container>
-
-      <div class="stepper-button-row">
-        <button mat-button matStepperNext type="button">Next</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
-      </div>
-    </mat-step>
-    
-    <mat-step [editable]="true">
-      <ng-template matStepLabel>Steps</ng-template>
-
-      <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
-
-      <div class="stepper-button-row">
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button mat-button matStepperNext type="button">Next</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
-      </div>
-    </mat-step>
-
-    <mat-step [editable]="true">
-      <ng-template matStepLabel>Ingredients</ng-template>
-
-      <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
-
-      <div class="stepper-button-row">
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
-      </div>
-    </mat-step>
-  </mat-vertical-stepper>
+  </mat-stepper>
 
   <div class="button-row">
     <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="id">

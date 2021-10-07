@@ -26,7 +26,10 @@
       <mat-card-subtitle>
         <span>{{recipe.description}}</span>
         <mat-card-actions>
-          <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">{{recipe.status}}</button>
+          <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
+            <span *ngIf="recipe.status !== 'private'">Published</span>
+            <span *ngIf="recipe.status === 'private'">Private</span>
+          </button>
           <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
           <button mat-button color="warn" (click)="removeIngredients()">
             <span>Cook</span>
