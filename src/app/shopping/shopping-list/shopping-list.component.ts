@@ -129,19 +129,19 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addIngredientToPantry(id: string): void {
-    this.applyFilter();
     const isCompleted = this.ingredientsDataSource.data.filter(x => x.cartQuantity > 0).length === 1;
     const data = this.ingredientsDataSource.data.find(x => x.id === id);
     if (Number(data.cartQuantity > 0)) {
       data.pantryQuantity = Number(data.pantryQuantity) + Number(data.cartQuantity);
-      data.cartQuantity = 0;
-      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.id);
-      this.userIngredientService.buyUserIngredient(1, isCompleted);
-      this.applyFilter();
-      this.notificationService.setModal(new SuccessNotification('Ingredient added!'));
-      if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0) {
-        this.isCompleted = true;
-      }
+    }
+
+    data.cartQuantity = 0;
+    this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.id);
+    this.userIngredientService.buyUserIngredient(1, isCompleted);
+    this.applyFilter();
+    this.notificationService.setModal(new SuccessNotification('Ingredient added!'));
+    if (this.ingredientsDataSource.filteredData.length === 0 && this.itemsDataSource.data.length === 0) {
+      this.isCompleted = true;
     }
   }
 

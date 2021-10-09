@@ -219,7 +219,7 @@ describe('ShoppingListComponent', () => {
 
       component.addIngredientToPantry('id');
 
-      expect(component.applyFilter).toHaveBeenCalledTimes(2);
+      expect(component.applyFilter).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
@@ -237,15 +237,15 @@ describe('ShoppingListComponent', () => {
 
       component.addIngredientToPantry('id');
 
-      expect(component.applyFilter).toHaveBeenCalledTimes(2);
+      expect(component.applyFilter).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.isCompleted).toBeTrue();
     });
 
-    it('should not buy an ingredient', () => {
-      component.ingredientsDataSource = new MatTableDataSource([{id: 'id'}]);
+    it('should buy an ingredient with an invalid cart quantity', () => {
+      component.ingredientsDataSource = new MatTableDataSource([{ id: 'id', cartQuantity: NaN }]);
       component.itemsDataSource = new MatTableDataSource([]);
 
       spyOn(component, 'applyFilter');
@@ -255,10 +255,10 @@ describe('ShoppingListComponent', () => {
 
       component.addIngredientToPantry('id');
 
-      expect(component.applyFilter).toHaveBeenCalledTimes(1);
-      expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
-      expect(userIngredientService.buyUserIngredient).not.toHaveBeenCalled();
-      expect(notificationService.setModal).not.toHaveBeenCalled();
+      expect(component.applyFilter).toHaveBeenCalled();
+      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 
