@@ -25,6 +25,7 @@
     "@angular/service-worker": "^12.2.0",
     "@swimlane/ngx-charts": "^17.0.1",
     "chart.js": "^2.9.4",
+    "compressorjs": "^1.1.1",
     "core-js": "^3.8.3",
     "firebase": "^8.4.1",
     "jquery": "^3.5.1",

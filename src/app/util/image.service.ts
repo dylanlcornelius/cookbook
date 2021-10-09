@@ -24,7 +24,7 @@ export class ImageService {
     }, () => {});
   }
 
-  upload(path: string, file: File): Observable<number | string | void> {
+  upload(path: string, file: File | Blob): Observable<number | string | void> {
     const uploadTask = this.ref?.child(path).put(file, { cacheControl: 'public,max-age=31557600' });
 
     return new Observable(observer => {

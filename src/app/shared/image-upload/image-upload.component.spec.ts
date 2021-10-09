@@ -43,26 +43,22 @@ describe('ImageUploadComponent', () => {
   });
 
   describe('readFile', () => {
-    it('should not upload a blank url', () => {
+    it('should not compress a file', () => {
       spyOn(imageService, 'upload');
-      spyOn(component, 'updateImage');
-      spyOn(notificationService, 'setModal');
 
       component.readFile({});
 
       expect(imageService.upload).not.toHaveBeenCalled();
-      expect(component.updateImage).not.toHaveBeenCalled();
-      expect(notificationService.setModal).not.toHaveBeenCalled();
-      expect(component.image).toBeUndefined();
-      expect(component.progress).toBeUndefined();
     });
+  });
 
+  describe('readFileEvent', () => {
     it('should upload a file and return progress', () => {
       spyOn(imageService, 'upload').and.returnValue(of(1));
       spyOn(component, 'updateImage');
       spyOn(notificationService, 'setModal');
 
-      component.readFile({target: {files: [{}]}});
+      component.readFileEvent(new Blob());
 
       expect(imageService.upload).toHaveBeenCalled();
       expect(component.updateImage).not.toHaveBeenCalled();
@@ -76,7 +72,7 @@ describe('ImageUploadComponent', () => {
       spyOn(component, 'updateImage');
       spyOn(notificationService, 'setModal');
 
-      component.readFile({target: {files: [{}]}});
+      component.readFileEvent(new Blob());
 
       expect(imageService.upload).toHaveBeenCalled();
       expect(component.updateImage).toHaveBeenCalled();

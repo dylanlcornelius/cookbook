@@ -42,7 +42,7 @@
         </mat-card-subtitle>
       </mat-card-header>
 
-      <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt=""/>
+      <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt="" loading="lazy"/>
 
       <mat-card-actions (click)="$event.stopPropagation()">
           <button mat-button color="accent" (click)="changeStatus(recipe)" *ngIf="recipe.hasAuthorPermission">{{recipe.status}}</button>
