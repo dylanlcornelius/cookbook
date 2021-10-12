@@ -4,7 +4,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { UOMConversion } from '@UOMConverson';
 import { RecipeService } from '@recipeService';
-import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter, SearchFilter } from '@recipeFilterService';
+import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter, SearchFilter, StatusFilter } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { IngredientService } from '@ingredientService';
@@ -12,7 +12,7 @@ import { ImageService } from '@imageService';
 import { User } from '@user';
 
 import { RecipeListComponent } from './recipe-list.component';
-import { Recipe } from '@recipe';
+import { Recipe, RECIPE_STATUS } from '@recipe';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
@@ -21,10 +21,12 @@ import { HouseholdService } from '@householdService';
 import { UtilService } from '@utilService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
   let fixture: ComponentFixture<RecipeListComponent>;
+  let breakpointObserver: BreakpointObserver;
   let currentUserService: CurrentUserService;
   let householdService: HouseholdService;
   let recipeService: RecipeService;
@@ -65,6 +67,7 @@ describe('RecipeListComponent', () => {
     fixture = TestBed.createComponent(RecipeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    breakpointObserver = TestBed.inject(BreakpointObserver);
     currentUserService = TestBed.inject(CurrentUserService);
     householdService = TestBed.inject(HouseholdService);
     recipeService = TestBed.inject(RecipeService);
@@ -94,6 +97,7 @@ describe('RecipeListComponent', () => {
           {
             category: 'category'
           }],
+          status: RECIPE_STATUS.PUBLISHED,
           author: 'author'
         }),
         new Recipe({})
@@ -115,7 +119,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search')];
+      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED)];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
@@ -124,6 +128,7 @@ describe('RecipeListComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(component, 'setSelectedFilterCount');
 
       component.load();
@@ -137,6 +142,7 @@ describe('RecipeListComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
+      expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
 
@@ -180,6 +186,7 @@ describe('RecipeListComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(component, 'setSelectedFilterCount');
 
       component.load();
@@ -193,6 +200,7 @@ describe('RecipeListComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
+      expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
 
@@ -229,6 +237,7 @@ describe('RecipeListComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
       spyOn(component, 'setSelectedFilterCount');
 
       component.load();
@@ -242,20 +251,27 @@ describe('RecipeListComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
+      expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
     }));
   });
 
   describe('setSelectedFilterCount', () => {
     it('should count the number of checked filters and set the count', () => {
-      component.filtersList = [
-        {
-          values: [
-            {checked: true},
-            {checked: false}
-          ]
-        }
-      ];
+      component.filtersList = [{ values: [{ checked: true }, { checked: false }] }];
+
+      component.setSelectedFilterCount();
+
+      expect(component.filtersList[0].numberOfSelected).toEqual(1);
+    });
+
+    it('should count the number of checked filters and set the count', () => {
+      component.filtersList = [{
+        icon: 'icon',
+        values: [
+          { values: [{ checked: true }, { checked: false }] }
+        ]
+      }];
 
       component.setSelectedFilterCount();
 

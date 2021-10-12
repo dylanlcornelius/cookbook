@@ -75,7 +75,7 @@ dt {
 }
 .button-row {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   margin: 10px auto;
 }
 .button-row .row-button:first-child {

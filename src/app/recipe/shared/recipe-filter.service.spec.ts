@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter } from '@recipeFilterService';
-import { Recipe } from '@recipe';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, StatusFilter } from '@recipeFilterService';
+import { Recipe, RECIPE_STATUS } from '@recipe';
 
 describe('RecipeFilterService', () => {
   let service: RecipeFilterService;
@@ -35,7 +35,7 @@ describe('RecipeFilterService', () => {
     });
 
     it('should filter by category', () => {
-      const result = service.recipeFilterPredicate(new Recipe({categories: [{category: 'category-test'}]}), [new CategoryFilter('test')]);
+      const result = service.recipeFilterPredicate(new Recipe({categories: [{category: 'test'}]}), [new CategoryFilter('test')]);
 
       expect(result).toBeTrue();
     });
@@ -52,8 +52,23 @@ describe('RecipeFilterService', () => {
       expect(result).toBeTrue();
     });
 
+    it('should filter by status', () => {
+      const result = service.recipeFilterPredicate(new Recipe({ status: RECIPE_STATUS.PUBLISHED }), [new StatusFilter(RECIPE_STATUS.PUBLISHED)]);
+
+      expect(result).toBeTrue();
+    });
+
+
     it('should filter by search', () => {
-      const result = service.recipeFilterPredicate(new Recipe({steps: [{step: 'thing'}], ingredients: [{name: 'ingredient'}], author: 'testy'}), [new SearchFilter('test')]);
+      const result = service.recipeFilterPredicate(
+        new Recipe({
+          steps: [{step: 'thing'}],
+          categories: [{ name: 'category' }],
+          ingredients: [{name: 'ingredient'}],
+          author: 'testy'}
+        ),
+        [new SearchFilter('test')]
+      );
 
       expect(result).toBeTrue();
     });

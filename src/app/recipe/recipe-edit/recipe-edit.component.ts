@@ -71,11 +71,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.init();
-
-    this.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.init());
-
-    this.stepperOrientation = this.breakpointObserver.observe('(min-width: 768px').pipe(map(({ matches }) => matches ? 'horizontal' : 'vertical'));
+    this.load();
   }
 
   ngOnDestroy() {
@@ -83,29 +79,27 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  init(): void {
-    this.recipesForm = this.formBuilder.group({
-      name: [null, [Validators.required, TitleCaseValidator()]],
-      link: [null],
-      description: [null],
-      time: [''],
-      servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      categories: this.formBuilder.array([]),
-      steps: this.formBuilder.array([]),
-      ingredients: this.formBuilder.array([])
-    });
-
-    this.load();
-  }
-
   load(): void {
+    this.stepperOrientation = this.breakpointObserver.observe('(min-width: 768px)').pipe(map(({ matches }) => matches ? 'horizontal' : 'vertical'));
+
     const ingredients$ = this.ingredientService.get();
     const recipes$ = this.recipeService.get();
 
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
       this.id = params['id'];
+      this.recipesForm = this.formBuilder.group({
+        name: [null, [Validators.required, TitleCaseValidator()]],
+        link: [null],
+        description: [null],
+        time: [''],
+        servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+        calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+        categories: this.formBuilder.array([]),
+        steps: this.formBuilder.array([]),
+        ingredients: this.formBuilder.array([])
+      });
+
 
       if (this.id) {
         const recipe$ = this.recipeService.get(this.id);
