@@ -12,12 +12,13 @@ import { takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter } from '@recipeFilterService';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter, StatusFilter } from '@recipeFilterService';
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-recipe-list',
@@ -42,6 +43,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private breakpointObserver: BreakpointObserver,
     private loadingService: LoadingService,
     private recipeService: RecipeService,
     private recipeFilterService: RecipeFilterService,
@@ -133,6 +135,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
           const categories = [];
           const authors = [];
+          const statuses = [];
           this.recipes.forEach(recipe => {
             recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
             this.imageService.download(recipe).then(url => {
@@ -152,6 +155,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
               const checked = filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !== undefined;
               authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
             }
+
+            if (statuses.find(s => s.name === recipe.status) === undefined) {
+              const checked = filters.find(f => f.type === FILTER_TYPE.STATUS && f.value === recipe.status) !== undefined;
+              statuses.push({ displayName: recipe.status.replace(/\b\w/g, l => l.toUpperCase()), name: recipe.status, checked: checked, filter: new StatusFilter(recipe.status) });
+            }
           });
           const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
           this.searchFilter = searchFilter ? searchFilter.value : '';
@@ -161,16 +169,34 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
           authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
           categories.sort(({ name: a }, { name: b }) => a.localeCompare(b));
-          this.filtersList = [
-            { displayName: 'Authors', name: 'author', values: authors },
-            { displayName: 'Categories', name: 'categories', values: categories },
-            { displayName: 'Ratings', name: 'ratings', values: ratings }
-          ];
-          this.setSelectedFilterCount();
-          this.dataSource.filter = filters;
-          this.dataSource.paginator = this.paginator;
+          statuses.sort(({ name: a }, { name: b }) => a.localeCompare(b));
 
-          this.loading = this.loadingService.set(false);
+          this.breakpointObserver.observe('(min-width: 768px)').pipe(takeUntil(this.unsubscribe$)).subscribe(({ matches }) => {
+            if (matches) {
+              this.filtersList = [
+                { displayName: 'Authors', name: 'author', values: authors },
+                { displayName: 'Categories', name: 'categories', values: categories },
+                { displayName: 'Ratings', name: 'ratings', values: ratings },
+                { displayName: 'Statuses', name: 'statuses', values: statuses },
+              ];
+            } else {
+              this.filtersList = [
+                { displayName: 'Categories', name: 'categories', values: categories },
+                {
+                  icon: 'more_vert',
+                  values: [
+                    { displayName: 'Authors', name: 'author', values: authors },
+                    { displayName: 'Ratings', name: 'ratings', values: ratings },
+                    { displayName: 'Statuses', name: 'statuses', values: statuses },
+                  ]
+                }
+              ];
+            }
+            this.setSelectedFilterCount();
+            this.dataSource.filter = this.recipeFilterService.selectedFilters;
+            this.dataSource.paginator = this.paginator;
+            this.loading = this.loadingService.set(false);
+          });
         });
       });
     });
@@ -179,11 +205,21 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   setSelectedFilterCount(): void {
     this.filtersList.forEach(filterList => {
       let i = 0;
-      filterList.values.forEach(filter => {
-        if (filter.checked) {
-          i++;
-        }
-      });
+      if (!filterList.icon) {
+        filterList.values.forEach(filter => {
+          if (filter.checked) {
+            i++;
+          }
+        });
+      } else {
+        filterList.values.forEach(subFilterList => {
+          subFilterList.values.forEach(subFilter => {
+            if (subFilter.checked) {
+              i++;
+            }
+          });
+        });
+      }
       filterList.numberOfSelected = i;
     });
   }

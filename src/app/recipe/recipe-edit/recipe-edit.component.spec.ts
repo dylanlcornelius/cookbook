@@ -13,10 +13,16 @@ import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { TutorialService } from '@tutorialService';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
   let fixture: ComponentFixture<RecipeEditComponent>;
+  let breakpointObserver: BreakpointObserver;
   let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
   let uomConversion: UOMConversion;
@@ -31,7 +37,11 @@ describe('RecipeEditComponent', () => {
           { path: 'recipe/detail/:id', component: RecipeDetailComponent }
         ]),
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        DragDropModule,
+        MatInputModule,
+        MatChipsModule,
+        BrowserAnimationsModule,
       ],
       providers: [
         UOMConversion
@@ -48,6 +58,7 @@ describe('RecipeEditComponent', () => {
     fixture = TestBed.createComponent(RecipeEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    breakpointObserver = TestBed.inject(BreakpointObserver);
     currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
     uomConversion = TestBed.inject(UOMConversion);
@@ -86,6 +97,7 @@ describe('RecipeEditComponent', () => {
         })
       ];
 
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
@@ -93,7 +105,9 @@ describe('RecipeEditComponent', () => {
       spyOn(component, 'addIngredient');
 
       component.load();
+      fixture.detectChanges();
 
+      expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
@@ -115,6 +129,7 @@ describe('RecipeEditComponent', () => {
         id: 'id'
       })];
 
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
@@ -122,7 +137,9 @@ describe('RecipeEditComponent', () => {
       spyOn(component, 'addIngredient');
 
       component.load();
+      fixture.detectChanges();
 
+      expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
@@ -145,6 +162,7 @@ describe('RecipeEditComponent', () => {
         })
       ];
 
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
@@ -152,7 +170,9 @@ describe('RecipeEditComponent', () => {
       spyOn(component, 'addIngredient');
 
       component.load();
+      fixture.detectChanges();
 
+      expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalledTimes(1);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();

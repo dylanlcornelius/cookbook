@@ -12,14 +12,36 @@
     </button>
 
     <span *ngFor="let filters of filtersList" class="row-button">
-      <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected === 0 ? '' : filters.numberOfSelected}}">{{filters.displayName}}</button>
-      <mat-menu #menu="matMenu">
-        <mat-checkbox class="mat-menu-item" *ngFor="let filter of filters.values"
-                      [(ngModel)]="filter.checked" (click)="$event.stopPropagation()"
-                      (change)="filterSelected(filter)">
-        {{filter.displayName}}
-      </mat-checkbox>
-      </mat-menu>
+      <span *ngIf="!filters.icon">
+        <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected === 0 ? '' : filters.numberOfSelected}}">{{filters.displayName}}</button>
+        <mat-menu #menu="matMenu">
+          <mat-checkbox class="mat-menu-item" *ngFor="let filter of filters.values"
+                        [(ngModel)]="filter.checked" (click)="$event.stopPropagation()"
+                        (change)="filterSelected(filter)">
+            {{filter.displayName}}
+          </mat-checkbox>
+        </mat-menu>
+      </span>
+
+
+      <span *ngIf="filters.icon">
+        <button mat-button [matMenuTriggerFor]="menu" matBadge="{{filters.numberOfSelected === 0 ? '' : filters.numberOfSelected}}">
+          <mat-icon>{{filters.icon}}</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <ng-container *ngFor="let subFilters of filters.values">
+            {{subFilters.numberOfSelected}}
+            <button mat-menu-item [matMenuTriggerFor]="subMenu">{{subFilters.displayName}}</button>
+            <mat-menu #subMenu="matMenu">
+              <mat-checkbox class="mat-menu-item" *ngFor="let filter of subFilters.values"
+                            [(ngModel)]="filter.checked" (click)="$event.stopPropagation()"
+                            (change)="filterSelected(filter)">
+                {{filter.displayName}}
+              </mat-checkbox>
+            </mat-menu>
+          </ng-container>
+        </mat-menu>
+      </span>
     </span>
   </div>
 
@@ -45,7 +67,10 @@
       <img mat-card-image *ngIf="recipe.image" [src]="recipe.image" alt="" loading="lazy"/>
 
       <mat-card-actions (click)="$event.stopPropagation()">
-          <button mat-button color="accent" (click)="changeStatus(recipe)" *ngIf="recipe.hasAuthorPermission">{{recipe.status}}</button>
+          <button mat-button color="accent" (click)="changeStatus(recipe)" *ngIf="recipe.hasAuthorPermission">
+            <span *ngIf="recipe.status !== 'private'">Published</span>
+            <span *ngIf="recipe.status === 'private'">Private</span>
+          </button>
           <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
           <button mat-button color="warn" (click)="removeIngredients(recipe.id)">
             <span>Cook</span>

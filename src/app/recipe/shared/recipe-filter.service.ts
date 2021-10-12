@@ -38,6 +38,7 @@ export enum FILTER_TYPE {
   AUTHOR = 'AUTHOR',
   CATEGORY = 'CATEGORY',
   RATING = 'RATING',
+  STATUS = 'STATUS',
   SEARCH = 'SEARCH',
 }
 
@@ -48,9 +49,9 @@ export abstract class Filter {
     this.value = value;
   }
 
-  // equals(a: string, b: string): boolean {
-  //   return a.localeCompare(b, undefined, { sensitivity: 'base' }) === 0;
-  // }
+  equals(a: string, b: string): boolean {
+    return a.localeCompare(b, undefined, { sensitivity: 'base' }) === 0;
+  }
 
   contains(a: string, b: string): boolean {
     return a && a.toLowerCase().includes(b.toLowerCase());
@@ -62,12 +63,12 @@ export abstract class Filter {
 
 export class AuthorFilter extends Filter {
   type = FILTER_TYPE.AUTHOR;
-  filterPredicate = (recipe: Recipe): boolean => this.contains(recipe.author, this.value); // may need to flip this to equals
+  filterPredicate = (recipe: Recipe): boolean => this.equals(recipe.author, this.value);
 }
 
 export class CategoryFilter extends Filter {
   type = FILTER_TYPE.CATEGORY;
-  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.contains(category, this.value)); // may need to flip this to equals
+  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.equals(category, this.value));
 }
 
 export class RatingFilter extends Filter {
@@ -75,14 +76,20 @@ export class RatingFilter extends Filter {
   filterPredicate = (recipe: Recipe): boolean => this.value - recipe.meanRating >= 0 && this.value - recipe.meanRating < (1 / 3 * 100);
 }
 
+export class StatusFilter extends Filter {
+  type = FILTER_TYPE.STATUS;
+  filterPredicate = (recipe: Recipe): boolean => this.value === recipe.status;
+}
+
+
 export class SearchFilter extends Filter {
   type = FILTER_TYPE.SEARCH;
   filterPredicate = (recipe: Recipe): boolean => {
     return this.contains(recipe.name, this.value)
       || this.contains(recipe.description, this.value)
-      || new CategoryFilter(this.value).filterPredicate(recipe)
+      || !!recipe.categories.find(({ category }) => this.contains(category, this.value))
       || !!recipe.steps.find(({ step }) => this.contains(step, this.value))
       || !!recipe.ingredients.find(({ name }) => this.contains(name, this.value))
-      || new AuthorFilter(this.value).filterPredicate(recipe);
+      || this.contains(recipe.author, this.value);
   };
 }
