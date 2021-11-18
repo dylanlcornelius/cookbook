@@ -56,7 +56,7 @@ describe('IngredientEditComponent', () => {
   describe('load', () => {
     it('should get an ingredient', () => {
       const route = TestBed.inject(ActivatedRoute);
-      route.params = of({ id: 'id' });
+      route.params = of({ 'ingredient-id': 'id' });
 
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
   
