@@ -71,7 +71,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   public load(): void {
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
-      this.id = params['id'];
+      this.id = params['ingredient-id'];
 
       if (this.id) {
         this.ingredientService.get(this.id).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
