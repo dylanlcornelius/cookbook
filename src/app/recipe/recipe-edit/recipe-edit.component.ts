@@ -48,6 +48,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   addedIngredients = [];
   allAvailableIngredients = [];
   availableIngredients = [];
+  ingredientFilter = '';
 
   uoms: Array<UOM>;
 
@@ -147,7 +148,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
               return result;
             }, [])
             .sort((a, b) => a.name.localeCompare(b.name));
-          this.availableIngredients = this.allAvailableIngredients;
+          
+          this.applyIngredientFilter(false);
   
           this.title = 'Edit a Recipe';
           this.loading = this.loadingService.set(false);
@@ -167,7 +169,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
             }, [])
             .sort((a, b) => a.name.localeCompare(b.name));
   
-          this.availableIngredients = this.allAvailableIngredients;
+          this.applyIngredientFilter(false);
   
           this.title = 'Add a new Recipe';
           this.loading = this.loadingService.set(false);
@@ -283,11 +285,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  applyIngredientFilter(filterValue: string): void {
-    const filter = filterValue.trim().toLowerCase();
+  applyIngredientFilter(filterValue: string | false): void {
+    if (filterValue !== false) {
+      this.ingredientFilter = filterValue.trim().toLowerCase();
+    }
 
     this.availableIngredients = this.allAvailableIngredients.filter(ingredient => {
-      return ingredient.name.toLowerCase().includes(filter) && !this.addedIngredients.find(addedIngredient => {
+      return ingredient.name.toLowerCase().includes(this.ingredientFilter) && !this.addedIngredients.find(addedIngredient => {
           return ingredient.id === addedIngredient.id;
       });
     });
