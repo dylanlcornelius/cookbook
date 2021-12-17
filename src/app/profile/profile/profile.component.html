@@ -87,6 +87,7 @@
     <mat-tab label="History">
       <div class="tab-body">
         <h2>Your Recipe History</h2>
+        <p *ngIf="totalRecipesCooked">Total Recipes Cooked: {{totalRecipesCooked}}</p>
 
         <div class="chart-container desktop">
           <ngx-charts-bar-vertical
