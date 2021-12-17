@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { ImageService } from '@imageService';
 import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
@@ -33,6 +33,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   householdId: string;
 
   filtersList = [];
+  searchFilter$ = new Subject<string>();
   searchFilter = '';
 
   dataSource;
@@ -78,6 +79,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
       this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
         this.householdId = household.id;
+
+        this.initSearchFilter();
 
         const recipes$ = this.recipeService.get();
         const ingredients$ = this.ingredientService.get();
@@ -202,6 +205,21 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     });
   }
 
+  initSearchFilter(): void {
+    this.searchFilter$.pipe(
+      takeUntil(this.unsubscribe$),
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(searchFilter => {
+      this.searchFilter = searchFilter;
+      this.setFilters();
+  
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+    });
+  }
+
   setSelectedFilterCount(): void {
     this.filtersList.forEach(filterList => {
       let i = 0;
@@ -243,13 +261,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.setFilters();
   }
 
-  applySearchFilter(filterValue: string): void {
-    this.searchFilter = filterValue.trim().toLowerCase();
-    this.setFilters();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  searchChanged(filterValue: string): void {
+    this.searchFilter$.next(filterValue.trim().toLowerCase());
   }
 
   setCategoryFilter = (filter: Filter): void => this.utilService.setListFilter(new CategoryFilter(filter));

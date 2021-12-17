@@ -22,6 +22,8 @@ import { UtilService } from '@utilService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { FormsModule } from '@angular/forms';
+import { take } from 'rxjs/operators';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -42,7 +44,8 @@ describe('RecipeListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),
-        MatTableModule
+        MatTableModule,
+        FormsModule
       ],
       providers: [
         CurrentUserService,
@@ -121,6 +124,7 @@ describe('RecipeListComponent', () => {
 
       recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED)];
 
+      spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -134,6 +138,7 @@ describe('RecipeListComponent', () => {
       component.load();
 
       tick();
+      expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
@@ -179,6 +184,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
+      spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -192,6 +198,7 @@ describe('RecipeListComponent', () => {
       component.load();
 
       tick();
+      expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
@@ -230,6 +237,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
+      spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -243,6 +251,7 @@ describe('RecipeListComponent', () => {
       component.load();
 
       tick();
+      expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
@@ -253,6 +262,36 @@ describe('RecipeListComponent', () => {
       expect(imageService.download).toHaveBeenCalled();
       expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
+    }));
+  });
+
+  describe('initSearchFilter', () => {
+    it('should apply a filter', fakeAsync(() => {
+      component.dataSource = new MatTableDataSource([]);
+
+      spyOn(component, 'setFilters');
+
+      component.initSearchFilter();
+      component.searchFilter$.next('value');
+      
+      tick(1000);
+      expect(component.searchFilter).toEqual('value');
+      expect(component.setFilters).toHaveBeenCalled();
+    }));
+
+    it('should apply a filter and go to the first page', fakeAsync(() => {
+      component.dataSource = {paginator: {firstPage: () => {}}};
+
+      spyOn(component, 'setFilters');
+      spyOn(component.dataSource.paginator, 'firstPage');
+
+      component.initSearchFilter();
+      component.searchFilter$.next('value');
+      
+      tick(1000);
+      expect(component.searchFilter).toEqual('value');
+      expect(component.setFilters).toHaveBeenCalled();
+      expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
     }));
   });
 
@@ -335,30 +374,16 @@ describe('RecipeListComponent', () => {
     });
   });
 
-  describe('applySearchFilter', () => {
-    it('should apply a filter', () => {
-      component.dataSource = new MatTableDataSource([]);
+  describe('searchChanged', () => {
+    it('should set the next search filter value', fakeAsync(() => {
+      component.searchFilter$.pipe(take(1)).subscribe(filterValue => {
+        expect(filterValue).toEqual('value');
+      });
 
-      spyOn(component, 'setFilters');
+      component.searchChanged(' VALUE ');
 
-      component.applySearchFilter(' VALUE ');
-
-      expect(component.searchFilter).toEqual('value');
-      expect(component.setFilters).toHaveBeenCalled();
-    });
-
-    it('should apply a filter and go to the first page', () => {
-      component.dataSource = {paginator: {firstPage: () => {}}};
-
-      spyOn(component, 'setFilters');
-      spyOn(component.dataSource.paginator, 'firstPage');
-
-      component.applySearchFilter(' VALUE ');
-
-      expect(component.searchFilter).toEqual('value');
-      expect(component.setFilters).toHaveBeenCalled();
-      expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
-    });
+      tick();
+    }));
   });
 
   describe('setCategoryFilter', () => {
