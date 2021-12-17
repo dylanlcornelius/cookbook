@@ -55,6 +55,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) weekPaginator: any;
 
   history = [];
+  totalRecipesCooked: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -170,16 +171,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
 
     combineLatest([recipes$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, histories]) => {
+      let total = 0;
+
       this.history = histories
         .reduce((list, recipeHistory) => {
           const recipe = recipes.find(recipe => recipe.id === recipeHistory.recipeId);
 
           if (recipe) {
             list.push({name: recipe.name, value: recipeHistory.timesCooked});
+            total += recipeHistory.timesCooked;
           }
           return list;
           }, [])
         .sort((a, b) => a.name.localeCompare(b.name));
+      
+      if (total > 0) {
+        this.totalRecipesCooked = total;
+      }
     });
   }
 

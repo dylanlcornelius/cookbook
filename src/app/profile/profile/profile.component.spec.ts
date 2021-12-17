@@ -194,6 +194,7 @@ describe('ProfileComponent', () => {
       expect(component.history[0].value).toEqual(2);
       expect(recipeService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(component.totalRecipesCooked).toEqual(3);
     });
 
     it('should load histories with missing recipes', () => {
@@ -207,6 +208,7 @@ describe('ProfileComponent', () => {
       expect(component.history.length).toEqual(0);
       expect(recipeService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(component.totalRecipesCooked).toBeUndefined();
     });
   });
 
