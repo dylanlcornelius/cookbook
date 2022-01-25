@@ -11,6 +11,7 @@ import { NavigationService } from '@navigationService';
 import { Navigation, NavigationMenu } from '@navigation';
 import { takeUntil } from 'rxjs/operators';
 import { HouseholdService } from '@householdService';
+import { RecipeService } from '@recipeService';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   profileNavs: Navigation[] = [];
   toolNavs: Navigation[] = [];
   householdNotifications: number;
+  continueNav: Navigation;
 
   constructor(
     private router: Router,
@@ -37,6 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private navigationService: NavigationService,
+    private recipeService: RecipeService,
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -68,6 +71,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.mobileNavs = navs.filter(({ subMenu }) => subMenu !== NavigationMenu.PROFILE);
       this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
       this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+
+      this.recipeService.getForm().pipe(takeUntil(this.unsubscribe$)).subscribe(form => {
+        if (form) {
+          const link = form.id ? `/recipe/edit/${form.id}` : '/recipe/edit';
+          this.continueNav = new Navigation({ id: 'continue', name: 'Continue!', link, order: 0, icon: 'edit' });
+        } else {
+          this.continueNav = null;
+        }
+      });
     });
 
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {

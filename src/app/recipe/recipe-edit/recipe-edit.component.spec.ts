@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
 import { UOMConversion, UOM } from '@UOMConverson';
 import { RecipeEditComponent } from './recipe-edit.component';
 import { RecipeService } from '@recipeService';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { User } from '@user';
 import { Recipe } from '@recipe';
 import { IngredientService } from '@ingredientService';
@@ -18,6 +18,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ValidationService } from '@modalService';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -28,6 +29,7 @@ describe('RecipeEditComponent', () => {
   let uomConversion: UOMConversion;
   let formBuilder: FormBuilder;
   let ingredientService: IngredientService;
+  let validationService: ValidationService;
   let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
@@ -64,6 +66,7 @@ describe('RecipeEditComponent', () => {
     uomConversion = TestBed.inject(UOMConversion);
     formBuilder = TestBed.inject(FormBuilder);
     ingredientService = TestBed.inject(IngredientService);
+    validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
   });
 
@@ -101,6 +104,8 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));  
+      spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(component, 'addIngredient');
 
@@ -111,6 +116,8 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(component.addCategory).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
     });
@@ -133,6 +140,8 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
+      spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
 
@@ -143,6 +152,8 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
@@ -166,6 +177,8 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
+      spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(component, 'addIngredient');
 
@@ -176,7 +189,46 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(1);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
+      expect(component.addIngredient).not.toHaveBeenCalled();
+    });
+
+    it('should load a continued recipe', () => {
+      component.addedIngredients = [new Ingredient({ id: 'id2' })];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'id'
+        }),
+        new Ingredient({
+          id: 'id2'
+        }),
+        new Ingredient({
+          id: 'id3'
+        })
+      ];
+
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
+      spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
+      spyOn(component, 'addCategory');
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(new Recipe({})));
+      spyOn(recipeService, 'setForm');
+      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
+      spyOn(component, 'addIngredient');
+
+      component.load();
+      fixture.detectChanges();
+
+      expect(breakpointObserver.observe).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(1);
+      expect(component.addCategory).not.toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(recipeService.setForm).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
   });
@@ -407,9 +459,41 @@ describe('RecipeEditComponent', () => {
     });
   });
 
+  describe('resetForm', () => {
+    it('should open a validation modal', () => {
+      spyOn(validationService, 'setModal');
+
+      component.resetForm(new FormGroupDirective(null, null));
+
+      expect(validationService.setModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetFormEvent', () => {
+    it('should clear and reset the recipe form', () => {
+      component.recipesForm = new FormGroup({
+        categories: formBuilder.array([]),
+        steps: formBuilder.array([]),
+        ingredients: formBuilder.array([])
+      });
+
+      const formDirective = new FormGroupDirective([], []);
+
+      spyOn(formDirective, 'resetForm');
+      spyOn(recipeService, 'setForm');
+      spyOn(component, 'initForm');
+
+      component.resetFormEvent(formDirective);
+
+      expect(formDirective.resetForm).toHaveBeenCalled();
+      expect(recipeService.setForm).toHaveBeenCalled();
+      expect(component.initForm).toHaveBeenCalled();
+    });
+  });
+
   describe('submitForm', () => {
     it('should update a recipe', () => {
-      component.recipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
+      component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33, creationDate: 'test'});
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });
@@ -430,13 +514,14 @@ describe('RecipeEditComponent', () => {
         author: '3',
         hasImage: true,
         meanRating: 0.33,
-        ratings: []
+        ratings: [],
+        creationDate: 'test'
       }).getObject(), 'id');
       expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should create a recipe', () => {
-      component.recipe = undefined;
+      component.originalRecipe = undefined;
 
       const router = TestBed.inject(Router);
 
@@ -448,23 +533,28 @@ describe('RecipeEditComponent', () => {
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.create).toHaveBeenCalledWith(new Recipe({
-        name: null,
-        link: null,
-        description: null,
+        name: '',
+        link: '',
+        description: '',
         time: '',
-        servings: '',
         calories: '',
+        servings: '',
+        quantity: '',
         categories: [],
         steps: [],
         ingredients: [],
+        hasImage: false,
+        meanRating: 0,
+        ratings: [],
         uid: '',
         author: '1 2',
-      }));
+        status: 'private'
+      }).getObject());
       expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should update a recipe and redirect to creating a new recipe', () => {
-      component.recipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
+      component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
       component.recipesForm = formBuilder.group({
         'ingredients': formBuilder.array([formBuilder.group({'name': []})])
       });

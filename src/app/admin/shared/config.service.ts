@@ -4,6 +4,7 @@ import { Config } from '@config';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
+import { ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class ConfigService extends FirestoreService {
     });
 }
 
-  create = (data: Config): string => super.create(data);
+  create = (data: ModelObject): string => super.create(data);
   update = (data: Config[]): void => super.updateAll(data);
   delete = (id: string): void => super.delete(id);
 }

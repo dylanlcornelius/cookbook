@@ -121,9 +121,9 @@
     </div>
 
     <mat-card-actions class="between">
-      <a mat-mini-fab matTooltip="Edit Recipe" color="primary" [routerLink]="['/recipe/edit/', recipe.id]">
+      <button mat-mini-fab matTooltip="Edit Recipe" color="primary" (click)="openRecipeEditor()">
         <mat-icon>edit</mat-icon>
-      </a>
+      </button>
 
       <button mat-raised-button (click)="setAuthorFilter(recipe.author)" class="author-link" *ngIf="recipe.author">by {{recipe.author}}</button>
       

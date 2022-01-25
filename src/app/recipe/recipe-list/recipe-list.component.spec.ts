@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { UOMConversion } from '@UOMConverson';
@@ -24,6 +24,8 @@ import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
+import { ValidationService } from '@modalService';
+import { BehaviorSubject } from 'rxjs';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -38,6 +40,7 @@ describe('RecipeListComponent', () => {
   let imageService: ImageService;
   let recipeIngredientService: RecipeIngredientService;
   let utilService: UtilService;
+  let validationService: ValidationService;
   let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
@@ -80,6 +83,7 @@ describe('RecipeListComponent', () => {
     imageService = TestBed.inject(ImageService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     utilService = TestBed.inject(UtilService);
+    validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
   });
 
@@ -497,6 +501,45 @@ describe('RecipeListComponent', () => {
       component.onRate(1, new Recipe({}));
 
       expect(recipeService.rateRecipe).toHaveBeenCalled();
+    });
+  });
+
+  describe('openRecipeEditor', () => {
+    it('should open a validation modal', () => {
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
+      spyOn(validationService, 'setModal');
+      spyOn(component, 'openRecipeEditorEvent');
+
+      component.openRecipeEditor();
+
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(validationService.setModal).not.toHaveBeenCalled();
+      expect(component.openRecipeEditorEvent).toHaveBeenCalled();
+    });
+
+    it('should not open a validation modal', () => {
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({}));
+      spyOn(validationService, 'setModal');
+      spyOn(component, 'openRecipeEditorEvent');
+
+      component.openRecipeEditor();
+
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(validationService.setModal).toHaveBeenCalled();
+      expect(component.openRecipeEditorEvent).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('openRecipeEditorEvent', () => {
+    it('should reset the editor form and navigate', () => {
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      spyOn(recipeService, 'setForm');
+
+      component.openRecipeEditorEvent();
+
+      expect(recipeService.setForm).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 

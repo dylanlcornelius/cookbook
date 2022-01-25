@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -25,6 +26,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   title: string;
 
   ingredientsForm: FormGroup;
+  ingredient: Ingredient;
   id: string;
   name: string;
   category: string;
@@ -74,13 +76,15 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       this.id = params['ingredient-id'];
 
       if (this.id) {
-        this.ingredientService.get(this.id).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+        this.ingredientService.get(this.id).pipe(takeUntil(this.unsubscribe$)).subscribe(ingredient => {
+          this.ingredient = ingredient;
+
           this.ingredientsForm.patchValue({
-            name: data.name,
-            category: data.category,
-            amount: data.amount || '',
-            uom: data.uom || '',
-            calories: data.calories
+            name: ingredient.name,
+            category: ingredient.category,
+            amount: ingredient.amount || '',
+            uom: ingredient.uom || '',
+            calories: ingredient.calories
           });
           this.title = 'Edit an Ingredient';
           this.loading = this.loadingService.set(false);
@@ -93,12 +97,16 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  onFormSubmit(form: FormGroup, formDirective: FormGroupDirective): void {
+  onFormSubmit(formDirective: FormGroupDirective): void {
+    const form = this.ingredientsForm.value;
+
     if (this.id) {
-      this.ingredientService.update(form.value, this.id);
+      form.creationDate = this.ingredient.creationDate;
+      
+      this.ingredientService.update(new Ingredient(form).getObject(), this.id);
       this.router.navigate(['/ingredient/detail/', this.id]);
     } else {
-      const id = this.ingredientService.create(form.value);
+      const id = this.ingredientService.create(new Ingredient(form).getObject());
       
       if (this.isQuickView) {
         this.handleIngredientCreate.emit(true);
@@ -107,7 +115,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       }
     }
     formDirective.resetForm();
-    form.reset();
+    this.ingredientsForm.reset();
   }
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);

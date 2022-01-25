@@ -3,6 +3,10 @@
     <div class="between">
       <a routerLink="/home" class="title">{{title}}</a>
       <span *ngIf="(isLoggedIn | async) && !user?.isPending" [@fadeInAnimation]>
+        <a mat-button class="title-button" [routerLink]="continueNav.link" *ngIf="continueNav">
+          <mat-icon>{{continueNav.icon}}</mat-icon>
+        </a>
+
         <button mat-button class="title-button" [matMenuTriggerFor]="profileMenu">
           <mat-icon [matBadge]="householdNotifications" matBadgeSize="small">person</mat-icon>
         </button>

@@ -229,6 +229,8 @@ describe('ProfileComponent', () => {
 
   describe('onFormSubmit', () => {
     it('should update a user record', () => {
+      component.user = new User({});
+
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(notificationService, 'setModal');

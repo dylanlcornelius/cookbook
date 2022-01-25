@@ -3,7 +3,7 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <form [formGroup]="recipesForm">
+  <form [formGroup]="recipesForm" #formDirective="ngForm">
     <ng-template #recipeStep>
       <mat-form-field class="form-field">
         <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required/>
@@ -147,6 +147,7 @@
       <ng-container *ngTemplateOutlet="recipeStep"></ng-container>
 
       <div class="stepper-button-row">
+        <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
         <button mat-button matStepperNext type="button">Next</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
@@ -159,6 +160,7 @@
       <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
 
       <div class="stepper-button-row">
+        <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
         <button mat-button matStepperPrevious type="button">Back</button>
         <button mat-button matStepperNext type="button">Next</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
@@ -172,6 +174,7 @@
       <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
 
       <div class="stepper-button-row">
+        <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
         <button mat-button matStepperPrevious type="button">Back</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
         <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>

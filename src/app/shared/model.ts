@@ -6,6 +6,8 @@ export class Model {
         this.id = data.id || '';
         if (data.creationDate && data.creationDate.toDate) {
             this.creationDate = data.creationDate.toDate();
+        } else if (data.creationDate) {
+            this.creationDate = data.creationDate;
         }
     }
 

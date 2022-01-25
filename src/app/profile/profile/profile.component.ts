@@ -93,7 +93,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     combineLatest([user$, users$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, users]) => {
       this.users = users;
-
       this.user = user;
 
       this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
@@ -198,6 +197,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   };
 
   onFormSubmit(form: any): void {
+    form.creationDate = this.user.creationDate;
     const user = new User(form);
 
     this.userService.update(user.getObject(), user.getId());

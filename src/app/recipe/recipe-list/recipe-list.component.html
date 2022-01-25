@@ -4,9 +4,9 @@
 
 <div [hidden]="loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Add Recipe" color="primary" routerLink="/recipe/edit">
+    <button mat-mini-fab matTooltip="Add Recipe" color="primary" (click)="openRecipeEditor()">
       <mat-icon>add</mat-icon>
-    </a>
+    </button>
     <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
