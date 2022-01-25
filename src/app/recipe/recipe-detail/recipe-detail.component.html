@@ -10,10 +10,10 @@
         <app-rating (rate)="onRate($event, recipe)" [recipe]="recipe" [uid]="user.uid"></app-rating>
       </div>
 
-      <button mat-button class="share-button" (click)="copyShareableLink()">
+      <button mat-button class="share-button" [ngClass]="{'user-share-button': !hasAuthorPermission}" (click)="copyShareableLink()">
         <mat-icon>share</mat-icon>
       </button>
-      <app-image-upload [id]="recipe.id" [updateImage]="updateImage" [(progress)]="recipeImageProgress" [(image)]="recipeImage"></app-image-upload>
+      <app-image-upload [id]="recipe.id" [updateImage]="updateImage" [(progress)]="recipeImageProgress" [(image)]="recipeImage" *ngIf="hasAuthorPermission"></app-image-upload>
 
       <mat-card-title>
         <h2 *ngIf="!recipe.link">{{recipe.name}}</h2>
@@ -121,13 +121,13 @@
     </div>
 
     <mat-card-actions class="between">
-      <button mat-mini-fab matTooltip="Edit Recipe" color="primary" (click)="openRecipeEditor()">
+      <button mat-mini-fab matTooltip="Edit Recipe" color="primary" (click)="openRecipeEditor()" *ngIf="hasAuthorPermission">
         <mat-icon>edit</mat-icon>
       </button>
 
       <button mat-raised-button (click)="setAuthorFilter(recipe.author)" class="author-link" *ngIf="recipe.author">by {{recipe.author}}</button>
       
-      <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)">
+      <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)" *ngIf="hasAuthorPermission">
         <mat-icon>delete</mat-icon>
       </a>
     </mat-card-actions>
