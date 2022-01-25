@@ -41,7 +41,7 @@ describe('TutorialService', () => {
     it('should create a new document', () => {
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create(new Tutorial({}));
+      service.create(new Tutorial({}).getObject());
 
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });

@@ -48,7 +48,7 @@ describe('ConfigService', () => {
     it('should create a new document', () => {
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create(new Config({}));
+      service.create(new Config({}).getObject());
 
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });

@@ -4,7 +4,7 @@ import { RecipeService } from '@recipeService';
 import { IngredientService} from '@ingredientService';
 import { ImageService } from '@imageService';
 import { Observable, combineLatest, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
@@ -197,6 +197,24 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeHistoryService.set(uid, recipeId, timesCooked);
     this.recipeHistoryService.set(householdId, recipeId, timesCooked);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
+  };
+
+  openRecipeEditor(): void {
+    this.recipeService.getForm().pipe(first()).subscribe(form => {
+      if (form) {
+        this.validationService.setModal(new Validation(
+          `Are you sure you want to undo your current changes in the recipe wizard?`,
+          this.openRecipeEditorEvent
+        ));
+      } else {
+        this.openRecipeEditorEvent();
+      }
+    });
+  }
+
+  openRecipeEditorEvent = (): void => {
+    this.recipeService.setForm(null);
+    this.router.navigate(['/recipe/edit/', this.recipe.id]);
   };
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);

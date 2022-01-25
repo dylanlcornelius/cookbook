@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import '@firebase/firestore';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Recipe, RecipeObject, RECIPE_STATUS } from '@recipe';
 import { FirestoreService } from '@firestoreService';
@@ -14,6 +14,15 @@ import { NotificationService, ValidationService } from '@modalService';
   providedIn: 'root'
 })
 export class RecipeService extends FirestoreService {
+  editorForm = new BehaviorSubject<any>(null);
+
+  getForm(): BehaviorSubject<any> {
+    return this.editorForm;
+  }
+  setForm(options: any): void {
+    this.editorForm.next(options);
+  }
+
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
@@ -40,7 +49,7 @@ export class RecipeService extends FirestoreService {
     });
   }
 
-  create = (data: Recipe): string => super.create(data, Action.CREATE_RECIPE);
+  create = (data: RecipeObject): string => super.create(data, Action.CREATE_RECIPE);
   update = (data: RecipeObject | RecipeObject[], id?: string): void => super.update(data, id, Action.UPDATE_RECIPE);
   delete = (id: string): void => super.delete(id, Action.DELETE_RECIPE);
 

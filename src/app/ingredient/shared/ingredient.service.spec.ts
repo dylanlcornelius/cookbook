@@ -47,7 +47,7 @@ describe('IngredientService', () => {
     it('should create a new document', () => {
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create(new Ingredient({}));
+      service.create(new Ingredient({}).getObject());
 
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });

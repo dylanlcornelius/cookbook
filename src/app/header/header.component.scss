@@ -1,5 +1,5 @@
 .header {
-    padding: calc(5px + 1vh) calc(10px + 1vw);
+    padding: calc(5px + 1vh) 10px;
     position: sticky;
     top: 0;
     display: flex;
@@ -8,7 +8,7 @@
 }
 @media screen and (max-width: 767px) {
     .nav-bar {
-        min-width: 80%;
+        min-width: 95%;
     }
 }
 .title {

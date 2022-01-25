@@ -3,7 +3,7 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onFormSubmit(ingredientsForm, formDirective)">
+  <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onFormSubmit(formDirective)">
     <mat-form-field class="form-field">
       <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required>
       <mat-error>

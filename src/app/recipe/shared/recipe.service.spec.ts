@@ -22,6 +22,24 @@ describe('RecipeService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('getForm', () => {
+    it('should return the editor form', () => {
+      service.getForm().subscribe(form => {
+        expect(form).toBeDefined();
+      });
+    });
+  });
+
+  describe('setForm', () => {
+    it('should set the editor form', () => {
+      spyOn(service.editorForm, 'next');
+
+      service.setForm(null);
+
+      expect(service.editorForm.next).toHaveBeenCalled();
+    });
+  });
+
   describe('get', () => {
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
@@ -48,7 +66,7 @@ describe('RecipeService', () => {
     it('should create a new document', () => {
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create(new Recipe({}));
+      service.create(new Recipe({}).getObject());
 
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });

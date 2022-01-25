@@ -33,7 +33,7 @@ describe('NavigationService', () => {
     it('should create a new document', () => {
       spyOn(FirestoreService.prototype, 'create');
 
-      service.create(new Navigation({}));
+      service.create(new Navigation({}).getObject());
 
       expect(FirestoreService.prototype.create).toHaveBeenCalled();
     });

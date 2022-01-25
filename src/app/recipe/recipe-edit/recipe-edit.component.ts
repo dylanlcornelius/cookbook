@@ -8,7 +8,8 @@ import {
   Validators,
   FormArray,
   ValidatorFn,
-  AbstractControl
+  AbstractControl,
+  FormGroupDirective
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '@ingredientService';
@@ -17,13 +18,15 @@ import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
-import { map, takeUntil } from 'rxjs/operators';
+import { first, map, takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { StepperOrientation } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { ValidationService } from '@modalService';
+import { Validation } from '@validation';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -40,6 +43,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   title: string;
 
   id: string;
+  originalRecipe: Recipe;
   recipe: Recipe;
   recipesForm: FormGroup;
 
@@ -49,12 +53,20 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   allAvailableIngredients = [];
   availableIngredients = [];
   ingredientFilter = '';
+  recipes;
+  ingredients;
 
   uoms: Array<UOM>;
 
   matcher = new ErrorMatcher();
   selectable;
   stepperOrientation: Observable<StepperOrientation>;
+
+  readonly listFields = {
+    categories: 'category',
+    steps: 'step',
+    ingredients: 'id'
+  };
 
   constructor(
     private router: Router,
@@ -66,6 +78,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
     private uomConversion: UOMConversion,
+    private validationService: ValidationService,
     private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
@@ -78,6 +91,25 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    this.unload();
+  }
+
+  unload(): void {
+    const recipe = this.originalRecipe || new Recipe({});
+    const form = this.recipesForm.value;
+
+    const isUnchanged = Object.keys(form).find(key => {
+        const listField = this.listFields[key];
+
+        return listField
+          ? recipe[key].map((property) => property[listField]).join('|') !== form[key].map((property) => property[listField]).join('|')
+          : recipe[key] !== form[key];
+      });
+
+    if (isUnchanged) {
+      this.recipeService.setForm({ ...form, id: this.id });
+    }
   }
 
   load(): void {
@@ -90,9 +122,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.loading = this.loadingService.set(true);
       this.id = params['id'];
       this.recipesForm = this.formBuilder.group({
-        name: [null, [Validators.required, TitleCaseValidator()]],
-        link: [null],
-        description: [null],
+        name: ['', [Validators.required, TitleCaseValidator()]],
+        link: [''],
+        description: [''],
         time: [''],
         servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
         calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
@@ -101,81 +133,79 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         ingredients: this.formBuilder.array([])
       });
 
-
+      const observables$: [Observable<Ingredient[]>, Observable<Recipe[]>, Observable<Recipe>?] = [ingredients$, recipes$];
       if (this.id) {
-        const recipe$ = this.recipeService.get(this.id);
-  
-        combineLatest([recipe$, ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes]) => {
-          if (this.loading) {
-            this.recipe = recipe;
-  
-            recipe.categories.forEach(() => {
-              this.addCategory();
-            });
-            recipe.steps.forEach(() => {
-              this.addStep();
-            });
-  
-            // figure out already added ingredients
-            this.addedIngredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
-            for (let i = 0; i < this.addedIngredients.length; i++) {
-              this.addIngredient(i);
-            }
-  
-            this.recipesForm.patchValue({
-              name: recipe.name,
-              link: recipe.link,
-              description: recipe.description,
-              time: recipe.time,
-              servings: recipe.servings,
-              calories: recipe.calories,
-              categories: recipe.categories,
-              steps: recipe.steps,
-              ingredients: this.addedIngredients,
-            });
-          }
-  
-          // figure out available ingredients
-          this.allAvailableIngredients = [...ingredients, ...recipes]
-            .reduce((result, ingredient) => {
-              const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
-              if (!currentIngredient && ingredient.id !== this.recipe.id) {
-                result.push({
-                  ...ingredient,
-                  quantity: 0
-                });
-              }
-              return result;
-            }, [])
-            .sort((a, b) => a.name.localeCompare(b.name));
-          
-          this.applyIngredientFilter(false);
-  
-          this.title = 'Edit a Recipe';
-          this.loading = this.loadingService.set(false);
-        });
+        observables$.push(this.recipeService.get(this.id));
+        this.title = 'Edit a Recipe';
       } else {
-        combineLatest([ingredients$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes]) => {
-          this.allAvailableIngredients = [...ingredients, ...recipes]
-            .reduce((result, ingredient) => {
-              const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
-              if (!currentIngredient) {
-                result.push({
-                  ...ingredient,
-                  quantity: 0
-                });
-              }
-              return result;
-            }, [])
-            .sort((a, b) => a.name.localeCompare(b.name));
-  
-          this.applyIngredientFilter(false);
-  
-          this.title = 'Add a new Recipe';
+        this.title = 'Add a New Recipe';
+      }
+
+      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes, recipe]: [Ingredient[], Recipe[], Recipe?]) => {
+        if (!this.loading) {
+          return;
+        }
+
+        this.recipes = recipes;
+        this.ingredients = ingredients;
+        this.originalRecipe = recipe;
+
+        this.recipeService.getForm().pipe(first()).subscribe(form => {
+          if (form) {
+            this.recipe = form;
+            this.recipeService.setForm(null);
+          } else {
+            this.recipe = recipe;
+          }
+
+          this.initForm();
+
           this.loading = this.loadingService.set(false);
         });
-      }
+      });
     });
+  }
+
+  initForm(): void {
+    if (this.recipe) {
+      this.recipe.categories.forEach(() => {
+        this.addCategory();
+      });
+      this.recipe.steps.forEach(() => {
+        this.addStep();
+      });
+
+      // figure out already added ingredients
+      this.addedIngredients = this.ingredientService.buildRecipeIngredients(this.recipe.ingredients, [...this.ingredients, ...this.recipes]);
+      for (let i = 0; i < this.addedIngredients.length; i++) {
+        this.addIngredient(i);
+      }
+        
+      this.recipesForm.patchValue({
+        name: this.recipe.name,
+        link: this.recipe.link,
+        description: this.recipe.description,
+        time: this.recipe.time,
+        servings: this.recipe.servings,
+        calories: this.recipe.calories,
+        categories: this.recipe.categories,
+        steps: this.recipe.steps,
+        ingredients: this.addedIngredients,
+      });
+    }
+
+    // figure out available ingredients
+    this.allAvailableIngredients = [...this.ingredients, ...this.recipes]
+      .reduce((result, ingredient) => {
+        const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
+        if (!currentIngredient && ingredient.id !== this.recipe?.id) {
+          result.push({ ...ingredient, quantity: 0 });
+        }
+        return result;
+      }, [])
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    this.applyIngredientFilter(false);
   }
 
   initCategory(category: string): FormGroup {
@@ -297,6 +327,28 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  resetForm(formDirective: FormGroupDirective): void {
+    this.validationService.setModal(new Validation(
+      `Are you sure you want to undo your current changes to the recipe wizard?`,
+      this.resetFormEvent,
+      [formDirective]
+    ));
+  }
+
+  resetFormEvent = (formDirective: FormGroupDirective): void => {
+    formDirective.resetForm();
+    const categories = <FormArray>this.recipesForm.controls['categories'];
+    categories.clear();
+    const steps = <FormArray>this.recipesForm.controls['steps'];
+    steps.clear();
+    const ingredients = <FormArray>this.recipesForm.controls['ingredients'];
+    ingredients.clear();
+    this.recipesForm.reset();
+    this.recipeService.setForm(null);
+    this.recipe = this.originalRecipe || new Recipe({});
+    this.initForm();
+  };
+
   submitForm(createNew: boolean): void {
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       const form = this.recipesForm.value;
@@ -305,21 +357,24 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         delete ingredient.name;
       });
 
-      let recipeId = this.recipe?.id;
+      let recipeId = this.originalRecipe?.id;
       if (this.id) {
-        form.uid = this.recipe.uid;
-        form.author = this.recipe.author;
-        form.hasImage = this.recipe.hasImage;
-        form.meanRating = this.recipe.meanRating;
-        form.ratings = this.recipe.ratings;
+        form.uid = this.originalRecipe.uid;
+        form.author = this.originalRecipe.author;
+        form.hasImage = this.originalRecipe.hasImage;
+        form.meanRating = this.originalRecipe.meanRating;
+        form.ratings = this.originalRecipe.ratings;
+        form.creationDate = this.originalRecipe.creationDate;
 
-        this.recipeService.update(new Recipe(form).getObject(), this.recipe.id);
+        this.recipeService.update(new Recipe(form).getObject(), this.originalRecipe.id);
       } else {
         form.uid = user.uid;
         form.author = user.name;
 
-        recipeId = this.recipeService.create(new Recipe(form));
+        recipeId = this.recipeService.create(new Recipe(form).getObject());
       }
+      
+      this.originalRecipe = this.recipesForm.value;
 
       if (createNew) {
         this.router.navigate(['/recipe/edit']);

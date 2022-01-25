@@ -7,7 +7,7 @@ import { RecipeService } from '@recipeService';
 import { Recipe } from '@recipe';
 import { RecipeListComponent } from '../recipe-list/recipe-list.component';
 import { ImageService } from '@imageService';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { IngredientService } from '@ingredientService';
 import { User } from '@user';
 import { Ingredient } from '@ingredient';
@@ -327,6 +327,47 @@ describe('RecipeDetailComponent', () => {
 
       expect(recipeHistoryService.set).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('openRecipeEditor', () => {
+    it('should open a validation modal', () => {
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
+      spyOn(validationService, 'setModal');
+      spyOn(component, 'openRecipeEditorEvent');
+
+      component.openRecipeEditor();
+
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(validationService.setModal).not.toHaveBeenCalled();
+      expect(component.openRecipeEditorEvent).toHaveBeenCalled();
+    });
+
+    it('should not open a validation modal', () => {
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({}));
+      spyOn(validationService, 'setModal');
+      spyOn(component, 'openRecipeEditorEvent');
+
+      component.openRecipeEditor();
+
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(validationService.setModal).toHaveBeenCalled();
+      expect(component.openRecipeEditorEvent).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('openRecipeEditorEvent', () => {
+    it('should reset the editor form and navigate', () => {
+      component.recipe = new Recipe({});
+
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      spyOn(recipeService, 'setForm');
+
+      component.openRecipeEditorEvent();
+
+      expect(recipeService.setForm).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 

@@ -37,7 +37,7 @@ export class IngredientService extends FirestoreService {
     });
   }
 
-  create = (data: Ingredient): string => super.create(data, Action.CREATE_INGREDIENT);
+  create = (data: IngredientObject): string => super.create(data, Action.CREATE_INGREDIENT);
   update = (data: IngredientObject | IngredientObject[], id?: string): void => super.update(data, id, Action.UPDATE_INGREDIENT);
   delete = (id: string): void => super.delete(id, Action.DELETE_INGREDIENT);
   sort = (a: Ingredient, b: Ingredient): number => a.name.localeCompare(b.name);

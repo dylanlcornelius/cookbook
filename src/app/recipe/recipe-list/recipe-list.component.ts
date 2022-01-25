@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { ImageService } from '@imageService';
 import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
@@ -19,6 +19,8 @@ import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { ValidationService } from '@modalService';
+import { Validation } from '@validation';
 
 @Component({
   selector: 'app-recipe-list',
@@ -55,6 +57,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
+    private validationService: ValidationService,
     private tutorialService: TutorialService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -304,6 +307,24 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   onRate(rating: number, recipe: Recipe): void {
     this.recipeService.rateRecipe(rating, this.user.uid, recipe);
   }
+
+  openRecipeEditor(): void {
+    this.recipeService.getForm().pipe(first()).subscribe(form => {
+      if (form) {
+        this.validationService.setModal(new Validation(
+          `Are you sure you want to undo your current changes in the recipe wizard?`,
+          this.openRecipeEditorEvent
+        ));
+      } else {
+        this.openRecipeEditorEvent();
+      }
+    });
+  }
+
+  openRecipeEditorEvent = (): void => {
+    this.recipeService.setForm(null);
+    this.router.navigate(['/recipe/edit']);
+  };
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

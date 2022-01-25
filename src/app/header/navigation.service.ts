@@ -4,6 +4,7 @@ import { FirestoreService } from '@firestoreService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Navigation } from '@navigation';
+import { ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class NavigationService extends FirestoreService {
     });
   }
 
-  create = (data: Navigation): string => super.create(data);
+  create = (data: ModelObject): string => super.create(data);
   update = (data: Navigation[]): void => super.updateAll(data);
   delete = (id: string): void => super.delete(id);
   sort = (a: Navigation, b: Navigation): number => a.order - b.order;

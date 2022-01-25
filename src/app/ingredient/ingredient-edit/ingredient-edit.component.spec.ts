@@ -75,14 +75,16 @@ describe('IngredientEditComponent', () => {
     });
 
     it('should update an ingredient', () => {
-      component.id = 'id';
       const router = TestBed.inject(Router);
+      component.id = 'id';
+      component.ingredient = new Ingredient({});
+      component.ingredientsForm = formBuilder.group({});
 
       spyOn(ingredientService, 'update');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(formBuilder.group({}), formDirective);
+      component.onFormSubmit(formDirective);
 
       expect(ingredientService.update).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
@@ -91,12 +93,13 @@ describe('IngredientEditComponent', () => {
 
     it('should create an ingredient', () => {
       const router = TestBed.inject(Router);
+      component.ingredientsForm = formBuilder.group({});
 
       spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(formBuilder.group({}), formDirective);
+      component.onFormSubmit(formDirective);
 
       expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
@@ -106,12 +109,13 @@ describe('IngredientEditComponent', () => {
     it('should create an ingredient from the quick view', () => {
       const router = TestBed.inject(Router);
       component.isQuickView = true;
+      component.ingredientsForm = formBuilder.group({});
 
       spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(formBuilder.group({}), formDirective);
+      component.onFormSubmit(formDirective);
 
       expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).toHaveBeenCalled();
