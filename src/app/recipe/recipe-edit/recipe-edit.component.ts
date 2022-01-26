@@ -125,7 +125,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.recipesForm = this.formBuilder.group({
         name: ['', [Validators.required, TitleCaseValidator()]],
         link: [''],
-        description: [''],
+        description: ['', [Validators.pattern(/[A-Z][^.]*[.]/g)]],
         time: [''],
         servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
         calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
@@ -240,7 +240,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   initStep(): FormGroup {
     return this.formBuilder.group({
-      step: [null]
+      step: ['', [Validators.pattern(/[A-Z][^.]*[.]/g)]]
     });
   }
 
