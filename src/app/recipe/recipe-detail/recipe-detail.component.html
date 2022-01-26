@@ -86,6 +86,11 @@
             <dt>Last Date Cooked</dt>
             <dd>{{lastDateCooked}}</dd>
           </span>
+
+          <span *ngIf="creationDate">
+            <dt>Created Date</dt>
+            <dd>{{creationDate}}</dd>
+          </span>
         </dl>
       </mat-card-content>
 

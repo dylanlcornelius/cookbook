@@ -44,6 +44,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipeImageProgress;
   timesCooked: number;
   lastDateCooked: string;
+  creationDate: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -126,6 +127,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           if (date.length === 3) {
             this.lastDateCooked = new Date(Number.parseInt(date[2]), Number.parseInt(date[1]) - 1, Number.parseInt(date[0])).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
           }
+          this.creationDate = this.recipe.creationDate?.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
           this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
           this.recipes = recipes;
