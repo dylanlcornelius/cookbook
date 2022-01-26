@@ -16,7 +16,6 @@ import { NotificationService, ValidationService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeHistory } from '@recipeHistory';
 import { UtilService } from '@utilService';
-import { UOMConversion } from '@UOMConverson';
 import { UserIngredient } from '@userIngredient';
 import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientService } from '@recipeIngredientService';
@@ -46,9 +45,6 @@ describe('RecipeDetailComponent', () => {
         RouterModule.forRoot([
           { path: 'recipe/list', component: RecipeListComponent }
         ])
-      ],
-      providers: [
-        UOMConversion,
       ],
       declarations: [ RecipeDetailComponent ],
       schemas: [

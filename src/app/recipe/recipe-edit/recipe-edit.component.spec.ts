@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
-import { UOMConversion, UOM } from '@UOMConverson';
+import { UOM } from '@uoms';
+import { UomService } from '@uomService';
 import { RecipeEditComponent } from './recipe-edit.component';
 import { RecipeService } from '@recipeService';
 import { BehaviorSubject, of } from 'rxjs';
@@ -26,7 +27,7 @@ describe('RecipeEditComponent', () => {
   let breakpointObserver: BreakpointObserver;
   let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
-  let uomConversion: UOMConversion;
+  let uomService: UomService;
   let formBuilder: FormBuilder;
   let ingredientService: IngredientService;
   let validationService: ValidationService;
@@ -45,9 +46,6 @@ describe('RecipeEditComponent', () => {
         MatChipsModule,
         BrowserAnimationsModule,
       ],
-      providers: [
-        UOMConversion
-      ],
       declarations: [ RecipeEditComponent ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
@@ -63,7 +61,7 @@ describe('RecipeEditComponent', () => {
     breakpointObserver = TestBed.inject(BreakpointObserver);
     currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
-    uomConversion = TestBed.inject(UOMConversion);
+    uomService = TestBed.inject(UomService);
     formBuilder = TestBed.inject(FormBuilder);
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
@@ -485,20 +483,20 @@ describe('RecipeEditComponent', () => {
 
   describe('getUOMs', () => {
     it('should return a list of uoms', () => {
-      spyOn(uomConversion, 'relatedUOMs').and.returnValue([]);
+      spyOn(uomService, 'relatedUOMs').and.returnValue([]);
 
       const result = component.getUOMs(UOM.CUP);
 
       expect(result).toEqual([]);
-      expect(uomConversion.relatedUOMs).toHaveBeenCalled();
+      expect(uomService.relatedUOMs).toHaveBeenCalled();
     });
 
     it('should handle undefined', () => {
-      spyOn(uomConversion, 'relatedUOMs');
+      spyOn(uomService, 'relatedUOMs');
 
       component.getUOMs(undefined);
 
-      expect(uomConversion.relatedUOMs).not.toHaveBeenCalled();
+      expect(uomService.relatedUOMs).not.toHaveBeenCalled();
     });
   });
 

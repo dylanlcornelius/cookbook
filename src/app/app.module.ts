@@ -14,7 +14,6 @@ import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './user/login/login.component';
 import { UserPendingComponent } from './user/user-pending/user-pending.component';
-import { UOMConversion } from '@UOMConverson';
 import { NewUserComponent } from './user/new-user/new-user.component';
 
 import { SharedModule } from '@sharedModule';
@@ -43,9 +42,6 @@ import { environment } from '../environments/environment';
     MatProgressBarModule,
     SharedModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-  ],
-  providers: [
-    UOMConversion,
   ],
   bootstrap: [AppComponent]
 })

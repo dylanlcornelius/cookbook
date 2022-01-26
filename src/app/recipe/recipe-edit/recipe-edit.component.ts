@@ -13,7 +13,8 @@ import {
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '@ingredientService';
-import { UOM, UOMConversion } from '@UOMConverson';
+import { UOM } from '@uoms';
+import { UomService } from '@uomService';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { Recipe } from '@recipe';
@@ -77,7 +78,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private recipeService: RecipeService,
     private ingredientService: IngredientService,
-    private uomConversion: UOMConversion,
+    private uomService: UomService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
   ) {
@@ -311,7 +312,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   getUOMs(uom: UOM): string[] {
     if (uom) {
-      return this.uomConversion.relatedUOMs(uom);
+      return this.uomService.relatedUOMs(uom);
     }
   }
 

@@ -1,5 +1,5 @@
 import { Model } from '@model';
-import { UOM } from '@UOMConverson';
+import { UOM } from '@uoms';
 
 export class Ingredient extends Model {
     name: string;

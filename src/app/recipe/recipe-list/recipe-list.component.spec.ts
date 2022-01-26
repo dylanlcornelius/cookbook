@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angul
 import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
-import { UOMConversion } from '@UOMConverson';
 import { RecipeService } from '@recipeService';
 import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter, SearchFilter, StatusFilter } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
@@ -56,8 +55,7 @@ describe('RecipeListComponent', () => {
         RecipeFilterService,
         UserIngredientService,
         IngredientService,
-        ImageService,
-        UOMConversion,
+        ImageService
       ],
       declarations: [
         RecipeListComponent,

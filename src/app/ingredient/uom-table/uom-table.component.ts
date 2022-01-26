@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TutorialService } from '@tutorialService';
-import { UOM, UOMConversion } from '@UOMConverson';
+import { UOM } from '@uoms';
+import { UomService } from '@uomService';
 import { NumberService } from 'src/app/util/number.service';
 
 @Component({
@@ -15,7 +16,7 @@ export class UomTableComponent {
 
   constructor(
     private numberService: NumberService,
-    private uomConversion: UOMConversion,
+    private uomService: UomService,
     private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
@@ -34,7 +35,7 @@ export class UomTableComponent {
       decimal = 0;
     }
 
-    const result = this.uomConversion.convert(from, to, decimal);
+    const result = this.uomService.convert(from, to, decimal);
     if (result === false) {
       return '-';
     }

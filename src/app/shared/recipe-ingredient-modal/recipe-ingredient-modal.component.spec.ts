@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Ingredient } from '@ingredient';
 import { UserIngredient } from '@userIngredient';
-import { UOMConversion } from '@UOMConverson';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 
 import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.component';
@@ -18,9 +17,6 @@ describe('RecipeIngredientModalComponent', () => {
       declarations: [
         RecipeIngredientModalComponent,
         ModalComponent
-      ],
-      providers: [
-        UOMConversion
       ]
     })
     .compileComponents();
