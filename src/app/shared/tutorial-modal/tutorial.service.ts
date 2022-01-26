@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Tutorial, TutorialModal } from '@tutorial';
 import { TutorialModalService } from '@modalService';
 import { Router } from '@angular/router';
+import { Action } from '@actions';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,8 @@ export class TutorialService extends FirestoreService {
   sort = (a: Tutorial, b: Tutorial): number => a.order - b.order;
 
   openTutorial(startingUrl: boolean): void {
+    this.commitAction(Action.OPEN_TUTORIAL);
+    
     this.tutorialModalService.setModal(new TutorialModal(
       startingUrl ? this.router.url : '/home',
       startingUrl ? this.router.url : null

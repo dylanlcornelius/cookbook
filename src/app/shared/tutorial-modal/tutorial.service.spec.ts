@@ -85,18 +85,22 @@ describe('TutorialService', () => {
 
   describe('openTutorial', () => {
     it('should open the tutorial modal', () => {
+      spyOn(service, 'commitAction');
       spyOn(tutorialModalService, 'setModal');
 
       service.openTutorial(false);
 
+      expect(service.commitAction).toHaveBeenCalled();
       expect(tutorialModalService.setModal).toHaveBeenCalled();
     });
 
     it('should open the tutorial modal with a starting url', () => {
+      spyOn(service, 'commitAction');
       spyOn(tutorialModalService, 'setModal');
 
       service.openTutorial(true);
 
+      expect(service.commitAction).toHaveBeenCalled();
       expect(tutorialModalService.setModal).toHaveBeenCalled();
     });
   });

@@ -231,6 +231,45 @@ describe('RecipeEditComponent', () => {
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
+
+    it('should reload a recipe', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ id: 'id' });
+
+      const recipe = new Recipe({
+        ingredients: [{
+          id: 'id2'
+        }]
+      });
+
+      const ingredients = [new Ingredient({
+        id: 'id'
+      })];
+
+      const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
+
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(component, 'addCategory');
+      spyOn(ingredientService, 'get').and.returnValue(ingredients$);
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
+      spyOn(recipeService, 'setForm');
+      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
+      spyOn(component, 'addIngredient');
+
+      component.load();
+      ingredients$.next([]);
+      fixture.detectChanges();
+
+      expect(breakpointObserver.observe).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
+      expect(component.addCategory).not.toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(recipeService.setForm).not.toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(component.addIngredient).not.toHaveBeenCalled();
+    });
   });
 
   describe('initCategory', () => {
@@ -314,6 +353,26 @@ describe('RecipeEditComponent', () => {
 
       const control = <FormArray>component.recipesForm.controls['steps'];
       expect(control.length).toEqual(0);
+    });
+  });
+
+  describe('moveItem', () => {
+    it('should call moveItemInArray', () => {
+      const list = [];
+
+      component.moveItem(list, 0, 0);
+
+      expect(list).toBeDefined();
+    });
+  });
+
+  describe('transferItem', () => {
+    it('should call transferArrayItem', () => {
+      const list = [];
+
+      component.transferItem(list, [], 0, 0);
+
+      expect(list).toBeDefined();
     });
   });
 

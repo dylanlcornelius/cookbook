@@ -44,7 +44,7 @@ describe('HouseholdService', () => {
 
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();

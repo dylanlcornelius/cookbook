@@ -43,10 +43,18 @@ describe('ImageUploadComponent', () => {
   });
 
   describe('readFile', () => {
-    it('should not compress a file', () => {
+    it('should not compress an empty event', () => {
       spyOn(imageService, 'upload');
 
       component.readFile({});
+
+      expect(imageService.upload).not.toHaveBeenCalled();
+    });
+
+    it('should not compress an event with no files', () => {
+      spyOn(imageService, 'upload');
+
+      component.readFile({ target: { files: [] } });
 
       expect(imageService.upload).not.toHaveBeenCalled();
     });

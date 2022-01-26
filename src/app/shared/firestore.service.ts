@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
 import { ModelObject } from '@model';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export abstract class FirestoreService {
       return;
     }
 
-    this.currentUserService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().pipe(first()).subscribe(user => {
       this.actionService.commitAction(user.uid, action, 1);
     });
   }

@@ -15,6 +15,8 @@
 
     BUY_INGREDIENT = 'BUY_INGREDIENT',
     COMPLETE_SHOPPING_LIST = 'COMPLETE_SHOPPING_LIST',
+
+    OPEN_TUTORIAL = 'OPEN_TUTORIAL',
 }
 
 export enum ActionLabel {
@@ -34,4 +36,6 @@ export enum ActionLabel {
 
     BUY_INGREDIENT = 'Buy Ingredient',
     COMPLETE_SHOPPING_LIST = 'Complete Shopping List',
+
+    OPEN_TUTORIAL = 'Open Tutorial',
 }
