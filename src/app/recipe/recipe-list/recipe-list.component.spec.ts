@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { RecipeService } from '@recipeService';
-import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter, SearchFilter, StatusFilter } from '@recipeFilterService';
+import { RecipeFilterService, CategoryFilter, RatingFilter, AuthorFilter, SearchFilter, StatusFilter, ImageFilter } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { IngredientService } from '@ingredientService';
@@ -124,7 +124,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED)];
+      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED), new ImageFilter(false)];
 
       spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
