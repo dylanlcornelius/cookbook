@@ -19,6 +19,9 @@
       
       <mat-form-field class="form-field">
         <textarea matInput placeholder="Description" formControlName="description"></textarea>
+        <mat-error>
+          <span *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched">Please enter valid sentences</span>
+        </mat-error>
       </mat-form-field>
   
       <mat-form-field class="form-field">
@@ -68,6 +71,9 @@
           <div class="center" [formGroupName]="i">
             <mat-form-field style="width: 80%;">
                 <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
+                <mat-error>
+                  <span *ngIf="!step.valid && step.touched">Please enter valid sentences</span>
+                </mat-error>
             </mat-form-field>
             <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" (click)="removeStep(i)">
               <mat-icon>close</mat-icon>
