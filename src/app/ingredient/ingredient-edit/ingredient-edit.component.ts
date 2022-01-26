@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { UOM } from '@UOMConverson';
+import { UOM } from '@uoms';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

@@ -20,7 +20,6 @@ import { RecipeIngredientModalComponent } from './recipe-ingredient-modal/recipe
 import { ValidationModalComponent } from './validation-modal/validation-modal.component';
 import { ModalComponent } from './modal/modal.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { UOMConversion } from '@UOMConverson';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TutorialModalComponent } from './tutorial-modal/tutorial-modal.component';
 import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component';
@@ -76,9 +75,6 @@ import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component'
     ModalComponent,
     ImageUploadComponent,
     TutorialModalComponent,
-  ],
-  providers: [
-    UOMConversion,
   ]
 })
 export class SharedModule { }

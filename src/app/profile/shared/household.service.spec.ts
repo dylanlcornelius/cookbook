@@ -30,6 +30,20 @@ describe('HouseholdService', () => {
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
     });
 
+    it('should get docs based on an id', () => {
+      (<any>service.ref) = { where: () => {} };
+     
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(service.ref, 'where');
+
+      service.get('id').subscribe(doc => {
+        expect(doc).toBeDefined();
+      });
+
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(service.ref.where).toHaveBeenCalled();
+    });
+
     it('should get a default household based on an id', () => {
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
       spyOn(FirestoreService.prototype, 'get');
@@ -44,7 +58,7 @@ describe('HouseholdService', () => {
 
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([]));
+      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
       service.get().subscribe(docs => {
         expect(docs).toBeDefined();
@@ -64,6 +78,20 @@ describe('HouseholdService', () => {
       });
 
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+    });
+
+    it('should get docs based on an id', () => {
+      (<any>service.ref) = { where: () => {} };
+    
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(service.ref, 'where');
+
+      service.getInvites('id').subscribe(doc => {
+        expect(doc).toBeDefined();
+      });
+
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(service.ref.where).toHaveBeenCalled();
     });
   });
 

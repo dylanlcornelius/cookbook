@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../user/shared/auth.service';
 
 import { HeaderComponent } from './header.component';
@@ -12,6 +12,7 @@ import { HouseholdService } from '@householdService';
 import { User } from '@user';
 import { Household } from '@household';
 import { RecipeService } from '@recipeService';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -25,7 +26,8 @@ describe('HeaderComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        RouterTestingModule
       ],
       declarations: [ HeaderComponent ],
       schemas: [
@@ -48,6 +50,24 @@ describe('HeaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  
+  describe('constructor', () => {
+    it('should listen to navigation events', () => {
+      const event = new NavigationEnd(1, '/', '/');
+      const router = TestBed.inject(Router);
+      (<any>router).events.next(event);
+
+      expect(component.route).toEqual('/');
+    });
+
+    it('should ignore non navigation events', () => {
+      const event = new NavigationStart(1, null);
+      const router = TestBed.inject(Router);
+      (<any>router).events.next(event);
+
+      expect(component.route).not.toEqual('/');
+    });
   });
 
   describe('load', () => {

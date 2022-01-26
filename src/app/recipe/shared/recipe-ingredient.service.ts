@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { UOM, UOMConversion } from '@UOMConverson';
+import { UOM } from '@uoms';
+import { UomService } from '@uomService';
 import { FailureNotification, InfoNotification, SuccessNotification } from '@notification';
 import { NotificationService, RecipeIngredientModalService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -16,7 +17,7 @@ import { Ingredient } from '@ingredient';
 export class RecipeIngredientService {
   constructor(
     private recipeIngredientModalService: RecipeIngredientModalService,
-    private uomConversion: UOMConversion,
+    private uomService: UomService,
     private notificationService: NotificationService,
     private recipeHistoryService: RecipeHistoryService,
     private userIngredientService: UserIngredientService,
@@ -71,7 +72,7 @@ export class RecipeIngredientService {
           ingredientCount++;
           
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
+          const value = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value && (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
             recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
           }
@@ -107,7 +108,7 @@ export class RecipeIngredientService {
       ingredients.forEach(ingredient => {
         if (recipeIngredient.id === ingredient.id) {
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-          const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
+          const value = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
           if (value) {
             ingredient.cartQuantity += Number(ingredient.amount) * Math.ceil(value / Number(ingredient.amount));
           } else {
@@ -137,7 +138,7 @@ export class RecipeIngredientService {
         ingredients.forEach(ingredient => {
           if (recipeIngredient.id === ingredient.id) {
             const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-            const value = this.uomConversion.convert(recipeIngredient.uom, ingredient.uom, quantity);
+            const value = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
             if (Number.isNaN(ingredient.pantryQuantity)) {
               ingredient.pantryQuantity = 0;
             } else if (value !== false) {

@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
-import { UOMConversion, UOM } from '@UOMConverson';
+import { UOM } from '@uoms';
+import { UomService } from '@uomService';
 import { RecipeEditComponent } from './recipe-edit.component';
 import { RecipeService } from '@recipeService';
 import { BehaviorSubject, of } from 'rxjs';
@@ -26,7 +27,7 @@ describe('RecipeEditComponent', () => {
   let breakpointObserver: BreakpointObserver;
   let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
-  let uomConversion: UOMConversion;
+  let uomService: UomService;
   let formBuilder: FormBuilder;
   let ingredientService: IngredientService;
   let validationService: ValidationService;
@@ -45,9 +46,6 @@ describe('RecipeEditComponent', () => {
         MatChipsModule,
         BrowserAnimationsModule,
       ],
-      providers: [
-        UOMConversion
-      ],
       declarations: [ RecipeEditComponent ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
@@ -63,7 +61,7 @@ describe('RecipeEditComponent', () => {
     breakpointObserver = TestBed.inject(BreakpointObserver);
     currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
-    uomConversion = TestBed.inject(UOMConversion);
+    uomService = TestBed.inject(UomService);
     formBuilder = TestBed.inject(FormBuilder);
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
@@ -231,6 +229,45 @@ describe('RecipeEditComponent', () => {
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
+
+    it('should reload a recipe', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ id: 'id' });
+
+      const recipe = new Recipe({
+        ingredients: [{
+          id: 'id2'
+        }]
+      });
+
+      const ingredients = [new Ingredient({
+        id: 'id'
+      })];
+
+      const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
+
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(component, 'addCategory');
+      spyOn(ingredientService, 'get').and.returnValue(ingredients$);
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
+      spyOn(recipeService, 'setForm');
+      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
+      spyOn(component, 'addIngredient');
+
+      component.load();
+      ingredients$.next([]);
+      fixture.detectChanges();
+
+      expect(breakpointObserver.observe).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
+      expect(component.addCategory).not.toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeService.getForm).toHaveBeenCalled();
+      expect(recipeService.setForm).not.toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(component.addIngredient).not.toHaveBeenCalled();
+    });
   });
 
   describe('initCategory', () => {
@@ -314,6 +351,26 @@ describe('RecipeEditComponent', () => {
 
       const control = <FormArray>component.recipesForm.controls['steps'];
       expect(control.length).toEqual(0);
+    });
+  });
+
+  describe('moveItem', () => {
+    it('should call moveItemInArray', () => {
+      const list = [];
+
+      component.moveItem(list, 0, 0);
+
+      expect(list).toBeDefined();
+    });
+  });
+
+  describe('transferItem', () => {
+    it('should call transferArrayItem', () => {
+      const list = [];
+
+      component.transferItem(list, [], 0, 0);
+
+      expect(list).toBeDefined();
     });
   });
 
@@ -426,20 +483,20 @@ describe('RecipeEditComponent', () => {
 
   describe('getUOMs', () => {
     it('should return a list of uoms', () => {
-      spyOn(uomConversion, 'relatedUOMs').and.returnValue([]);
+      spyOn(uomService, 'relatedUOMs').and.returnValue([]);
 
       const result = component.getUOMs(UOM.CUP);
 
       expect(result).toEqual([]);
-      expect(uomConversion.relatedUOMs).toHaveBeenCalled();
+      expect(uomService.relatedUOMs).toHaveBeenCalled();
     });
 
     it('should handle undefined', () => {
-      spyOn(uomConversion, 'relatedUOMs');
+      spyOn(uomService, 'relatedUOMs');
 
       component.getUOMs(undefined);
 
-      expect(uomConversion.relatedUOMs).not.toHaveBeenCalled();
+      expect(uomService.relatedUOMs).not.toHaveBeenCalled();
     });
   });
 

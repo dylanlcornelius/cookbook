@@ -1,6 +1,6 @@
 import { Model } from '@model';
 import { Ingredient } from '@ingredient';
-import { UOM } from '@UOMConverson';
+import { UOM } from '@uoms';
 
 export class Recipe extends Model {
     name: string;

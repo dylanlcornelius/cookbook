@@ -31,6 +31,22 @@ describe('ConfigService', () => {
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
     });
 
+    it('should get one document based on an id with a ref', () => {
+      (<any>service.ref) = { where: () => {} };
+     
+      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
+      spyOn(FirestoreService.prototype, 'get');
+      spyOn(service.ref, 'where');
+
+      service.get('name').subscribe(doc => {
+        expect(doc).toBeDefined();
+      });
+
+      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
+      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
+      expect(service.ref.where).toHaveBeenCalled();
+    });
+
     it('should get all documents', () => {
       spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
