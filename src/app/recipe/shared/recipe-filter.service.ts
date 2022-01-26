@@ -39,6 +39,7 @@ export enum FILTER_TYPE {
   CATEGORY = 'CATEGORY',
   RATING = 'RATING',
   STATUS = 'STATUS',
+  IMAGE = 'IMAGE',
   SEARCH = 'SEARCH',
 }
 
@@ -81,6 +82,10 @@ export class StatusFilter extends Filter {
   filterPredicate = (recipe: Recipe): boolean => this.value === recipe.status;
 }
 
+export class ImageFilter extends Filter {
+  type = FILTER_TYPE.IMAGE;
+  filterPredicate = (recipe: Recipe): boolean => this.value === recipe.hasImage;
+}
 
 export class SearchFilter extends Filter {
   type = FILTER_TYPE.SEARCH;

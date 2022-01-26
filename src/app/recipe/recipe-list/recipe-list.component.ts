@@ -12,7 +12,7 @@ import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/opera
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter, StatusFilter } from '@recipeFilterService';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter, StatusFilter, ImageFilter } from '@recipeFilterService';
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
@@ -39,7 +39,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   searchFilter = '';
 
   dataSource;
-  recipes = [];
+  recipes: Recipe[] = [];
   userIngredient: UserIngredient;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -142,6 +142,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           const categories = [];
           const authors = [];
           const statuses = [];
+          const images = [];
           this.recipes.forEach(recipe => {
             recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
             this.imageService.download(recipe).then(url => {
@@ -166,6 +167,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
               const checked = filters.find(f => f.type === FILTER_TYPE.STATUS && f.value === recipe.status) !== undefined;
               statuses.push({ displayName: recipe.status.replace(/\b\w/g, l => l.toUpperCase()), name: recipe.status, checked: checked, filter: new StatusFilter(recipe.status) });
             }
+
+            if (images.find(i => i.name === recipe.hasImage) === undefined) {
+              const checked = filters.find(f => f.type === FILTER_TYPE.IMAGE && f.value === recipe.hasImage) !== undefined;
+              images.push({ displayName: recipe.hasImage.toString().replace(/\b\w/g, l => l.toUpperCase()), name: recipe.hasImage, checked: checked, filter: new ImageFilter(recipe.hasImage) });
+            }
           });
           const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
           this.searchFilter = searchFilter ? searchFilter.value : '';
@@ -184,6 +190,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 { displayName: 'Categories', name: 'categories', values: categories },
                 { displayName: 'Ratings', name: 'ratings', values: ratings },
                 { displayName: 'Statuses', name: 'statuses', values: statuses },
+                { displayName: 'Images', name: 'images', values: images },
               ];
             } else {
               this.filtersList = [
@@ -194,6 +201,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                     { displayName: 'Authors', name: 'author', values: authors },
                     { displayName: 'Ratings', name: 'ratings', values: ratings },
                     { displayName: 'Statuses', name: 'statuses', values: statuses },
+                    { displayName: 'Images', name: 'images', values: images },
                   ]
                 }
               ];
