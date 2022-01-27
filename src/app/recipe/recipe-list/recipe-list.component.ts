@@ -275,7 +275,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   if (selectedFilter.checked) {
       this.recipeFilterService.selectedFilters.push(selectedFilter.filter);
     } else {
-      this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => selectedFilter.filter.type !== f.type && selectedFilter.filter.value != f.value);
+      this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => !(selectedFilter.filter.type === f.type && selectedFilter.filter.value == f.value));
     }
 
     this.setSelectedFilterCount();
