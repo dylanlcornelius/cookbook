@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
@@ -25,6 +25,8 @@ import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { ValidationService } from '@modalService';
 import { BehaviorSubject } from 'rxjs';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -47,7 +49,9 @@ describe('RecipeListComponent', () => {
       imports: [
         RouterModule.forRoot([]),
         MatTableModule,
-        FormsModule
+        MatPaginatorModule,
+        FormsModule,
+        BrowserAnimationsModule
       ],
       providers: [
         CurrentUserService,
@@ -93,6 +97,7 @@ describe('RecipeListComponent', () => {
     it('should initialize the recipes list', fakeAsync(() => {
       const recipes = [
         new Recipe({
+          id: 'recipe',
           ingredients: [{
             id: 'ingredientId',
           }],
@@ -124,7 +129,12 @@ describe('RecipeListComponent', () => {
         })
       ];
 
+      const element = document.createElement('div');
+      element.id = 'recipe';
+      document.getElementsByClassName('search-bar')[0].appendChild(element);
+      
       recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED), new ImageFilter(false)];
+      recipeFilterService.recipeId = 'recipe';
 
       spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
@@ -140,6 +150,7 @@ describe('RecipeListComponent', () => {
       component.load();
 
       tick();
+      flush();
       expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
@@ -186,6 +197,8 @@ describe('RecipeListComponent', () => {
         })
       ];
 
+      recipeFilterService.recipeId = 'recipe';
+
       spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
@@ -200,6 +213,7 @@ describe('RecipeListComponent', () => {
       component.load();
 
       tick();
+      flush();
       expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
@@ -538,6 +552,17 @@ describe('RecipeListComponent', () => {
 
       expect(recipeService.setForm).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('pageEvent', () => {
+    it('should store the page index', () => {
+      const event = new PageEvent();
+      event.pageIndex = 2;
+
+      component.pageEvent(event);
+
+      expect(recipeFilterService.pageIndex).toEqual(2);
     });
   });
 

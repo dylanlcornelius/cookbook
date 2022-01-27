@@ -86,5 +86,5 @@
     </mat-card>
   </div>
 
-  <mat-paginator [pageSizeOptions]="[100, 200, 500]" class="full-width"></mat-paginator>
+  <mat-paginator [pageIndex]="pageIndex" [pageSizeOptions]="[100, 200, 500]" (page)="pageEvent($event)" class="full-width"></mat-paginator>
 </div>
