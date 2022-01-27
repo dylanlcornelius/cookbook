@@ -374,14 +374,16 @@ describe('RecipeListComponent', () => {
     });
 
     it('should unapply a filter', () => {
-      const filter = new CategoryFilter('test');
-      const filter2 = new AuthorFilter('author');
-      recipeFilterService.selectedFilters = [filter, filter2];
+      const filter1 = new CategoryFilter('test');
+      const filter2 = new CategoryFilter('test1');
+      const filter3 = new AuthorFilter('author');
+      recipeFilterService.selectedFilters = [filter1, filter2, filter3];
 
-      component.filterSelected({checked: false, name: 'test', filter});
+      component.filterSelected({checked: false, name: 'test', filter: filter1});
 
-      expect(recipeFilterService.selectedFilters).not.toContain(filter);
+      expect(recipeFilterService.selectedFilters).not.toContain(filter1);
       expect(recipeFilterService.selectedFilters).toContain(filter2);
+      expect(recipeFilterService.selectedFilters).toContain(filter3);
     });
 
     afterEach(() => {
@@ -563,6 +565,17 @@ describe('RecipeListComponent', () => {
       component.pageEvent(event);
 
       expect(recipeFilterService.pageIndex).toEqual(2);
+    });
+  });
+
+  describe('handlePageBottom', () => {
+    it('should store the page index', () => {
+      const event = new PageEvent();
+      event.pageIndex = 2;
+
+      component.handlePageBottom(event);
+
+      expect(component.paginator.pageIndex).toEqual(2);
     });
   });
 
