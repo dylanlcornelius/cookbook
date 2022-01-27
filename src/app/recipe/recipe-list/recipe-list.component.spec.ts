@@ -68,7 +68,6 @@ describe('RecipeListComponent', () => {
         CUSTOM_ELEMENTS_SCHEMA
       ]
     })
-    // .overrideTemplate(RecipeListComponent, '<div id="recipe"></div>')
     .compileComponents();
   }));
 
