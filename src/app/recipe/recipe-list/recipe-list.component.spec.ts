@@ -566,6 +566,17 @@ describe('RecipeListComponent', () => {
     });
   });
 
+  describe('handlePageBottom', () => {
+    it('should store the page index', () => {
+      const event = new PageEvent();
+      event.pageIndex = 2;
+
+      component.handlePageBottom(event);
+
+      expect(component.paginator.pageIndex).toEqual(2);
+    });
+  });
+
   describe('openTutorial', () => {
     it('should open the tutorial', () => {
       spyOn(tutorialService, 'openTutorial');

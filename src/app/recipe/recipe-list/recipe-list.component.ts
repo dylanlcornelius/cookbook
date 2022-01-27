@@ -349,5 +349,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     return event;
   }
 
+  handlePageBottom(event: PageEvent): PageEvent {
+    this.paginator.pageIndex = event.pageIndex;
+    this.paginator.page.emit(event);
+    return event;
+  }
+
   openTutorial = (): void => this.tutorialService.openTutorial(true);
 }
