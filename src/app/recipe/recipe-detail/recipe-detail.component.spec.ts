@@ -22,6 +22,7 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
+import { RecipeFilterService } from '@recipeFilterService';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -36,6 +37,7 @@ describe('RecipeDetailComponent', () => {
   let utilService: UtilService;
   let userIngredientService: UserIngredientService;
   let recipeIngredientService: RecipeIngredientService;
+  let recipeFilterService: RecipeFilterService;
   let validationService: ValidationService;
   let tutorialService: TutorialService;
 
@@ -68,12 +70,23 @@ describe('RecipeDetailComponent', () => {
     utilService = TestBed.inject(UtilService);
     userIngredientService = TestBed.inject(UserIngredientService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
+    recipeFilterService = TestBed.inject(RecipeFilterService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
+
+    component.recipe = new Recipe({ id: 'recipe' });
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('unload', () => {
+    it('should set a recipe id for scroll restoration', () => {
+      component.unload();
+
+      expect(recipeFilterService.recipeId).toEqual('recipe');
+    });
   });
 
   describe('load', () => {
@@ -193,8 +206,6 @@ describe('RecipeDetailComponent', () => {
 
   describe('updateImage', () => {
     it('should update recipe image metadata',() => {
-      component.recipe = new Recipe({});
-
       spyOn(recipeService, 'update');
 
       component.updateImage(false);
@@ -205,8 +216,6 @@ describe('RecipeDetailComponent', () => {
 
   describe('deleteRecipe', () => {
     it('should open a modal to delete a recipe', () => {
-      component.recipe = new Recipe({});
-
       spyOn(validationService, 'setModal');
 
       component.deleteRecipe('id');
@@ -354,8 +363,6 @@ describe('RecipeDetailComponent', () => {
 
   describe('openRecipeEditorEvent', () => {
     it('should reset the editor form and navigate', () => {
-      component.recipe = new Recipe({});
-
       const router = TestBed.inject(Router);
       spyOn(router, 'navigate');
       spyOn(recipeService, 'setForm');

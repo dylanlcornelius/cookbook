@@ -3,7 +3,7 @@ import { RecipeService } from '@recipeService';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ImageService } from '@imageService';
 import { combineLatest, Subject } from 'rxjs';
@@ -37,6 +37,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   filtersList = [];
   searchFilter$ = new Subject<string>();
   searchFilter = '';
+  pageIndex: number;
 
   dataSource;
   recipes: Recipe[] = [];
@@ -208,8 +209,17 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             }
             this.setSelectedFilterCount();
             this.dataSource.filter = this.recipeFilterService.selectedFilters;
+            this.paginator.pageIndex = this.recipeFilterService.pageIndex;
             this.dataSource.paginator = this.paginator;
             this.loading = this.loadingService.set(false);
+
+            if (this.recipeFilterService.recipeId) {
+              setTimeout(() => {
+                const element = document.getElementById(this.recipeFilterService.recipeId);
+                element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                this.recipeFilterService.recipeId = null;
+              }, 1000);
+            }
           });
         });
       });
@@ -333,6 +343,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipeService.setForm(null);
     this.router.navigate(['/recipe/edit']);
   };
+
+  pageEvent(event: PageEvent): PageEvent {
+    this.recipeFilterService.pageIndex = event.pageIndex;
+    return event;
+  }
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

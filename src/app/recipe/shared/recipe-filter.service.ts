@@ -11,6 +11,9 @@ export class RecipeFilterService {
   get selectedFilters(): Array<Filter> { return this.filters; }
   set selectedFilters(filters: Array<Filter>) { this.filters = filters; }
 
+  pageIndex: number;
+  recipeId: Recipe['id'];
+
   constructor() { }
 
   recipeFilterPredicate(data: Recipe, filters: Array<Filter>): boolean {

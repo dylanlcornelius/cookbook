@@ -11,7 +11,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { AuthorFilter, CategoryFilter } from '@recipeFilterService';
+import { AuthorFilter, CategoryFilter, RecipeFilterService } from '@recipeFilterService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
@@ -60,6 +60,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
     private userIngredientService: UserIngredientService,
+    private recipeFilterService: RecipeFilterService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
   ) {
@@ -73,6 +74,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    this.unload();
+  }
+
+  unload(): void {
+    this.recipeFilterService.recipeId = this.recipe.id;
   }
 
   load(): void {
