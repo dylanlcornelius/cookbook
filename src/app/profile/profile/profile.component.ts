@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { ActionService } from '@actionService';
 import { User } from '@user';
-import { ActionLabel } from '@actions';
+import { Action, ActionLabel } from '@actions';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
@@ -48,11 +48,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   actions = [];
   actionsLength = 0;
-  week = {pageIndex: 0};
+  actionPage = { pageIndex: 0 };
 
   matcher = new ErrorMatcher();
 
-  @ViewChild(MatPaginator) weekPaginator: any;
+  @ViewChild(MatPaginator) actionPaginator: any;
 
   history = [];
   totalRecipesCooked: number;
@@ -133,36 +133,45 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         return {
           data: actionData,
-          date: `${action.month}/${action.day}/${action.year}`,
+          date: action.year,
         };
       });
 
       this.actionsLength = Object.keys(this.actions).length;
 
-      this.week.pageIndex = this.actionsLength - 1;
-      if (this.weekPaginator) {
-        this.weekPaginator.pageIndex = this.actionsLength - 1;
+      this.actionPage.pageIndex = this.actionsLength - 1;
+      if (this.actionPaginator) {
+        this.actionPaginator.pageIndex = this.actionsLength - 1;
       }
     });
   }
 
-  sortActions(userActions: any): { day: number, month: number, year: number, data: any }[] {
+  sortActions(userActions: any): { year: number, data: any }[] {
     const dateArray = Object.keys(userActions).map(key => {
       return key.split('/').map(Number);
     });
 
-    dateArray.sort((a, b) => a[0] - b[0]);
-    dateArray.sort((a, b) => a[1] - b[1]);
     dateArray.sort((a, b) => a[2] - b[2]);
 
     return dateArray.map(date => {
       return {
-        day: date[0],
-        month: date[1],
         year: date[2],
-        data: userActions[`${date[0]}/${date[1]}/${date[2]}`]
+        data: userActions[date.join('/')]
       };
-    });
+    }).reduce((yearList, dateActions) => {
+      const yearActions = yearList.find(({ year }) => year === dateActions.year);
+      if (yearActions) {
+        for (const action of Object.values(Action)) {
+          if (yearActions.data[action] || dateActions.data[action]) {
+            yearActions.data[action] = (yearActions.data[action] || 0) + (dateActions.data[action] || 0);
+          }
+        }
+      } else {
+        yearList.push(dateActions);
+      }
+
+      return yearList;
+    }, []);
   }
 
   loadHistory(): void {

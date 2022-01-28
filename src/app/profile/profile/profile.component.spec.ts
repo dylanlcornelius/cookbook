@@ -21,6 +21,7 @@ import { RecipeHistory } from '@recipeHistory';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
+import { Action } from '@actions';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -114,7 +115,7 @@ describe('ProfileComponent', () => {
   describe('loadActions', () => {
     it('should load actions', fakeAsync(() => {
       component.user = new User({uid: 'uid'});
-      component.weekPaginator = {};
+      component.actionPaginator = {};
       
       const actions = [
         { day: 0, month: 1, year: 0, data: {'1': 2} },
@@ -137,7 +138,7 @@ describe('ProfileComponent', () => {
 
     it('should load actions without paginators', fakeAsync(() => {
       component.user = new User({uid: 'uid'});
-      component.weekPaginator = null;
+      component.actionPaginator = null;
       
       const actions = [
         { day: 0, month: 1, year: 0, data: {'1': 2} },
@@ -174,9 +175,25 @@ describe('ProfileComponent', () => {
 
   describe('sortActions', () => {
     it('should sort and format dates', () => {
-      const result = component.sortActions({'2/2/2': {}, '1/1/1': {}});
+      const result = component.sortActions({
+        '2/2/2': {},
+        '1/1/1': { [Action.BUY_INGREDIENT]: 1 },
+        '1/2/1': {}
+      });
 
-      expect(result[0].day).toBe(1);
+      expect(result[0].year).toBe(1);
+      expect(result[1].year).toBe(2);
+    });
+
+    it('should sort and format dates', () => {
+      const result = component.sortActions({
+        '2/2/2': {},
+        '1/1/1': {},
+        '1/2/1': { [Action.BUY_INGREDIENT]: 1 }
+      });
+
+      expect(result[0].year).toBe(1);
+      expect(result[1].year).toBe(2);
     });
   });
 
