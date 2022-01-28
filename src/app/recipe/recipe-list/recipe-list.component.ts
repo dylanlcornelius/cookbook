@@ -218,7 +218,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 const element = document.getElementById(this.recipeFilterService.recipeId);
                 element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 this.recipeFilterService.recipeId = null;
-              }, 1000);
+              }, 1500);
             }
           });
         });

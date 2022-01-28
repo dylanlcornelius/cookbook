@@ -85,6 +85,12 @@ dt {
   display: contents !important;
   padding: 0 5%;
 }
+.icon-buttons {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .highlighted-element {
   outline: 3px solid red !important;
   border-radius: 5px !important;

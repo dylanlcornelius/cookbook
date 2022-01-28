@@ -30,9 +30,7 @@
   <mat-step [editable]="true" [optional]="true">
     <ng-template matStepLabel>Upload a Picture</ng-template>
 
-    <div class="image-button">
-      <app-image-upload [id]="user.id" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
-    </div>
+    <app-image-upload [id]="user.id" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
     <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
     <mat-progress-bar class="image-progress" mode="determinate" [value]="userImageProgress" [hidden]="!userImageProgress"></mat-progress-bar>
 
