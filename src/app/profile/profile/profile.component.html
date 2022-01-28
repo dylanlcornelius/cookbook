@@ -68,17 +68,17 @@
       <div class="tab-body">
         <h2>Your Analytics</h2>
 
-        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="week = $event"></mat-paginator>
-        <h4>{{actions[week.pageIndex]?.date || ''}}</h4>
+        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="actionPage = $event"></mat-paginator>
+        <h4>{{actions[actionPage.pageIndex]?.date || ''}}</h4>
 
         <div class="chart-container">
           <ngx-charts-pie-chart class="desktop"
-            [results]="actions[week.pageIndex]?.data"
+            [results]="actions[actionPage.pageIndex]?.data"
             [legend]="true"
             [doughnut]="true">
           </ngx-charts-pie-chart>
           <ngx-charts-pie-chart class="mobile"
-            [results]="actions[week.pageIndex]?.data">
+            [results]="actions[actionPage.pageIndex]?.data">
           </ngx-charts-pie-chart>
         </div>
       </div>
