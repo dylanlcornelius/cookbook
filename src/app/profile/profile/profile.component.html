@@ -8,7 +8,7 @@
 
         <h2>Your Profile</h2>
 
-        <app-image-upload [id]="user.id" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
+        <app-image-upload [id]="user.id" class="icon-buttons" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
 
         <div class="container">
           <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
