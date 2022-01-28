@@ -21,14 +21,10 @@ SPA: Yes
 ```
 
 #### Build application
-##### TEST:
-```
-ng build --aot
-```
 
 ##### PRODUCTION: 
 ```
-ng build --prod
+ng build -c product
 ```
 
 #### Deploy build
