@@ -265,8 +265,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   setFilters(): void {
     this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => FILTER_TYPE.SEARCH !== f.type);
-    if (this.searchFilter) {
-      this.recipeFilterService.selectedFilters.push(new SearchFilter(this.searchFilter));
+    if (this.searchFilter.trim().toLowerCase()) {
+      this.recipeFilterService.selectedFilters.push(new SearchFilter(this.searchFilter.trim().toLowerCase()));
     }
     this.dataSource.filter = this.recipeFilterService.selectedFilters;
   }
@@ -283,7 +283,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   searchChanged(filterValue: string): void {
-    this.searchFilter$.next(filterValue.trim().toLowerCase());
+    this.searchFilter$.next(filterValue);
   }
 
   setCategoryFilter = (filter: Filter): void => this.utilService.setListFilter(new CategoryFilter(filter));
