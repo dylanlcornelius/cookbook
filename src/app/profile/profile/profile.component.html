@@ -85,28 +85,30 @@
     </mat-tab>
 
     <mat-tab label="History">
-      <div class="tab-body">
-        <h2>Your Recipe History</h2>
-        <p *ngIf="totalRecipesCooked">Total Recipes Cooked: {{totalRecipesCooked}}</p>
-
-        <div class="chart-container desktop">
-          <ngx-charts-bar-vertical
-            [results]="history"
-            [gradient]="true"
-            [xAxis]="true"
-            [legend]="true"
-            [showDataLabel]="true">
-          </ngx-charts-bar-vertical>
+      <ng-template matTabContent>
+        <div class="tab-body">
+          <h2>Your Recipe History</h2>
+          <p *ngIf="totalRecipesCooked">Total Recipes Cooked: {{totalRecipesCooked}}</p>
+  
+          <div class="chart-container desktop">
+            <ngx-charts-bar-vertical
+              [results]="history"
+              [gradient]="true"
+              [xAxis]="true"
+              [legend]="true"
+              [showDataLabel]="true">
+            </ngx-charts-bar-vertical>
+          </div>
+          <div class="chart-container mobile" [ngStyle]="{'height': history.length * 3 + 'vh'}">
+              <ngx-charts-bar-horizontal
+              [results]="history"
+              [gradient]="true"
+              [yAxis]="true"
+              [showDataLabel]="true">
+            </ngx-charts-bar-horizontal>
+          </div>
         </div>
-        <div class="chart-container mobile" [ngStyle]="{'height': history.length * 3 + 'vh'}">
-            <ngx-charts-bar-horizontal
-            [results]="history"
-            [gradient]="true"
-            [yAxis]="true"
-            [showDataLabel]="true">
-          </ngx-charts-bar-horizontal>
-        </div>
-      </div>
+      </ng-template>
     </mat-tab>
   </mat-tab-group>
 </div>
