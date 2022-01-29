@@ -350,7 +350,7 @@ describe('RecipeListComponent', () => {
       component.dataSource = new MatTableDataSource();
       const filter = new CategoryFilter('category');
       recipeFilterService.selectedFilters = [filter];
-      component.searchFilter = 'filter';
+      component.searchFilter = ' FILTER ';
 
       component.setFilters();
 
@@ -398,7 +398,7 @@ describe('RecipeListComponent', () => {
         expect(filterValue).toEqual('value');
       });
 
-      component.searchChanged(' VALUE ');
+      component.searchChanged('value');
 
       tick();
     }));
