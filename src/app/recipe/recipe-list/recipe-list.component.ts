@@ -265,7 +265,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   setFilters(): void {
     this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => FILTER_TYPE.SEARCH !== f.type);
-    if (this.searchFilter.trim().toLowerCase()) {
+    if (this.searchFilter?.trim().toLowerCase()) {
       this.recipeFilterService.selectedFilters.push(new SearchFilter(this.searchFilter.trim().toLowerCase()));
     }
     this.dataSource.filter = this.recipeFilterService.selectedFilters;
