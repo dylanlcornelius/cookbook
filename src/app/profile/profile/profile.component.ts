@@ -191,7 +191,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
           return list;
           }, [])
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+        .sort(({ value: a }, { value: b }) => b - a);
       
       if (total > 0) {
         this.totalRecipesCooked = total;
