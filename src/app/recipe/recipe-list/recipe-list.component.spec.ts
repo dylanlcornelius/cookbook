@@ -101,14 +101,7 @@ describe('RecipeListComponent', () => {
           ingredients: [{
             id: 'ingredientId',
           }],
-          categories: [{
-            category: 'category'
-          },
-          {
-            category: 'category'
-          }],
-          status: RECIPE_STATUS.PUBLISHED,
-          author: 'author'
+          status: RECIPE_STATUS.PUBLISHED
         }),
         new Recipe({})
       ];
@@ -133,10 +126,8 @@ describe('RecipeListComponent', () => {
       element.id = 'recipe';
       document.getElementsByClassName('search-bar')[0].appendChild(element);
       
-      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED), new ImageFilter(false)];
       recipeFilterService.recipeId = 'recipe';
 
-      spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -144,14 +135,12 @@ describe('RecipeListComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
-      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
-      spyOn(component, 'setSelectedFilterCount');
+      spyOn(component, 'initFilters');
 
       component.load();
 
       tick();
       flush();
-      expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
@@ -160,8 +149,7 @@ describe('RecipeListComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
-      expect(breakpointObserver.observe).toHaveBeenCalled();
-      expect(component.setSelectedFilterCount).toHaveBeenCalled();
+      expect(component.initFilters).toHaveBeenCalled();
     }));
 
     it('should handle falsey values', fakeAsync(() => {
@@ -169,16 +157,12 @@ describe('RecipeListComponent', () => {
         new Recipe({
           ingredients: [{
             id: 'ingredientId'
-          }],
-          categories: [{ category: 'thing' }, { category: 'thingy'}],
-          author: 'author'
+          }]
         }),
         new Recipe({
           ingredients: [{
             id: 'ingredientId'
-          }],
-          categories: [],
-          author: 'author2'
+          }]
         })
       ];
 
@@ -199,7 +183,6 @@ describe('RecipeListComponent', () => {
 
       recipeFilterService.recipeId = 'recipe';
 
-      spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -207,14 +190,12 @@ describe('RecipeListComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
-      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
-      spyOn(component, 'setSelectedFilterCount');
+      spyOn(component, 'initFilters');
 
       component.load();
 
       tick();
       flush();
-      expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
@@ -223,8 +204,7 @@ describe('RecipeListComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
-      expect(breakpointObserver.observe).toHaveBeenCalled();
-      expect(component.setSelectedFilterCount).toHaveBeenCalled();
+      expect(component.initFilters).toHaveBeenCalled();
     }));
 
     it('should handle images errors', fakeAsync(() => {
@@ -253,7 +233,6 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      spyOn(component, 'initSearchFilter');
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -261,13 +240,11 @@ describe('RecipeListComponent', () => {
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
-      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
-      spyOn(component, 'setSelectedFilterCount');
+      spyOn(component, 'initFilters');
 
       component.load();
 
       tick();
-      expect(component.initSearchFilter).toHaveBeenCalled();
       expect(component.dataSource.data[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
@@ -276,35 +253,70 @@ describe('RecipeListComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
-      expect(breakpointObserver.observe).toHaveBeenCalled();
-      expect(component.setSelectedFilterCount).toHaveBeenCalled();
+      expect(component.initFilters).toHaveBeenCalled();
     }));
   });
 
-  describe('initSearchFilter', () => {
-    it('should apply a filter', fakeAsync(() => {
+  describe('initFilters', () => {
+    it('should apply all filters', fakeAsync(() => {
       component.dataSource = new MatTableDataSource([]);
 
-      spyOn(component, 'setFilters');
+      component.recipes = [
+        new Recipe({
+          categories: [{ category: 'thing' }, { category: 'thingy'}],
+          author: 'author'
+        }),
+        new Recipe({
+          categories: [],
+          author: 'author2'
+        })
+      ];
 
-      component.initSearchFilter();
+      recipeFilterService.selectedFilters = [new RatingFilter(1), new CategoryFilter(''), new AuthorFilter('author'), new SearchFilter('search'), new StatusFilter(RECIPE_STATUS.PUBLISHED), new ImageFilter(false)];
+
+      spyOn(component, 'setFilters');
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
+      spyOn(component, 'setSelectedFilterCount');
+
+      component.initFilters();
       component.searchFilter$.next('value');
       
       tick(1000);
+      expect(breakpointObserver.observe).toHaveBeenCalled();
+      expect(component.setSelectedFilterCount).toHaveBeenCalled();
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
     }));
 
-    it('should apply a filter and go to the first page', fakeAsync(() => {
+    it('should only apply a search filter', fakeAsync(() => {
       component.dataSource = {paginator: {firstPage: () => {}}};
+
+      component.recipes = [
+        new Recipe({
+          categories: [{
+            category: 'category'
+          },
+          {
+            category: 'category'
+          }],
+          status: RECIPE_STATUS.PUBLISHED,
+          author: 'author'
+        }),
+        new Recipe({})
+      ];
 
       spyOn(component, 'setFilters');
       spyOn(component.dataSource.paginator, 'firstPage');
+      spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
+      spyOn(component, 'setSelectedFilterCount');
 
-      component.initSearchFilter();
+      component.initFilters();
+      component.initFilters();
       component.searchFilter$.next('value');
       
       tick(1000);
+      expect(breakpointObserver.observe).toHaveBeenCalledTimes(2);
+      expect(component.setSelectedFilterCount).toHaveBeenCalledTimes(2);
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
       expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
@@ -402,6 +414,21 @@ describe('RecipeListComponent', () => {
 
       tick();
     }));
+  });
+
+  describe('clearFilters', () => {
+    it('should clear and re-initialize filters', () => {
+      recipeFilterService.selectedFilters = [new SearchFilter('search')];
+
+      spyOn(component, 'initFilters');
+      spyOn(component, 'setFilters');
+
+      component.clearFilters();
+
+      expect(recipeFilterService.selectedFilters).toHaveSize(0);
+      expect(component.initFilters).toHaveBeenCalled();
+      expect(component.setFilters).toHaveBeenCalled();
+    });
   });
 
   describe('setCategoryFilter', () => {
