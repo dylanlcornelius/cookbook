@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ImageService } from '@imageService';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
 import { Recipe } from '@recipe';
@@ -42,6 +42,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   dataSource;
   recipes: Recipe[] = [];
   userIngredient: UserIngredient;
+
+  breakpointSubscription: Subscription;
+  searchSubscription: Subscription;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -84,8 +87,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
         this.householdId = household.id;
 
-        this.initSearchFilter();
-
         const recipes$ = this.recipeService.get();
         const ingredients$ = this.ingredientService.get();
         const userIngredient$ = this.userIngredientService.get(this.householdId);
@@ -110,124 +111,134 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             });
           });
 
-          // account for deleted ingredients
-          recipes.forEach(recipe => {
-            recipe.ingredients.forEach(recipeIngredient => {
-              if (!recipeIngredient.name) {
-                recipeIngredient.name = null;
-              }
-            });
-
-            recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, recipe);
-          });
-
-          const filters = this.recipeFilterService.selectedFilters;
-
           this.recipes = recipes
             .filter(recipe => this.householdService.hasUserPermission(household, this.user, recipe))
             .sort(this.sortRecipesByName)
-            .sort(this.sortRecipesByImages);
-          this.dataSource = new MatTableDataSource(recipes);
-          const ratings = [];
-          [0, 1, 2, 3].forEach(ratingOption => {
-            const rating = ratingOption / 3 * 100;
-            let displayValue = '';
-            for (let i = 0; i < ratingOption; i++) {
-              displayValue += '★';
-            }
-            
-            const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
-            ratings.push({ displayName: `${displayValue}`, name: rating, checked: checked, filter: new RatingFilter(rating) });
-          });
+            .sort(this.sortRecipesByImages)
+            .map(recipe => {
+              // account for deleted ingredients
+              recipe.ingredients.forEach(recipeIngredient => {
+                if (!recipeIngredient.name) {
+                  recipeIngredient.name = null;
+                }
+              });
 
-          const categories = [];
-          const authors = [];
-          const statuses = [];
-          const images = [];
-          this.recipes.forEach(recipe => {
-            recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
-            this.imageService.download(recipe).then(url => {
-              if (url) {
-                recipe.image = url;
-              }
-            }, () => {});
+              recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, recipe);
+              recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
 
-            recipe.categories.forEach(({ category }) => {
-              if (categories.find(c => c.name === category) === undefined) {
-                const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === category) !== undefined;
-                categories.push({ displayName: category, name: category, checked: checked, filter: new CategoryFilter(category) });
-              }
+              this.imageService.download(recipe).then(url => {
+                if (url) {
+                  recipe.image = url;
+                }
+              }, () => {});
+
+              return recipe;
             });
-
-            if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
-              const checked = filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !== undefined;
-              authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
-            }
-
-            if (statuses.find(s => s.name === recipe.status) === undefined) {
-              const checked = filters.find(f => f.type === FILTER_TYPE.STATUS && f.value === recipe.status) !== undefined;
-              statuses.push({ displayName: recipe.status.replace(/\b\w/g, l => l.toUpperCase()), name: recipe.status, checked: checked, filter: new StatusFilter(recipe.status) });
-            }
-
-            if (images.find(i => i.name === recipe.hasImage) === undefined) {
-              const checked = filters.find(f => f.type === FILTER_TYPE.IMAGE && f.value === recipe.hasImage) !== undefined;
-              images.push({ displayName: recipe.hasImage.toString().replace(/\b\w/g, l => l.toUpperCase()), name: recipe.hasImage, checked: checked, filter: new ImageFilter(recipe.hasImage) });
-            }
-          });
-          const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
-          this.searchFilter = searchFilter ? searchFilter.value : '';
 
           this.dataSource = new MatTableDataSource(this.recipes);
           this.dataSource.filterPredicate = this.recipeFilterService.recipeFilterPredicate;
+          this.dataSource.filter = this.recipeFilterService.selectedFilters;
+          this.paginator.pageIndex = this.recipeFilterService.pageIndex;
+          this.dataSource.paginator = this.paginator;
+          this.loading = this.loadingService.set(false);
 
-          authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
-          categories.sort(({ name: a }, { name: b }) => a.localeCompare(b));
-          statuses.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+          if (this.recipeFilterService.recipeId) {
+            setTimeout(() => {
+              const element = document.getElementById(this.recipeFilterService.recipeId);
+              element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              this.recipeFilterService.recipeId = null;
+            }, 1500);
+          }
 
-          this.breakpointObserver.observe('(min-width: 768px)').pipe(takeUntil(this.unsubscribe$)).subscribe(({ matches }) => {
-            if (matches) {
-              this.filtersList = [
-                { displayName: 'Authors', name: 'author', values: authors },
-                { displayName: 'Categories', name: 'categories', values: categories },
-                { displayName: 'Ratings', name: 'ratings', values: ratings },
-                { displayName: 'Statuses', name: 'statuses', values: statuses },
-                { displayName: 'Images', name: 'images', values: images },
-              ];
-            } else {
-              this.filtersList = [
-                { displayName: 'Categories', name: 'categories', values: categories },
-                {
-                  icon: 'more_vert',
-                  values: [
-                    { displayName: 'Authors', name: 'author', values: authors },
-                    { displayName: 'Ratings', name: 'ratings', values: ratings },
-                    { displayName: 'Statuses', name: 'statuses', values: statuses },
-                    { displayName: 'Images', name: 'images', values: images },
-                  ]
-                }
-              ];
-            }
-            this.setSelectedFilterCount();
-            this.dataSource.filter = this.recipeFilterService.selectedFilters;
-            this.paginator.pageIndex = this.recipeFilterService.pageIndex;
-            this.dataSource.paginator = this.paginator;
-            this.loading = this.loadingService.set(false);
-
-            if (this.recipeFilterService.recipeId) {
-              setTimeout(() => {
-                const element = document.getElementById(this.recipeFilterService.recipeId);
-                element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                this.recipeFilterService.recipeId = null;
-              }, 1500);
-            }
-          });
+          this.initFilters();
         });
       });
     });
   }
 
-  initSearchFilter(): void {
-    this.searchFilter$.pipe(
+  initFilters(): void {
+    const filters = this.recipeFilterService.selectedFilters;
+
+    const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
+    this.searchFilter = searchFilter ? searchFilter.value : '';
+    
+    const ratings = [];
+    [0, 1, 2, 3].forEach(ratingOption => {
+      const rating = ratingOption / 3 * 100;
+      let displayValue = '';
+      for (let i = 0; i < ratingOption; i++) {
+        displayValue += '★';
+      }
+      
+      const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
+      ratings.push({ displayName: `${displayValue}`, name: rating, checked: checked, filter: new RatingFilter(rating) });
+    });
+
+    const categories = [];
+    const authors = [];
+    const statuses = [];
+    const images = [];
+    this.recipes.forEach(recipe => {
+      recipe.categories.forEach(({ category }) => {
+        if (categories.find(c => c.name === category) === undefined) {
+          const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === category) !== undefined;
+          categories.push({ displayName: category, name: category, checked: checked, filter: new CategoryFilter(category) });
+        }
+      });
+
+      if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
+        const checked = filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !== undefined;
+        authors.push({ displayName: recipe.author, name: recipe.author, checked: checked, filter: new AuthorFilter(recipe.author) });
+      }
+
+      if (statuses.find(s => s.name === recipe.status) === undefined) {
+        const checked = filters.find(f => f.type === FILTER_TYPE.STATUS && f.value === recipe.status) !== undefined;
+        statuses.push({ displayName: recipe.status.replace(/\b\w/g, l => l.toUpperCase()), name: recipe.status, checked: checked, filter: new StatusFilter(recipe.status) });
+      }
+
+      if (images.find(i => i.name === recipe.hasImage) === undefined) {
+        const checked = filters.find(f => f.type === FILTER_TYPE.IMAGE && f.value === recipe.hasImage) !== undefined;
+        images.push({ displayName: recipe.hasImage.toString().replace(/\b\w/g, l => l.toUpperCase()), name: recipe.hasImage, checked: checked, filter: new ImageFilter(recipe.hasImage) });
+      }
+    });
+
+    authors.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+    categories.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+    statuses.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+
+    if (this.breakpointSubscription) {
+      this.breakpointSubscription.unsubscribe();
+    }
+    this.breakpointSubscription = this.breakpointObserver.observe('(min-width: 768px)').pipe(takeUntil(this.unsubscribe$)).subscribe(({ matches }) => {
+      if (matches) {
+        this.filtersList = [
+          { displayName: 'Authors', name: 'author', values: authors },
+          { displayName: 'Categories', name: 'categories', values: categories },
+          { displayName: 'Ratings', name: 'ratings', values: ratings },
+          { displayName: 'Statuses', name: 'statuses', values: statuses },
+          { displayName: 'Images', name: 'images', values: images },
+        ];
+      } else {
+        this.filtersList = [
+          { displayName: 'Categories', name: 'categories', values: categories },
+          {
+            icon: 'more_vert',
+            values: [
+              { displayName: 'Authors', name: 'author', values: authors },
+              { displayName: 'Ratings', name: 'ratings', values: ratings },
+              { displayName: 'Statuses', name: 'statuses', values: statuses },
+              { displayName: 'Images', name: 'images', values: images },
+            ]
+          }
+        ];
+      }
+      this.setSelectedFilterCount();
+    });
+
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+    this.searchSubscription = this.searchFilter$.pipe(
       takeUntil(this.unsubscribe$),
       debounceTime(500),
       distinctUntilChanged()
@@ -284,6 +295,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   searchChanged(filterValue: string): void {
     this.searchFilter$.next(filterValue);
+  }
+
+  clearFilters(): void {
+    this.recipeFilterService.selectedFilters = [];
+    this.initFilters();
+    this.setFilters();
   }
 
   setCategoryFilter = (filter: Filter): void => this.utilService.setListFilter(new CategoryFilter(filter));
