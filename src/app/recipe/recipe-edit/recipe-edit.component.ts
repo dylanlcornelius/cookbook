@@ -33,6 +33,8 @@ function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
 }
 
+const SentencePattern = /^([A-Z].*(\.|\?|!)\s)*[A-Z].*(\.|\?|!)$/s;
+
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
@@ -125,7 +127,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.recipesForm = this.formBuilder.group({
         name: ['', [Validators.required, TitleCaseValidator()]],
         link: [''],
-        description: ['', [Validators.pattern(/[A-Z][^.]*[.]/g)]],
+        description: ['', [Validators.pattern(SentencePattern)]],
         time: [''],
         servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
         calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
@@ -240,7 +242,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   initStep(): FormGroup {
     return this.formBuilder.group({
-      step: ['', [Validators.pattern(/[A-Z][^.]*[.]/g)]]
+      step: ['', [Validators.pattern(SentencePattern)]]
     });
   }
 
