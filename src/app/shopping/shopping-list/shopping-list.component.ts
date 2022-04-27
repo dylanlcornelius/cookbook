@@ -185,7 +185,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const itemsCount = this.itemsDataSource.data.length;
     this.itemsDataSource.data = [];
     this.userItemService.formattedUpdate(this.itemsDataSource.data, this.householdId, this.itemsId);
-    this.userItemService.buyUserItem(itemsCount, false);
+    this.userItemService.buyUserItem(itemsCount, true);
 
     this.applyFilter();
     this.notificationService.setModal(new SuccessNotification('List completed!'));

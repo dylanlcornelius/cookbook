@@ -6,7 +6,7 @@ import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
-import { ModelObject } from '@model';
+import { Model, ModelObject } from '@model';
 import { first } from 'rxjs/operators';
 
 @Injectable({
@@ -83,13 +83,13 @@ export abstract class FirestoreService {
     this.ref?.doc(id).set(data);
   }
 
-  updateAll(data: ModelObject[]): void {
+  updateAll(data: Model[]): void {
     data.forEach(d => {
       this.ref?.doc(d.getId()).set(d.getObject());
     });
   }
 
-  update(data: ModelObject | ModelObject[], id?: string, action?: Action): void {
+  update(data: ModelObject | Model[], id?: string, action?: Action): void {
     if (id && !Array.isArray(data)) {
       this.updateOne(data, id, action);
     } else if (Array.isArray(data)) {

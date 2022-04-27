@@ -102,7 +102,7 @@ describe('FirestoreService', () => {
 
   describe('updateAll', () => {
     it('should update all documents', () => {
-      service.updateAll([new Recipe({}).getObject()]);
+      service.updateAll([new Recipe({})]);
 
       expect(true).toBeTrue();
     });

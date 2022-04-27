@@ -5,6 +5,7 @@ import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { Comment, CommentObject } from '@comment';
+import { Action } from '@actions';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class CommentService extends FirestoreService {
     });
   }
 
-  create = (data: Comment): string => super.create(data.getObject());
-  update = (data: CommentObject | CommentObject[], id?: string): void => super.update(data, id);
-  delete = (id: string): void => super.delete(id);
+  create = (data: Comment): string => super.create(data.getObject(), Action.CREATE_COMMENT);
+  update = (data: CommentObject | Comment[], id?: string): void => super.update(data, id, Action.UPDATE_COMMENT);
+  delete = (id: string): void => super.delete(id, Action.DELETE_COMMENT);
 }

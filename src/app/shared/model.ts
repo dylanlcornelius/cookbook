@@ -22,4 +22,4 @@ export class Model {
     }
 }
 
-export type ModelObject = Omit<Model, 'id'>;
+export type ModelObject = Omit<Model, 'id' | 'getId' | 'getObject'>;

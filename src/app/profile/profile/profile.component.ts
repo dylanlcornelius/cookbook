@@ -127,9 +127,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       const sortedActions = this.sortActions(userAction.actions);
 
       this.actions = sortedActions.map(action => {
-        const actionData = Object.keys(action.data).map(key => {
-          return { name: ActionLabel[key], value: action.data[key] };
-        });
+        const actionData = Object.keys(action.data)
+          .filter(key => ActionLabel[key])
+          .map(key => ({ name: ActionLabel[key], value: action.data[key] }));
 
         return {
           data: actionData,
@@ -208,6 +208,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onFormSubmit(form: any): void {
     form.creationDate = this.user.creationDate;
+    form.hasPlanner = this.user.hasPlanner;
     const user = new User(form);
 
     this.userService.update(user.getObject(), user.getId());

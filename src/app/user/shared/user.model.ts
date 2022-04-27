@@ -37,7 +37,7 @@ export class User extends Model {
     }
 }
 
-export type UserObject = Omit<User, 'id' | 'name' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;
+export type UserObject = Omit<User, 'id' | 'getId' | 'getObject' | 'name' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;
 
 export enum ROLE {
     ADMIN = 'admin',

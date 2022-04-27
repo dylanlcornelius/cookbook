@@ -30,7 +30,7 @@
         </mat-form-field>
     
         <div class="button-row">
-          <button mat-button color="primary" (click)="editComment(comment, comment.control.value)">Save</button>
+          <button mat-button type="button" color="primary" (click)="editComment(comment, comment.control.value)">Save</button>
         </div>
       </form>
     </div>
@@ -51,7 +51,7 @@
     </mat-form-field>
 
     <div class="button-row">
-      <button mat-button color="primary" (click)="addComment(control.value, parent?.id)">Save</button>
+      <button mat-button type="button" color="primary" (click)="addComment(control.value, parent?.id)">Save</button>
     </div>
   </form>
 </ng-template>

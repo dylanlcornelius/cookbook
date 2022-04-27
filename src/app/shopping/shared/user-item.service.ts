@@ -5,7 +5,7 @@ import { Action } from '@actions';
 import { UserItem } from '@userItem';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
-import { ModelObject } from '@model';
+import { Model, ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class UserItemService extends FirestoreService{
   }
 
   create = (data: UserItem): string => super.create(data.getObject());
-  update = (data: ModelObject | ModelObject[], id?: string): void => super.update(data, id);
+  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
 
   formattedUpdate(data: UserItem["items"], uid: string, id: string): void {
     const items = data.map(({ name = '' }) => ({ name }));

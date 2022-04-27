@@ -118,7 +118,7 @@ describe('ProfileComponent', () => {
       component.actionPaginator = {};
       
       const actions = [
-        { day: 0, month: 1, year: 0, data: {'1': 2} },
+        { day: 0, month: 1, year: 0, data: {[Action.BUY_INGREDIENT]: 2} },
         { day: 0, month: 1, year: 0, data: {'2': 2} },
         { day: 0, month: 2, year: 0, data: {'2': 2} },
         { day: 0, month: 3, year: 0, data: {'2': 2} }

@@ -23,11 +23,11 @@ export class Comment extends Model {
         this.parent = data.parent || '';
     }
 
-    public getObject(): CommentObject {
+    public getObject(): CommentObject{
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, authorName, date, showResolved, isEditing, control, ...comment } = this;
         return comment;
     }
 }
 
-export type CommentObject = Omit<Comment, 'id' | 'authorName' | 'date' | 'showResolved' | 'isEditing' | 'control'>;
+export type CommentObject = Omit<Comment, 'id' | 'getId' | 'getObject' | 'authorName' | 'date' | 'showResolved' | 'isEditing' | 'control'>;
