@@ -6,10 +6,13 @@ import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
+import { CurrentUserService } from '@currentUserService';
+import { User } from '@user';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let currentUserService: CurrentUserService;
   let navigationService: NavigationService;
 
   beforeEach(waitForAsync(() => {
@@ -29,6 +32,7 @@ describe('HomeComponent', () => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    currentUserService = TestBed.inject(CurrentUserService);
     navigationService = TestBed.inject(NavigationService);
   });
 
@@ -43,10 +47,22 @@ describe('HomeComponent', () => {
 
   describe('load', () => {
     it('should load navs', () => {
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
 
       component.load();
 
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(navigationService.get).toHaveBeenCalled();
+    });
+
+    it('should load navs with a feature flag', () => {
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ hasPlanner: true })));
+      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({ link: '/shopping/plan' })]));
+
+      component.load();
+
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(navigationService.get).toHaveBeenCalled();
     });
   });

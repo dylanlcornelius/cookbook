@@ -141,7 +141,7 @@ export class AdminDashboardComponent implements OnDestroy {
     ),
     new Context(
       'Users',
-      ['firstName', 'lastName', 'role', 'theme'],
+      ['firstName', 'lastName', 'role', 'theme', 'hasPlanner'],
       this.userService,
       this.revert,
       this.save,
