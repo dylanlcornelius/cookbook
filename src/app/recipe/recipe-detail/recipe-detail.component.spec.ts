@@ -23,6 +23,8 @@ import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
 import { RecipeFilterService } from '@recipeFilterService';
+import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
+import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -40,6 +42,7 @@ describe('RecipeDetailComponent', () => {
   let recipeFilterService: RecipeFilterService;
   let validationService: ValidationService;
   let tutorialService: TutorialService;
+  let mealPlanService: MealPlanService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -73,6 +76,7 @@ describe('RecipeDetailComponent', () => {
     recipeFilterService = TestBed.inject(RecipeFilterService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
+    mealPlanService = TestBed.inject(MealPlanService);
 
     component.recipe = new Recipe({ id: 'recipe' });
   });
@@ -282,6 +286,21 @@ describe('RecipeDetailComponent', () => {
       expect(recipeService.changeStatus).toHaveBeenCalled();
     });
   });
+
+  describe('addIngredients', () => {
+    it('should add a recipe', () => {
+      spyOn(mealPlanService, 'get').and.returnValue(of(new MealPlan({})));
+      spyOn(mealPlanService, 'formattedUpdate');
+      spyOn(notificationService, 'setModal');
+
+      component.addRecipe();
+
+      expect(mealPlanService.get).toHaveBeenCalled();
+      expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
+
 
   describe('addIngredients', () => {
     it('should add ingredients', () => {

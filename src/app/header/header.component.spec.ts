@@ -88,7 +88,7 @@ describe('HeaderComponent', () => {
     it('should not load household invites', () => {
       spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({}));
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid' })));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();
@@ -96,13 +96,13 @@ describe('HeaderComponent', () => {
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.getInvites).toHaveBeenCalled();
+      expect(householdService.getInvites).not.toHaveBeenCalled();
     });
 
-    it('should load the continue nav', () => {
-      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
+    it('should load the continue nav and feature flag navs', () => {
+      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({ link: '/shopping/plan' })]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({id: 'test'}));
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid' })));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid', hasPlanner: true })));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();

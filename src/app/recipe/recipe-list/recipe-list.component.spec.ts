@@ -23,10 +23,12 @@ import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
-import { ValidationService } from '@modalService';
+import { NotificationService, ValidationService } from '@modalService';
 import { BehaviorSubject } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
+import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -43,6 +45,8 @@ describe('RecipeListComponent', () => {
   let utilService: UtilService;
   let validationService: ValidationService;
   let tutorialService: TutorialService;
+  let mealPlanService: MealPlanService;
+  let notificationService: NotificationService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -87,6 +91,8 @@ describe('RecipeListComponent', () => {
     utilService = TestBed.inject(UtilService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
+    mealPlanService = TestBed.inject(MealPlanService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should create', () => {
@@ -506,6 +512,20 @@ describe('RecipeListComponent', () => {
       component.changeStatus(new Recipe({}));
 
       expect(recipeService.changeStatus).toHaveBeenCalled();
+    });
+  });
+
+  describe('addIngredients', () => {
+    it('should add a recipe', () => {
+      spyOn(mealPlanService, 'get').and.returnValue(of(new MealPlan({})));
+      spyOn(mealPlanService, 'formattedUpdate');
+      spyOn(notificationService, 'setModal');
+
+      component.addRecipe(new Recipe({}));
+
+      expect(mealPlanService.get).toHaveBeenCalled();
+      expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 

@@ -15,7 +15,8 @@ export class ModalComponent {
     this.params = true;
   }
 
-  close(): void {
+  close(success = false): void {
+    this.params.callback?.(success);
     this.params = undefined;
   }
 }

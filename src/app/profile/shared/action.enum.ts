@@ -16,6 +16,10 @@
     BUY_INGREDIENT = 'BUY_INGREDIENT',
     COMPLETE_SHOPPING_LIST = 'COMPLETE_SHOPPING_LIST',
 
+    CREATE_COMMENT = 'CREATE_COMMENT',
+    UPDATE_COMMENT = 'UPDATE_COMMENT',
+    DELETE_COMMENT = 'DELETE_COMMENT',
+
     OPEN_TUTORIAL = 'OPEN_TUTORIAL',
 }
 
@@ -36,6 +40,10 @@ export enum ActionLabel {
 
     BUY_INGREDIENT = 'Buy Ingredient',
     COMPLETE_SHOPPING_LIST = 'Complete Shopping List',
+
+    CREATE_COMMENT = 'Create Comment',
+    UPDATE_COMMENT = 'Update Comment',
+    DELETE_COMMENT = 'Delete Comment',
 
     OPEN_TUTORIAL = 'Open Tutorial',
 }

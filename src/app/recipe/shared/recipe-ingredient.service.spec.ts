@@ -340,6 +340,24 @@ describe('RecipeIngredientService', () => {
       expect(recipeIngredientModalService.setModal).not.toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
     });
+    
+    it('should show an error if the uom conversion is invalid and call the callback', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        count: 0,
+        ingredients: []
+      });
+      
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(recipeIngredientModalService, 'setModal');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredients(recipe, [], new UserIngredient({}), '', () => {});
+
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientModalService.setModal).not.toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
   });
 
   describe('addIngredientsEvent', () => {

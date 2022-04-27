@@ -20,6 +20,7 @@ import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
 import { TutorialService } from '@tutorialService';
 import { LoadingService } from '@loadingService';
+import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -63,6 +64,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeFilterService: RecipeFilterService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
+    private mealPlanService: MealPlanService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -172,6 +174,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
 
   changeStatus = (): void => this.recipeService.changeStatus(this.recipe);
+
+  addRecipe(): void {
+    this.mealPlanService.get(this.householdId).pipe(first()).subscribe(mealPlan => {
+      this.mealPlanService.formattedUpdate([...mealPlan.recipes, this.recipe], this.householdId, mealPlan.id);
+      this.notificationService.setModal(new SuccessNotification('Recipe added!'));
+    });
+  }
 
   addIngredients(): void {
     this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.householdId);

@@ -7,6 +7,7 @@ export class User extends Model {
     role: string;
     theme: boolean;
     hasImage: boolean;
+    hasPlanner: boolean;
 
     name: string;
     isAdmin: boolean;
@@ -24,6 +25,7 @@ export class User extends Model {
         this.role = data.role || '';
         this.theme = data.theme || false;
         this.hasImage = data.hasImage || false;
+        this.hasPlanner = data.hasPlanner || false;
         this.isAdmin = data.role === ROLE.ADMIN;
         this.isPending = data.role === ROLE.PENDING;
     }
@@ -35,7 +37,7 @@ export class User extends Model {
     }
 }
 
-export type UserObject = Omit<User, 'id' | 'name' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;
+export type UserObject = Omit<User, 'id' | 'getId' | 'getObject' | 'name' | 'isAdmin' | 'isPending' | 'recipeCount' | 'ratingCount' | 'image'>;
 
 export enum ROLE {
     ADMIN = 'admin',

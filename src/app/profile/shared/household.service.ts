@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
-import { ModelObject } from '@model';
+import { Model, ModelObject } from '@model';
 import { Recipe, RECIPE_STATUS } from '@recipe';
 import { User } from '@user';
 import { Observable } from 'rxjs';
@@ -45,7 +45,7 @@ export class HouseholdService extends FirestoreService {
   }
 
   create = (data: Household): string => super.create(data.getObject());
-  update = (data: ModelObject | ModelObject[], id? : string): void => super.update(data, id);
+  update = (data: ModelObject | Model[], id? : string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
 
   hasAuthorPermission(household: Household, user: User, recipe: Recipe): boolean {

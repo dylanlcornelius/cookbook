@@ -34,6 +34,6 @@ export class UserService extends FirestoreService {
 }
 
   create = (data: User): string => super.create(data.getObject());
-  update = (data: UserObject | UserObject[], id?: string): void => super.update(data, id);
+  update = (data: UserObject | User[], id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
 }

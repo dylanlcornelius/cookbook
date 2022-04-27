@@ -58,6 +58,7 @@ describe('RecipeIngredientModalComponent', () => {
     beforeEach(() => {
       const recipeIngredientModal = new RecipeIngredientModal(
         () => {},
+        'recipe',
         [new Ingredient({})],
         userIngredient,
         householdId,

@@ -19,8 +19,10 @@ import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ValidationService } from '@modalService';
+import { NotificationService, ValidationService } from '@modalService';
 import { Validation } from '@validation';
+import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
+import { SuccessNotification } from '@notification';
 
 @Component({
   selector: 'app-recipe-list',
@@ -61,8 +63,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
+    private notificationService: NotificationService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
+    private mealPlanService: MealPlanService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -330,6 +334,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   changeStatus = (recipe: Recipe): void => this.recipeService.changeStatus(recipe);
+
+  addRecipe(recipe: Recipe): void {
+    this.mealPlanService.get(this.householdId).pipe(first()).subscribe(mealPlan => {
+      this.mealPlanService.formattedUpdate([...mealPlan.recipes, recipe], this.householdId, mealPlan.id);
+      this.notificationService.setModal(new SuccessNotification('Recipe added!'));
+    });
+  }
 
   addIngredients(id: string): void {
     this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.householdId);

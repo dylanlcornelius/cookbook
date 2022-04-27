@@ -61,7 +61,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
     );
 
     this.selectionCount = 0;
-    this.modal.close();
+    this.modal.close(true);
   }
 
   cancel(): void {

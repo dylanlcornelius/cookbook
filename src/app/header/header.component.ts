@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { AuthService } from '../user/shared/auth.service';
@@ -66,29 +66,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.navigationService.get().subscribe(navs => {
-      this.desktopNavs = navs.filter(({ subMenu }) => !subMenu);
-      this.mobileNavs = navs.filter(({ subMenu }) => subMenu !== NavigationMenu.PROFILE);
-      this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
-      this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+    const user$ = this.currentUserService.getCurrentUser();
+    const navs$ = this.navigationService.get();
+    const recipeForm$ = this.recipeService.getForm();
 
-      this.recipeService.getForm().pipe(takeUntil(this.unsubscribe$)).subscribe(form => {
-        if (form) {
-          const link = form.id ? `/recipe/edit/${form.id}` : '/recipe/edit';
-          this.continueNav = new Navigation({ id: 'continue', name: 'Continue!', link, order: 0, icon: 'edit' });
-        } else {
-          this.continueNav = null;
-        }
-      });
-    });
-
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+    combineLatest([user$, navs$, recipeForm$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, navs, form]) => {
       this.user = user;
 
       if (this.user.uid) {
         this.householdService.getInvites(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(households => {
           this.householdNotifications = households.length ? households.length : undefined;
         });
+      }
+      
+      this.desktopNavs = navs.filter(({ subMenu, link }) => !subMenu && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
+      this.mobileNavs = navs.filter(({ subMenu, link }) => subMenu !== NavigationMenu.PROFILE && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
+      this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
+      this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+
+      if (form) {
+        const link = form.id ? `/recipe/edit/${form.id}` : '/recipe/edit';
+        this.continueNav = new Navigation({ id: 'continue', name: 'Continue!', link, order: 0, icon: 'edit' });
+      } else {
+        this.continueNav = null;
       }
     });
   }

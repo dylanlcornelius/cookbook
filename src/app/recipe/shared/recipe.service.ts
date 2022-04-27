@@ -50,7 +50,7 @@ export class RecipeService extends FirestoreService {
   }
 
   create = (data: RecipeObject): string => super.create(data, Action.CREATE_RECIPE);
-  update = (data: RecipeObject | RecipeObject[], id?: string): void => super.update(data, id, Action.UPDATE_RECIPE);
+  update = (data: RecipeObject | Recipe[], id?: string): void => super.update(data, id, Action.UPDATE_RECIPE);
   delete = (id: string): void => super.delete(id, Action.DELETE_RECIPE);
 
   calculateMeanRating(ratings: { rating: number }[] ): number {

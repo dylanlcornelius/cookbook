@@ -2,7 +2,7 @@ import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
-import { ModelObject } from '@model';
+import { Model, ModelObject } from '@model';
 import { Observable } from 'rxjs';
 import { Tutorial, TutorialModal } from '@tutorial';
 import { TutorialModalService } from '@modalService';
@@ -31,7 +31,7 @@ export class TutorialService extends FirestoreService {
   }
 
   create = (data: ModelObject): string => super.create(data);
-  update = (data: ModelObject | ModelObject[], id?: string): void => super.update(data, id);
+  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
   sort = (a: Tutorial, b: Tutorial): number => a.order - b.order;
 

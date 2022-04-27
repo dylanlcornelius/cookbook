@@ -31,4 +31,4 @@ export class Ingredient extends Model {
     }
 }
 
-export type IngredientObject = Omit<Ingredient, 'id' | 'quantity' | 'pantryQuantity' | 'cartQuantity' | 'selected'>;
+export type IngredientObject = Omit<Ingredient, 'id' | 'getId' | 'getObject' | 'quantity' | 'pantryQuantity' | 'cartQuantity' | 'selected'>;

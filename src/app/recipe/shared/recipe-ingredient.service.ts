@@ -87,18 +87,21 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, householdId: string): void {
+  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, householdId: string, callback?: Function): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length > 0) {
       this.recipeIngredientModalService.setModal(new RecipeIngredientModal(
         this.addIngredientsEvent,
+        recipe.name,
         recipeIngredients,
         userIngredient,
         householdId,
+        callback
       ));
     } else {
       this.notificationService.setModal(new InfoNotification('Recipe has no ingredients'));
+      callback?.();
     }
   }
 

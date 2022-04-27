@@ -5,7 +5,7 @@ import { UserIngredient } from '@userIngredient';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
-import { ModelObject } from '@model';
+import { Model, ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class UserIngredientService extends FirestoreService {
   }
 
   create = (data: UserIngredient): string => super.create(data.getObject());
-  update = (data: ModelObject | ModelObject[], id?: string): void => super.update(data, id);
+  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
 
   formattedUpdate(data: UserIngredient["ingredients"], uid: string, id: string): void {
     const ingredients = data.map(({ id, pantryQuantity, cartQuantity }) => ({ id, pantryQuantity, cartQuantity }));
