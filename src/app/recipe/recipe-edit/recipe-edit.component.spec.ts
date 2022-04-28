@@ -111,7 +111,7 @@ describe('RecipeEditComponent', () => {
       fixture.detectChanges();
 
       expect(breakpointObserver.observe).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
@@ -254,6 +254,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
+      spyOn(component, 'applyIngredientFilter');
 
       component.load();
       ingredients$.next([]);
@@ -265,8 +266,9 @@ describe('RecipeEditComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalledTimes(1);
       expect(component.addIngredient).not.toHaveBeenCalled();
+      expect(component.applyIngredientFilter).toHaveBeenCalledTimes(2);
     });
   });
 
