@@ -145,26 +145,27 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       }
 
       combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes, recipe]: [Ingredient[], Recipe[], Recipe?]) => {
-        if (!this.loading) {
-          return;
-        }
-
         this.recipes = recipes;
         this.ingredients = ingredients;
         this.originalRecipe = recipe;
 
-        this.recipeService.getForm().pipe(first()).subscribe(form => {
-          if (form) {
-            this.recipe = form;
-            this.recipeService.setForm(null);
-          } else {
-            this.recipe = recipe;
-          }
+        if (this.loading) {
+          this.recipeService.getForm().pipe(first()).subscribe(form => {
+            if (form) {
+              this.recipe = form;
+              this.recipeService.setForm(null);
+            } else {
+              this.recipe = recipe;
+            }
 
-          this.initForm();
+            this.initForm();
+            this.initIngredients();
 
-          this.loading = this.loadingService.set(false);
-        });
+            this.loading = this.loadingService.set(false);
+          });
+        } else {
+          this.initIngredients();
+        }
       });
     });
   }
@@ -178,12 +179,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.addStep();
       });
 
-      // figure out already added ingredients
       this.addedIngredients = this.ingredientService.buildRecipeIngredients(this.recipe.ingredients, [...this.ingredients, ...this.recipes]);
       for (let i = 0; i < this.addedIngredients.length; i++) {
         this.addIngredient(i);
       }
-        
+
       this.recipesForm.patchValue({
         name: this.recipe.name,
         link: this.recipe.link,
@@ -196,8 +196,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         ingredients: this.addedIngredients,
       });
     }
+  }
 
-    // figure out available ingredients
+  initIngredients(): void {
     this.allAvailableIngredients = [...this.ingredients, ...this.recipes]
       .reduce((result, ingredient) => {
         const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
