@@ -102,11 +102,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
 
         combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
-          this.recipe = recipe;
-          this.userIngredient = userIngredient;
-
-          this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
-
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
               if (ingredient.id === myIngredient.id) {
@@ -124,7 +119,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
               });
             });
           });
-
+          
+          this.recipe = recipe;
+          this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
           this.imageService.download(this.recipe).then(url => {
             if (url) {
               this.recipeImage = url;
@@ -140,6 +137,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
           this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
           this.recipes = recipes;
+          this.userIngredient = userIngredient;
           this.recipe.ingredients = this.ingredients;
           this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
           this.loading = this.loadingService.set(false);
