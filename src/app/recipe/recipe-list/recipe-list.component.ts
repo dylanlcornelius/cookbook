@@ -96,7 +96,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const userIngredient$ = this.userIngredientService.get(this.householdId);
 
         combineLatest([recipes$, ingredients$, userIngredient$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, ingredients, userIngredient]) => {
-          this.userIngredient = userIngredient;
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
               if (ingredient.id === myIngredient.id) {
@@ -115,6 +114,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             });
           });
 
+          this.userIngredient = userIngredient;
           this.recipes = recipes
             .filter(recipe => this.householdService.hasUserPermission(household, this.user, recipe))
             .sort(this.sortRecipesByName)

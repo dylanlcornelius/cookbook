@@ -16,6 +16,7 @@ import { RecipeService } from '@recipeService';
 import { UserIngredient } from '@userIngredient';
 import { Recipe } from '@recipe';
 import { UserIngredientService } from '@userIngredientService';
+import { IngredientService } from '@ingredientService';
 
 @Component({
   selector: 'app-meal-planner',
@@ -43,6 +44,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private mealPlanService: MealPlanService,
     private recipeService: RecipeService,
+    private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
     private notificationService: NotificationService,
     private recipeIngredientService: RecipeIngredientService,
@@ -69,9 +71,28 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
 
         const userIngredient$ = this.userIngredientService.get(this.householdId);
         const recipes$ = this.recipeService.get();
+        const ingredients$ = this.ingredientService.get();
         const mealPlan$ = this.mealPlanService.get(this.householdId);
 
-        combineLatest([userIngredient$, recipes$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, recipes, mealPlan]) => {
+        combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, recipes, ingredients, mealPlan]) => {
+          ingredients.forEach(ingredient => {
+            userIngredient.ingredients.forEach(myIngredient => {
+              if (ingredient.id === myIngredient.id) {
+                myIngredient.uom = ingredient.uom;
+                myIngredient.amount = ingredient.amount;
+              }
+            });
+
+            recipes.forEach(recipe => {
+              recipe.ingredients.forEach(recipeIngredient => {
+                if (ingredient.id === recipeIngredient.id) {
+                  recipeIngredient.amount = ingredient.amount;
+                  recipeIngredient.name = ingredient.name;
+                }
+              });
+            });
+          });
+          
           this.userIngredient = userIngredient;
           this.recipes = recipes;
 

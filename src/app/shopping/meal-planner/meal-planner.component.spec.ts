@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 import { CurrentUserService } from '@currentUserService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
+import { Ingredient } from '@ingredient';
+import { IngredientService } from '@ingredientService';
 import { NotificationService } from '@modalService';
 import { Recipe } from '@recipe';
 import { RecipeIngredientService } from '@recipeIngredientService';
@@ -28,6 +30,7 @@ describe('MealPlannerComponent', () => {
   let currentUserService: CurrentUserService;
   let householdService: HouseholdService;
   let recipeService: RecipeService;
+  let ingredientService: IngredientService;
   let notificationService: NotificationService;
   let tutorialService: TutorialService;
   let recipeIngredientService: RecipeIngredientService;
@@ -56,6 +59,7 @@ describe('MealPlannerComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     householdService = TestBed.inject(HouseholdService);
     recipeService = TestBed.inject(RecipeService);
+    ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
     tutorialService = TestBed.inject(TutorialService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
@@ -67,23 +71,30 @@ describe('MealPlannerComponent', () => {
 
   describe('load', () => {
     it('should load the meal plan', () => {
-      const userIngredients = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
+      const userIngredient = new UserIngredient({
+        ingredients: [
+          { id: 'ingredient' },
+          { id: 'ingredient2' }
+        ]
       });
       const recipes = [new Recipe({
         id: 'id',
-        name: 'recipe'
+        name: 'recipe',
+        ingredients: [
+          { id: 'ingredient' },
+          { id: 'ingredient3' }
+        ]
       })];
+      const ingredients = [new Ingredient({id: 'ingredient'})];
       const mealPlan = new MealPlan({
         recipes: ['id']
       });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(mealPlanService, 'get').and.returnValue(of(mealPlan));
 
       component.load();
@@ -94,6 +105,7 @@ describe('MealPlannerComponent', () => {
       expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
       expect(mealPlanService.get).toHaveBeenCalled();
     });
   });
