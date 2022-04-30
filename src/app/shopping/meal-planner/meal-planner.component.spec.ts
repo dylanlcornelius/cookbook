@@ -97,7 +97,7 @@ describe('MealPlannerComponent', () => {
       ];
       const ingredients = [new Ingredient({id: 'ingredient'})];
       const mealPlan = new MealPlan({
-        recipes: ['id']
+        recipes: [{ id: 'id' }, { id: 'recipe-id-deleted' }]
       });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
@@ -117,6 +117,7 @@ describe('MealPlannerComponent', () => {
       expect(recipeService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(mealPlanService.get).toHaveBeenCalled();
+      expect(component.mealPlan.recipes.length).toEqual(1);
     });
   });
 
