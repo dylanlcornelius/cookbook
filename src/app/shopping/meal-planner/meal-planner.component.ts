@@ -96,7 +96,9 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
           this.userIngredient = userIngredient;
           this.recipes = recipes;
 
-          mealPlan.recipes = mealPlan.recipes.map(planRecipe => recipes.find(({ id }) => id === planRecipe.id));
+          mealPlan.recipes = mealPlan.recipes
+            .map(planRecipe => recipes.find(({ id }) => id === planRecipe.id))
+            .filter(recipe => recipe);
           this.mealPlan = mealPlan;
 
           this.filteredRecipes = this.recipeControl.valueChanges.pipe(
