@@ -5,8 +5,8 @@ import { Ingredient, IngredientObject } from '@ingredient';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
-import { NumberService } from 'src/app/util/number.service';
 import { Recipe } from '@recipe';
+import { NumberService } from '@numberService';
 
 @Injectable({
   providedIn: 'root'

@@ -77,14 +77,24 @@ describe('MealPlannerComponent', () => {
           { id: 'ingredient2' }
         ]
       });
-      const recipes = [new Recipe({
-        id: 'id',
-        name: 'recipe',
-        ingredients: [
-          { id: 'ingredient' },
-          { id: 'ingredient3' }
-        ]
-      })];
+      const recipes = [
+        new Recipe({
+          id: 'id',
+          name: 'recipe',
+          ingredients: [
+            { id: 'ingredient' },
+            { id: 'ingredient3' }
+          ]
+        }),
+        new Recipe({
+          id: 'id2',
+          name: 'recipe2',
+          ingredients: [
+            { id: 'ingredient' },
+            { id: 'ingredient3' }
+          ]
+        })
+      ];
       const ingredients = [new Ingredient({id: 'ingredient'})];
       const mealPlan = new MealPlan({
         recipes: ['id']

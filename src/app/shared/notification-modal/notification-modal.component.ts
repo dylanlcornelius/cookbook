@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService } from '@modalService';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { concat, of, Subject, timer } from 'rxjs';
+import { concatMap, debounceTime, filter, ignoreElements, takeUntil } from 'rxjs/operators';
 import { Notification } from '@notification';
+
+const DISPLAY_TIME = 2000;
 
 @Component({
   selector: 'app-notification-modal',
@@ -27,16 +29,29 @@ export class NotificationModalComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.notificationService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((notification: Notification) => {
-      if (!notification) {
-        return;
-      }
+    // listen for notifications and delay subsequent notifications
+    this.notificationService.getModal()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter(x => !!x),
+        concatMap(x => concat(of(x), timer(DISPLAY_TIME).pipe(ignoreElements()))),
+      )
+      .subscribe((notification: Notification) => {
+        this.params = notification;
+      });
 
-      this.params = notification;
-      setTimeout(() => {
+
+    // wait for notifications to stop
+    this.notificationService.getModal()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter(x => !!x),
+        concatMap(x => concat(of(x), timer(DISPLAY_TIME).pipe(ignoreElements()))),
+        debounceTime(DISPLAY_TIME + 500),
+      )
+      .subscribe(() => {
         this.notificationService.setModal(undefined);
         this.params = undefined;
-      }, 3000);
-    });
+      });
   }
 }

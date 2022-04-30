@@ -39,6 +39,7 @@
       "@configService": ["src/app/admin/shared/config.service"],
       "@context": ["src/app/admin/shared/context.model"],
       "@imageService": ["src/app/util/image.service"],
+      "@numberService": ["src/app/util/number.service"],
       "@uoms": ["src/app/ingredient/shared/uom.enum.ts"],
       "@uomService": ["src/app/ingredient/shared/uom.service.ts"],
       "@navigation": ["src/app/header/navigation.model"],

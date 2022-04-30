@@ -6,7 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NumberService } from 'src/app/util/number.service';
+import { NumberService } from '@numberService';
 
 describe('IngredientModalComponent', () => {
   let component: IngredientModalComponent;

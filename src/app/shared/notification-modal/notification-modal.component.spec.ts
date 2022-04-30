@@ -45,10 +45,7 @@ describe('NotificationModalComponent', () => {
 
       tick(4000);
       expect(notificationService.getModal).toHaveBeenCalled();
-      fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(notificationService.setModal).toHaveBeenCalled();
-      });
+      expect(notificationService.setModal).toHaveBeenCalled();
     }));
 
     it('should listen to the notification service and handle an undefined value', fakeAsync(() => {
@@ -57,7 +54,7 @@ describe('NotificationModalComponent', () => {
 
       component.load();
 
-      tick();
+      tick(4000);
       expect(notificationService.getModal).toHaveBeenCalled();
       expect(notificationService.setModal).not.toHaveBeenCalled();
     }));

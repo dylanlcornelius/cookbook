@@ -20,8 +20,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { NumberService } from '@numberService';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
-import { NumberService } from 'src/app/util/number.service';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({

@@ -8,8 +8,8 @@ import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { Recipe } from '@recipe';
 import { UserIngredient } from '@userIngredient';
-import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
+import { NumberService } from '@numberService';
 
 @Injectable({
   providedIn: 'root'
@@ -156,7 +156,9 @@ export class RecipeIngredientService {
     }
 
     this.recipeHistoryService.add(uid, recipe.id);
-    this.recipeHistoryService.add(householdId, recipe.id);
+    if (householdId !== uid) {
+      this.recipeHistoryService.add(householdId, recipe.id);
+    }
     this.notificationService.setModal(new SuccessNotification('Recipe cooked!'));
   }
 }

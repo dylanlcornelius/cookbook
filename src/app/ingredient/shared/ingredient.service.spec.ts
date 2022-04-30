@@ -4,7 +4,7 @@ import { FirestoreService } from '@firestoreService';
 
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
-import { NumberService } from 'src/app/util/number.service';
+import { NumberService } from '@numberService';
 
 describe('IngredientService', () => {
   let service: IngredientService;
