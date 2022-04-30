@@ -8,17 +8,20 @@ import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { User } from '@user';
 import { Ingredient } from '@ingredient';
+import { NotificationService } from '@modalService';
 
 describe('UserIngredientService', () => {
   let service: UserIngredientService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
+  let notificationService: NotificationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(UserIngredientService);
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
+    notificationService = TestBed.inject(NotificationService);
   });
 
   it('should be created', () => {
@@ -128,21 +131,25 @@ describe('UserIngredientService', () => {
     it('should update a user item record', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(actionService, 'commitAction');
+      spyOn(notificationService, 'setModal');
 
       service.buyUserIngredient(1, false);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalledTimes(1);
+      expect(notificationService.setModal).not.toHaveBeenCalled();
     });
 
     it('should update a user item record and mark it as completed', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(actionService, 'commitAction');
+      spyOn(notificationService, 'setModal');
 
       service.buyUserIngredient(1, true);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalledTimes(2);
+      expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 });

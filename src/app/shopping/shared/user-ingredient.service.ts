@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { Model, ModelObject } from '@model';
+import { SuccessNotification } from '@notification';
+import { NotificationService } from '@modalService';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class UserIngredientService extends FirestoreService {
   constructor(
     currentUserService: CurrentUserService,
     actionService: ActionService,
+    private notificationService: NotificationService
   ) {
     super('user-ingredients', currentUserService, actionService);
   }
@@ -55,6 +58,7 @@ export class UserIngredientService extends FirestoreService {
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);
+        this.notificationService.setModal(new SuccessNotification('List completed!'));
       }
     });
   }

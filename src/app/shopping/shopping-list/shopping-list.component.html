@@ -3,9 +3,14 @@
 <h2>Your Shopping List</h2>
 
 <div *ngIf="!loading">
-  <form class="short-container item-form" [formGroup]="itemForm" (ngSubmit)="addItem(itemForm.value)">
+  <form class="short-container item-form" (ngSubmit)="addItem(ingredientControl.value)">
     <mat-form-field class="item-form-field">
-      <input matInput placeholder="Add item" formControlName="name">
+      <input matInput placeholder="Add an Ingredient" [formControl]="ingredientControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="addIngredient($event.option.value)">
+        <mat-option *ngFor="let ingredient of filteredIngredients | async" [value]="ingredient">
+          {{ingredient.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
 
     <button mat-mini-fab matTooltip="Add Item" type="submit" color="primary">
