@@ -101,7 +101,9 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
 
           this.filteredRecipes = this.recipeControl.valueChanges.pipe(
             startWith(''),
-            map(value => this.recipes.filter(({ name }) => name.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : '')))
+            map(value => this.recipes
+              .filter(({ name }) => name.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : ''))
+              .sort(({ name: a }, { name: b }) => a.localeCompare(b)))
           );
 
           this.loading = this.loadingService.set(false);
