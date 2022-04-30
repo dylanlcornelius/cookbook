@@ -156,7 +156,9 @@ export class RecipeIngredientService {
     }
 
     this.recipeHistoryService.add(uid, recipe.id);
-    this.recipeHistoryService.add(householdId, recipe.id);
+    if (householdId !== uid) {
+      this.recipeHistoryService.add(householdId, recipe.id);
+    }
     this.notificationService.setModal(new SuccessNotification('Recipe cooked!'));
   }
 }

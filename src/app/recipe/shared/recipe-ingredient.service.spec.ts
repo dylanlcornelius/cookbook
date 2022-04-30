@@ -470,14 +470,14 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '', '');
+      service.removeIngredients(recipe, [], userIngredient, 'uid', 'householdId');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setModal).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalledTimes(1);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(2);
     });
 
     it('should remove an ingredient from the pantry', () => {
@@ -506,14 +506,14 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '', '');
+      service.removeIngredients(recipe, [], userIngredient, 'uid', 'uid');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setModal).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalledTimes(1);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
     });
 
     it('should show an error if the uom conversion is invalid', () => {
@@ -542,14 +542,14 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [], userIngredient, '', '');
+      service.removeIngredients(recipe, [], userIngredient, 'uid', 'uid');
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-      expect(notificationService.setModal).toHaveBeenCalled();
-      expect(recipeHistoryService.add).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalledTimes(2);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
     });
 
     it('should handle recipes without ingredients', () => {
