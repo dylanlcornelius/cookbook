@@ -7,9 +7,9 @@ import { IngredientDetailComponent } from './ingredient-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
-import { NumberService } from 'src/app/util/number.service';
 import { ValidationService } from '@modalService';
 import { TutorialService } from '@tutorialService';
+import { NumberService } from '@numberService';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;

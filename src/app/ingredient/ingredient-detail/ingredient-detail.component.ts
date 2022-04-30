@@ -5,11 +5,11 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
-import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
 import { Validation } from '@validation';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
+import { NumberService } from '@numberService';
 
 @Component({
   selector: 'app-ingredient-detail',

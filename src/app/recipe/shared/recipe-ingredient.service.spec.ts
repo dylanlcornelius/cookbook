@@ -8,8 +8,8 @@ import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 
 import { RecipeIngredientService } from '@recipeIngredientService';
-import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
+import { NumberService } from '@numberService';
 
 describe('RecipeIngredientService', () => {
   let service: RecipeIngredientService;

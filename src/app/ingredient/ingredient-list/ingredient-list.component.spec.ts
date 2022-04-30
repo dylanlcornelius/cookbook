@@ -11,10 +11,10 @@ import { UserIngredient } from '@userIngredient';
 import { Ingredient } from '@ingredient';
 import { CurrentUserService } from '@currentUserService';
 import { RouterModule } from '@angular/router';
-import { NumberService } from 'src/app/util/number.service';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
+import { NumberService } from '@numberService';
 
 describe('IngredientListComponent', () => {
   let component: IngredientListComponent;

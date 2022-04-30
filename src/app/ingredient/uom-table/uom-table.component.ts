@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { NumberService } from '@numberService';
 import { TutorialService } from '@tutorialService';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
-import { NumberService } from 'src/app/util/number.service';
 
 @Component({
   selector: 'app-uom-table',

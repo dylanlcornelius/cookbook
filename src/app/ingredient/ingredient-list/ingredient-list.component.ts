@@ -8,11 +8,11 @@ import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '@user';
-import { NumberService } from 'src/app/util/number.service';
 import { Ingredient } from '@ingredient';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
+import { NumberService } from '@numberService';
 
 @Component({
   selector: 'app-ingredient-list',

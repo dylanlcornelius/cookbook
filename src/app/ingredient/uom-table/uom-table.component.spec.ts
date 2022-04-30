@@ -5,10 +5,10 @@ import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NumberService } from 'src/app/util/number.service';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TutorialService } from '@tutorialService';
+import { NumberService } from '@numberService';
 
 describe('UomTableComponent', () => {
   let component: UomTableComponent;
