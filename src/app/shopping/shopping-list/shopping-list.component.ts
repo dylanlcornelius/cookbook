@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
-import { MatTableDataSource } from '@angular/material/table';
 import { UserItemService } from '@userItemService';
 import { FormControl } from '@angular/forms';
 import { CurrentUserService } from '@currentUserService';
@@ -19,6 +18,8 @@ import { UserIngredient } from '@userIngredient';
 import { UserItem } from '@userItem';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from '@numberService';
+import { IngredientCategory } from '@ingredientCategory';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-shopping-list',
@@ -35,12 +36,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   userIngredient: UserIngredient;
   userItem: UserItem;
   ingredients: Ingredient[];
-
-  ingredientsDataSource;
-  itemsDataSource;
+  categories: IngredientCategory[];
 
   ingredientControl = new FormControl();
   filteredIngredients: Observable<Ingredient[]>;
+  displayIngredients: {[category: string]: Array<any>};
 
   constructor(
     private loadingService: LoadingService,
@@ -54,7 +54,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private tutorialService: TutorialService,
     private recipeIngredientService: RecipeIngredientService,
     private numberService: NumberService,
-  ) {}
+  ) {
+    this.categories = Object.values(IngredientCategory);
+  }
 
   ngOnInit() {
     this.load();
@@ -79,33 +81,44 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         const ingredients$ = this.ingredientService.get();
 
         combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, userItem, ingredients]) => {
-          const myIngredients = [];
-          ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (myIngredient.id === ingredient.id) {
-                myIngredient.uom = ingredient.uom;
-                myIngredient.amount = ingredient.amount;
-
-                myIngredients.push({
-                  id: myIngredient.id,
-                  name: ingredient.name,
-                  uom: ingredient.uom,
-                  pantryQuantity: myIngredient.pantryQuantity,
-                  cartQuantity: myIngredient.cartQuantity
-                });
-              }
-            });
-          });
           this.userIngredient = userIngredient;
           this.userItem = userItem;
           this.ingredients = ingredients;
-
-          this.ingredientsDataSource = new MatTableDataSource(myIngredients);
-          this.ingredientsDataSource.filterPredicate = (data, filter) => data.cartQuantity != filter;
-          this.applyFilter();
-
-          this.itemsDataSource = new MatTableDataSource(userItem.items);
           
+          this.displayIngredients = userIngredient.ingredients.reduce((myIngredients, myIngredient) => {
+            const ingredient = ingredients.find(({ id }) => id === myIngredient.id);
+            if (ingredient) {
+              myIngredient.uom = ingredient.uom;
+              myIngredient.amount = ingredient.amount;
+            }
+
+            if (ingredient && myIngredient.cartQuantity !== 0) {
+              const category = IngredientCategory[ingredient.category] || ingredient.category;
+              
+              if (!myIngredients[category]) {
+                myIngredients[category] = [];
+              }
+
+              myIngredients[category].push({
+                id: myIngredient.id,
+                name: ingredient.name,
+                uom: ingredient.uom,
+                pantryQuantity: myIngredient.pantryQuantity,
+                cartQuantity: myIngredient.cartQuantity
+              });
+            }
+
+            return myIngredients;
+          }, {});
+
+          if (this.userItem.items.length) {
+            this.displayIngredients[IngredientCategory.OTHER] = (this.displayIngredients[IngredientCategory.OTHER] || []).concat(this.userItem.items.map((item, index) => ({ ...item, index, isItem: true })));
+          }
+
+          if (!Object.keys(this.displayIngredients).length) {
+            this.displayIngredients = null;
+          }
+
           this.filteredIngredients = this.ingredientControl.valueChanges.pipe(
             startWith(''),
             map(value => this.ingredients.filter(({ name }) => name.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : '')))
@@ -116,22 +129,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     });
   }
 
-  applyFilter(): void {
-    this.ingredientsDataSource.filter = '0';
-  }
-
-  /**
-   * UNUSED - maybe add a remove button to shopping list
-   * @param id 
-   */
-  removeIngredient(id: string): void {
-    const data = this.ingredientsDataSource.data.find(x => x.id === id);
-    const ingredient = this.ingredients.find(x => x.id === id);
-    if (Number(data.cartQuantity) > 0 && ingredient && ingredient.amount) {
-      data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.userIngredient.id);
-    }
-  }
+  categoryOrder = ({ key: a }: KeyValue<string, any>, {key: b }: KeyValue<string, any>): number => {
+    return this.categories.findIndex(value => value === a) - this.categories.findIndex(value => value === b);
+  };
 
   addIngredient(ingredient: Ingredient): void {
     // add a single buyable amount to the shopping list
@@ -141,15 +141,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addIngredientToPantry(id: string): void {
-    const ingredient =  this.ingredientsDataSource.data.find(x => x.id === id);
+    const ingredient =  this.userIngredient.ingredients.find(x => x.id === id);
     if (Number(ingredient.cartQuantity > 0)) {
       ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
     }
     ingredient.cartQuantity = 0;
-    this.applyFilter();
-    this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.userItem.items.length === 0;
+    const filteredData = this.userIngredient.ingredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    this.isCompleted = filteredData.length === 0 && this.userItem.items.length === 0;
 
-    this.userIngredientService.formattedUpdate(this.ingredientsDataSource.data, this.householdId, this.userIngredient.id);
+    this.userIngredientService.formattedUpdate(this.userIngredient.ingredients, this.householdId, this.userIngredient.id);
     this.notificationService.setModal(new SuccessNotification('Ingredient removed!'));
     this.userIngredientService.buyUserIngredient(1, this.isCompleted);
   }
@@ -167,7 +167,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   removeItem(index: number): void {
     this.userItem.items = this.userItem.items.filter((_x, i) =>  i !== index);
-    this.isCompleted = this.ingredientsDataSource.filteredData.length === 0 && this.userItem.items.length === 0;
+    const filteredData = this.userIngredient.ingredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    this.isCompleted = filteredData.length === 0 && this.userItem.items.length === 0;
 
     this.userItemService.formattedUpdate(this.userItem.items, this.householdId, this.userItem.id);
     this.notificationService.setModal(new SuccessNotification('Item removed!'));
@@ -182,6 +183,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addAllToPantryEvent = (): void => {
+    const filteredData = this.userIngredient.ingredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    const totalItems = filteredData.length + this.userItem.items.length;
+
     this.userIngredient.ingredients.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
         ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
@@ -189,7 +193,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       }
     });
 
-    const totalItems = this.ingredientsDataSource.filteredData.length + this.userItem.items.length;
     this.isCompleted = true;
     this.userIngredientService.buyUserIngredient(totalItems, this.isCompleted);
 

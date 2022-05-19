@@ -13,6 +13,7 @@ import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
+import { IngredientCategory } from '@ingredientCategory';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -71,6 +72,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         
           const myIngredients = [];
           ingredients.forEach(ingredient => {
+            ingredient.category = IngredientCategory[ingredient.category] || ingredient.category;
             ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
             userIngredient.ingredients.forEach(myIngredient => {

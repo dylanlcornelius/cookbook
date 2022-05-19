@@ -10,6 +10,7 @@ import { Validation } from '@validation';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
+import { IngredientCategory } from '@ingredientCategory';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -47,6 +48,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       
       this.ingredientService.get(params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
         this.ingredient = data;
+        this.ingredient.category = IngredientCategory[this.ingredient.category] || this.ingredient.category;
         this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
         this.loading = this.loadingService.set(false);
       });

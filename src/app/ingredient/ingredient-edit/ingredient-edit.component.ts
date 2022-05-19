@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { Ingredient } from '@ingredient';
+import { IngredientCategory } from '@ingredientCategory';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -28,11 +29,11 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   ingredientsForm: FormGroup;
   ingredient: Ingredient;
   id: string;
-  name: string;
-  category: string;
-  amount: string;
   uoms: Array<UOM>;
-  calories: number;
+  categories: Array<{
+    key: string,
+    value: IngredientCategory
+  }>;
 
   matcher = new ErrorMatcher();
 
@@ -51,6 +52,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     private tutorialService: TutorialService,
   ) {
     this.uoms = Object.values(UOM);
+    this.categories = Object.entries(IngredientCategory).map(([key, value]) => ({ key, value }));
   }
 
   ngOnInit() {
@@ -58,7 +60,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       'name': [null, Validators.required],
       'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
       'uom': [null, Validators.required],
-      'category': [null],
+      'category': [null, Validators.required],
       'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
     });
 

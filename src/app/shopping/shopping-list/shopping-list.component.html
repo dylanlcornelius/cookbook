@@ -21,55 +21,38 @@
       <mat-icon>help</mat-icon>
     </button>
   </form>
-    
-  <div class="short-container">
-    <div class="table-container mat-elevation-z8" *ngIf="ingredientsDataSource.filteredData.length > 0"
-        [ngClass]="{'ingredients-table': itemsDataSource.filteredData.length === 0}">
-      <mat-table #table [dataSource]="ingredientsDataSource">
-        <ng-container matColumnDef="name">
-          <mat-cell *matCellDef="let element">
-            {{element.cartQuantity | number: '1.0-2'}} {{element.uom === 'other'? '' : element.uom}}
-            {{element.name}}
-          </mat-cell>
-        </ng-container>
 
-        <ng-container matColumnDef="buy">
-          <mat-cell *matCellDef="let element">
-            <button mat-raised-button color="primary" (click)="addIngredientToPantry(element.id)">
-              <mat-icon>done</mat-icon>
-            </button>
-          </mat-cell>
-        </ng-container>
-  
-        <mat-row *matRowDef="let row; columns: ['name', 'buy'];"></mat-row>
-      </mat-table>
-    </div>
-  
-    <div class="table-container items-table mat-elevation-z8" *ngIf="itemsDataSource.filteredData.length > 0">
-      <mat-table #table [dataSource]="itemsDataSource">
-        <ng-container matColumnDef="name">
-          <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="buy">
-          <mat-cell *matCellDef="let element; let i = index;">
-            <button mat-raised-button color="primary" (click)="removeItem(i)">
-              <mat-icon>done</mat-icon>
-            </button>
-          </mat-cell>
-        </ng-container>
-        
-        <mat-row *matRowDef="let row; columns: ['name', 'buy'];"></mat-row>
-      </mat-table>
+  <div class="short-container" *ngIf="displayIngredients">
+    <div *ngFor="let categoryIngredients of displayIngredients | keyvalue: categoryOrder">
+      <h6>{{categoryIngredients.key}}</h6>
+
+      <div class="table-container mat-elevation-z8 box">
+        <div class="table-row" *ngFor="let ingredient of categoryIngredients.value">
+          <span class="table-cell" *ngIf="!ingredient.isItem">
+            {{ingredient.cartQuantity | number: '1.0-2'}} {{ingredient.uom === 'other'? '' : ingredient.uom}}
+            {{ingredient.name}}
+          </span>
+          <button mat-raised-button color="primary" *ngIf="!ingredient.isItem" (click)="addIngredientToPantry(ingredient.id)">
+            <mat-icon>done</mat-icon>
+          </button>
+
+          <span class="table-cell" *ngIf="ingredient.isItem">
+            {{ingredient.name}}
+          </span>
+          <button mat-raised-button color="primary" *ngIf="ingredient.isItem" (click)="removeItem(ingredient.index)">
+            <mat-icon>done</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="short-container button-row" *ngIf="ingredientsDataSource.filteredData.length > 0 || itemsDataSource.filteredData.length > 0">
+  <div class="short-container button-row" *ngIf="displayIngredients">
     <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">Add All</button>
   </div>
 </div>
 
-<div *ngIf="!loading && ingredientsDataSource.filteredData.length === 0 && itemsDataSource.filteredData.length === 0" style="text-align: center;">
+<div class="text-center" *ngIf="!loading && !displayIngredients">
   <br/>
   <h4 [hidden]="isCompleted">Your shopping list is empty</h4>
   <h4 [hidden]="!isCompleted">Your shopping list is completed!</h4>

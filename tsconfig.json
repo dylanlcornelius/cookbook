@@ -52,6 +52,7 @@
       "@recipeHistory": ["src/app/recipe/shared/recipe-history.model"],
       "@recipeHistoryService": ["src/app/recipe/shared/recipe-history.service"],
       "@ingredient": ["src/app/ingredient/shared/ingredient.model"],
+      "@ingredientCategory": ["src/app/ingredient/shared/ingredient-category.enum"],
       "@ingredientService": ["src/app/ingredient/shared/ingredient.service"],
       "@userIngredient": ["src/app/shopping/shared/user-ingredient.model"],
       "@userIngredientService": ["src/app/shopping/shared/user-ingredient.service"],

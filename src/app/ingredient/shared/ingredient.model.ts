@@ -1,9 +1,10 @@
 import { Model } from '@model';
+import { IngredientCategory } from '@ingredientCategory';
 import { UOM } from '@uoms';
 
 export class Ingredient extends Model {
     name: string;
-    category: string;
+    category: IngredientCategory;
     amount: string;
     uom: UOM;
     calories: string;
@@ -16,7 +17,7 @@ export class Ingredient extends Model {
     constructor (data: any) {
         super(data);
         this.name = data.name || '';
-        this.category = data.category || '';
+        this.category = data.category || IngredientCategory.OTHER;
         this.amount = data.amount || '';
         this.uom = data.uom || '';
         this.calories = data.calories || '';

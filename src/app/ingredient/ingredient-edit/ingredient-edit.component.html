@@ -33,9 +33,14 @@
     </div>
 
     <mat-form-field class="form-field">
-      <input matInput placeholder="Category" formControlName="category" [errorStateMatcher]="matcher">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category" required>
+        <mat-option *ngFor="let category of categories" [value]="category.key">
+          {{category.value}}
+        </mat-option>
+      </mat-select>
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('category').valid">Please enter a valid number for Ingredient Servings</span>
+        <span *ngIf="!ingredientsForm.get('category').valid && ingredientsForm.get('category').touched">Please enter a valid number for Ingredient Category</span>
       </mat-error>
     </mat-form-field>
 
