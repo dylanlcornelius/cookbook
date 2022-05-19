@@ -1,3 +1,4 @@
+import { ActionService } from '@actionService';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +18,7 @@ describe('CommentListComponent', () => {
   let currentUserService: CurrentUserService;
   let commentService: CommentService;
   let userService: UserService;
+  let actionService: ActionService;
   let validationService: ValidationService;
   let notificationService: NotificationService;
 
@@ -38,6 +40,7 @@ describe('CommentListComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     commentService = TestBed.inject(CommentService);
     userService = TestBed.inject(UserService);
+    actionService = TestBed.inject(ActionService);
     validationService = TestBed.inject(ValidationService);
     notificationService = TestBed.inject(NotificationService);
   });
@@ -106,28 +109,34 @@ describe('CommentListComponent', () => {
 
   describe('editComment', () => {
     it('should update comment text', () => {
+      component.user = new User({});
       const comment = new Comment({ text: 'a' });
 
       spyOn(commentService, 'update');
+      spyOn(actionService, 'commitAction');
       spyOn(notificationService, 'setModal');
 
       component.editComment(comment, 'b');
 
       expect(commentService.update).toHaveBeenCalled();
+      expect(actionService.commitAction).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
 
   describe('resolveComment', () => {
     it('should update comment resolution', () => {
+      component.user = new User({});
       const comment = new Comment({ resolved: false });
 
       spyOn(commentService, 'update');
+      spyOn(actionService, 'commitAction');
       spyOn(notificationService, 'setModal');
 
       component.resolveComment(comment);
 
       expect(commentService.update).toHaveBeenCalled();
+      expect(actionService.commitAction).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
     });
   });
