@@ -36,6 +36,6 @@ export class CommentService extends FirestoreService {
   }
 
   create = (data: Comment): string => super.create(data.getObject(), Action.CREATE_COMMENT);
-  update = (data: CommentObject | Comment[], id?: string): void => super.update(data, id, Action.UPDATE_COMMENT);
+  update = (data: CommentObject | Comment[], id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id, Action.DELETE_COMMENT);
 }

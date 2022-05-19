@@ -14,6 +14,7 @@
 
     CREATE_COMMENT = 'CREATE_COMMENT',
     UPDATE_COMMENT = 'UPDATE_COMMENT',
+    RESOLVE_COMMENT = 'RESOLVE_COMMENT',
     DELETE_COMMENT = 'DELETE_COMMENT',
 
     OPEN_TUTORIAL = 'OPEN_TUTORIAL',
@@ -35,6 +36,7 @@ export enum ActionLabel {
 
     CREATE_COMMENT = 'Create Comment',
     UPDATE_COMMENT = 'Update Comment',
+    RESOLVE_COMMENT = 'Resolve Comment',
     DELETE_COMMENT = 'Delete Comment',
 
     OPEN_TUTORIAL = 'Open Tutorial',

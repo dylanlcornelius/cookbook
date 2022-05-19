@@ -1,3 +1,5 @@
+import { Action } from '@actions';
+import { ActionService } from '@actionService';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Comment } from '@comment';
@@ -33,6 +35,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
     private currentUserService: CurrentUserService,
     private commentService: CommentService,
     private userService: UserService,
+    private actionService: ActionService,
     private validationService: ValidationService,
     private notificationService: NotificationService,
   ) { }
@@ -113,12 +116,14 @@ export class CommentListComponent implements OnInit, OnDestroy {
   editComment(comment: Comment, text: string): void {
     comment.text = text;
     this.commentService.update(comment.getObject(), comment.getId());
+    this.actionService.commitAction(this.user.uid, Action.UPDATE_COMMENT, 1);
     this.notificationService.setModal(new SuccessNotification('Comment edited!'));
   }
 
   resolveComment(comment: Comment): void {
     comment.isResolved = true;
     this.commentService.update(comment.getObject(), comment.getId());
+    this.actionService.commitAction(this.user.uid, Action.RESOLVE_COMMENT, 1);
     this.notificationService.setModal(new SuccessNotification('Comment resolved!'));
   }
 
