@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ShoppingListComponent } from './shopping-list.component';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { UserIngredientService } from '@userIngredientService';
 import { UserItemService } from '@userItemService';
 import { of } from 'rxjs';
@@ -21,6 +20,7 @@ import { TutorialService } from '@tutorialService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from '@numberService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { IngredientCategory } from '@ingredientCategory';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -40,7 +40,6 @@ describe('ShoppingListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),
-        MatTableModule,
         FormsModule,
         ReactiveFormsModule,
         MatAutocompleteModule,
@@ -76,13 +75,18 @@ describe('ShoppingListComponent', () => {
   describe('load', () => {
     it('should load ingredients and items', () => {
       const userIngredients = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
+        ingredients: [{ id: 'ingredientId' }, { id: 'ingredientId2' }]
       });
-      const ingredients = [new Ingredient({
-        id: 'ingredientId'
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          category: IngredientCategory.BAKING
+        }),
+        new Ingredient({
+          id: 'ingredientId2',
+          category: IngredientCategory.BAKING
+        })
+      ];
       const userItems = new UserItem({
         items: [{
           id: 'itemId'
@@ -99,6 +103,7 @@ describe('ShoppingListComponent', () => {
       fixture.detectChanges();
       component.ingredientControl.setValue(undefined);
 
+      expect(component.displayIngredients).toBeDefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
@@ -129,6 +134,7 @@ describe('ShoppingListComponent', () => {
 
       component.load();
 
+      expect(component.displayIngredients).toBeDefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
@@ -151,49 +157,12 @@ describe('ShoppingListComponent', () => {
 
       component.load();
 
+      expect(component.displayIngredients).toBeNull();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();
-    });
-  });
-
-  describe('applyFilter', () => {
-    it('should reset filters', () => {
-      component.ingredientsDataSource = new MatTableDataSource();
-
-      component.applyFilter();
-
-      expect(component.ingredientsDataSource.filter).toEqual('0');
-    });
-  });
-
-  describe('removeIngredient', () => {
-    it('should update user ingredients', () => {
-      const ingredients = [new Ingredient({ id: 'id', cartQuantity: 10, amount: 5 }), new Ingredient({})];
-      component.ingredients = ingredients;
-      component.userIngredient = new UserIngredient({ ingredients });
-      component.ingredientsDataSource = new MatTableDataSource(ingredients);
-
-      spyOn(userIngredientService, 'formattedUpdate');
-
-      component.removeIngredient('id');
-
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
-    });
-
-    it('should not update user ingredients', () => {
-      const ingredients = [new Ingredient({ id: 'id', cartQuantity: 10 }), new Ingredient({})];
-      component.ingredients = ingredients;
-      component.userIngredient = new UserIngredient({ ingredients });
-      component.ingredientsDataSource = new MatTableDataSource(ingredients);
-
-      spyOn(userIngredientService, 'formattedUpdate');
-
-      component.removeIngredient('id');
-
-      expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
     });
   });
 
@@ -217,38 +186,30 @@ describe('ShoppingListComponent', () => {
     it('should buy an ingredient', () => {
       const ingredients = [new Ingredient({ id: 'id', cartQuantity: 10 }), new Ingredient({})];
       component.userIngredient = new UserIngredient({ ingredients });
-      component.ingredientsDataSource = new MatTableDataSource(ingredients);
-
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
-      spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
 
       component.addIngredientToPantry('id');
 
-      expect(component.applyFilter).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
     });
 
     it('should complete the shopping list', () => {
-      const ingredients = [new Ingredient({ id: 'id', cartQuantity: 0 }), new Ingredient({})];
+      const ingredients = [new Ingredient({ id: 'id', cartQuantity: 0 }), new Ingredient({ cartQuantity: 0 })];
       component.userIngredient = new UserIngredient({ ingredients });
-      component.ingredientsDataSource = new MatTableDataSource(ingredients);
-      
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
-      spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
 
       component.addIngredientToPantry('id');
 
-      expect(component.applyFilter).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
@@ -257,19 +218,14 @@ describe('ShoppingListComponent', () => {
     it('should buy an ingredient with an invalid cart quantity', () => {
       const ingredients = [new Ingredient({ id: 'id', cartQuantity: NaN }), new Ingredient({})];
       component.userIngredient = new UserIngredient({ ingredients });
-      component.ingredientsDataSource = new MatTableDataSource(ingredients);
-      component.applyFilter();
-      
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
-      spyOn(component, 'applyFilter');
       spyOn(userIngredientService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
 
       component.addIngredientToPantry('id');
 
-      expect(component.applyFilter).toHaveBeenCalled();
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
@@ -322,8 +278,8 @@ describe('ShoppingListComponent', () => {
 
   describe('removeItem', () => {
     it('should buy a user item', () => {
+      component.userIngredient = new UserIngredient({ ingredients: [new Ingredient({ cartQuantity: 0 })] });
       component.userItem = new UserItem({ items: [{ name: 'item'}, { name: 'item2' }] });
-      component.ingredientsDataSource = new MatTableDataSource([]);
 
       spyOn(userItemService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
@@ -349,9 +305,8 @@ describe('ShoppingListComponent', () => {
 
   describe('addAllToPantryEvent', () => {
     it('should add ingredients and items to pantry', () => {
-      const ingredients = [new Ingredient({ cartQuantity: 10 }), new Ingredient({})];
+      const ingredients = [new Ingredient({ cartQuantity: 10 }), new Ingredient({ cartQuantity: 0 })];
       component.userIngredient = new UserIngredient({ ingredients });
-      component.ingredientsDataSource = new MatTableDataSource(ingredients);
 
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
@@ -361,7 +316,7 @@ describe('ShoppingListComponent', () => {
 
       component.addAllToPantryEvent();
 
-      expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
+      expect(userIngredientService.buyUserIngredient).toHaveBeenCalledWith(2, true);
       expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
       expect(userItemService.formattedUpdate).toHaveBeenCalled();
     });

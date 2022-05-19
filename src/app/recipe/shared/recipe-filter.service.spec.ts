@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, StatusFilter } from '@recipeFilterService';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, StatusFilter, ImageFilter } from '@recipeFilterService';
 import { Recipe, RECIPE_STATUS } from '@recipe';
 
 describe('RecipeFilterService', () => {
@@ -54,6 +54,12 @@ describe('RecipeFilterService', () => {
 
     it('should filter by status', () => {
       const result = service.recipeFilterPredicate(new Recipe({ status: RECIPE_STATUS.PUBLISHED }), [new StatusFilter(RECIPE_STATUS.PUBLISHED)]);
+
+      expect(result).toBeTrue();
+    });
+
+    it('should filter by image', () => {
+      const result = service.recipeFilterPredicate(new Recipe({ hasImage: true }), [new ImageFilter(true)]);
 
       expect(result).toBeTrue();
     });

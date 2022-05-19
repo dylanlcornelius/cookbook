@@ -51,12 +51,12 @@
   </div>
 </div>
 
-<div *ngIf="!loading && mealPlan?.recipes.length === 0" style="text-align: center;">
+<div class="text-center" *ngIf="!loading && mealPlan?.recipes.length === 0">
   <br/>
   <h4>Your meal plan doesn't have any recipes</h4>
 </div>
 
-<div *ngIf="!loading && !mealPlan" style="text-align: center;">
+<div class="text-center" *ngIf="!loading && !mealPlan">
   <br/>
   <h4>You have no meal plans</h4>
 </div>
