@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { SPACE, COMMA, TAB } from '@angular/cdk/keycodes';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RecipeService } from '@recipeService';
 import {
@@ -9,7 +9,8 @@ import {
   FormArray,
   ValidatorFn,
   AbstractControl,
-  FormGroupDirective
+  FormGroupDirective,
+  FormControl
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService} from '@ingredientService';
@@ -19,7 +20,7 @@ import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { Recipe } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
-import { first, map, takeUntil } from 'rxjs/operators';
+import { first, map, startWith, takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
@@ -49,21 +50,25 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   originalRecipe: Recipe;
   recipe: Recipe;
   recipesForm: FormGroup;
+  categoryControl = new FormControl();
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeysCodes: number[] = [SPACE, COMMA, TAB];
 
   addedIngredients = [];
   allAvailableIngredients = [];
   availableIngredients = [];
   ingredientFilter = '';
-  recipes;
+  recipes: Recipe[];
   ingredients;
+  recipeCategories;
 
   uoms: Array<UOM>;
 
   matcher = new ErrorMatcher();
   selectable;
   stepperOrientation: Observable<StepperOrientation>;
+
+  @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
 
   readonly listFields = {
     categories: 'category',
@@ -160,11 +165,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
             this.initForm();
             this.initIngredients();
+            this.initCategories();
 
             this.loading = this.loadingService.set(false);
           });
         } else {
           this.initIngredients();
+          this.initCategories();
         }
       });
     });
@@ -212,6 +219,25 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.applyIngredientFilter(false);
   }
 
+  initCategories(): void {
+    this.recipeCategories = this.categoryControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.recipes
+        .reduce((allCategories, { categories }) => {
+          categories.forEach(({ category }) => {
+            const isFound = allCategories.find(currentCategory => currentCategory === category);
+
+            if (!isFound) {
+              allCategories.push(category);
+            }
+          });
+          return allCategories;
+        }, [])
+        .filter(category => category.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : ''))
+        .sort((a, b) => a.localeCompare(b)))
+    );
+  }
+
   initCategory(category: string): FormGroup {
     return this.formBuilder.group({
       category: category
@@ -223,17 +249,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     control.push(this.initCategory(category));
   }
 
-  addCategoryEvent = (event: any): void => {
-    const input = event.input;
-    const value = event.value;
-
+  addCategoryEvent = (value: string): void => {
     if (value && value.trim()) {
       this.addCategory(value.trim());
     }
 
-    if (input) {
-      input.value = '';
-    }
+    this.categoryInput.nativeElement.value = '';
   };
 
   removeCategory(i: number): void {

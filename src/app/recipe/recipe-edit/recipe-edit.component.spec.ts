@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ValidationService } from '@modalService';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -42,6 +43,7 @@ describe('RecipeEditComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         DragDropModule,
+        MatAutocompleteModule,
         MatInputModule,
         MatChipsModule,
         BrowserAnimationsModule,
@@ -86,6 +88,11 @@ describe('RecipeEditComponent', () => {
         }]
       });
 
+      const recipes = [
+        new Recipe({ categories: [{ category: '1' }, { category: '2' }] }),
+        new Recipe({ categories: [{ category: '1' }] }),
+      ];
+
       const ingredients = [
         new Ingredient({
           id: 'id'
@@ -99,7 +106,7 @@ describe('RecipeEditComponent', () => {
       ];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
-      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of(recipes));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));  
@@ -109,6 +116,7 @@ describe('RecipeEditComponent', () => {
 
       component.load();
       fixture.detectChanges();
+      component.categoryControl.setValue(undefined);
 
       expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalledTimes(2);
@@ -294,17 +302,23 @@ describe('RecipeEditComponent', () => {
 
   describe('addCategoryEvent', () => {
     it('should add a category', () => {
+      component.loading = false;
+      fixture.detectChanges();
+
       spyOn(component, 'addCategory');
 
-      component.addCategoryEvent({ input: {input: 'value'}, value: 'value'});
+      component.addCategoryEvent('value');
     
       expect(component.addCategory).toHaveBeenCalled();
     });
 
     it('should not add a category', () => {
+      component.loading = false;
+      fixture.detectChanges();
+
       spyOn(component, 'addCategory');
 
-      component.addCategoryEvent({ input: undefined, value: ''});
+      component.addCategoryEvent('');
     
       expect(component.addCategory).not.toHaveBeenCalled();
     });
