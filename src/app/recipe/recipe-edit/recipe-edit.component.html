@@ -51,11 +51,20 @@
             {{category.value.category}}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip>
-          <input placeholder="Categories"
+          <input #categoryInput
+                placeholder="Categories"
+                [formControl]="categoryControl"
+                [matAutocomplete]="auto"
                 [matChipInputFor]="categoryList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="true"
-                (matChipInputTokenEnd)="addCategoryEvent($event)">
+                (matChipInputTokenEnd)="addCategoryEvent($event.value)">
+
+          <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="addCategoryEvent($event.option.value)">
+            <mat-option *ngFor="let category of recipeCategories | async" [value]="category">
+              {{category}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-chip-list>
       </mat-form-field>
     </ng-template>

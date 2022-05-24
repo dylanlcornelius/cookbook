@@ -16,6 +16,7 @@ import { SharedModule } from '@sharedModule';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { RecipeHistoryModalComponent } from './recipe-history-modal/recipe-history-modal.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { CommentListComponent } from './comment-list/comment-list.component';
   imports: [
     CommonModule,
     RecipeRoutingModule,
+    MatAutocompleteModule,
     MatProgressBarModule,
     MatBadgeModule,
     MatCheckboxModule,
