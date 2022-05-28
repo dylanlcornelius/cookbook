@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { CollectionReference, Query } from '@firebase/firestore-types';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
 import { Model, ModelObject } from '@model';
 import { first } from 'rxjs/operators';
+import { collection, getFirestore, CollectionReference, doc, Query, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { getApps } from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
 })
 export abstract class FirestoreService {
+    
   ref: CollectionReference;
 
   constructor(
-    collection: string,
+    collectionPath: string,
     protected currentUserService: CurrentUserService,
     protected actionService: ActionService,
   ) {
-    if (firebase.apps.length > 0 && !this.ref && collection) {
-      this.ref = firebase.firestore().collection(collection);
+    if (getApps().length > 0 && !this.ref && collectionPath) {
+      this.ref = collection(getFirestore(), collectionPath);
     }
   }
 
@@ -37,27 +37,28 @@ export abstract class FirestoreService {
 
   getOne(id: string): Observable<any> {
     return new Observable(observable => {
-      this.ref?.doc(id).onSnapshot(doc => {
+      onSnapshot(doc(this.ref, id), (snapshot => {
         observable.next({
-          ...doc.data(),
-          id: doc.id
+          ...snapshot.data(),
+          id: snapshot.id
         });
-      });
+      }));
     });
+
   }
 
   getMany(ref?: Query): Observable<any> {
     return new Observable(observable => {
-      (ref || this.ref)?.onSnapshot(querySnapshot => {
+      onSnapshot(ref || this.ref, (snapshot => {
         const docs = [];
-        querySnapshot.forEach(doc => {
+        snapshot.forEach(doc => {
           docs.push({
             ...doc.data(),
             id: doc.id
           });
         });
         observable.next(docs);
-      });
+      }));
     });
   }
 
@@ -72,20 +73,22 @@ export abstract class FirestoreService {
   create(data: ModelObject, action?: Action): string {
     this.commitAction(action);
 
-    const newDoc = this.ref?.doc();
-    newDoc?.set({ ...data, creationDate: new Date() });
-    return newDoc?.id;
+    const currentDoc = doc(this.ref);
+    setDoc(currentDoc, { ...data, creationDate: new Date() });
+    return currentDoc?.id;
   }
 
   updateOne(data: ModelObject, id: string, action?: Action): void {
     this.commitAction(action);
 
-    this.ref?.doc(id).set(data);
+    const currentDoc = doc(this.ref, id);
+    setDoc(currentDoc, data);
   }
 
   updateAll(data: Model[]): void {
     data.forEach(d => {
-      this.ref?.doc(d.getId()).set(d.getObject());
+      const currentDoc = doc(this.ref, d.getId());
+      setDoc(currentDoc, d.getObject());
     });
   }
 
@@ -100,6 +103,7 @@ export abstract class FirestoreService {
   delete(id: string, action?: Action): void {
     this.commitAction(action);
     
-    this.ref?.doc(id).delete();
+    const currentDoc = doc(this.ref, id);
+    deleteDoc(currentDoc);
   }
 }

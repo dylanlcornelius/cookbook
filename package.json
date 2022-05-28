@@ -27,7 +27,7 @@
     "chart.js": "^2.9.4",
     "compressorjs": "^1.1.1",
     "core-js": "^3.8.3",
-    "firebase": "^8.4.1",
+    "firebase": "^9.8.1",
     "jquery": "^3.5.1",
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",

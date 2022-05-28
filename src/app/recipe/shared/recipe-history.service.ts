@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CurrentUserService } from '@currentUserService';
 import { RecipeHistory } from '@recipeHistory';
+import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -51,11 +52,11 @@ export class RecipeHistoryService extends FirestoreService {
   get(uid?: string, recipeId?: string): Observable<RecipeHistory | RecipeHistory[]> {
     return new Observable(observable => {
       if (uid && recipeId) {
-        super.getMany(this.ref?.where('uid', '==', uid).where('recipeId', '==', recipeId)).subscribe(docs => {
+        super.getMany(query(this.ref, where('uid', '==', uid), where('recipeId', '==', recipeId))).subscribe(docs => {
           observable.next(new RecipeHistory(docs[0]));
         });
       } else if (uid) {
-        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(query(this.ref, where('uid', '==', uid))).subscribe(docs => {
           observable.next(docs.map(doc => new RecipeHistory(doc)));
         });
       } else {

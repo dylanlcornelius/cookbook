@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Navigation } from '@navigation';
 import { ModelObject } from '@model';
+import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'

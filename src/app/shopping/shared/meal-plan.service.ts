@@ -5,6 +5,7 @@ import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { Model, ModelObject } from '@model';
 import { MealPlan } from './meal-plan.model';
+import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class MealPlanService extends FirestoreService {
   get(uid?: string): Observable<MealPlan | MealPlan[]> {
     return new Observable(observer => {
       if (uid) {
-        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(query(this.ref, where('uid', '==', uid))).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new MealPlan(docs[0]));
           } else {

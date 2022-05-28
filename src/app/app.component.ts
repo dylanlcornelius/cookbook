@@ -1,6 +1,5 @@
 import { environment } from '../environments/environment';
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -27,7 +26,7 @@ export class AppComponent implements OnInit {
     private title: Title,
     private currentUserService: CurrentUserService
   ) {
-    this.title.setTitle(environment.config.title);
+    this.title.setTitle(environment.title);
   }
 
   ngOnInit() {

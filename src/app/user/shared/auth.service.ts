@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { firebase } from '@firebase/app';
-import '@firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { ROLE, User } from '@user';
 import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { first } from 'rxjs/operators';
+import { getApps } from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +21,13 @@ export class AuthService {
     private userService: UserService,
     private actionService: ActionService,
   ) {
-    if (firebase.apps.length > 0) {
+    if (getApps().length > 0) {
       this.load();
     }
   }
 
   load(): void {
-    firebase.auth().onAuthStateChanged(this.handleUserChange);
+    getAuth().onAuthStateChanged(this.handleUserChange);
   }
 
   handleUserChange = (user: any): void => {
@@ -67,12 +67,11 @@ export class AuthService {
   };
 
   googleLogin(): void {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
+    signInWithRedirect(getAuth(), new GoogleAuthProvider());
   }
 
   logout(): void {
-    firebase.auth().signOut().then(() => {
+    getAuth().signOut().then(() => {
       this.currentUserService.setCurrentUser(new User({}));
       this.currentUserService.setIsLoggedIn(false);
       this.currentUserService.setIsGuest(true);

@@ -5,6 +5,7 @@ import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { ModelObject } from '@model';
+import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class ConfigService extends FirestoreService {
   get(name?: string): Observable<Config | Config[]> {
     return new Observable(observer => {
       if (name) {
-        super.getMany(this.ref?.where('name', '==', name)).subscribe(docs => {
+        super.getMany(query(this.ref, where('name', '==', name))).subscribe(docs => {
           observer.next(new Config(docs[0]));
         });
       } else {

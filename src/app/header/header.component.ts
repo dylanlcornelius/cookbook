@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.title = environment.config.title;
+    this.title = environment.title;
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
 
     this.load();

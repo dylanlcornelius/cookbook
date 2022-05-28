@@ -8,6 +8,7 @@ import { CurrentUserService } from '@currentUserService';
 import { Model, ModelObject } from '@model';
 import { SuccessNotification } from '@notification';
 import { NotificationService } from '@modalService';
+import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class UserIngredientService extends FirestoreService {
   get(uid?: string): Observable<UserIngredient | UserIngredient[]> {
     return new Observable(observer => {
       if (uid) {
-        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(query(this.ref, where('uid', '==', uid))).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new UserIngredient(docs[0]));
           } else {

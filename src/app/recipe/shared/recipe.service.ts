@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import '@firebase/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Action } from '@actions';
 import { Recipe, RecipeObject, RECIPE_STATUS } from '@recipe';

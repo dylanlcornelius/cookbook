@@ -6,6 +6,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { initializeApp } from 'firebase/app';
+import { enableMultiTabIndexedDbPersistence, getFirestore } from 'firebase/firestore';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,8 +20,6 @@ import { NewUserComponent } from './user/new-user/new-user.component';
 
 import { SharedModule } from '@sharedModule';
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { environment } from '../environments/environment';
 
 @NgModule({
@@ -48,8 +48,8 @@ import { environment } from '../environments/environment';
 export class AppModule {
   constructor() {
     if (environment) {
-      firebase.initializeApp(environment.config);
-      firebase.firestore().enablePersistence();
+      initializeApp(environment.firebase);
+      enableMultiTabIndexedDbPersistence(getFirestore());
     }
   }
 }

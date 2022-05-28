@@ -1,5 +1,6 @@
 import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
+import { query, where } from 'firebase/firestore';
 import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
 import { Household } from '@household';
@@ -25,7 +26,7 @@ export class HouseholdService extends FirestoreService {
   get(uid?: string): Observable<Household | Household[]> {
     return new Observable(observer => {
       if (uid) {
-        super.getMany(this.ref?.where('memberIds', 'array-contains', uid)).subscribe(docs => {
+        super.getMany(query(this.ref, where('memberIds', 'array-contains', uid))).subscribe(docs => {
           observer.next(new Household(docs[0] || { id: uid }));
         });
       } else {
@@ -38,7 +39,7 @@ export class HouseholdService extends FirestoreService {
 
   getInvites(uid: string): Observable<Household[]> {
     return new Observable(observer => {
-      super.getMany(this.ref?.where('inviteIds', 'array-contains', uid)).subscribe(docs => {
+      super.getMany(query(this.ref, where('inviteIds', 'array-contains', uid))).subscribe(docs => {
         observer.next(docs.map(doc => new Household(doc)));
       });
     });
