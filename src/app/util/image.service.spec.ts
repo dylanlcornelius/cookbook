@@ -1,14 +1,17 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { FirebaseService } from '@firebaseService';
 
 import { ImageService } from '@imageService';
 import { Recipe } from '@recipe';
 
 describe('ImageService', () => {
   let service: ImageService;
+  let firebase: FirebaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ImageService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
@@ -17,22 +20,66 @@ describe('ImageService', () => {
 
   describe('get', () => {
     it('should get a file url', () => {
-      const ref = spyOnProperty(service, 'ref');
+      spyOn(firebase, 'ref');
+      spyOn(firebase, 'getDownloadURL').and.returnValue(Promise.resolve('url'));
     
       service.get('path');
 
-      expect(ref).toHaveBeenCalled();
+      expect(firebase.ref).toHaveBeenCalled();
+      expect(firebase.getDownloadURL).toHaveBeenCalled();
+    });
+
+    it('should catch an non-existant file url', () => {
+      spyOn(firebase, 'ref');
+      spyOn(firebase, 'getDownloadURL').and.returnValue(Promise.reject());
+    
+      service.get('path');
+
+      expect(firebase.ref).toHaveBeenCalled();
+      expect(firebase.getDownloadURL).toHaveBeenCalled();
     });
   });
 
   describe('upload', () => {
-    it('should upload a file', () => {
-      const ref = spyOnProperty(service, 'ref');
+    it('should upload a file', waitForAsync(() => {
+      const uploadTask = {
+        on: (_task: string, callback: Function, _error: Function, final: Function) => {
+          callback({ bytesTransferred: 50, totalBytes: 100 });
+          final();
+        }
+      };
+      
+      spyOn(firebase, 'ref');
+      spyOn(firebase, 'uploadBytesResumable').and.returnValue(uploadTask);
+      spyOn(service, 'get').and.returnValue(Promise.resolve('url'));
     
-      service.upload('path', null);
+      service.upload('path', null).subscribe(url => {
+        expect(url).toBeDefined();
+      });
 
-      expect(ref).toHaveBeenCalled();
-    });
+      expect(firebase.ref).toHaveBeenCalled();
+      expect(firebase.uploadBytesResumable).toHaveBeenCalled();
+      expect(service.get).toHaveBeenCalled();
+    }));
+
+    it('should catch an error with uploading a file', waitForAsync(() => {
+      const uploadTask = {
+        on: (_task: string, callback: Function, error: Function) => {
+          callback({ bytesTransferred: 50, totalBytes: 100 });
+          error();
+        }
+      };
+      
+      spyOn(firebase, 'ref');
+      spyOn(firebase, 'uploadBytesResumable').and.returnValue(uploadTask);
+      spyOn(service, 'get').and.returnValue(Promise.resolve('url'));
+    
+      service.upload('path', null).subscribe(() => {});
+
+      expect(firebase.ref).toHaveBeenCalled();
+      expect(firebase.uploadBytesResumable).toHaveBeenCalled();
+      expect(service.get).not.toHaveBeenCalled();
+    }));
   });
 
   describe('download', () => {
@@ -55,11 +102,13 @@ describe('ImageService', () => {
 
   describe('deleteFile', () => {
     it('should delete a file', () => {
-      const ref = spyOnProperty(service, 'ref');
+      spyOn(firebase, 'ref');
+      spyOn(firebase, 'deleteObject');
     
       service.deleteFile('path');
 
-      expect(ref).toHaveBeenCalled();
+      expect(firebase.ref).toHaveBeenCalled();
+      expect(firebase.deleteObject).toHaveBeenCalled();
     });
   });
 });

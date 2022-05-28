@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective, FormControl } from '@angular/forms';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { RecipeEditComponent } from './recipe-edit.component';
@@ -11,7 +11,7 @@ import { User } from '@user';
 import { Recipe } from '@recipe';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -59,7 +59,11 @@ describe('RecipeEditComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecipeEditComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
+    spyOn(component, 'unload');
     fixture.detectChanges();
+    component.load = load;
     breakpointObserver = TestBed.inject(BreakpointObserver);
     currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
@@ -68,6 +72,18 @@ describe('RecipeEditComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
+
+    component.recipesForm = formBuilder.group({
+      name: [],
+      link: [],
+      description: [],
+      time: [],
+      servings: [],
+      calories: [],
+      categories: formBuilder.array([]),
+      steps: formBuilder.array([]),
+      ingredients: formBuilder.array([])
+    });
   });
 
   it('should create', () => {
@@ -302,8 +318,8 @@ describe('RecipeEditComponent', () => {
 
   describe('addCategoryEvent', () => {
     it('should add a category', () => {
-      component.loading = false;
-      fixture.detectChanges();
+      const input = document.createElement('input');
+      component.categoryInput = new ElementRef(input);
 
       spyOn(component, 'addCategory');
 
@@ -313,8 +329,8 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should not add a category', () => {
-      component.loading = false;
-      fixture.detectChanges();
+      const input = document.createElement('input');
+      component.categoryInput = new ElementRef(input);
 
       spyOn(component, 'addCategory');
 

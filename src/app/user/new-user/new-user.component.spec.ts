@@ -38,7 +38,11 @@ describe('NewUserComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NewUserComponent);
     component = fixture.componentInstance;
+    component.user = new User({});
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     currentUserService = TestBed.inject(CurrentUserService);
     userService = TestBed.inject(UserService);
     imageService = TestBed.inject(ImageService);
@@ -72,12 +76,22 @@ describe('NewUserComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
+
+    it('should load the current user data and catch an image error', () => {
+      const user = new User({});
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
+      spyOn(imageService, 'download').and.returnValue(Promise.reject());
+
+      component.load();
+
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
+    });
   });
 
   describe('updateImage', () => {
     it('should update a user image', () => {
-      component.user = new User({});
-
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
@@ -90,8 +104,6 @@ describe('NewUserComponent', () => {
 
   describe('submit', () => {
     it('should update a user', () => {
-      component.user = new User({});
-
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
 
@@ -99,15 +111,19 @@ describe('NewUserComponent', () => {
       component.lastNameControl.patchValue('Test');
       component.themeControl.patchValue(true);
 
+      component.submit();
+
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
     });
 
     it('should not update a user', () => {
-      component.user = new User({});
-
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
+
+      component.firstNameControl.patchValue('');
+      component.lastNameControl.patchValue('');
+      component.themeControl.patchValue(false);
 
       component.submit();
 

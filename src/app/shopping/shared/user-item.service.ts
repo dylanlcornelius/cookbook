@@ -8,18 +8,19 @@ import { CurrentUserService } from '@currentUserService';
 import { Model, ModelObject } from '@model';
 import { SuccessNotification } from '@notification';
 import { NotificationService } from '@modalService';
-import { query, where } from 'firebase/firestore';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserItemService extends FirestoreService{
   constructor(
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
     private notificationService: NotificationService
   ) {
-    super('user-items', currentUserService, actionService);
+    super('user-items', firebase, currentUserService, actionService);
   }
 
   get(uid: string): Observable<UserItem>;
@@ -28,7 +29,7 @@ export class UserItemService extends FirestoreService{
   get(uid?: string): Observable<UserItem | UserItem[]> {
     return new Observable((observer) => {
       if (uid) {
-        super.getMany(query(this.ref, where('uid', '==', uid))).subscribe(docs => {
+        super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
           if (docs.length > 0) {
             observer.next(new UserItem(docs[0]));
           } else {

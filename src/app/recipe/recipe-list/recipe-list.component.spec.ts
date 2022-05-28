@@ -78,7 +78,10 @@ describe('RecipeListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecipeListComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     breakpointObserver = TestBed.inject(BreakpointObserver);
     currentUserService = TestBed.inject(CurrentUserService);
     householdService = TestBed.inject(HouseholdService);
@@ -214,6 +217,8 @@ describe('RecipeListComponent', () => {
     }));
 
     it('should handle images errors', fakeAsync(() => {
+      const router = TestBed.inject(Router);
+
       const recipes = [
         new Recipe({
           ingredients: [{
@@ -260,6 +265,10 @@ describe('RecipeListComponent', () => {
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.initFilters).toHaveBeenCalled();
+
+      const result = router.routeReuseStrategy.shouldReuseRoute(null, null);
+
+      expect(result).toEqual(false);
     }));
   });
 
@@ -543,6 +552,8 @@ describe('RecipeListComponent', () => {
 
   describe('removeIngredients', () => {
     it('should remove ingredients', () => {
+      component.user = new User({});
+
       spyOn(component, 'findRecipe').and.returnValue(new Recipe({}));
       spyOn(recipeIngredientService, 'removeIngredients');
   

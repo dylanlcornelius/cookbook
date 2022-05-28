@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ref, getDownloadURL, deleteObject, uploadBytesResumable, getStorage } from 'firebase/storage';
+import { FirebaseService } from '@firebaseService';
 import { Recipe } from '@recipe';
 import { User } from '@user';
 import { Observable } from 'rxjs';
@@ -8,24 +8,26 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImageService {
+  constructor(
+    private firebase: FirebaseService,
+  ) {}
+
   get(path: string): Promise<string | void> {
-    const storageRef = ref(getStorage(), path);
-    return getDownloadURL(storageRef).then(url => {
-      return url;
-    }, () => {});
+    const storageRef = this.firebase.ref(this.firebase.storage, path);
+    return this.firebase.getDownloadURL(storageRef).then(url => url, () => {});
   }
 
   upload(path: string, file: File | Blob): Observable<number | string | void> {
-    const storageRef = ref(getStorage(), path);
-    const uploadTask = uploadBytesResumable(storageRef, file, { cacheControl: 'public,max-age=31557600' });
+    const storageRef = this.firebase.ref(this.firebase.storage, path);
+    const uploadTask = this.firebase.uploadBytesResumable(storageRef, file, { cacheControl: 'public,max-age=31557600' });
 
     return new Observable(observer => {
-      uploadTask?.on("state_changed", snapshot => {
+      uploadTask.on("state_changed", snapshot => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         observer.next(progress);
-      }, error => {
-        console.log(error);
-      }, () => {
+      },
+      () => {},
+      () => {
         this.get(path).then(url => {
           observer.next(url);
         });
@@ -42,7 +44,7 @@ export class ImageService {
   }
 
   deleteFile(path: string): Promise<void> {
-    const storageRef = ref(getStorage(), path);
-    return deleteObject(storageRef);
+    const storageRef = this.firebase.ref(this.firebase.storage, path);
+    return this.firebase.deleteObject(storageRef);
   }
 }

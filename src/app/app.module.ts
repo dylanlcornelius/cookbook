@@ -6,8 +6,6 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { initializeApp } from 'firebase/app';
-import { enableMultiTabIndexedDbPersistence, getFirestore } from 'firebase/firestore';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +17,7 @@ import { UserPendingComponent } from './user/user-pending/user-pending.component
 import { NewUserComponent } from './user/new-user/new-user.component';
 
 import { SharedModule } from '@sharedModule';
+import { FirebaseService } from '@firebaseService';
 
 import { environment } from '../environments/environment';
 
@@ -46,10 +45,20 @@ import { environment } from '../environments/environment';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
+  constructor(
+    private firebase: FirebaseService,
+  ) {
     if (environment) {
-      initializeApp(environment.firebase);
-      enableMultiTabIndexedDbPersistence(getFirestore());
+      this.firebase.initializeApp(environment.firebase);
+
+      if (firebase.getApps().length) {
+        firebase.appLoaded = true;
+        firebase.firestore = firebase.getFirestore();
+        firebase.auth = firebase.getAuth();
+        firebase.storage = firebase.getStorage();
+  
+        firebase.enableMultiTabIndexedDbPersistence(firebase.firestore);
+      }
     }
   }
 }

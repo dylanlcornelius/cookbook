@@ -8,6 +8,7 @@ import { ActionService } from '@actionService';
 import { Validation } from '@validation';
 import { SuccessNotification } from '@notification';
 import { NotificationService, ValidationService } from '@modalService';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,13 @@ export class RecipeService extends FirestoreService {
   }
 
   constructor(
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
     private validationService: ValidationService,
     private notificationService: NotificationService
   ) {
-    super('recipes', currentUserService, actionService);
+    super('recipes', firebase, currentUserService, actionService);
   }
 
   get(id: string): Observable<Recipe>;

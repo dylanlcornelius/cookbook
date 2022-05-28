@@ -27,6 +27,7 @@
       "@sharedModule": ["src/app/shared/shared.module"],
       "@model": ["src/app/shared/model"],
       "@utilService": ["src/app/shared/util.service"],
+      "@firebaseService": ["src/app/shared/firebase.service"],
       "@firestoreService": ["src/app/shared/firestore.service"],
       "@loadingService": ["src/app/shared/loading-modal/loading.service"],
       "@modalService": ["src/app/shared/modal.service"],

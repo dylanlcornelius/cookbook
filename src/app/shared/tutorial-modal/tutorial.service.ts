@@ -8,6 +8,7 @@ import { Tutorial, TutorialModal } from '@tutorial';
 import { TutorialModalService } from '@modalService';
 import { Router } from '@angular/router';
 import { Action } from '@actions';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +16,12 @@ import { Action } from '@actions';
 export class TutorialService extends FirestoreService {
   constructor(
     private router: Router,
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
     private tutorialModalService: TutorialModalService,
   ) {
-    super('tutorials', currentUserService, actionService);
+    super('tutorials', firebase, currentUserService, actionService);
   }
 
   get(): Observable<Tutorial[]> {

@@ -43,7 +43,10 @@ describe('IngredientEditComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IngredientEditComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     ingredientService = TestBed.inject(IngredientService);
     formBuilder = TestBed.inject(FormBuilder);
     tutorialService = TestBed.inject(TutorialService);

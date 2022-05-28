@@ -7,17 +7,19 @@ import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { Recipe } from '@recipe';
 import { NumberService } from '@numberService';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IngredientService extends FirestoreService {
   constructor(
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
     private numberService: NumberService,
   ) {
-    super('ingredients', currentUserService, actionService);
+    super('ingredients', firebase, currentUserService, actionService);
   }
 
   get(id: string): Observable<Ingredient>;

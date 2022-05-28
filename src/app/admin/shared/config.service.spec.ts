@@ -4,13 +4,16 @@ import { of } from 'rxjs/internal/observable/of';
 import { Config } from '@config';
 
 import { ConfigService } from '@configService';
+import { FirebaseService } from '@firebaseService';
 
 describe('ConfigService', () => {
   let service: ConfigService;
+  let firebase: FirebaseService;
   
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ConfigService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
@@ -20,6 +23,8 @@ describe('ConfigService', () => {
 
   describe('getConfigs', () => {
     it('should get one document based on an id', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
 
@@ -27,27 +32,15 @@ describe('ConfigService', () => {
         expect(doc).toBeDefined();
       });
 
+      expect(firebase.where).toHaveBeenCalled();
+      expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get one document based on an id with a ref', () => {
-      (<any>service.ref) = { where: () => {} };
-     
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service.ref, 'where');
-
-      service.get('name').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.ref.where).toHaveBeenCalled();
     });
 
     it('should get all documents', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
@@ -55,6 +48,8 @@ describe('ConfigService', () => {
         expect(docs).toBeDefined();
       });
 
+      expect(firebase.where).not.toHaveBeenCalled();
+      expect(firebase.query).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });

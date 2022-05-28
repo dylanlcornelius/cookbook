@@ -7,9 +7,12 @@ import { ActionService } from '@actionService';
 
 import { FirestoreService } from './firestore.service';
 import { Recipe } from '@recipe';
+import { FirebaseService } from '@firebaseService';
+import { DocumentData, DocumentReference } from 'firebase/firestore';
 
 describe('FirestoreService', () => {
   let service: FirestoreService;
+  let firebase: FirebaseService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
 
@@ -20,12 +23,33 @@ describe('FirestoreService', () => {
       ]
     });
     service = TestBed.inject(FirestoreService);
+    firebase = TestBed.inject(FirebaseService);
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('load', () => {
+    it('should set a collection ref', () => {
+      firebase.appLoaded = true;
+
+      spyOn(firebase, 'collection');
+
+      service.load();
+
+      expect(firebase.collection).toHaveBeenCalled();
+    });
+
+    it('should set a collection ref', () => {
+      spyOn(firebase, 'collection');
+
+      service.load();
+
+      expect(firebase.collection).not.toHaveBeenCalled();
+    });
   });
 
   describe('commitAction', () => {
@@ -52,9 +76,27 @@ describe('FirestoreService', () => {
 
   describe('getOne', () => {
     it('should get one document', () => {
-      service.getOne('id');
+      spyOn(firebase, 'doc');
+      spyOn(firebase, 'onSnapshot').and.returnValue(of({ data: () => {}, id: 'id' }));
 
-      expect(true).toBeTrue();
+      service.getOne('id').subscribe(data => {
+        expect(data.id).toEqual('id');
+      });
+
+      expect(firebase.doc).toHaveBeenCalled();
+      expect(firebase.onSnapshot).toHaveBeenCalled();
+    });
+  });
+
+  describe('getMany', () => {
+    it('should get one document', () => {
+      spyOn(firebase, 'onSnapshot').and.returnValue(of([{ data: () => {}, id: 'id' }]));
+
+      service.getMany().subscribe(data => {
+        expect(data[0].id).toEqual('id');
+      });
+
+      expect(firebase.onSnapshot).toHaveBeenCalled();
     });
   });
 
@@ -83,10 +125,14 @@ describe('FirestoreService', () => {
   describe('create', () => {
     it('should create a document', () => {
       spyOn(service, 'commitAction');
+      spyOn(firebase, 'doc').and.returnValue({});
+      spyOn(firebase, 'setDoc');
 
       service.create(new Recipe({}).getObject());
 
       expect(service.commitAction).toHaveBeenCalled();
+      expect(firebase.doc).toHaveBeenCalled();
+      expect(firebase.setDoc).toHaveBeenCalled();
     });
   });
 
@@ -94,17 +140,26 @@ describe('FirestoreService', () => {
     it('should update one document', () => {
       spyOn(service, 'commitAction');
 
+      spyOn(firebase, 'doc');
+      spyOn(firebase, 'setDoc');
+
       service.updateOne(new Recipe({}).getObject(), 'id');
 
       expect(service.commitAction).toHaveBeenCalled();
+      expect(firebase.doc).toHaveBeenCalled();
+      expect(firebase.setDoc).toHaveBeenCalled();
     });
   });
 
   describe('updateAll', () => {
     it('should update all documents', () => {
-      service.updateAll([new Recipe({})]);
+      spyOn(firebase, 'doc');
+      spyOn(firebase, 'setDoc');
 
-      expect(true).toBeTrue();
+      service.updateAll([new Recipe({}), new Recipe({})]);
+
+      expect(firebase.doc).toHaveBeenCalledTimes(2);
+      expect(firebase.setDoc).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -123,10 +178,14 @@ describe('FirestoreService', () => {
   describe('delete', () => {
     it('should delete a document', () => {
       spyOn(service, 'commitAction');
+      spyOn(firebase, 'doc');
+      spyOn(firebase, 'deleteDoc');
 
       service.delete('id');
 
       expect(service.commitAction).toHaveBeenCalled();
+      expect(firebase.doc).toHaveBeenCalled();
+      expect(firebase.deleteDoc).toHaveBeenCalled();
     });
   });
 });

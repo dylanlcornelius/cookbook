@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
-import { query, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { Comment, CommentObject } from '@comment';
 import { Action } from '@actions';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService extends FirestoreService {
   constructor(
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super('comments', currentUserService, actionService);
+    super('comments', firebase, currentUserService, actionService);
   }
 
   get(id: string): Observable<Comment[]>;
@@ -24,7 +25,7 @@ export class CommentService extends FirestoreService {
   get(id?: string): Observable<Comment[]> {
     return new Observable(observer => {
       if (id) {
-        super.getMany(query(this.ref, where('documentId', '==', id))).subscribe(docs => {
+        super.getMany(this.firebase.query(this.ref, this.firebase.where('documentId', '==', id))).subscribe(docs => {
           observer.next(docs.map(doc => new Comment(doc)));
         });
       } else {

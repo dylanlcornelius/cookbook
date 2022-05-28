@@ -1,18 +1,17 @@
 import { ActionService } from '@actionService';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
 import { CurrentUserService } from '@currentUserService';
+import { FirebaseService } from '@firebaseService';
 import { User } from '@user';
 import { UserService } from '@userService';
 import { of } from 'rxjs';
-import { firebase } from '@firebase/app';
-import '@firebase/auth';
-import FirebaseAuth from 'firebase';
 
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let firebase: FirebaseService;
   let currentUserService: CurrentUserService;
   let userService: UserService;
   let actionService: ActionService;
@@ -25,6 +24,7 @@ describe('AuthService', () => {
       ]
     });
     service = TestBed.inject(AuthService);
+    firebase = TestBed.inject(FirebaseService);
     currentUserService = TestBed.inject(CurrentUserService);
     userService = TestBed.inject(UserService);
     actionService = TestBed.inject(ActionService);
@@ -33,6 +33,26 @@ describe('AuthService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('load', () => {
+    it('should setup auth state watcher', () => {
+      firebase.appLoaded = true;
+
+      spyOn(firebase, 'onAuthStateChanged');
+
+      service.load();
+
+      expect(firebase.onAuthStateChanged).toHaveBeenCalled();
+    });
+    
+    it('should not setup auth state watcher', () => {
+      spyOn(firebase, 'onAuthStateChanged');
+
+      service.load();
+
+      expect(firebase.onAuthStateChanged).not.toHaveBeenCalled();
+    });
   });
 
   describe('handleLogin', () => {
@@ -118,6 +138,39 @@ describe('AuthService', () => {
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('googleLogin', () => {
+    it('should sign in with a redirect', () => {
+      spyOn(firebase, 'signInWithRedirect');
+
+      service.googleLogin();
+
+      expect(firebase.signInWithRedirect).toHaveBeenCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('should sign out', fakeAsync(() => {
+      const router = TestBed.inject(Router);
+
+      spyOn(firebase, 'signOut').and.returnValue(Promise.resolve());
+      spyOn(router, 'navigate');
+
+      service.logout();
+
+      tick();
+      expect(firebase.signOut).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
+    }));
+
+    it('should catch a sign out error', () => {
+      spyOn(firebase, 'signOut').and.returnValue(Promise.reject({}));
+
+      service.logout();
+
+      expect(firebase.signOut).toHaveBeenCalled();
     });
   });
 });

@@ -28,7 +28,10 @@ describe('TutorialModalComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TutorialModalComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     tutorialModalService = TestBed.inject(TutorialModalService);
     tutorialService = TestBed.inject(TutorialService);
     loadingService = TestBed.inject(LoadingService);

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@actions';
-import { collection, CollectionReference, doc, setDoc, where, query, addDoc, getFirestore, getDocs } from 'firebase/firestore';
-import { getApps } from 'firebase/app';
+import { CollectionReference, FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +8,15 @@ import { getApps } from 'firebase/app';
 export class ActionService {
   ref: CollectionReference;
 
-  constructor() {
-    if (!this.ref && getApps().length > 0) {
-      this.ref = collection(getFirestore(), 'user-actions');
+  constructor(
+    private firebase: FirebaseService,
+  ) {
+    this.load();
+  }
+
+  load(): void {
+    if (!this.ref && this.firebase.appLoaded) {
+      this.ref = this.firebase.collection(this.firebase.firestore, 'user-actions');
     }
   }
 
@@ -50,24 +55,20 @@ export class ActionService {
   }
 
   get(uid: string): Promise<{ id?: string, uid: string, actions: any }> {
-    return getDocs(query(this.ref, where('uid', '==', uid))).then((querySnapshot) => {
+    return this.firebase.getDocs(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).then((querySnapshot) => {
       const action = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const data = doc.data();
-        action.push({
-            id: doc.id,
-            uid: data.uid || '',
-            actions: data.actions || {},
-          });
+        action.push({ id: doc.id, uid: data.uid || '', actions: data.actions || {} });
       });
       return action[0];
     });
   }
 
   create = (data: any): void => {
-    addDoc(this.ref, data);
+    this.firebase.addDoc(this.ref, data);
   };
   update = (data: any): void => {
-    setDoc(doc(this.ref, data.id), data);
+    this.firebase.setDoc(this.firebase.doc(this.ref, data.id), data);
   };
 }

@@ -53,7 +53,10 @@ describe('MealPlannerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MealPlannerComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     mealPlanService = TestBed.inject(MealPlanService);
     userIngredientService = TestBed.inject(UserIngredientService);
     currentUserService = TestBed.inject(CurrentUserService);
