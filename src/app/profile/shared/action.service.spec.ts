@@ -2,17 +2,40 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
+import { FirebaseService } from '@firebaseService';
 
 describe('ActionService', () => {
   let service: ActionService;
+  let firebase: FirebaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ActionService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('load', () => {
+    it('should set a ref', () => {
+      firebase.appLoaded = true;
+
+      spyOn(firebase, 'collection');
+
+      service.load();
+
+      expect(firebase.collection).toHaveBeenCalled();
+    });
+
+    it('should not set a ref', () => {
+      spyOn(firebase, 'collection');
+
+      service.load();
+
+      expect(firebase.collection).not.toHaveBeenCalled();
+    });
   });
 
   describe('commitAction', () => {
@@ -99,31 +122,37 @@ describe('ActionService', () => {
 
   describe('get', () => {
     it('should get a document', () => {
-      const ref = spyOnProperty(service, 'ref');
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
+      spyOn(firebase, 'getDocs').and.returnValue(Promise.resolve([{ data: () => { return {}; } }]));
 
       service.get('uid');
 
-      expect(ref).toHaveBeenCalled();
+      expect(firebase.where).toHaveBeenCalled();
+      expect(firebase.query).toHaveBeenCalled();
+      expect(firebase.getDocs).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should add a document', () => {
-      const ref = spyOnProperty(service, 'ref');
+      spyOn(firebase, 'addDoc');
 
       service.create({});
 
-      expect(ref).toHaveBeenCalled();
+      expect(firebase.addDoc).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update a document', () => {
-      const ref = spyOnProperty(service, 'ref');
+      spyOn(firebase, 'doc');
+      spyOn(firebase, 'setDoc');
 
       service.update({});
 
-      expect(ref).toHaveBeenCalled();
+      expect(firebase.doc).toHaveBeenCalled();
+      expect(firebase.setDoc).toHaveBeenCalled();
     });
   });
 });

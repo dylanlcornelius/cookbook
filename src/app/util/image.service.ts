@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { firebase } from '@firebase/app';
-import '@firebase/storage';
-import { Reference  } from '@firebase/storage-types';
+import { FirebaseService } from '@firebaseService';
 import { Recipe } from '@recipe';
 import { User } from '@user';
 import { Observable } from 'rxjs';
@@ -10,30 +8,26 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImageService {
-  _ref;
-  get ref(): Reference {
-    if (!this._ref && firebase.apps.length > 0) {
-      this._ref = firebase.storage().ref();
-    }
-    return this._ref;
-  }
+  constructor(
+    private firebase: FirebaseService,
+  ) {}
 
   get(path: string): Promise<string | void> {
-    return this.ref?.child(path).getDownloadURL().then(url => {
-      return url;
-    }, () => {});
+    const storageRef = this.firebase.ref(this.firebase.storage, path);
+    return this.firebase.getDownloadURL(storageRef).then(url => url, () => {});
   }
 
   upload(path: string, file: File | Blob): Observable<number | string | void> {
-    const uploadTask = this.ref?.child(path).put(file, { cacheControl: 'public,max-age=31557600' });
+    const storageRef = this.firebase.ref(this.firebase.storage, path);
+    const uploadTask = this.firebase.uploadBytesResumable(storageRef, file, { cacheControl: 'public,max-age=31557600' });
 
     return new Observable(observer => {
-      uploadTask?.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
+      uploadTask.on("state_changed", snapshot => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         observer.next(progress);
-      }, error => {
-        console.log(error);
-      }, () => {
+      },
+      () => {},
+      () => {
         this.get(path).then(url => {
           observer.next(url);
         });
@@ -50,6 +44,7 @@ export class ImageService {
   }
 
   deleteFile(path: string): Promise<void> {
-    return this.ref?.child(path).delete();
+    const storageRef = this.firebase.ref(this.firebase.storage, path);
+    return this.firebase.deleteObject(storageRef);
   }
 }

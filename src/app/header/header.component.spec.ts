@@ -40,7 +40,10 @@ describe('HeaderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     authService = TestBed.inject(AuthService);
     navigationService = TestBed.inject(NavigationService);
     currentUserService = TestBed.inject(CurrentUserService);

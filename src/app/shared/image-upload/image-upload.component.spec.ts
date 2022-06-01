@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { ImageService } from '@imageService';
 import { NotificationService, ValidationService } from '@modalService';
@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { ImageUploadComponent } from './image-upload.component';
+import { openSync } from 'fs';
 
 describe('ImageUploadComponent', () => {
   let component: ImageUploadComponent;
@@ -43,6 +44,17 @@ describe('ImageUploadComponent', () => {
   });
 
   describe('readFile', () => {
+    it('should compress a file', waitForAsync(() => {
+      const blob = Uint8Array.from(window.atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII='), c => c.charCodeAt(0));
+
+      spyOn(component, 'readFileEvent');
+
+      component.readFile({ target: { files: [new File([blob], 'filename.png', { type: 'image/png' })] } });
+
+      // the compressor doesn't successfully complete
+      expect(component.readFileEvent).not.toHaveBeenCalled();
+    }));
+
     it('should not compress an empty event', () => {
       spyOn(imageService, 'upload');
 

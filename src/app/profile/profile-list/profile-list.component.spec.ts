@@ -36,7 +36,10 @@ describe('ProfileListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProfileListComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     userService = TestBed.inject(UserService);
     recipeService = TestBed.inject(RecipeService);
     imageService = TestBed.inject(ImageService);

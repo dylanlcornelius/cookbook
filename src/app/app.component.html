@@ -8,7 +8,7 @@
 		<app-header></app-header>
 
 		<div class="center">
-			<section [@fadeComponentAnimation]="routeTransition(outlet)">
+			<section [@fadeComponentAnimation]="outlet.isActivated && outlet.activatedRoute">
 				<router-outlet #outlet="outlet"></router-outlet>
 			</section>
 		</div>

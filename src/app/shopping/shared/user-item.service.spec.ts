@@ -7,9 +7,11 @@ import { ActionService } from '@actionService';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService } from '@modalService';
+import { FirebaseService } from '@firebaseService';
 
 describe('UserItemService', () => {
   let service: UserItemService;
+  let firebase: FirebaseService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
   let notificationService: NotificationService;
@@ -17,6 +19,7 @@ describe('UserItemService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(UserItemService);
+    firebase = TestBed.inject(FirebaseService);
     currentUserService = TestBed.inject(CurrentUserService);
     actionService = TestBed.inject(ActionService);
     notificationService = TestBed.inject(NotificationService);
@@ -28,6 +31,8 @@ describe('UserItemService', () => {
 
   describe('get', () => {
     it('should return an existing user item record', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
       spyOn(service, 'create');
@@ -36,30 +41,16 @@ describe('UserItemService', () => {
         expect(doc).toBeDefined();
       });
 -
+      expect(firebase.where).toHaveBeenCalled();
+      expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
       expect(service.create).not.toHaveBeenCalled();
-    });
-
-    it('should return an existing user item record with a ref', () => {
-      (<any>service.ref) = { where: () => {} };
-    
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service, 'create');
-      spyOn(service.ref, 'where');
-
-      service.get('uid').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
--
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.create).not.toHaveBeenCalled();
-      expect(service.ref.where).toHaveBeenCalled();
     });
 
     it('should create a user item record and return it', fakeAsync(() => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
       spyOn(FirestoreService.prototype, 'get');
       spyOn(service, 'create');
@@ -69,12 +60,16 @@ describe('UserItemService', () => {
       });
 
       tick();
+      expect(firebase.where).toHaveBeenCalled();
+      expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
       expect(service.create).toHaveBeenCalled();
     }));
 
     it('should get all documents', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
@@ -82,6 +77,8 @@ describe('UserItemService', () => {
         expect(docs).toBeDefined();
       });
 
+      expect(firebase.where).not.toHaveBeenCalled();
+      expect(firebase.query).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });

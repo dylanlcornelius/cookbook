@@ -4,13 +4,16 @@ import { of } from 'rxjs';
 import { Comment } from '@comment';
 
 import { CommentService } from './comment.service';
+import { FirebaseService } from '@firebaseService';
 
 describe('CommentService', () => {
   let service: CommentService;
+  let firebase: FirebaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(CommentService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
@@ -19,6 +22,8 @@ describe('CommentService', () => {
 
   describe('get', () => {
     it('should get many document based on an id', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
 
@@ -26,27 +31,15 @@ describe('CommentService', () => {
         expect(docs).toBeDefined();
       });
 
+      expect(firebase.where).toHaveBeenCalled();
+      expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get many document based on an id with a ref', () => {
-      (<any>service.ref) = { where: () => {} };
-
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service.ref, 'where');
-
-      service.get('id').subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.ref.where).toHaveBeenCalled();
     });
 
     it('should get all documents', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
 
@@ -54,6 +47,8 @@ describe('CommentService', () => {
         expect(docs).toBeDefined();
       });
 
+      expect(firebase.where).not.toHaveBeenCalled();
+      expect(firebase.query).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });

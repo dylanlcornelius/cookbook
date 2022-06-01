@@ -31,7 +31,10 @@ describe('HomeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     currentUserService = TestBed.inject(CurrentUserService);
     navigationService = TestBed.inject(NavigationService);
   });

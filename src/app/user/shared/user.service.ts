@@ -4,16 +4,18 @@ import { User, UserObject } from '@user';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService extends FirestoreService {
   constructor(
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super('users', currentUserService, actionService);
+    super('users', firebase, currentUserService, actionService);
   }
 
   get(uid: string): Observable<User>;
@@ -22,7 +24,7 @@ export class UserService extends FirestoreService {
   get(uid?: string): Observable<User | User[]> {
     return new Observable(observer => {
       if (uid) {
-        super.getMany(this.ref?.where('uid', '==', uid)).subscribe(docs => {
+        super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
           observer.next(docs[0] ? new User(docs[0]) : undefined);
         });
       } else {

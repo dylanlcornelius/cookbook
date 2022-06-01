@@ -43,7 +43,10 @@ describe('IngredientListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IngredientListComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     currentUserService = TestBed.inject(CurrentUserService);
     householdService = TestBed.inject(HouseholdService);
     userIngredientService = TestBed.inject(UserIngredientService);

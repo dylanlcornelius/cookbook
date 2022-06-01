@@ -1,13 +1,11 @@
 import { environment } from '../environments/environment';
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import '@firebase/firestore';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { fadeComponentAnimation } from 'src/app/theme/animations';
 import { User } from '@user';
 import { CurrentUserService } from '@currentUserService';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +25,7 @@ export class AppComponent implements OnInit {
     private title: Title,
     private currentUserService: CurrentUserService
   ) {
-    this.title.setTitle(environment.config.title);
+    this.title.setTitle(environment.title);
   }
 
   ngOnInit() {
@@ -44,9 +42,5 @@ export class AppComponent implements OnInit {
         }
       }
     });
-  }
-
-  routeTransition(outlet: RouterOutlet): ActivatedRoute {
-    return outlet.isActivated && outlet.activatedRoute;
   }
 }

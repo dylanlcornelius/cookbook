@@ -41,5 +41,15 @@ describe('ModalComponent', () => {
 
       expect(component.params).toBeUndefined();
     });
+
+    it('should set params to undefined and callback', () => {
+      component.params = { value: 'test', callback: () => {} };
+
+      spyOn(component.params, 'callback');
+
+      component.close();
+
+      expect(component.params).toBeUndefined();
+    });
   });
 });

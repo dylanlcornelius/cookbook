@@ -60,7 +60,10 @@ describe('ProfileComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     userService = TestBed.inject(UserService);
     currentUserService = TestBed.inject(CurrentUserService);
     householdService = TestBed.inject(HouseholdService);
@@ -101,6 +104,23 @@ describe('ProfileComponent', () => {
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
+
+      component.load();
+
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
+      expect(component.loadActions).toHaveBeenCalled();
+      expect(component.loadHistory).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
+    });
+
+    it('should load data and catch an image error', () => {
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userService, 'get').and.returnValue(of([new User({})]));
+      spyOn(component, 'loadActions');
+      spyOn(component, 'loadHistory');
+      spyOn(imageService, 'download').and.returnValue(Promise.reject());
 
       component.load();
 

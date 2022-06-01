@@ -17,9 +17,8 @@ import { UserPendingComponent } from './user/user-pending/user-pending.component
 import { NewUserComponent } from './user/new-user/new-user.component';
 
 import { SharedModule } from '@sharedModule';
+import { FirebaseService } from '@firebaseService';
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { environment } from '../environments/environment';
 
 @NgModule({
@@ -46,10 +45,20 @@ import { environment } from '../environments/environment';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
+  constructor(
+    private firebase: FirebaseService,
+  ) {
     if (environment) {
-      firebase.initializeApp(environment.config);
-      firebase.firestore().enablePersistence();
+      this.firebase.initializeApp(environment.firebase);
+
+      if (firebase.getApps().length) {
+        firebase.appLoaded = true;
+        firebase.firestore = firebase.getFirestore();
+        firebase.auth = firebase.getAuth();
+        firebase.storage = firebase.getStorage();
+  
+        firebase.enableMultiTabIndexedDbPersistence(firebase.firestore);
+      }
     }
   }
 }

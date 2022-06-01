@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { CollectionReference, Query } from '@firebase/firestore-types';
 import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
 import { Model, ModelObject } from '@model';
 import { first } from 'rxjs/operators';
+import { CollectionReference, FirebaseService, Query } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +14,17 @@ export abstract class FirestoreService {
   ref: CollectionReference;
 
   constructor(
-    collection: string,
+    private collectionPath: string,
+    protected firebase: FirebaseService,
     protected currentUserService: CurrentUserService,
     protected actionService: ActionService,
   ) {
-    if (firebase.apps.length > 0 && !this.ref && collection) {
-      this.ref = firebase.firestore().collection(collection);
+    this.load();
+  }
+
+  load(): void {
+    if (this.firebase.appLoaded && !this.ref && this.collectionPath) {
+      this.ref = this.firebase.collection(this.firebase.firestore, this.collectionPath);
     }
   }
 
@@ -37,24 +40,19 @@ export abstract class FirestoreService {
 
   getOne(id: string): Observable<any> {
     return new Observable(observable => {
-      this.ref?.doc(id).onSnapshot(doc => {
-        observable.next({
-          ...doc.data(),
-          id: doc.id
-        });
+      this.firebase.onSnapshot(this.firebase.doc(this.ref, id)).subscribe(snapshot => {
+        observable.next({ ...snapshot.data(), id: snapshot.id });
       });
     });
+
   }
 
   getMany(ref?: Query): Observable<any> {
     return new Observable(observable => {
-      (ref || this.ref)?.onSnapshot(querySnapshot => {
+      this.firebase.onSnapshot(ref || this.ref).subscribe(snapshot => {
         const docs = [];
-        querySnapshot.forEach(doc => {
-          docs.push({
-            ...doc.data(),
-            id: doc.id
-          });
+        snapshot.forEach(doc => {
+          docs.push({ ...doc.data(), id: doc.id });
         });
         observable.next(docs);
       });
@@ -72,20 +70,22 @@ export abstract class FirestoreService {
   create(data: ModelObject, action?: Action): string {
     this.commitAction(action);
 
-    const newDoc = this.ref?.doc();
-    newDoc?.set({ ...data, creationDate: new Date() });
-    return newDoc?.id;
+    const currentDoc = this.firebase.doc(this.ref);
+    this.firebase.setDoc(currentDoc, { ...data, creationDate: new Date() });
+    return currentDoc.id;
   }
 
   updateOne(data: ModelObject, id: string, action?: Action): void {
     this.commitAction(action);
 
-    this.ref?.doc(id).set(data);
+    const currentDoc = this.firebase.doc(this.ref, id);
+    this.firebase.setDoc(currentDoc, data);
   }
 
   updateAll(data: Model[]): void {
     data.forEach(d => {
-      this.ref?.doc(d.getId()).set(d.getObject());
+      const currentDoc = this.firebase.doc(this.ref, d.getId());
+      this.firebase.setDoc(currentDoc, d.getObject());
     });
   }
 
@@ -100,6 +100,7 @@ export abstract class FirestoreService {
   delete(id: string, action?: Action): void {
     this.commitAction(action);
     
-    this.ref?.doc(id).delete();
+    const currentDoc = this.firebase.doc(this.ref, id);
+    this.firebase.deleteDoc(currentDoc);
   }
 }

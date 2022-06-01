@@ -1,0 +1,55 @@
+import { Injectable } from '@angular/core';
+import { collection, getFirestore, doc, setDoc, deleteDoc, onSnapshot, addDoc, where, query, getDocs, CollectionReference, Query, enableMultiTabIndexedDbPersistence, Firestore } from 'firebase/firestore';
+import { getApps, initializeApp } from 'firebase/app';
+import { getAuth, signInWithRedirect, GoogleAuthProvider, Auth } from 'firebase/auth';
+import { deleteObject, FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FirebaseService {
+  appLoaded = false;
+  firestore: Firestore;
+  auth: Auth;
+  storage: FirebaseStorage;
+
+  // FIREBASE
+  initializeApp = initializeApp;
+  getApps = getApps;
+
+  // FIRESTORE
+  getFirestore = getFirestore;
+  enableMultiTabIndexedDbPersistence = enableMultiTabIndexedDbPersistence;
+  collection = collection;
+  doc = (reference: any, path?: any): any => path ? doc(reference, path) : doc(reference);
+  getDocs = (query: any): any => getDocs(query);
+  onSnapshot = (reference: any): any => new Observable(observable => onSnapshot(reference, (snapshot) => observable.next(snapshot)));
+  query = query;
+  where = where;
+  addDoc = addDoc;
+  setDoc = setDoc;
+  deleteDoc = deleteDoc;
+
+  // AUTH
+  getAuth = getAuth;
+  onAuthStateChanged = (next: any): any => this.auth.onAuthStateChanged(next);
+  signInWithRedirect = signInWithRedirect;
+  signOut = (): any => this.auth.signOut();
+
+  // STORAGE
+  getStorage = getStorage;
+  ref = ref;
+  getDownloadURL = getDownloadURL;
+  uploadBytesResumable = (ref: any, file: any, options: any): any => uploadBytesResumable(ref, file, options);
+  deleteObject = deleteObject;
+}
+
+export {
+  // FIRESTORE
+  CollectionReference,
+  Query,
+
+  // AUTH
+  GoogleAuthProvider
+}; 

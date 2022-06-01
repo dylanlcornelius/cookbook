@@ -102,6 +102,9 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest"
+            ],
+            "codeCoverageExclude": [
+              "src/app/shared/firebase.service.ts"
             ]
           }
         },

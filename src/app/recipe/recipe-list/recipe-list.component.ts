@@ -67,9 +67,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private validationService: ValidationService,
     private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
-  ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-  }
+  ) {}
 
   identify = this.utilService.identify;
 
@@ -83,6 +81,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.loading = this.loadingService.set(true);
 
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {

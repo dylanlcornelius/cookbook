@@ -30,7 +30,10 @@ describe('HouseholdComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HouseholdComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     currentUserService = TestBed.inject(CurrentUserService);
     userService = TestBed.inject(UserService);
     householdService = TestBed.inject(HouseholdService);
@@ -170,6 +173,8 @@ describe('HouseholdComponent', () => {
 
   describe('createHouseholdEvent', () => {
     it('should make a new household', () => {
+      component.user = new User({});
+
       spyOn(component, 'cleanHousehold');
       spyOn(householdService, 'create');
       spyOn(notificationService, 'setModal');
@@ -192,6 +197,7 @@ describe('HouseholdComponent', () => {
 
   describe('sendInviteEvent', () => {
     it('should update a household with an invitation', () => {
+      component.user = new User({});
       component.household = new Household({ invites: [], inviteIds: [] });
       const user = new User({ uid: 'uid' });
 
@@ -265,6 +271,7 @@ describe('HouseholdComponent', () => {
 
   describe('rejectInvite', () => {
     it('should update a household', () => {
+      component.user = new User({});
       const household = new Household({ invites: [{ uid: 'uid' }], inviteIds: ['uid'] });
 
       spyOn(householdService, 'update');
@@ -306,6 +313,7 @@ describe('HouseholdComponent', () => {
 
   describe('acceptInviteEvent', () => {
     it('should update a household', () => {
+      component.user = new User({});
       const household = new Household({ invites: [{ uid: 'uid' }], inviteIds: ['uid'] });
 
       spyOn(householdService, 'update');

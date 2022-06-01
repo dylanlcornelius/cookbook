@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { firebase } from '@firebase/app';
-import '@firebase/auth';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
 import { ROLE, User } from '@user';
 import { CurrentUserService } from '@currentUserService';
 import { UserService } from '@userService';
 import { first } from 'rxjs/operators';
+import { FirebaseService, GoogleAuthProvider } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
@@ -17,17 +16,18 @@ export class AuthService {
 
   constructor(
     private router: Router,
+    private firebase: FirebaseService,
     private currentUserService: CurrentUserService,
     private userService: UserService,
     private actionService: ActionService,
   ) {
-    if (firebase.apps.length > 0) {
-      this.load();
-    }
+    this.load();
   }
 
   load(): void {
-    firebase.auth().onAuthStateChanged(this.handleUserChange);
+    if (this.firebase.appLoaded) {
+      this.firebase.onAuthStateChanged(this.handleUserChange);
+    }
   }
 
   handleUserChange = (user: any): void => {
@@ -67,19 +67,16 @@ export class AuthService {
   };
 
   googleLogin(): void {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
+    this.firebase.signInWithRedirect(this.firebase.auth, new GoogleAuthProvider());
   }
 
   logout(): void {
-    firebase.auth().signOut().then(() => {
+    this.firebase.signOut().then(() => {
       this.currentUserService.setCurrentUser(new User({}));
       this.currentUserService.setIsLoggedIn(false);
       this.currentUserService.setIsGuest(true);
       this.redirectUrl = null;
       this.router.navigate(['/login']);
-    }).catch(error => {
-      console.log(error.message);
-    });
+    }).catch(() => {});
   }
 }

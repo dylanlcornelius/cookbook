@@ -40,7 +40,10 @@ describe('IngredientsDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IngredientDetailComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
     validationService = TestBed.inject(ValidationService);

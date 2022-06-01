@@ -5,16 +5,18 @@ import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { ModelObject } from '@model';
+import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService extends FirestoreService {
   constructor(
+    firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
   ) {
-    super('configs', currentUserService, actionService);
+    super('configs', firebase, currentUserService, actionService);
   }
 
   get(name: string): Observable<Config>;
@@ -22,7 +24,7 @@ export class ConfigService extends FirestoreService {
   get(name?: string): Observable<Config | Config[]> {
     return new Observable(observer => {
       if (name) {
-        super.getMany(this.ref?.where('name', '==', name)).subscribe(docs => {
+        super.getMany(this.firebase.query(this.ref, this.firebase.where('name', '==', name))).subscribe(docs => {
           observer.next(new Config(docs[0]));
         });
       } else {

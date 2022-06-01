@@ -36,7 +36,10 @@ describe('CommentListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CommentListComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     currentUserService = TestBed.inject(CurrentUserService);
     commentService = TestBed.inject(CommentService);
     userService = TestBed.inject(UserService);

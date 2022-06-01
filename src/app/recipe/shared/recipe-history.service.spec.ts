@@ -4,13 +4,16 @@ import { of } from 'rxjs';
 import { RecipeHistory } from '@recipeHistory';
 
 import { RecipeHistoryService } from '@recipeHistoryService';
+import { FirebaseService } from '@firebaseService';
 
 describe('RecipeHistoryService', () => {
   let service: RecipeHistoryService;
+  let firebase: FirebaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(RecipeHistoryService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
@@ -79,6 +82,8 @@ describe('RecipeHistoryService', () => {
 
   describe('get', () => {
     it('should get one document based on an id', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of({}));
       spyOn(FirestoreService.prototype, 'get');
 
@@ -86,27 +91,15 @@ describe('RecipeHistoryService', () => {
         expect(doc).toBeDefined();
       });
 
+      expect(firebase.where).toHaveBeenCalledTimes(2);
+      expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get one document based on an id with a ref', () => {
-      (<any>service.ref) = { where: () => {} };
-
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of({}));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service.ref, 'where').and.returnValue(service.ref);
-
-      service.get('uid', 'recipeId').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.ref.where).toHaveBeenCalledTimes(2);
     });
 
     it('should get all documents based on a uid', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
 
@@ -114,27 +107,15 @@ describe('RecipeHistoryService', () => {
         expect(docs).toBeDefined();
       });
 
+      expect(firebase.where).toHaveBeenCalledTimes(1);
+      expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get all documents based on a uid with a ref', () => {
-      (<any>service.ref) = { where: () => {} };
-
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service.ref, 'where');
-
-      service.get('uid').subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.ref.where).toHaveBeenCalled();
     });
 
     it('should get all documents', () => {
+      spyOn(firebase, 'where');
+      spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany');
       spyOn(FirestoreService.prototype, 'get').and.returnValue(of([new RecipeHistory({})]));
 
@@ -142,6 +123,8 @@ describe('RecipeHistoryService', () => {
         expect(doc).toBeDefined();
       });
 
+      expect(firebase.where).not.toHaveBeenCalled();
+      expect(firebase.query).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
       expect(FirestoreService.prototype.get).toHaveBeenCalled();
     });

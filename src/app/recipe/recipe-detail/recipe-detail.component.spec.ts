@@ -62,7 +62,10 @@ describe('RecipeDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecipeDetailComponent);
     component = fixture.componentInstance;
+    const load = component.load;
+    spyOn(component, 'load');
     fixture.detectChanges();
+    component.load = load;
     recipeService = TestBed.inject(RecipeService);
     imageService = TestBed.inject(ImageService);
     currentUserService = TestBed.inject(CurrentUserService);
@@ -314,6 +317,8 @@ describe('RecipeDetailComponent', () => {
 
   describe('removeIngredients', () => {
     it('should remove ingredients', () => {
+      component.user = new User({});
+     
       spyOn(recipeIngredientService, 'removeIngredients');
   
       component.removeIngredients();
@@ -324,11 +329,23 @@ describe('RecipeDetailComponent', () => {
 
   describe('onRate', () => {
     it('should call the recipe service and rate a recipe', () => {
+      component.user = new User({});
+
       spyOn(recipeService, 'rateRecipe');
 
       component.onRate(1, new Recipe({}));
 
       expect(recipeService.rateRecipe).toHaveBeenCalled();
+    });
+  });
+
+  describe('copyShareableLink', () => {
+    it('should copy the current route', () => {
+      spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.resolve());
+
+      component.copyShareableLink();
+
+      expect(navigator.clipboard.writeText).toHaveBeenCalled();
     });
   });
 
