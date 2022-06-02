@@ -1,6 +1,5 @@
 export const environment = {
+  title: '',
   production: false,
-  config: {
-    title: ''
-  }
+  firebase: {}
 };
