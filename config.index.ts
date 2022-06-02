@@ -5,7 +5,7 @@ const targetPath = './src/environments/environment.prod.ts';
 const envConfigFile = `export const environment = {
     title: 'The Cookbook',
     production: true,
-    config: {
+    firebase: {
         apiKey: '${process.env.FIREBASE_TOKEN}',
         authDomain: '${process.env.FIREBASE_AUTH_DOMAIN}',
 		databaseURL: '${process.env.FIREBASE_DB_URL}',
