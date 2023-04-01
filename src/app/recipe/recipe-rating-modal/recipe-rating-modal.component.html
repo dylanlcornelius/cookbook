@@ -1,0 +1,16 @@
+<app-modal [params]="params" *ngIf="params?.recipe && params?.uid">
+  <div class="text-center">
+    <h4>{{params?.text}}</h4>
+  </div>
+  <br/>
+  <h6>Recommended Ratings:</h6>
+  <p>One star for a recipe that isn't good and needs a lot of changes.</p>
+  <p>Two stars for a recipe that is good, but not great, and still requires development.</p>
+  <p>Three stars for a recipe that could be eaten all the time.</p>
+  <app-rating (rate)="onRate($event, params.recipe)" [recipe]="params.recipe" [uid]="params.uid"></app-rating>
+  <br/>
+  <div class="center">
+    <button mat-raised-button color="primary" (click)="confirm()"  style="margin-right: 20px;">Cook without Rating</button>
+    <button mat-raised-button color="warn" (click)="cancel()">Close</button>
+  </div>
+</app-modal>

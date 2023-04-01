@@ -70,6 +70,7 @@ export class RecipeService extends FirestoreService {
     recipe.meanRating = this.calculateMeanRating(recipe.ratings);
     
     this.update(recipe.getObject(), recipe.getId());
+    this.notificationService.setModal(new SuccessNotification('Recipe rating updated!'));
   }
 
   changeStatus(recipe: Recipe): void {
