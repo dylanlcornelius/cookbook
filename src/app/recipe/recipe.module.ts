@@ -17,6 +17,8 @@ import { IngredientModule } from '../ingredient/ingredient.module';
 import { RecipeHistoryModalComponent } from './recipe-history-modal/recipe-history-modal.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { RecipeCookButtonComponent } from './recipe-cook-button/recipe-cook-button.component';
+import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-modal.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     RatingComponent,
     RecipeHistoryModalComponent,
     CommentListComponent,
+    RecipeCookButtonComponent,
+    RecipeRatingModalComponent,
   ],
   imports: [
     CommonModule,

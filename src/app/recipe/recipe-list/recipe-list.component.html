@@ -77,10 +77,7 @@
           </button>
           <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe(recipe)">Add to Plan</button>
           <button mat-button color="primary" *ngIf="!user.hasPlanner" (click)="addIngredients(recipe.id)">Add to List</button>
-          <button mat-button color="warn" (click)="removeIngredients(recipe.id)">
-            <span>Cook</span>
-            <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
-          </button>
+          <app-recipe-cook-button [recipe]="recipe" [uid]="user.uid" [householdId]="householdId" (removeIngredients)="removeIngredients(recipe.id)"></app-recipe-cook-button>
       </mat-card-actions>
 
       <mat-chip-list class="categories">
