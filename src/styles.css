@@ -111,10 +111,6 @@ dt {
   margin: 0 !important;
   width: 100%;
 }
-.mat-card-header .mat-card-title {
-  font-size: 18px !important;
-  margin-bottom: 5px !important;
-}
 .mat-card-header .mat-card-subtitle {
   margin-bottom: 0 !important;
 }
