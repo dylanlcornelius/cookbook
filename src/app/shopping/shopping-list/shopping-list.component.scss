@@ -29,6 +29,12 @@
     flex-direction: column;
     justify-content: center;
 }
+.plain-link {
+  color: inherit;
+}
+.plain-link:hover {
+  text-decoration: none;
+}
 
 @media screen and (max-width: 767px) {
     .mat-cell {

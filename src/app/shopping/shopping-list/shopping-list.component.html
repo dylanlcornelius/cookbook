@@ -28,10 +28,10 @@
 
       <div class="table-container mat-elevation-z8 box">
         <div class="table-row" *ngFor="let ingredient of categoryIngredients.value">
-          <span class="table-cell" *ngIf="!ingredient.isItem">
+          <a class="table-cell plain-link" [routerLink]="['/ingredient/detail/', ingredient.id]" *ngIf="!ingredient.isItem">
             {{ingredient.cartQuantity | number: '1.0-2'}} {{ingredient.uom === 'other'? '' : ingredient.uom}}
             {{ingredient.name}}
-          </span>
+          </a>
           <button mat-raised-button color="primary" *ngIf="!ingredient.isItem" (click)="addIngredientToPantry(ingredient.id)">
             <mat-icon>done</mat-icon>
           </button>
