@@ -119,7 +119,9 @@ describe('RecipeDetailComponent', () => {
           { id: 'ingredient2' }
         ]
       });
-      const recipeHistories = new RecipeHistory({});
+      const recipeHistories = new RecipeHistory({
+        timesCooked: 1
+      });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));

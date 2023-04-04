@@ -46,6 +46,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   timesCooked: number;
   lastDateCooked: string;
   creationDate: string;
+  hasNewCategory = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -140,6 +141,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.userIngredient = userIngredient;
           this.recipe.ingredients = this.ingredients;
           this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+          this.hasNewCategory = !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
           this.loading = this.loadingService.set(false);
         });
       });

@@ -23,6 +23,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { Validation } from '@validation';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { SuccessNotification } from '@notification';
+import { RecipeHistoryService } from '@recipeHistoryService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -67,6 +68,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private validationService: ValidationService,
     private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
+    private recipeHistoryService: RecipeHistoryService,
   ) {}
 
   identify = this.utilService.identify;
@@ -93,8 +95,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const recipes$ = this.recipeService.get();
         const ingredients$ = this.ingredientService.get();
         const userIngredient$ = this.userIngredientService.get(this.householdId);
+        const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
 
-        combineLatest([recipes$, ingredients$, userIngredient$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, ingredients, userIngredient]) => {
+        combineLatest([recipes$, ingredients$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$), debounceTime(100)).subscribe(([recipes, ingredients, userIngredient, histories]) => {
           ingredients.forEach(ingredient => {
             userIngredient.ingredients.forEach(myIngredient => {
               if (ingredient.id === myIngredient.id) {
@@ -128,6 +131,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
               recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, recipe);
               recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+
+              // display new category automatically
+              const timesCooked = histories.find(({ recipeId }) => recipeId === recipe.id)?.timesCooked;
+              const hasNewCategory = !timesCooked || (timesCooked === 1 && !recipe.hasImage);
+              recipe.clearNewCategory();
+              if (hasNewCategory) {
+                recipe.categories.unshift({ category: 'New!' });
+              }
 
               this.imageService.download(recipe).then(url => {
                 if (url) {
