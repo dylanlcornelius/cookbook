@@ -65,6 +65,10 @@ export class AdminDashboardComponent implements OnDestroy {
     });
   }
 
+  isBoolean(obj: any): boolean {
+    return typeof obj === 'boolean';
+  }
+
   isArray(obj: any): boolean {
     return Array.isArray(obj);
   }

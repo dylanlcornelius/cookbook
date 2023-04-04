@@ -73,6 +73,20 @@ describe('AdminDashboardComponent', () => {
     });
   });
 
+  describe('isBoolean', () => {
+    it('should return true if an object is a boolean', () => {
+      const result = component.isBoolean(true);
+
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if an object is not a boolean', () => {
+      const result = component.isBoolean('true');
+
+      expect(result).toBeFalse();
+    });
+  });
+
   describe('isArray', () => {
     it('should return true if an object is an array', () => {
       const result = component.isArray([]);
