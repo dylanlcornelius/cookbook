@@ -68,6 +68,11 @@ dd {
 .box:last-child {
   border: none;
 }
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 .author-link {
   color: inherit;
   height: fit-content;
@@ -75,6 +80,10 @@ dd {
 }
 .author-link:hover {
   text-decoration: none;
+}
+.right-buttons {
+  display: flex;
+  gap: 15px;
 }
 
 @media screen and (max-width: 767px) {

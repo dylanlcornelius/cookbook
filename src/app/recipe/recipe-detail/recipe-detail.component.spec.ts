@@ -419,4 +419,20 @@ describe('RecipeDetailComponent', () => {
       expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
+
+  describe('cloneRecipe', () => {
+    it('should clone a recipe', () => {
+      const router = TestBed.inject(Router);
+
+      spyOn(recipeService, 'create');
+      spyOn(router, 'navigate');
+      spyOn(notificationService, 'setModal');
+
+      component.cloneRecipe();
+
+      expect(recipeService.create).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+  });
 });

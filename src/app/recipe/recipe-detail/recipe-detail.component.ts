@@ -122,6 +122,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           
           this.recipe = recipe;
           this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
+          this.recipeImage = undefined;
           this.imageService.download(this.recipe).then(url => {
             if (url) {
               this.recipeImage = url;
@@ -234,4 +235,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   };
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);
+
+  cloneRecipe(): void {
+    const recipeId = this.recipeService.create({
+      ...this.recipe.getObject(),
+      hasImage: false
+    });
+    this.router.navigate(['/recipe/detail/', recipeId]);
+    this.notificationService.setModal(new SuccessNotification('Recipe cloned!'));
+  }
 }
