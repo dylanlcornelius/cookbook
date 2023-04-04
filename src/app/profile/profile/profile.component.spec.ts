@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileComponent } from './profile.component';
@@ -115,9 +115,12 @@ describe('ProfileComponent', () => {
     });
 
     it('should load data and catch an image error', () => {
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ id: 'id' });
+      
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'admin' })));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userService, 'get').and.returnValue(of([new User({})]));
+      spyOn(userService, 'get').and.returnValue(of([new User({ id: 'id' })]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
@@ -249,9 +252,10 @@ describe('ProfileComponent', () => {
     });
   });
 
-  describe('deleteFile', () => {
-    it('should delete a file', () => {
-      component.user = new User({});
+  describe('updateImage', () => {
+    it('should update an image', () => {
+      component.currentUser = new User({});
+      component.user = component.currentUser;
       component.userImage = 'url';
 
       spyOn(userService, 'update');
@@ -262,11 +266,26 @@ describe('ProfileComponent', () => {
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
     });
+
+    it('should update an image and not set current user for admins', () => {
+      component.currentUser = new User({});
+      component.user = new User({});
+      component.userImage = 'url';
+
+      spyOn(userService, 'update');
+      spyOn(currentUserService, 'setCurrentUser');
+
+      component.updateImage(true);
+
+      expect(userService.update).toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
+    });
   });
 
   describe('onFormSubmit', () => {
     it('should update a user record', () => {
-      component.user = new User({});
+      component.currentUser = new User({});
+      component.user = component.currentUser;
 
       spyOn(userService, 'update');
       spyOn(currentUserService, 'setCurrentUser');
@@ -276,6 +295,21 @@ describe('ProfileComponent', () => {
 
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should update a user record and not set current user for admins', () => {
+      component.currentUser = new User({});
+      component.user = new User({});
+
+      spyOn(userService, 'update');
+      spyOn(currentUserService, 'setCurrentUser');
+      spyOn(notificationService, 'setModal');
+
+      component.onFormSubmit({});
+
+      expect(userService.update).toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
     });
   });

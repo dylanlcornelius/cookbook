@@ -45,6 +45,14 @@
 .full-width {
     width: 100%;
 }
+.profile-link {
+  color: inherit;
+  height: fit-content;
+  margin: auto !important;
+}
+.profile-link:hover {
+  text-decoration: none;
+}
 @media screen and (max-width: 767px) {
     .user-card {
         margin: 5px;

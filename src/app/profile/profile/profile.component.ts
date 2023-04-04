@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
 
   userForm: FormGroup;
+  currentUser: User;
   user: User;
   householdId: string;
   id: string;
@@ -88,28 +89,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.loading = this.loadingService.set(true);
+    const params$ = this.route.params;
     const user$ = this.currentUserService.getCurrentUser();
     const users$ = this.userService.get();
 
-    combineLatest([user$, users$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, users]) => {
+    combineLatest([params$, user$, users$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([params, user, users]) => {
+      this.currentUser = user;
       this.users = users;
-      this.user = user;
+
+      const paramId = params['id'];
+      this.user = paramId && this.currentUser.isAdmin ? this.users.find(({ id }) => id === paramId) : user;
 
       this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
         this.householdId = household.id;
 
         this.userForm = this.formBuilder.group({
-          uid: [user.uid],
-          firstName : [user.firstName, Validators.required],
-          lastName : [user.lastName, Validators.required],
-          role: [user.role],
-          theme: [user.theme],
-          hasImage: [user.hasImage],
-          hasAdminView: [user.hasAdminView],
-          id: [user.id],
+          uid: [this.user.uid],
+          firstName : [this.user.firstName, Validators.required],
+          lastName : [this.user.lastName, Validators.required],
+          role: [this.user.role],
+          theme: [this.user.theme],
+          hasImage: [this.user.hasImage],
+          hasAdminView: [this.user.hasAdminView],
+          id: [this.user.id],
         });
   
-        this.imageService.download(user).then(url => {
+        this.imageService.download(this.user).then(url => {
           if (url) {
             this.userImage = url;
           }
@@ -204,7 +209,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   updateImage = (hasImage: boolean): void => {
     this.user.hasImage = hasImage;
     this.userService.update(this.user.getObject(), this.user.getId());
-    this.currentUserService.setCurrentUser(this.user);
+    if (this.currentUser === this.user) {
+      this.currentUserService.setCurrentUser(this.user);
+    }
   };
 
   onFormSubmit(form: any): void {
@@ -213,7 +220,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const user = new User(form);
 
     this.userService.update(user.getObject(), user.getId());
-    this.currentUserService.setCurrentUser(user);
+    if (this.currentUser === this.user) {
+      this.currentUserService.setCurrentUser(user);
+    }
     this.notificationService.setModal(new SuccessNotification('Profile updated!'));
   }
 

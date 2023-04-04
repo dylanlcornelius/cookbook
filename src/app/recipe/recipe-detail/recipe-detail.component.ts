@@ -5,7 +5,7 @@ import { IngredientService} from '@ingredientService';
 import { ImageService } from '@imageService';
 import { Observable, combineLatest, Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { Recipe } from '@recipe';
+import { Recipe, RECIPE_STATUS } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
@@ -241,7 +241,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   cloneRecipe(): void {
     const recipeId = this.recipeService.create({
       ...this.recipe.getObject(),
-      hasImage: false
+      hasImage: false,
+      uid: this.user.uid,
+      author: this.user.name,
+      meanRating: 0,
+      ratings: [],
+      status: RECIPE_STATUS.PRIVATE
     });
     this.router.navigate(['/recipe/detail/', recipeId]);
     this.notificationService.setModal(new SuccessNotification('Recipe cloned!'));

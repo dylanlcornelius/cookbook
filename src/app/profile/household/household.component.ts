@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { CurrentUserService } from '@currentUserService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
@@ -31,9 +30,11 @@ export class HouseholdComponent implements OnInit, OnDestroy {
 
   householdInviteModalParams;
 
+  @Input()
+  userId: string;
+
   constructor(
     private loadingService: LoadingService,
-    private currentUserService: CurrentUserService,
     private userService: UserService,
     private householdService: HouseholdService,
     private validationService: ValidationService,
@@ -52,7 +53,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
   load(): void {
     this.loading = this.loadingService.set(true);
     
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+    this.userService.get(this.userId).pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
 
       const users$ = this.userService.get();

@@ -425,6 +425,7 @@ describe('RecipeDetailComponent', () => {
   describe('cloneRecipe', () => {
     it('should clone a recipe', () => {
       const router = TestBed.inject(Router);
+      component.user = new User({});
 
       spyOn(recipeService, 'create');
       spyOn(router, 'navigate');

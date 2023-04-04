@@ -9,6 +9,8 @@ import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('UomTableComponent', () => {
   let component: UomTableComponent;
@@ -23,6 +25,8 @@ describe('UomTableComponent', () => {
         RouterModule.forRoot([]),
         FormsModule,
         MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
       ],
       declarations: [ UomTableComponent ],
       schemas: [
