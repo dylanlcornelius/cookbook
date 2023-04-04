@@ -61,7 +61,7 @@
                 (matChipInputTokenEnd)="addCategoryEvent($event.value)">
 
           <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="addCategoryEvent($event.option.value)">
-            <mat-option *ngFor="let category of recipeCategories | async" [value]="category">
+            <mat-option *ngFor="let category of recipeCategories | async" [value]="category" (mousedown)="$event.preventDefault()">
               {{category}}
             </mat-option>
           </mat-autocomplete>
