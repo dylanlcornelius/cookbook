@@ -1,15 +1,21 @@
 <h4>UOM Table</h4>
+<div class="center">
+  <div>
+    <mat-form-field class="search-bar">
+      <input matInput type="text" placeholder="Input an amount" id="uomValue" [value]="uomValue" [(ngModel)]="uomValue"/>
+    </mat-form-field>
+    <mat-error>
+        <span *ngIf="!isValid(uomValue)">Invalid value</span>
+    </mat-error>
+  </div>
+</div>
+<br/>
+
 <div class="table-container">
     <table>
         <thead>
             <tr>
-                <th>
-                    <label for="uomValue">value: </label>
-                    <input matInput type="text" id="uomValue" [value]="uomValue" [(ngModel)]="uomValue"/>
-                    <mat-error>
-                        <span *ngIf="!isValid(uomValue)">Invalid value</span>
-                    </mat-error>
-                </th>
+                <th></th>
                 <th *ngFor="let uomColumn of uoms; let columnIndex = index;">to {{uomColumn}}</th>
             </tr>
         </thead>
