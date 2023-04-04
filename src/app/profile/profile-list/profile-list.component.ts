@@ -10,6 +10,8 @@ import { UtilService } from '@utilService';
 import { Router } from '@angular/router';
 import { AuthorFilter } from '@recipeFilterService';
 import { LoadingService } from '@loadingService';
+import { CurrentUserService } from '@currentUserService';
+import { User } from '@user';
 
 @Component({
   selector: 'app-profile-list',
@@ -22,6 +24,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
 
   dataSource;
   id: string;
+  currentUser: User;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -32,6 +35,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private userService: UserService,
     private utilService: UtilService,
+    private currentUserService: CurrentUserService,
   ) { }
 
   identify = this.utilService.identify;
@@ -48,10 +52,12 @@ export class ProfileListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.loading = this.loadingService.set(true);
+    const user$ = this.currentUserService.getCurrentUser();
     const users$ = this.userService.get();
     const recipes$ = this.recipeService.get();
 
-    combineLatest([users$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([users, recipes]) => {
+    combineLatest([user$, users$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, users, recipes]) => {
+      this.currentUser = user;
       const recipeCounts = {};
 
       recipes.forEach(recipe => {

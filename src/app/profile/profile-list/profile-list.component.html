@@ -1,6 +1,6 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 
-<h2>The Authors</h2>
+<h2>Authors</h2>
 
 <div [hidden]="loading">
   <mat-form-field class="search-bar">
@@ -23,6 +23,10 @@
         <span>{{user.recipeCount}} recipes</span>
         <span>{{user.ratingCount}} ratings</span>
       </mat-card-content>
+
+      <mat-card-actions *ngIf="currentUser?.isAdmin">
+        <button mat-raised-button class="profile-link" [routerLink]="['/profile/settings/', user.id]">Profile Settings</button>
+      </mat-card-actions>
     </mat-card>
   </div>
 
