@@ -129,16 +129,26 @@
       </mat-card-content>
     </div>
 
-    <mat-card-actions class="between">
-      <button mat-mini-fab matTooltip="Edit Recipe" color="primary" (click)="openRecipeEditor()" *ngIf="hasAuthorPermission">
-        <mat-icon>edit</mat-icon>
-      </button>
+    <mat-card-actions class="action-buttons">
+      <div class="between">
+        <button mat-raised-button (click)="setAuthorFilter(recipe.author)" class="author-link" *ngIf="recipe.author">by {{recipe.author}}</button>
+      </div>
 
-      <button mat-raised-button (click)="setAuthorFilter(recipe.author)" class="author-link" *ngIf="recipe.author">by {{recipe.author}}</button>
-      
-      <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)" *ngIf="hasAuthorPermission">
-        <mat-icon>delete</mat-icon>
-      </a>
+      <div class="between">
+        <button mat-mini-fab matTooltip="Edit Recipe" color="primary" (click)="openRecipeEditor()" *ngIf="hasAuthorPermission">
+          <mat-icon>edit</mat-icon>
+        </button>
+  
+        
+        <div class="right-buttons">
+          <button mat-mini-fab matTooltip="Copy Recipe" color="primary" (click)="cloneRecipe()">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <a mat-mini-fab matTooltip="Delete Recipe" color="warn" (click)="deleteRecipe(recipe.id)" *ngIf="hasAuthorPermission">
+            <mat-icon>delete</mat-icon>
+          </a>
+        </div>
+      </div>
     </mat-card-actions>
   </mat-card>
 
