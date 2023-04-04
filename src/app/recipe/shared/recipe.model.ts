@@ -54,13 +54,18 @@ export class Recipe extends Model {
     }
 
     public getObject(): RecipeObject {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {id, count, image, amount, uom, hasAuthorPermission, ...recipe} = this;
-        return recipe;
+      this.clearNewCategory();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {id, count, image, amount, uom, hasAuthorPermission, clearNewCategory, ...recipe} = this;
+      return recipe;
+    }
+
+    clearNewCategory(): void {
+      this.categories = this.categories.filter(({ category }) => category !== 'New!');
     }
 }
 
-export type RecipeObject = Omit<Recipe, 'id' | 'getId' | 'getObject' | 'count' | 'image' | 'amount' | 'uom' | 'hasAuthorPermission'>;
+export type RecipeObject = Omit<Recipe, 'id' | 'getId' | 'getObject' | 'count' | 'image' | 'amount' | 'uom' | 'hasAuthorPermission' | 'clearNewCategory'>;
 
 export enum RECIPE_STATUS {
     PUBLISHED = 'published',

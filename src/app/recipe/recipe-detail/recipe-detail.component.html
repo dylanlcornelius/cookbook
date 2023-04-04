@@ -67,10 +67,13 @@
             <dd>{{recipe.quantity}}</dd>
           </span>
 
-          <span *ngIf="recipe.categories && recipe.categories.length">
+          <span *ngIf="recipe.categories && recipe.categories.length || hasNewCategory">
             <dt>Categories</dt>
             <dd>
               <mat-chip-list class="center">
+                <mat-chip (click)="setCategoryFilter('New!')" *ngIf="hasNewCategory">
+                  New!
+                </mat-chip>
                 <mat-chip *ngFor="let category of recipe.categories" (click)="setCategoryFilter(category.category)">
                   {{category.category}}
                 </mat-chip>
