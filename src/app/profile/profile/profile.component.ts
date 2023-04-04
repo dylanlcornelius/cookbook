@@ -110,6 +110,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           role: [this.user.role],
           theme: [this.user.theme],
           hasImage: [this.user.hasImage],
+          hasAdminView: [this.user.hasAdminView],
           id: [this.user.id],
         });
   

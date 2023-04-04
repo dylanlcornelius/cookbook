@@ -45,6 +45,17 @@
                   <mat-icon>brightness_3</mat-icon>
                 </span>
               </div>
+
+              <div *ngIf="user.isAdmin">
+                <mat-slide-toggle matInput formControlName="hasAdminView" ngDefaultControl [checked]="userForm.get('hasAdminView').value">
+                </mat-slide-toggle>
+                <span *ngIf="!userForm.get('hasAdminView').value" class="theme-icon" matTooltip="Admin View Disabled">
+                  <mat-icon>visibility_off</mat-icon>
+                </span>
+                <span *ngIf="userForm.get('hasAdminView').value" class="theme-icon" matTooltip="Admin View Enabled">
+                  <mat-icon>visibility</mat-icon>
+                </span>
+              </div>
             </div>
             
             <div class="button-row">

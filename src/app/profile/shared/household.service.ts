@@ -51,7 +51,7 @@ export class HouseholdService extends FirestoreService {
   delete = (id: string): void => super.delete(id);
 
   hasAuthorPermission(household: Household, user: User, recipe: Recipe): boolean {
-    return household.memberIds.includes(recipe.uid) || user.uid === recipe.uid || recipe.status === RECIPE_STATUS.BLUEPRINT;
+    return household.memberIds.includes(recipe.uid) || user.uid === recipe.uid || recipe.status === RECIPE_STATUS.BLUEPRINT || user.hasAdminView;
   }
 
   hasUserPermission(household: Household, user: User, recipe: Recipe): boolean {

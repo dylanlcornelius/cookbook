@@ -156,6 +156,16 @@ describe('HouseholdService', () => {
     
       expect(result).toBeTrue();
     });
+
+    it('should return true when the admin view is enabled', () => {
+      const household = new Household({});
+      const user = new User({ uid: 'uid', hasAdminView: true });
+      const recipe = new Recipe({});
+
+      const result = service.hasAuthorPermission(household, user, recipe);
+    
+      expect(result).toBeTrue();
+    });
   });
 
   describe('hasUserPermission', () => {
