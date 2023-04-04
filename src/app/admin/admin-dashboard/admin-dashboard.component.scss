@@ -8,6 +8,9 @@
     min-width: 500px;
     overflow: auto;
 }
+th.mat-header-cell {
+  padding: 0 5px;
+}
 td.mat-cell {
     padding: 0 5px;
     min-width: max-content;

@@ -10,9 +10,11 @@
       <ng-contaner *ngFor="let column of context.displayedColumns" [matColumnDef]="column">
         <th mat-header-cell *matHeaderCellDef>{{column}}</th>
         <td mat-cell *matCellDef="let element" [ngStyle]="{'min-width': isArray(element[column]) ? '200px' : 'max-content'}">
-          <mat-form-field *ngIf="!isArray(element[column])">
+          <mat-form-field *ngIf="!isArray(element[column]) && !isBoolean(element[column])">
             <input matInput [value]="element[column]" [(ngModel)]="element[column]"/>
           </mat-form-field>
+          
+          <mat-checkbox [(ngModel)]="element[column]" *ngIf="isBoolean(element[column])"></mat-checkbox>
 
           <span *ngIf="isArray(element[column])">{{element[column] | json}}</span>
         </td>

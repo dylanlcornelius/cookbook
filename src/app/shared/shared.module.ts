@@ -58,6 +58,7 @@ import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component'
     MatInputModule,
     MatCardModule,
     MatPaginatorModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatFormFieldModule,
     MatSelectModule,

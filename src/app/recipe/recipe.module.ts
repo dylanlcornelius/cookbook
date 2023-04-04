@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -37,7 +36,6 @@ import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-
     MatAutocompleteModule,
     MatProgressBarModule,
     MatBadgeModule,
-    MatCheckboxModule,
     MatStepperModule,
     DragDropModule,
     SharedModule,
