@@ -16,9 +16,22 @@ td {
   background-color: #495057;
   color: white;
 }
+.ingredients {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  position: relative;
+}
 .list-container {
-  min-width: 260px;
-  max-width: 400px;
+  max-width: 500px;
+  flex-grow: 1;
+  flex-basis: 280px;
+}
+.swap-icon {
+  padding: 0 5px;
+}
+.swap-icon-mobile {
+  width: 100%;
 }
 .list {
   min-height: 40px;
@@ -56,6 +69,7 @@ h3 {
   font-size: 14px;
   min-height: 40px;
   padding: 17.5px 10px 0;
+  position: relative
 }
 .box:last-child {
   border: none;
@@ -81,6 +95,10 @@ mat-label {
 }
 .list.cdk-drop-list-dragging .box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.box-icon {
+  position: absolute;
+  right: 0;
 }
 @media screen and (max-width: 767px) {
   .list {
