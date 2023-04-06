@@ -32,7 +32,7 @@ export class RecipeIngredientService {
    * @returns ingredients
    */
   findRecipeIngredients(recipe: Recipe, recipes: Recipe[]): Ingredient[] {
-    const addedIngredients = [];
+    const addedIngredients: Ingredient[] = [];
 
     // sort required ingredients before optional ingredients
     let startingIngredients = [...recipe.ingredients]
@@ -60,6 +60,33 @@ export class RecipeIngredientService {
     }
 
     return addedIngredients.filter(({ uom }) => uom !== UOM.RECIPE);
+  }
+
+  /**
+   * Iterative version of finding ingredient recipe ids and includes itself
+   * @param recipe recipe to find ingredients for
+   * @param recipes all recipes
+   * @returns recipe ids
+   */
+  findRecipeIds(recipe: Recipe, recipes: Recipe[]): string[] {
+    const addedRecipes: Ingredient[] = [];
+
+    let startingIngredients = [...recipe.ingredients];
+    while (startingIngredients.length) {
+      const ingredient = startingIngredients.pop();
+
+      const isAdded = addedRecipes.find(({ id }) => id === ingredient.id);
+      if (!isAdded) {
+        addedRecipes.push(ingredient);
+
+        const ingredientRecipe = recipes.find(({ id }) => id === ingredient.id);
+        if (ingredientRecipe) {
+          startingIngredients = startingIngredients.concat(ingredientRecipe.ingredients);
+        }
+      }
+    }
+
+    return addedRecipes.filter(({ uom }) => uom === UOM.RECIPE).map(({ id }) => id).concat(recipe.id);
   }
 
   getRecipeCount(recipe: Recipe, recipes: Recipe[], { ingredients }: UserIngredient): number {
@@ -165,10 +192,13 @@ export class RecipeIngredientService {
       this.userIngredientService.formattedUpdate(ingredients, householdId, id);
     }
 
-    this.recipeHistoryService.add(uid, recipe.id);
-    if (householdId !== uid) {
-      this.recipeHistoryService.add(householdId, recipe.id);
-    }
+    const cookedRecipeIds = this.findRecipeIds(recipe, recipes);
+    cookedRecipeIds.forEach(recipeId => {
+      this.recipeHistoryService.add(uid, recipeId);
+      if (householdId !== uid) {
+        this.recipeHistoryService.add(householdId, recipeId);
+      }
+    });
     this.notificationService.setModal(new SuccessNotification('Recipe cooked!'));
   }
 }

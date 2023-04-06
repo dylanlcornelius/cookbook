@@ -143,6 +143,75 @@ describe('RecipeIngredientService', () => {
     });
   });
 
+  describe('findRecipeIds', () => {
+    it('should find all recipe ingredients for a recipe', () => {
+      const recipes = [
+        new Recipe({
+          id: '1',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'a'}),
+            new Ingredient({id: '2', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '2',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'b'}),
+            new Ingredient({id: '3', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '3',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'c'})
+          ]
+        })
+      ];
+
+      const result = service.findRecipeIds(recipes[0], recipes);
+
+      expect(result.length).toEqual(3);
+      expect(result).toEqual(['2', '3', '1']);
+    });
+
+    it('should handle circularly dependent recipe ingredients', () => {
+      const recipes = [
+        new Recipe({
+          id: '1',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'a'}),
+            new Ingredient({id: '2', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '2',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'b'}),
+            new Ingredient({id: '3', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '3',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'c'}),
+            new Ingredient({id: '2', uom: UOM.RECIPE})
+          ]
+        })
+      ];
+
+      const result = service.findRecipeIds(recipes[0], recipes);
+
+      expect(result.length).toEqual(3);
+      expect(result).toEqual(['2', '3', '1']);
+    });
+  });
+
   describe('getRecipeCount', () => {
     it('should count the available number of recipes', () => {
       const recipe = new Recipe({
@@ -645,6 +714,72 @@ describe('RecipeIngredientService', () => {
       expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalled();
+    });
+
+    it('should add history for all recipe ingredients', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        count: 1,
+        ingredients: [{
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10
+        }, {
+          id: 'id2',
+          uom: UOM.RECIPE,
+          quantity: 10
+        }, {
+          id: 'id3',
+          uom: UOM.RECIPE,
+          quantity: 10
+        }]
+      });
+
+      const recipe2 = new Recipe({
+        id: 'id2',
+        ingredients: [{
+          id: 'ingredientId2',
+          uom: 'x',
+          quantity: 10
+        }, {
+          id: 'id3',
+          uom: UOM.RECIPE,
+          quantity: 10
+        }]
+      });
+
+      const recipe3 = new Recipe({
+        id: 'id3',
+        ingredients: [{
+          id: 'ingredientId3',
+          uom: 'x',
+          quantity: 10
+        }]
+      });
+
+      const userIngredient = new UserIngredient({
+        ingredients: [{
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 2
+        }]
+      });
+
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(numberService, 'toDecimal').and.returnValue(10);
+      spyOn(uomService, 'convert').and.returnValue(5);
+      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(notificationService, 'setModal');
+      spyOn(recipeHistoryService, 'add');
+
+      service.removeIngredients(recipe, [recipe, recipe2, recipe3], userIngredient, 'uid', 'householdId');
+
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalled();
+      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalledTimes(1);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(6);
     });
   });
 });
