@@ -12,7 +12,7 @@ import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/opera
 import { Recipe } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
-import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter, StatusFilter, ImageFilter } from '@recipeFilterService';
+import { RecipeFilterService, AuthorFilter, CategoryFilter, RatingFilter, SearchFilter, FILTER_TYPE, Filter, StatusFilter, ImageFilter, RestrictionFilter } from '@recipeFilterService';
 import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
@@ -69,7 +69,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
     private recipeHistoryService: RecipeHistoryService,
-  ) {}
+  ) { }
 
   identify = this.utilService.identify;
 
@@ -144,7 +144,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 if (url) {
                   recipe.image = url;
                 }
-              }, () => {});
+              }, () => { });
 
               return recipe;
             });
@@ -175,7 +175,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
     const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
     this.searchFilter = searchFilter ? searchFilter.value : '';
-    
+
     const ratings = [];
     [0, 1, 2, 3].forEach(ratingOption => {
       const rating = ratingOption / 3 * 100;
@@ -183,9 +183,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       for (let i = 0; i < ratingOption; i++) {
         displayValue += '★';
       }
-      
+
       const checked = filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
       ratings.push({ displayName: `${displayValue}`, name: rating, checked: checked, filter: new RatingFilter(rating) });
+    });
+
+    const restrictions = [];
+    [
+      { displayName: 'Vegetarian', name: 'isVegetarian' },
+      { displayName: 'Vegan', name: 'isVegan' },
+      { displayName: 'Gluten Free', name: 'isGlutenFree' },
+      { displayName: 'Dairy Free', name: 'isDairyFree' }
+    ].forEach(({ displayName, name }) => {
+      const checked = filters.find(f => f.type === FILTER_TYPE.RESTRICTION && f.value === name) !== undefined;
+      restrictions.push({ displayName, name, checked: checked, filter: new RestrictionFilter(name) });
     });
 
     const categories = [];
@@ -227,6 +238,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       if (matches) {
         this.filtersList = [
           { displayName: 'Authors', name: 'author', values: authors },
+          { displayName: 'Restrictions', name: 'restriction', values: restrictions },
           { displayName: 'Categories', name: 'categories', values: categories },
           { displayName: 'Ratings', name: 'ratings', values: ratings },
           { displayName: 'Statuses', name: 'statuses', values: statuses },
@@ -239,6 +251,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             icon: 'more_vert',
             values: [
               { displayName: 'Authors', name: 'author', values: authors },
+              { displayName: 'Restrictions', name: 'restriction', values: restrictions },
               { displayName: 'Ratings', name: 'ratings', values: ratings },
               { displayName: 'Statuses', name: 'statuses', values: statuses },
               { displayName: 'Images', name: 'images', values: images },
@@ -259,7 +272,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     ).subscribe(searchFilter => {
       this.searchFilter = searchFilter;
       this.setFilters();
-  
+
       if (this.dataSource.paginator) {
         this.dataSource.paginator.firstPage();
       }
@@ -297,7 +310,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   filterSelected(selectedFilter: { filter: Filter, checked: boolean, name: string }): void {
-  if (selectedFilter.checked) {
+    if (selectedFilter.checked) {
       this.recipeFilterService.selectedFilters.push(selectedFilter.filter);
     } else {
       this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(f => !(selectedFilter.filter.type === f.type && selectedFilter.filter.value == f.value));
@@ -327,7 +340,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     if (a.hasImage && b.hasImage) {
       return 0;
     }
-    
+
     if (a.hasImage) {
       return -1;
     }

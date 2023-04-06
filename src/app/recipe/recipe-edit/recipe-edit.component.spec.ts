@@ -21,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ValidationService } from '@modalService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -46,6 +47,7 @@ describe('RecipeEditComponent', () => {
         MatAutocompleteModule,
         MatInputModule,
         MatChipsModule,
+        MatCheckboxModule,
         BrowserAnimationsModule,
       ],
       declarations: [ RecipeEditComponent ],

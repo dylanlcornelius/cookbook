@@ -282,6 +282,16 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
+  describe('setRestrictionFilter', () => {
+    it('should set a restriction filter', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setRestrictionFilter('isVegetarian');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
+    });
+  });
+
   describe('changeStatus', () => {
     it('should change a recipe status', () => {
       spyOn(recipeService, 'changeStatus');

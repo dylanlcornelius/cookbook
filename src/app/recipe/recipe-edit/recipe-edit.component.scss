@@ -16,6 +16,17 @@ td {
   background-color: #495057;
   color: white;
 }
+.restrictions {
+  display: flex;
+  flex-wrap: wrap;
+
+  span {
+    display: flex;
+    padding: 10px;
+    flex-basis: 125px;
+    justify-content: space-between;
+  }
+}
 .ingredients {
   display: flex;
   justify-content: space-around;

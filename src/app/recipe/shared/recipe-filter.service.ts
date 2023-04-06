@@ -39,6 +39,7 @@ export class RecipeFilterService {
 
 export enum FILTER_TYPE {
   AUTHOR = 'AUTHOR',
+  RESTRICTION = 'RESTRICTION',
   CATEGORY = 'CATEGORY',
   RATING = 'RATING',
   STATUS = 'STATUS',
@@ -68,6 +69,11 @@ export abstract class Filter {
 export class AuthorFilter extends Filter {
   type = FILTER_TYPE.AUTHOR;
   filterPredicate = (recipe: Recipe): boolean => this.equals(recipe.author, this.value);
+}
+
+export class RestrictionFilter extends Filter {
+  type = FILTER_TYPE.RESTRICTION;
+  filterPredicate = (recipe: Recipe): boolean => recipe[this.value] === true;
 }
 
 export class CategoryFilter extends Filter {

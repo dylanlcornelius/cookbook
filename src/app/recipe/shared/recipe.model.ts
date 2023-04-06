@@ -26,6 +26,10 @@ export class Recipe extends Model {
     uid: string;
     author: string;
     status: RECIPE_STATUS;
+    isVegetarian: boolean;
+    isVegan: boolean;
+    isGlutenFree: boolean;
+    isDairyFree: boolean;
 
     count: number;
     image: string;
@@ -51,6 +55,10 @@ export class Recipe extends Model {
         this.uid = data.uid || '';
         this.author = data.author || '';
         this.status = data.status || RECIPE_STATUS.PRIVATE;
+        this.isVegetarian = data.isVegetarian || false;
+        this.isVegan = data.isVegan || false;
+        this.isGlutenFree = data.isGlutenFree || false;
+        this.isDairyFree = data.isDairyFree || false;
     }
 
     public getObject(): RecipeObject {
