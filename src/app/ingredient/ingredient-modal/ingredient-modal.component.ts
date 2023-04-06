@@ -21,7 +21,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { NumberService } from '@numberService';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({

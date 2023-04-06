@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 import { IngredientEditComponent } from '../ingredient-edit/ingredient-edit.component';
 
 import { IngredientQuickCreateComponent } from './ingredient-quick-create.component';

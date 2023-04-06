@@ -1,4 +1,4 @@
-import { Modal } from "../modal.service";
+import { Modal } from "@modalService";
 
 export class Notification extends Modal {
     type: string;

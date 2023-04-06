@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecipeRatingModalComponent } from './recipe-rating-modal.component';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Recipe } from '@recipe';
 import { RecipeService } from '@recipeService';

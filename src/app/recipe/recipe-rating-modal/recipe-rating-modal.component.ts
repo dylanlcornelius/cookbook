@@ -16,7 +16,7 @@ this.recipeRatingModalParams = {
 import { Component, Input, ViewChild } from '@angular/core';
 import { Recipe } from '@recipe';
 import { RecipeService } from '@recipeService';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 
 @Component({
   selector: 'app-recipe-rating-modal',

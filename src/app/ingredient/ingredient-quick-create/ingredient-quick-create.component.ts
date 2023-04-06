@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 import { IngredientEditComponent } from '../ingredient-edit/ingredient-edit.component';
 
 @Component({

@@ -30,6 +30,7 @@
       "@firebaseService": ["src/app/shared/firebase.service"],
       "@firestoreService": ["src/app/shared/firestore.service"],
       "@loadingService": ["src/app/shared/loading-modal/loading.service"],
+      "@modalComponent": ["src/app/shared/modal/modal.component"],
       "@modalService": ["src/app/shared/modal.service"],
       "@notification": ["src/app/shared/notification-modal/notification.model"],
       "@validation": ["src/app/shared/validation-modal/validation.model"],
