@@ -3,14 +3,14 @@
 <div *ngIf="!loading">
   <mat-tab-group class="box mat-elevation-z8" dynamicHeight="true" animationDuration="1000ms" [selectedIndex]="selectedIndex">
     <mat-tab label="Profile">
-      <div class="tab-body">
+      <mat-card class="tab-body">
         <mat-progress-bar class="image-progress" mode="determinate" [value]="userImageProgress" [hidden]="!userImageProgress"></mat-progress-bar>
 
         <h2>Your Profile</h2>
 
         <app-image-upload [id]="user.id" class="icon-buttons" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
 
-        <div class="container">
+        <div class="profile container">
           <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
   
           <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)">
@@ -72,7 +72,7 @@
         <hr />
 
         <app-household [userId]="user.uid"></app-household>
-      </div>
+      </mat-card>
     </mat-tab>
 
     <mat-tab label="Analytics">
@@ -101,16 +101,7 @@
           <h2>Your Recipe History</h2>
           <p *ngIf="totalRecipesCooked">Total Recipes Cooked: {{totalRecipesCooked}}</p>
   
-          <div class="chart-container desktop">
-            <ngx-charts-bar-vertical
-              [results]="history"
-              [gradient]="true"
-              [xAxis]="true"
-              [legend]="true"
-              [showDataLabel]="true">
-            </ngx-charts-bar-vertical>
-          </div>
-          <div class="chart-container mobile" [ngStyle]="{'height': history.length * 3 + 'vh'}">
+          <div class="chart-container" [ngStyle]="{'height': history.length * 3 + 'vh'}">
               <ngx-charts-bar-horizontal
               [results]="history"
               [gradient]="true"

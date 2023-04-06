@@ -34,6 +34,7 @@ h2 {
 .mat-card-image {
     margin: 0 -16px 5px !important;
     object-fit: cover;
+    aspect-ratio: 1/1;
 }
 .mat-card-actions {
     display: flex !important;
