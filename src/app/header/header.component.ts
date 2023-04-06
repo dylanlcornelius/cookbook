@@ -12,6 +12,7 @@ import { Navigation, NavigationMenu } from '@navigation';
 import { takeUntil } from 'rxjs/operators';
 import { HouseholdService } from '@householdService';
 import { RecipeService } from '@recipeService';
+import { FeedbackService } from '@feedbackService';
 
 @Component({
   selector: 'app-header',
@@ -31,6 +32,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   profileNavs: Navigation[] = [];
   toolNavs: Navigation[] = [];
   householdNotifications: number;
+  feedbackNotifications: number;
   continueNav: Navigation;
 
   constructor(
@@ -40,6 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private navigationService: NavigationService,
     private recipeService: RecipeService,
+    private feedbackService: FeedbackService,
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -69,16 +72,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const user$ = this.currentUserService.getCurrentUser();
     const navs$ = this.navigationService.get();
     const recipeForm$ = this.recipeService.getForm();
+    const feedbacks$ = this.feedbackService.get();
 
-    combineLatest([user$, navs$, recipeForm$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, navs, form]) => {
+    combineLatest([user$, navs$, recipeForm$, feedbacks$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, navs, form, feedbacks]) => {
       this.user = user;
 
       if (this.user.uid) {
         this.householdService.getInvites(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(households => {
           this.householdNotifications = households.length ? households.length : undefined;
         });
+
+        this.feedbackNotifications = this.user.isAdmin && feedbacks.length ? feedbacks.length : undefined;
       }
-      
+
       this.desktopNavs = navs.filter(({ subMenu, link }) => !subMenu && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
       this.mobileNavs = navs.filter(({ subMenu, link }) => subMenu !== NavigationMenu.PROFILE && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
       this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);

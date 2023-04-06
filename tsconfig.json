@@ -39,6 +39,8 @@
       "@tutorialService": ["src/app/shared/tutorial-modal/tutorial.service"],
       "@config": ["src/app/admin/shared/config.model"],
       "@configService": ["src/app/admin/shared/config.service"],
+      "@feedback": ["src/app/admin/shared/feedback.model"],
+      "@feedbackService": ["src/app/admin/shared/feedback.service"],
       "@context": ["src/app/admin/shared/context.model"],
       "@imageService": ["src/app/util/image.service"],
       "@numberService": ["src/app/util/number.service"],

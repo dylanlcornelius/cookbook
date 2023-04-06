@@ -1,0 +1,85 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { FeedbackComponent } from './feedback.component';
+import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { User } from '@user';
+import { NotificationService } from '@modalService';
+import { FeedbackService } from '@feedbackService';
+import { ModalComponent } from '@modalComponent';
+
+describe('FeedbackComponent', () => {
+  let component: FeedbackComponent;
+  let fixture: ComponentFixture<FeedbackComponent>;
+  let feedbackService: FeedbackService;
+  let notificationService: NotificationService;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [
+        ModalComponent,
+        FeedbackComponent
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+      ]
+    })
+    .compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(FeedbackComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    feedbackService = TestBed.inject(FeedbackService);
+    notificationService = TestBed.inject(NotificationService);
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('open', () => {
+    it('should load the component and open the modal', () => {
+      spyOn(component.modal, 'open');
+
+      component.open();
+
+      expect(component.modal.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('close', () => {
+    it('should close the modal', () => {
+      spyOn(component.modal, 'close');
+
+      component.close();
+
+      expect(component.modal.close).toHaveBeenCalled();
+    });
+  });
+
+  describe('onFormSubmit', () => {
+    it('should update a user record', () => {
+      const formDirective = new FormGroupDirective([], []);
+
+      component.user = new User({});
+
+      spyOn(feedbackService, 'create');
+      spyOn(notificationService, 'setModal');
+      spyOn(formDirective, 'resetForm');
+      spyOn(component.modal, 'close');
+
+      component.onFormSubmit(formDirective);
+
+      expect(feedbackService.create).toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+      expect(formDirective.resetForm).toHaveBeenCalled();
+      expect(component.modal.close).toHaveBeenCalled();
+    });
+  });
+});

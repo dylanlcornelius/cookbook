@@ -13,6 +13,8 @@ import { User } from '@user';
 import { Household } from '@household';
 import { RecipeService } from '@recipeService';
 import { RouterTestingModule } from '@angular/router/testing';
+import { FeedbackService } from '@feedbackService';
+import { Feedback } from '@feedback';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -22,6 +24,7 @@ describe('HeaderComponent', () => {
   let currentUserService: CurrentUserService;
   let householdService: HouseholdService;
   let recipeService: RecipeService;
+  let feedbackService: FeedbackService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -49,6 +52,7 @@ describe('HeaderComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     householdService = TestBed.inject(HouseholdService);
     recipeService = TestBed.inject(RecipeService);
+    feedbackService = TestBed.inject(FeedbackService);
   });
 
   it('should create', () => {
@@ -77,7 +81,8 @@ describe('HeaderComponent', () => {
     it('should load navs and household invites', () => {
       spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid' })));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid', role: 'admin' })));
+      spyOn(feedbackService, 'get').and.returnValue(of([new Feedback({})]));
       spyOn(householdService, 'getInvites').and.returnValue(of([new Household({})]));
 
       component.load();
@@ -85,6 +90,7 @@ describe('HeaderComponent', () => {
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(feedbackService.get).toHaveBeenCalled();
       expect(householdService.getInvites).toHaveBeenCalled();
     });
 
@@ -92,6 +98,7 @@ describe('HeaderComponent', () => {
       spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({}));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(feedbackService, 'get').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();
@@ -99,6 +106,7 @@ describe('HeaderComponent', () => {
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(feedbackService.get).toHaveBeenCalled();
       expect(householdService.getInvites).not.toHaveBeenCalled();
     });
 
@@ -106,6 +114,7 @@ describe('HeaderComponent', () => {
       spyOn(navigationService, 'get').and.returnValue(of([new Navigation({ link: '/shopping/plan' })]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({id: 'test'}));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid', hasPlanner: true })));
+      spyOn(feedbackService, 'get').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();
@@ -113,6 +122,7 @@ describe('HeaderComponent', () => {
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(feedbackService.get).toHaveBeenCalled();
       expect(householdService.getInvites).toHaveBeenCalled();
     });
   });

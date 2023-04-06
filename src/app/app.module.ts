@@ -20,6 +20,7 @@ import { SharedModule } from '@sharedModule';
 import { FirebaseService } from '@firebaseService';
 
 import { environment } from '../environments/environment';
+import { FeedbackComponent } from './footer/feedback/feedback.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { environment } from '../environments/environment';
     LoginComponent,
     UserPendingComponent,
     NewUserComponent,
+    FeedbackComponent,
   ],
   imports: [
     BrowserModule,
