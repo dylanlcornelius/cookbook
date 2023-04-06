@@ -1,11 +1,23 @@
 <app-modal [params]="params">
     <h4>Select {{params?.recipeName}} Ingredients</h4>
     <div class="ingredient-list">
-        <div *ngFor="let ingredient of params?.ingredients">
+        <div *ngFor="let ingredient of params?.ingredients | filterOptional:false">
             <mat-checkbox class="mat-menu-item" [(ngModel)]="ingredient.selected" (change)="select(ingredient.selected)" *ngIf="ingredient.name">
                 {{ingredient.name}}
             </mat-checkbox>
         </div>
+    </div>
+    <br />
+
+    <div *ngIf="(params?.ingredients | filterOptional:true)?.length !== 0">
+      <h6>Optional Ingredients:</h6>
+      <div class="ingredient-list">
+          <div *ngFor="let ingredient of params?.ingredients | filterOptional:true">
+              <mat-checkbox class="mat-menu-item" [(ngModel)]="ingredient.selected" (change)="select(ingredient.selected)" *ngIf="ingredient.name">
+                  {{ingredient.name}}
+              </mat-checkbox>
+          </div>
+      </div>
     </div>
     <div class="center">
         <button mat-raised-button color="primary" (click)="add()" style="margin-right: 20px;">

@@ -68,14 +68,16 @@ h3 {
   cursor: move;
   font-size: 14px;
   min-height: 40px;
-  padding: 17.5px 10px 0;
-  position: relative
+  padding: 8px 10px;
+  position: relative;
+  border-bottom: 1px solid #4e4e4e;
 }
 .box:last-child {
   border: none;
+  padding-bottom: 17.5px;
 }
 .box-bottom {
-  padding-bottom: 17.5px;
+  padding-bottom: 10px;
 }
 mat-label {
   font-weight: 700;

@@ -53,6 +53,7 @@ export class IngredientService extends FirestoreService {
           name: currentIngredient.name,
           uom: addedIngredient.uom || '',
           quantity: this.numberService.toFormattedFraction(addedIngredient.quantity),
+          isOptional: addedIngredient.isOptional || false
         });
       }
       return result;

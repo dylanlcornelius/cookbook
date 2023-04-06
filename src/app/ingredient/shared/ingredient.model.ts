@@ -13,6 +13,7 @@ export class Ingredient extends Model {
     pantryQuantity: number | string;
     cartQuantity: number;
     selected: boolean;
+    isOptional: boolean;
 
     constructor (data: any) {
         super(data);
@@ -23,13 +24,14 @@ export class Ingredient extends Model {
         this.calories = data.calories || '';
         this.pantryQuantity = data.pantryQuantity;
         this.cartQuantity = data.cartQuantity;
+        this.isOptional = data.isOptional || false;
     }
 
     public getObject(): IngredientObject {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {id, quantity, pantryQuantity, cartQuantity, selected, ...ingredient} = this;
+        const {id, quantity, pantryQuantity, cartQuantity, selected, isOptional, ...ingredient} = this;
         return ingredient;
     }
 }
 
-export type IngredientObject = Omit<Ingredient, 'id' | 'getId' | 'getObject' | 'quantity' | 'pantryQuantity' | 'cartQuantity' | 'selected'>;
+export type IngredientObject = Omit<Ingredient, 'id' | 'getId' | 'getObject' | 'quantity' | 'pantryQuantity' | 'cartQuantity' | 'selected' | 'isOptional'>;

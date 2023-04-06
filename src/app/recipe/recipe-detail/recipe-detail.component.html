@@ -110,11 +110,28 @@
       </mat-card-content>
 
       <mat-card-content class="center-text" *ngIf="ingredients && ingredients.length">
-        <dl>
+        <dl *ngIf="(ingredients | filterOptional:false)?.length !== 0">
           <dt>Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of ingredients">
+            <div class="box" *ngFor="let ingredient of ingredients | filterOptional:false">
+              <a class="author-link" [routerLink]="['/recipe/detail/', ingredient.id]" *ngIf="ingredient.uom === 'recipe'">
+                <span>{{ingredient.quantity}} - {{ingredient.name}}</span>
+                <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
+              </a>
+
+              <a class="author-link" [routerLink]="['/ingredient/detail/', ingredient.id]" *ngIf="ingredient.uom !== 'recipe'">
+                {{ingredient.quantity}}  {{ingredient.uom === 'other'? '' : ingredient.uom}} - {{ingredient.name}}
+              </a>
+            </div>
+          </div>
+        </dl>
+
+        <dl *ngIf="(ingredients | filterOptional:true)?.length !== 0">
+          <dt>Optional Ingredients</dt>
+
+          <div class="list">
+            <div class="box" *ngFor="let ingredient of ingredients | filterOptional:true">
               <a class="author-link" [routerLink]="['/recipe/detail/', ingredient.id]" *ngIf="ingredient.uom === 'recipe'">
                 <span>{{ingredient.quantity}} - {{ingredient.name}}</span>
                 <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>

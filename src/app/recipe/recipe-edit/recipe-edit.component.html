@@ -117,6 +117,10 @@
                   <mat-option *ngFor="let uom of getUOMs(ingredient.get('uom').value)" [value]="uom">{{uom}}</mat-option>
                 </mat-select>
               </mat-form-field>
+              <div class="evenly">
+                <mat-label>Is Ingredient Optional?</mat-label>
+                <mat-checkbox formControlName="isOptional"></mat-checkbox>
+              </div>
               <mat-icon class="box-icon">drag_indicator</mat-icon>
             </div>
             <div class="container box box-bottom" *ngIf="addedIngredients.length === 0">
