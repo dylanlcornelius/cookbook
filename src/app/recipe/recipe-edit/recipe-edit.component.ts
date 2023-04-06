@@ -210,7 +210,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       .reduce((result, ingredient) => {
         const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
-          result.push({ ...ingredient, quantity: 0 });
+          result.push({ ...ingredient, quantity: 0, isOptional: false });
         }
         return result;
       }, [])
@@ -312,6 +312,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       id: [null],
       quantity: [null, [Validators.required, Validators.min(0.00001), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]],
       uom: [null, [Validators.required]],
+      isOptional: [false],
       name: [null],
     });
   }
@@ -325,6 +326,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         name: data.name,
         quantity: data.quantity,
         uom: data.uom,
+        isOptional: data.isOptional,
       });
     }
     control.insert(index, ingredientControl);

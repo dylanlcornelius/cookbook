@@ -6,6 +6,7 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.component';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
+import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
 
 describe('RecipeIngredientModalComponent', () => {
   let component: RecipeIngredientModalComponent;
@@ -16,7 +17,8 @@ describe('RecipeIngredientModalComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         RecipeIngredientModalComponent,
-        ModalComponent
+        ModalComponent,
+        OptionalIngredientsPipe,
       ]
     })
     .compileComponents();

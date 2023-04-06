@@ -103,6 +103,44 @@ describe('RecipeIngredientService', () => {
 
       expect(result.length).toEqual(3);
     });
+
+    it('should handle optional recipe ingredients', () => {
+      const recipes = [
+        new Recipe({
+          id: '1',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'a'}),
+            new Ingredient({id: 'b'}),
+            new Ingredient({id: 'c', isOptional: true}),
+            new Ingredient({id: 'd', isOptional: true}),
+            new Ingredient({id: '2', uom: UOM.RECIPE}),
+            new Ingredient({id: '3', uom: UOM.RECIPE})
+          ]
+        }),
+        new Recipe({
+          id: '2',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'a'}),
+            new Ingredient({id: 'b', isOptional: true}),
+            new Ingredient({id: 'c'}),
+            new Ingredient({id: 'd', isOptional: true}),
+          ]
+        }),
+        new Recipe({
+          id: '3',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new Ingredient({id: 'd', isOptional: true}),
+          ]
+        })
+      ];
+
+      const result = service.findRecipeIngredients(recipes[0], recipes);
+
+      expect(result.length).toEqual(4);
+    });
   });
 
   describe('getRecipeCount', () => {

@@ -58,6 +58,10 @@ dt {
   display: flex !important;
   justify-content: space-between !important;
 }
+.evenly {
+  display: flex;
+  justify-content: space-evenly;
+}
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

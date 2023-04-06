@@ -23,6 +23,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TutorialModalComponent } from './tutorial-modal/tutorial-modal.component';
 import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component';
+import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component'
     ImageUploadComponent,
     TutorialModalComponent,
     TutorialComponent,
+    OptionalIngredientsPipe,
   ],
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component'
     ModalComponent,
     ImageUploadComponent,
     TutorialModalComponent,
+    OptionalIngredientsPipe,
   ]
 })
 export class SharedModule { }

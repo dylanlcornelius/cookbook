@@ -34,7 +34,9 @@ export class RecipeIngredientService {
   findRecipeIngredients(recipe: Recipe, recipes: Recipe[]): Ingredient[] {
     const addedIngredients = [];
 
-    let startingIngredients = [...recipe.ingredients];
+    // sort required ingredients before optional ingredients
+    let startingIngredients = [...recipe.ingredients]
+      .sort(({isOptional: a}, {isOptional: b}) => Number(b) - Number(a));
     while (startingIngredients.length) {
       const ingredient = startingIngredients.pop();
 
@@ -44,8 +46,16 @@ export class RecipeIngredientService {
 
         const ingredientRecipe = recipes.find(({ id }) => id === ingredient.id);
         if (ingredientRecipe) {
-          startingIngredients = startingIngredients.concat(ingredientRecipe.ingredients);
+          const recipeIngredients = ingredientRecipe.ingredients;
+          recipeIngredients.forEach(current => {
+            // recipe ingredient should allow optional
+            current.isOptional = current.isOptional || ingredient.isOptional;
+          });
+          startingIngredients = startingIngredients.concat(recipeIngredients);
         }
+      } else {
+        // ingredient should always prioritize required
+        isAdded.isOptional = isAdded.isOptional && ingredient.isOptional;
       }
     }
 
