@@ -67,6 +67,18 @@
             <dd>{{recipe.quantity}}</dd>
           </span>
 
+          <span *ngIf="recipe.isVegetarian || recipe.isVegan || recipe.isGlutenFree || recipe.isDairyFree">
+            <dt>Restrictions</dt>
+            <dd>
+              <mat-chip-list class="center">
+                <mat-chip *ngIf="recipe.isVegetarian" (click)="setRestrictionFilter('isVegetarian')">Vegetarian</mat-chip>
+                <mat-chip *ngIf="recipe.isVegan" (click)="setRestrictionFilter('isVegan')">Vegan</mat-chip>
+                <mat-chip *ngIf="recipe.isGlutenFree" (click)="setRestrictionFilter('isGlutenFree')">Gluten Free</mat-chip>
+                <mat-chip *ngIf="recipe.isDairyFree" (click)="setRestrictionFilter('isDairyFree')">Dairy Free</mat-chip>
+              </mat-chip-list>
+            </dd>
+          </span>
+
           <span *ngIf="recipe.categories && recipe.categories.length || hasNewCategory">
             <dt>Categories</dt>
             <dd>

@@ -44,6 +44,32 @@
           <span *ngIf="!recipesForm.get('calories').valid">Please enter a valid number for Recipe Calories</span>
         </mat-error>
       </mat-form-field>
+
+      <div class="form-field">
+        <h6>Dietary Restrictions</h6>
+
+        <div class="restrictions">
+          <span>
+            <mat-label>Vegetarian?</mat-label>
+            <mat-checkbox formControlName="isVegetarian"></mat-checkbox>
+          </span>
+
+          <span>
+            <mat-label>Vegan?</mat-label>
+            <mat-checkbox formControlName="isVegan"></mat-checkbox>
+          </span>
+
+          <span>
+            <mat-label>Gluten Free?</mat-label>
+            <mat-checkbox formControlName="isGlutenFree"></mat-checkbox>
+          </span>
+
+          <span>
+            <mat-label>Dairy Free?</mat-label>
+            <mat-checkbox formControlName="isDairyFree"></mat-checkbox>
+          </span>
+        </div>
+      </div>
   
       <mat-form-field class="form-field">
         <mat-chip-list #categoryList>

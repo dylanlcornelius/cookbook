@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '@recipeService';
-import { IngredientService} from '@ingredientService';
+import { IngredientService } from '@ingredientService';
 import { ImageService } from '@imageService';
 import { Observable, combineLatest, Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { AuthorFilter, CategoryFilter, RecipeFilterService } from '@recipeFilterService';
+import { AuthorFilter, CategoryFilter, RecipeFilterService, RestrictionFilter } from '@recipeFilterService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
@@ -120,7 +120,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
               });
             });
           });
-          
+
           this.recipe = recipe;
           this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
           this.recipeImage = undefined;
@@ -128,7 +128,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
             if (url) {
               this.recipeImage = url;
             }
-          }, () => {});
+          }, () => { });
 
           this.timesCooked = recipeHistory.timesCooked;
           const date = recipeHistory.lastDateCooked.split('/');
@@ -173,6 +173,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
+  setRestrictionFilter = (filter: string): void => this.utilService.setListFilter(new RestrictionFilter(filter));
 
   changeStatus = (): void => this.recipeService.changeStatus(this.recipe);
 

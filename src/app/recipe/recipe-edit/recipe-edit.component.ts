@@ -13,7 +13,7 @@ import {
   FormControl
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientService} from '@ingredientService';
+import { IngredientService } from '@ingredientService';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { ErrorMatcher } from '../../util/error-matcher';
@@ -108,12 +108,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     const form = this.recipesForm.value;
 
     const isUnchanged = Object.keys(form).find(key => {
-        const listField = this.listFields[key];
+      const listField = this.listFields[key];
 
-        return listField
-          ? recipe[key].map((property) => property[listField]).join('|') !== form[key].map((property) => property[listField]).join('|')
-          : recipe[key] !== form[key];
-      });
+      return listField
+        ? recipe[key].map((property) => property[listField]).join('|') !== form[key].map((property) => property[listField]).join('|')
+        : recipe[key] !== form[key];
+    });
 
     if (isUnchanged) {
       this.recipeService.setForm({ ...form, id: this.id });
@@ -136,6 +136,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         time: [''],
         servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
         calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+        isVegetarian: [false],
+        isVegan: [false],
+        isGlutenFree: [false],
+        isDairyFree: [false],
         categories: this.formBuilder.array([]),
         steps: this.formBuilder.array([]),
         ingredients: this.formBuilder.array([])
@@ -198,6 +202,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         time: this.recipe.time,
         servings: this.recipe.servings,
         calories: this.recipe.calories,
+        isVegetarian: this.recipe.isVegetarian,
+        isVegan: this.recipe.isVegan,
+        isGlutenFree: this.recipe.isGlutenFree,
+        isDairyFree: this.recipe.isDairyFree,
         categories: this.recipe.categories,
         steps: this.recipe.steps,
         ingredients: this.addedIngredients,
@@ -348,7 +356,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
     this.availableIngredients = this.allAvailableIngredients.filter(ingredient => {
       return ingredient.name.toLowerCase().includes(this.ingredientFilter) && !this.addedIngredients.find(addedIngredient => {
-          return ingredient.id === addedIngredient.id;
+        return ingredient.id === addedIngredient.id;
       });
     });
   }
@@ -399,7 +407,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
         recipeId = this.recipeService.create(new Recipe(form).getObject());
       }
-      
+
       this.originalRecipe = this.recipesForm.value;
 
       if (createNew) {
