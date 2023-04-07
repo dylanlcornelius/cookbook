@@ -77,9 +77,10 @@ describe('ShoppingListComponent', () => {
 
   describe('load', () => {
     it('should load ingredients and items', () => {
-      const userIngredients = new UserIngredient({
-        ingredients: [{ id: 'ingredientId' }, { id: 'ingredientId2' }]
-      });
+      const userIngredients = [
+        new UserIngredient({ ingredientId: 'ingredientId', cartQuantity: 1 }),
+        new UserIngredient({ ingredientId: 'ingredientId2', cartQuantity: 2 })
+      ];
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
@@ -115,11 +116,7 @@ describe('ShoppingListComponent', () => {
     });
 
     it('should not load unavailable ingredients and items', () => {
-      const userIngredients = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId2'
-        }]
-      });
+      const userIngredients = [new UserIngredient({ ingredientId: 'ingredientId2' })];
       const ingredients = [new Ingredient({
         id: 'ingredientId'
       })];
@@ -146,7 +143,7 @@ describe('ShoppingListComponent', () => {
     });
 
     it('should handle empty user ingredients and user items', () => {
-      const userIngredients = new UserIngredient({});
+      const userIngredients = [new UserIngredient({})];
       const ingredients = [new Ingredient({
         id: 'ingredientId'
       })];
@@ -187,49 +184,55 @@ describe('ShoppingListComponent', () => {
 
   describe('addIngredientToPantry', () => {
     it('should buy an ingredient', () => {
-      const ingredients = [new Ingredient({ id: 'id', cartQuantity: 10 }), new Ingredient({})];
-      component.userIngredient = new UserIngredient({ ingredients });
+      component.userIngredients = [
+        new UserIngredient({ ingredientId: 'id', cartQuantity: 10 }),
+        new UserIngredient({})
+      ];
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
 
       component.addIngredientToPantry('id');
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
     });
 
     it('should complete the shopping list', () => {
-      const ingredients = [new Ingredient({ id: 'id', cartQuantity: 0 }), new Ingredient({ cartQuantity: 0 })];
-      component.userIngredient = new UserIngredient({ ingredients });
+      component.userIngredients = [
+        new UserIngredient({ ingredientId: 'id', cartQuantity: 0 }),
+        new UserIngredient({ cartQUantity: 0 })
+      ];
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
 
       component.addIngredientToPantry('id');
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
     });
 
     it('should buy an ingredient with an invalid cart quantity', () => {
-      const ingredients = [new Ingredient({ id: 'id', cartQuantity: NaN }), new Ingredient({})];
-      component.userIngredient = new UserIngredient({ ingredients });
+      component.userIngredients = [
+        new UserIngredient({ ingredientId: 'id', cartQuantity: NaN }),
+        new UserIngredient({ cartQuantity: NaN })
+      ];
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
 
       component.addIngredientToPantry('id');
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalled();
     });
@@ -281,7 +284,7 @@ describe('ShoppingListComponent', () => {
 
   describe('removeItem', () => {
     it('should buy a user item', () => {
-      component.userIngredient = new UserIngredient({ ingredients: [new Ingredient({ cartQuantity: 0 })] });
+      component.userIngredients = [new UserIngredient({ cartQuantity: 0 })];
       component.userItem = new UserItem({ items: [{ name: 'item'}, { name: 'item2' }] });
 
       spyOn(userItemService, 'formattedUpdate');
@@ -308,19 +311,20 @@ describe('ShoppingListComponent', () => {
 
   describe('addAllToPantryEvent', () => {
     it('should add ingredients and items to pantry', () => {
-      const ingredients = [new Ingredient({ cartQuantity: 10 }), new Ingredient({ cartQuantity: 0 })];
-      component.userIngredient = new UserIngredient({ ingredients });
-
+      component.userIngredients = [
+        new UserIngredient({ cartQuantity: 10 }),
+        new UserIngredient({ cartQuantity: 0 })
+      ];
       component.userItem = new UserItem({ items: [{ name: 'name'}] });
 
       spyOn(userIngredientService, 'buyUserIngredient');
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
       spyOn(userItemService, 'formattedUpdate');
 
       component.addAllToPantryEvent();
 
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalledWith(2, true);
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
       expect(userItemService.formattedUpdate).toHaveBeenCalled();
     });
   });

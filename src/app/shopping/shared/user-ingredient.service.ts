@@ -5,7 +5,7 @@ import { UserIngredient } from '@userIngredient';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
-import { Model, ModelObject } from '@model';
+import { Model } from '@model';
 import { SuccessNotification } from '@notification';
 import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
@@ -23,20 +23,14 @@ export class UserIngredientService extends FirestoreService {
     super('user-ingredients', firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<UserIngredient>;
+  get(uid: string): Observable<UserIngredient[]>;
   get(): Observable<UserIngredient[]>;
-  get(): Observable<UserIngredient | UserIngredient[]>; // type for spyOn
-  get(uid?: string): Observable<UserIngredient | UserIngredient[]> {
+  get(): Observable<UserIngredient[]>; // type for spyOn
+  get(uid?: string): Observable<UserIngredient[]> {
     return new Observable(observer => {
       if (uid) {
         super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
-          if (docs.length > 0) {
-            observer.next(new UserIngredient(docs[0]));
-          } else {
-            const userIngredient = new UserIngredient({uid: uid});
-            userIngredient.id = this.create(userIngredient);
-            observer.next(userIngredient);
-          }
+          observer.next(docs.map(doc => new UserIngredient(doc)));
         });
       } else {
         super.get().subscribe(docs => {
@@ -47,13 +41,7 @@ export class UserIngredientService extends FirestoreService {
   }
 
   create = (data: UserIngredient): string => super.create(data.getObject());
-  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
-
-  formattedUpdate(data: UserIngredient["ingredients"], uid: string, id: string): void {
-    const ingredients = data.map(({ id, pantryQuantity, cartQuantity }) => ({ id, pantryQuantity, cartQuantity }));
-    const userIngredient = new UserIngredient({ uid, ingredients, id });
-    this.update(userIngredient.getObject(), userIngredient.getId());
-  }
+  update = (data: Model[]): void => super.update(data);
 
   buyUserIngredient(actions: number, isCompleted: boolean): void {
     this.currentUserService.getCurrentUser().subscribe(user => {

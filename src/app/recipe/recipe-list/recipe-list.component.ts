@@ -44,7 +44,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   dataSource;
   recipes: Recipe[] = [];
-  userIngredient: UserIngredient;
+  userIngredients: UserIngredient[];
 
   breakpointSubscription: Subscription;
   searchSubscription: Subscription;
@@ -97,12 +97,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const userIngredient$ = this.userIngredientService.get(this.householdId);
         const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
 
-        combineLatest([recipes$, ingredients$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$), debounceTime(100)).subscribe(([recipes, ingredients, userIngredient, histories]) => {
+        combineLatest([recipes$, ingredients$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$), debounceTime(100)).subscribe(([recipes, ingredients, userIngredients, histories]) => {
           ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (ingredient.id === myIngredient.id) {
-                myIngredient.uom = ingredient.uom;
-                myIngredient.amount = ingredient.amount;
+            userIngredients.forEach(userIngredient => {
+              if (ingredient.id === userIngredient.ingredientId) {
+                userIngredient.uom = ingredient.uom;
+                userIngredient.amount = ingredient.amount;
               }
             });
 
@@ -116,7 +116,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             });
           });
 
-          this.userIngredient = userIngredient;
+          this.userIngredients = userIngredients;
           this.recipes = recipes
             .filter(recipe => this.householdService.hasUserPermission(household, this.user, recipe))
             .sort(this.sortRecipesByName)
@@ -130,7 +130,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
               });
 
               recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, recipe);
-              recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+              recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredients);
 
               // display new category automatically
               const timesCooked = histories.find(({ recipeId }) => recipeId === recipe.id)?.timesCooked;
@@ -366,11 +366,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   addIngredients(id: string): void {
-    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.householdId);
+    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredients, this.householdId);
   }
 
   removeIngredients(id: string): void {
-    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredient, this.user.uid, this.householdId);
+    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredients, this.user.uid, this.householdId);
   }
 
   onRate(rating: number, recipe: Recipe): void {

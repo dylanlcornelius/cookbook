@@ -6,7 +6,7 @@ export class RecipeIngredientModal extends Modal {
     function: Function;
     recipeName: string;
     ingredients: Ingredient[];
-    userIngredient: UserIngredient;
+    userIngredients: UserIngredient[];
     householdId: string;
     callback: Function;
 
@@ -14,7 +14,7 @@ export class RecipeIngredientModal extends Modal {
         eventFunction: Function,
         recipeName: string,
         ingredients: Ingredient[],
-        userIngredient: UserIngredient,
+        userIngredients: UserIngredient[],
         householdId: string,
         callback?: Function,
     ) {
@@ -22,7 +22,7 @@ export class RecipeIngredientModal extends Modal {
         this.function = eventFunction;
         this.recipeName = recipeName;
         this.ingredients = ingredients;
-        this.userIngredient = userIngredient;
+        this.userIngredients = userIngredients;
         this.householdId = householdId;
         this.callback = callback;
     }

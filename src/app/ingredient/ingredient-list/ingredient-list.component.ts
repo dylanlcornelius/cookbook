@@ -28,7 +28,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
   dataSource;
 
-  id: string;
   userIngredients = [];
 
   user: User;
@@ -67,24 +66,15 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
         const userIngredients$ = this.userIngredientService.get(this.householdId);
         const ingredients$ = this.ingredientService.get();
-        combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, ingredients]) => {
-          this.id = userIngredient.id;
-        
-          const myIngredients = [];
+        combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, ingredients]) => {
           ingredients.forEach(ingredient => {
             ingredient.category = IngredientCategory[ingredient.category] || ingredient.category;
             ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (myIngredient.id === ingredient.id) {
-                ingredient.pantryQuantity = this.numberService.toFormattedFraction(myIngredient.pantryQuantity);
-                ingredient.cartQuantity = myIngredient.cartQuantity;
-
-                myIngredients.push({
-                  id: myIngredient.id,
-                  pantryQuantity: myIngredient.pantryQuantity,
-                  cartQuantity: myIngredient.cartQuantity
-                });
+            userIngredients.forEach(userIngredient => {
+              if (userIngredient.ingredientId === ingredient.id) {
+                ingredient.pantryQuantity = this.numberService.toFormattedFraction(userIngredient.pantryQuantity);
+                ingredient.cartQuantity = userIngredient.cartQuantity;
               }
             });
           });
@@ -92,7 +82,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource(ingredients);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
-          this.userIngredients = myIngredients;
+          this.userIngredients = userIngredients;
           this.loading = this.loadingService.set(false);
         });
       });
@@ -128,7 +118,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   editIngredientEvent = (): void => {
-    this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
+    this.userIngredientService.update(this.userIngredients);
   };
 
   removeIngredient(id: string): void {
@@ -137,7 +127,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
       ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
+      this.userIngredientService.update(this.userIngredients);
     }
   }
 
@@ -152,7 +142,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
         ingredient.cartQuantity = Number(ingredient.amount);
       }
-      this.userIngredientService.formattedUpdate(this.userIngredients, this.householdId, this.id);
+      this.userIngredientService.update(this.userIngredients);
     }
   }
 

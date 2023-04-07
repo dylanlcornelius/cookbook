@@ -30,7 +30,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
-  userIngredient: UserIngredient;
+  userIngredients: UserIngredient[];
   recipes: Recipe[];
 
   recipeControl = new FormControl();
@@ -74,12 +74,12 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
         const ingredients$ = this.ingredientService.get();
         const mealPlan$ = this.mealPlanService.get(this.householdId);
 
-        combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, recipes, ingredients, mealPlan]) => {
+        combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, recipes, ingredients, mealPlan]) => {
           ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (ingredient.id === myIngredient.id) {
-                myIngredient.uom = ingredient.uom;
-                myIngredient.amount = ingredient.amount;
+            userIngredients.forEach(userIngredient => {
+              if (ingredient.id === userIngredient.ingredientId) {
+                userIngredient.uom = ingredient.uom;
+                userIngredient.amount = ingredient.amount;
               }
             });
 
@@ -93,7 +93,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
             });
           });
           
-          this.userIngredient = userIngredient;
+          this.userIngredients = userIngredients;
           this.recipes = recipes;
 
           mealPlan.recipes = mealPlan.recipes
@@ -136,7 +136,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
       }
     }; 
 
-    this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredient, this.householdId, callback);
+    this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredients, this.householdId, callback);
   }
 
   addAllIngredients = (success?: boolean, isStart?: boolean): void => {
@@ -151,7 +151,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     const recipe = this.mealPlan.recipes[0];
 
     if (recipe) {
-      this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredient, this.householdId, this.addAllIngredients);
+      this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredients, this.householdId, this.addAllIngredients);
     }
   };
 

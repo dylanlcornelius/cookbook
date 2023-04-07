@@ -89,12 +89,12 @@ export class RecipeIngredientService {
     return addedRecipes.filter(({ uom }) => uom === UOM.RECIPE).map(({ id }) => id).concat(recipe.id);
   }
 
-  getRecipeCount(recipe: Recipe, recipes: Recipe[], { ingredients }: UserIngredient): number {
+  getRecipeCount(recipe: Recipe, recipes: Recipe[], userIngredients: UserIngredient[]): number {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     let recipeCount;
     let ingredientCount = 0;
-    if (recipeIngredients.length === 0 || ingredients.length === 0) {
+    if (recipeIngredients.length === 0 || userIngredients.length === 0) {
       return 0;
     }
     recipeIngredients.forEach(recipeIngredient => {
@@ -104,14 +104,14 @@ export class RecipeIngredientService {
         return;
       }
 
-      ingredients.forEach(ingredient => {
-        if (recipeIngredient.id === ingredient.id) {
+      userIngredients.forEach(userIngredient => {
+        if (recipeIngredient.id === userIngredient.ingredientId) {
           ingredientCount++;
           
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-          const value = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
-          if (value && (Number(ingredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
-            recipeCount = Math.floor(Number(ingredient.pantryQuantity) / Number(value));
+          const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
+          if (value && (Number(userIngredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
+            recipeCount = Math.floor(Number(userIngredient.pantryQuantity) / Number(value));
           }
         }
       });
@@ -124,7 +124,7 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredient: UserIngredient, householdId: string, callback?: Function): void {
+  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredients: UserIngredient[], householdId: string, callback?: Function): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length > 0) {
@@ -132,7 +132,7 @@ export class RecipeIngredientService {
         this.addIngredientsEvent,
         recipe.name,
         recipeIngredients,
-        userIngredient,
+        userIngredients,
         householdId,
         callback
       ));
@@ -142,15 +142,15 @@ export class RecipeIngredientService {
     }
   }
 
-  addIngredientsEvent = (recipeIngredients: Ingredient[], { id, ingredients }: UserIngredient, householdId: string): void => {
+  addIngredientsEvent = (recipeIngredients: Ingredient[], userIngredients: UserIngredient[], householdId: string): void => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
-      ingredients.forEach(ingredient => {
-        if (recipeIngredient.id === ingredient.id) {
+      userIngredients.forEach(userIngredient => {
+        if (recipeIngredient.id === userIngredient.ingredientId) {
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-          const value = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
+          const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
           if (value) {
-            ingredient.cartQuantity += Number(ingredient.amount) * Math.ceil(value / Number(ingredient.amount));
+            userIngredient.cartQuantity += Number(userIngredient.amount) * Math.ceil(value / Number(userIngredient.amount));
           } else {
             this.notificationService.setModal(new FailureNotification('Calculation error!'));
           }
@@ -158,38 +158,37 @@ export class RecipeIngredientService {
         }
       });
       if (!hasIngredient) {
-        ingredients.push(new Ingredient({
-          id: String(recipeIngredient.id),
+        userIngredients.push(new UserIngredient({
+          uid: householdId,
+          ingredientId: String(recipeIngredient.id),
           pantryQuantity: 0,
           cartQuantity: Number(recipeIngredient.amount)
         }));
       }
     });
 
-    this.userIngredientService.formattedUpdate(ingredients, householdId, id);
+    this.userIngredientService.update(userIngredients);
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
   };
 
-  removeIngredients(recipe: Recipe, recipes: Recipe[], { id, ingredients }: UserIngredient, uid: string, householdId: string): void {
+  removeIngredients(recipe: Recipe, recipes: Recipe[], userIngredients: UserIngredient[], uid: string, householdId: string): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length) {
       recipeIngredients.forEach(recipeIngredient => {
-        ingredients.forEach(ingredient => {
-          if (recipeIngredient.id === ingredient.id) {
+        userIngredients.forEach(userIngredient => {
+          if (recipeIngredient.id === userIngredient.ingredientId) {
             const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-            const value = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
-            if (Number.isNaN(ingredient.pantryQuantity)) {
-              ingredient.pantryQuantity = 0;
-            } else if (value !== false) {
-              ingredient.pantryQuantity = Math.max(Number(ingredient.pantryQuantity) - Number(value), 0);
+            const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
+            if (value !== false) {
+              userIngredient.pantryQuantity = Math.max(Number(userIngredient.pantryQuantity) - Number(value), 0);
             } else {
               this.notificationService.setModal(new FailureNotification('Calculation error!'));
             }
           }
         });
       });
-      this.userIngredientService.formattedUpdate(ingredients, householdId, id);
+      this.userIngredientService.update(userIngredients);
     }
 
     const cookedRecipeIds = this.findRecipeIds(recipe, recipes);

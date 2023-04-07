@@ -131,11 +131,9 @@ describe('RecipeListComponent', () => {
         new Recipe({})
       ];
 
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
-      });
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
 
       const ingredients = [
         new Ingredient({
@@ -147,7 +145,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      const histories  = [
+      const histories = [
         new RecipeHistory({
           recipeId: 'recipe',
           timesCooked: 1
@@ -163,7 +161,7 @@ describe('RecipeListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
       spyOn(recipeIngredientService, 'getRecipeCount');
@@ -200,11 +198,9 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
-      });
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
 
       const ingredients = [
         new Ingredient({
@@ -226,7 +222,7 @@ describe('RecipeListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
       spyOn(recipeIngredientService, 'getRecipeCount');
@@ -262,11 +258,9 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
-      });
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
 
       const ingredients = [
         new Ingredient({
@@ -286,7 +280,7 @@ describe('RecipeListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
       spyOn(recipeIngredientService, 'getRecipeCount');

@@ -38,7 +38,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   householdId: string;
   hasAuthorPermission: boolean;
   recipe: Recipe;
-  userIngredient: UserIngredient;
+  userIngredients: UserIngredient[];
   ingredients = [];
   recipes = [];
   recipeImage: string;
@@ -102,12 +102,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         const userIngredient$ = this.userIngredientService.get(this.householdId);
         const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
 
-        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
+        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredients, recipeHistory]) => {
           ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (ingredient.id === myIngredient.id) {
-                myIngredient.uom = ingredient.uom;
-                myIngredient.amount = ingredient.amount;
+            userIngredients.forEach(userIngredient => {
+              if (ingredient.id === userIngredient.ingredientId) {
+                userIngredient.uom = ingredient.uom;
+                userIngredient.amount = ingredient.amount;
               }
             });
 
@@ -139,9 +139,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
           this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
           this.recipes = recipes;
-          this.userIngredient = userIngredient;
+          this.userIngredients = userIngredients;
           this.recipe.ingredients = this.ingredients;
-          this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+          this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredients);
           this.hasNewCategory = !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
           this.loading = this.loadingService.set(false);
         });
@@ -194,11 +194,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   addIngredients(): void {
-    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.householdId);
+    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredients, this.householdId);
   }
 
   removeIngredients(): void {
-    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredient, this.user.uid, this.householdId);
+    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredients, this.user.uid, this.householdId);
   }
 
   onRate(rating: number, recipe: Recipe): void {

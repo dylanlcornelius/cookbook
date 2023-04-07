@@ -33,7 +33,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
-  userIngredient: UserIngredient;
+  userIngredients: UserIngredient[];
   userItem: UserItem;
   ingredients: Ingredient[];
   categories: IngredientCategory[];
@@ -80,35 +80,35 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         const userItems$ = this.userItemService.get(this.householdId);
         const ingredients$ = this.ingredientService.get();
 
-        combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, userItem, ingredients]) => {
-          this.userIngredient = userIngredient;
+        combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, userItem, ingredients]) => {
+          this.userIngredients = userIngredients;
           this.userItem = userItem;
           this.ingredients = ingredients;
           
-          this.displayIngredients = userIngredient.ingredients.reduce((myIngredients, myIngredient) => {
-            const ingredient = ingredients.find(({ id }) => id === myIngredient.id);
+          this.displayIngredients = userIngredients.reduce((userIngredientsByCategory, userIngredient) => {
+            const ingredient = ingredients.find(({ id }) => id === userIngredient.ingredientId);
             if (ingredient) {
-              myIngredient.uom = ingredient.uom;
-              myIngredient.amount = ingredient.amount;
+              userIngredient.uom = ingredient.uom;
+              userIngredient.amount = ingredient.amount;
             }
 
-            if (ingredient && myIngredient.cartQuantity !== 0) {
+            if (ingredient && userIngredient.cartQuantity !== 0) {
               const category = IngredientCategory[ingredient.category] || ingredient.category;
               
-              if (!myIngredients[category]) {
-                myIngredients[category] = [];
+              if (!userIngredientsByCategory[category]) {
+                userIngredientsByCategory[category] = [];
               }
 
-              myIngredients[category].push({
-                id: myIngredient.id,
+              userIngredientsByCategory[category].push({
+                id: userIngredient.ingredientId,
                 name: ingredient.name,
                 uom: ingredient.uom,
-                pantryQuantity: myIngredient.pantryQuantity,
-                cartQuantity: myIngredient.cartQuantity
+                pantryQuantity: userIngredient.pantryQuantity,
+                cartQuantity: userIngredient.cartQuantity
               });
             }
 
-            return myIngredients;
+            return userIngredientsByCategory;
           }, {});
 
           if (this.userItem.items.length) {
@@ -136,20 +136,20 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   addIngredient(ingredient: Ingredient): void {
     // add a single buyable amount to the shopping list
     ingredient.quantity = this.numberService.toDecimal(ingredient.amount);
-    this.recipeIngredientService.addIngredientsEvent([ingredient], this.userIngredient, this.householdId);
+    this.recipeIngredientService.addIngredientsEvent([ingredient], this.userIngredients, this.householdId);
     this.ingredientControl.reset();
   }
 
   addIngredientToPantry(id: string): void {
-    const ingredient =  this.userIngredient.ingredients.find(x => x.id === id);
+    const ingredient =  this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     if (Number(ingredient.cartQuantity > 0)) {
       ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
     }
     ingredient.cartQuantity = 0;
-    const filteredData = this.userIngredient.ingredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
     this.isCompleted = filteredData.length === 0 && this.userItem.items.length === 0;
 
-    this.userIngredientService.formattedUpdate(this.userIngredient.ingredients, this.householdId, this.userIngredient.id);
+    this.userIngredientService.update(this.userIngredients);
     this.notificationService.setModal(new SuccessNotification('Ingredient removed!'));
     this.userIngredientService.buyUserIngredient(1, this.isCompleted);
   }
@@ -167,7 +167,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   removeItem(index: number): void {
     this.userItem.items = this.userItem.items.filter((_x, i) =>  i !== index);
-    const filteredData = this.userIngredient.ingredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
     this.isCompleted = filteredData.length === 0 && this.userItem.items.length === 0;
 
     this.userItemService.formattedUpdate(this.userItem.items, this.householdId, this.userItem.id);
@@ -183,10 +183,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addAllToPantryEvent = (): void => {
-    const filteredData = this.userIngredient.ingredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
     const totalItems = filteredData.length + this.userItem.items.length;
 
-    this.userIngredient.ingredients.forEach(ingredient => {
+    this.userIngredients.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
         ingredient.pantryQuantity = Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
         ingredient.cartQuantity = 0;
@@ -196,7 +196,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.isCompleted = true;
     this.userIngredientService.buyUserIngredient(totalItems, this.isCompleted);
 
-    this.userIngredientService.formattedUpdate(this.userIngredient.ingredients, this.householdId, this.userIngredient.id);
+    this.userIngredientService.update(this.userIngredients);
     this.userItemService.formattedUpdate([], this.householdId, this.userItem.id);
   };
 
