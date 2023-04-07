@@ -18,7 +18,7 @@
         </mat-menu>
         
         <a mat-button class="title-button" routerLink="/admin/dashboard" *ngIf="user?.isAdmin">
-          <mat-icon>apps</mat-icon>
+          <mat-icon [matBadge]="feedbackNotifications" matBadgeSize="small">apps</mat-icon>
         </a>
   
         <button mat-button class="mobile title-button float-right" (click)="toggleNav()" *ngIf="(isLoggedIn | async)">

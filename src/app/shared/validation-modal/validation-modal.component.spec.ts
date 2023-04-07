@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ValidationModalComponent } from './validation-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 import { Validation } from '@validation';
 
 describe('ValidationModalComponent', () => {

@@ -27,7 +27,7 @@
         <img *ngIf="recipeImage" class="mobile" mat-card-image [src]="recipeImage" alt=""/>
       </mat-card-title>
       <mat-card-subtitle>
-        <span>{{recipe.description}}</span>
+        <span class="recipe-description">{{recipe.description}}</span>
         <mat-card-actions>
           <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
             <span *ngIf="recipe.status !== 'private'">Published</span>

@@ -10,8 +10,12 @@
       <ng-contaner *ngFor="let column of context.displayedColumns" [matColumnDef]="column">
         <th mat-header-cell *matHeaderCellDef>{{column}}</th>
         <td mat-cell *matCellDef="let element" [ngStyle]="{'min-width': isArray(element[column]) ? '200px' : 'max-content'}">
-          <mat-form-field *ngIf="!isArray(element[column]) && !isBoolean(element[column])">
+          <mat-form-field *ngIf="!isArray(element[column]) && !isBoolean(element[column]) && column !== 'description'">
             <input matInput [value]="element[column]" [(ngModel)]="element[column]"/>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="column === 'description'">
+            <textarea matInput [value]="element[column]" [(ngModel)]="element[column]" cdkTextareaAutosize></textarea>
           </mat-form-field>
           
           <mat-checkbox [(ngModel)]="element[column]" *ngIf="isBoolean(element[column])"></mat-checkbox>
@@ -40,31 +44,31 @@
 
 <mat-tab-group class="box mat-elevation-z8" dynamicHeight="true" animationDuration="1000ms" (selectedTabChange)="tabChanged($event)">
   <mat-tab label="Admin Dashboard">
-    <h2>Dashboard</h2>
+    <div class="admin-description">
+      <h2>Dashboard</h2>
 
-    <div>
-      <h3>Nav fields</h3>
-      <div>subMenus: profile, tools</div>
-      <div>isNavOnly: true, false</div>
-    </div>
-    <br />
+      <div>
+        <h3>Nav fields</h3>
+        <div>subMenus: profile, tools</div>
+      </div>
+      <br />
 
-    <div>
-      <h3>Tutorial fields</h3>
-      <div>position: right, left</div>
-    </div>
-    <br />
+      <div>
+        <h3>Tutorial fields</h3>
+        <div>position: right, left</div>
+      </div>
+      <br />
 
-    <div>
-      <h3>User fields</h3>
-      <div>Roles: user, admin, pending</div>
-      <div>Theme: true, false</div>
-    </div>
-    <br />
+      <div>
+        <h3>User fields</h3>
+        <div>Roles: user, admin, pending</div>
+      </div>
+      <br />
 
-    <div>
-      <h3>Recipe fields</h3>
-      <div>Statuses: published, private, blueprint</div>
+      <div>
+        <h3>Recipe fields</h3>
+        <div>Statuses: published, private, blueprint</div>
+      </div>
     </div>
   </mat-tab>
 

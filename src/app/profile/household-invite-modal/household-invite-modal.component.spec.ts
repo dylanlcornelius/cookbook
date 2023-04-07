@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { User } from '@user';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 
 import { HouseholdInviteModalComponent } from './household-invite-modal.component';
 

@@ -18,6 +18,7 @@ import { CommentService } from '@commentService';
 import { HouseholdService } from '@householdService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { TutorialService } from '@tutorialService';
+import { FeedbackService } from '@feedbackService';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -43,6 +44,7 @@ export class AdminDashboardComponent implements OnDestroy {
     private userItemService: UserItemService,
     private validationService: ValidationService,
     private notificationService: NotificationService,
+    private feedbackService: FeedbackService,
   ) {}
 
   ngOnDestroy() {
@@ -144,6 +146,14 @@ export class AdminDashboardComponent implements OnDestroy {
       this.add,
     ),
     new Context(
+      'Feedbacks',
+      ['description', 'author', 'uid'],
+      this.feedbackService,
+      this.revert,
+      this.save,
+      this.remove,
+    ),
+    new Context(
       'Users',
       ['firstName', 'lastName', 'role', 'theme', 'hasPlanner', 'hasAdminView'],
       this.userService,
@@ -161,7 +171,7 @@ export class AdminDashboardComponent implements OnDestroy {
     ),
     new Context(
       'Recipes',
-      ['name', 'link', 'categories', 'steps', 'meanRating', 'uid', 'author', 'status'],
+      ['name', 'link', 'description', 'time', 'calories', 'servings', 'categories', 'steps', 'meanRating', 'ratings', 'uid', 'author', 'status', 'hasImage', 'isVegetarian', 'isVegan', 'isGlutenFree', 'isDairyFree'],
       this.recipeService,
       this.revert,
       this.save,

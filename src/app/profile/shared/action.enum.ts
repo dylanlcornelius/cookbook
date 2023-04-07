@@ -18,6 +18,8 @@
     DELETE_COMMENT = 'DELETE_COMMENT',
 
     OPEN_TUTORIAL = 'OPEN_TUTORIAL',
+
+    SUBMIT_FEEDBACK = 'SUBMIT_FEEDBACK',
 }
 
 export enum ActionLabel {
@@ -39,5 +41,5 @@ export enum ActionLabel {
     RESOLVE_COMMENT = 'Resolve Comment',
     DELETE_COMMENT = 'Delete Comment',
 
-    OPEN_TUTORIAL = 'Open Tutorial',
+    SUBMIT_FEEDBACK = 'Submit Feedback',
 }

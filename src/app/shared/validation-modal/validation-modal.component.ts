@@ -3,7 +3,7 @@ import { ValidationService } from '@modalService';
 import { Validation } from '@validation';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 
 @Component({
   selector: 'app-validation-modal',

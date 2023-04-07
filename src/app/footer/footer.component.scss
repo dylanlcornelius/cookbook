@@ -5,6 +5,8 @@
     padding: 15px;
     text-align: center;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
 }
 .author-text, .author-text a {
     color: darkgray;

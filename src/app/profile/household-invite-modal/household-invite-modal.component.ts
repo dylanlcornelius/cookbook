@@ -16,7 +16,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { User } from '@user';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalComponent } from '@modalComponent';
 
 @Component({
   selector: 'app-household-invite-modal',

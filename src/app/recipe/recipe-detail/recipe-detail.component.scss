@@ -37,6 +37,9 @@ dd {
 .recipe-link:hover {
   color: grey;
 }
+.recipe-description {
+  white-space: pre-wrap;
+}
 .mat-card-image {
   object-fit: cover;
   margin: 0 -16px;
