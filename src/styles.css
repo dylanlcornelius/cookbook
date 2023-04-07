@@ -102,6 +102,13 @@ dt {
   outline: 3px solid red !important;
   border-radius: 5px !important;
 }
+.indicator.mat-icon {
+  height: 15px;
+  width: 15px;
+  font-size: 20px;
+  line-height: 0.5;
+  vertical-align: bottom;
+}
 
 .mat-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
