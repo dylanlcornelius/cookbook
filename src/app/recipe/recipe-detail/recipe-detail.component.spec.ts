@@ -262,6 +262,41 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
+  describe('shouldDisplayCategories', () => {
+    it('should return true when there are recipe categories', () => {
+      component.recipe = new Recipe({ categories: [{ category: 'test' }] });
+
+      const result = component.shouldDisplayCategories();
+
+      expect(result).toBeTrue();
+    });
+
+    it('should return true when the recipe has the new category', () => {
+      component.recipe = new Recipe({});
+      component.hasNewCategory = true;
+
+      const result = component.shouldDisplayCategories();
+
+      expect(result).toBeTrue();
+    });
+
+    it('should return true when there is a dietary restirction', () => {
+      component.recipe = new Recipe({ isDairyFree: true });
+
+      const result = component.shouldDisplayCategories();
+
+      expect(result).toBeTrue();
+    });
+
+    it('should return false when there are no category', () => {
+      component.recipe = new Recipe({});
+
+      const result = component.shouldDisplayCategories();
+
+      expect(result).toBeFalse();
+    });
+  });
+
   describe('setCategoryFilter', () => {
     it('should set a category filter', () => {
       spyOn(utilService, 'setListFilter');

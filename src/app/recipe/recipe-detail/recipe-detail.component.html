@@ -67,25 +67,17 @@
             <dd>{{recipe.quantity}}</dd>
           </span>
 
-          <span *ngIf="recipe.isVegetarian || recipe.isVegan || recipe.isGlutenFree || recipe.isDairyFree">
-            <dt>Restrictions</dt>
-            <dd>
-              <mat-chip-list class="center">
-                <mat-chip *ngIf="recipe.isVegetarian" (click)="setRestrictionFilter('isVegetarian')">Vegetarian</mat-chip>
-                <mat-chip *ngIf="recipe.isVegan" (click)="setRestrictionFilter('isVegan')">Vegan</mat-chip>
-                <mat-chip *ngIf="recipe.isGlutenFree" (click)="setRestrictionFilter('isGlutenFree')">Gluten Free</mat-chip>
-                <mat-chip *ngIf="recipe.isDairyFree" (click)="setRestrictionFilter('isDairyFree')">Dairy Free</mat-chip>
-              </mat-chip-list>
-            </dd>
-          </span>
-
-          <span *ngIf="recipe.categories && recipe.categories.length || hasNewCategory">
+          <span *ngIf="shouldDisplayCategories()">
             <dt>Categories</dt>
             <dd>
               <mat-chip-list class="center">
                 <mat-chip (click)="setCategoryFilter('New!')" *ngIf="hasNewCategory">
                   New!
                 </mat-chip>
+                <mat-chip *ngIf="recipe.isVegetarian" (click)="setRestrictionFilter('isVegetarian')">Vegetarian</mat-chip>
+                <mat-chip *ngIf="recipe.isVegan" (click)="setRestrictionFilter('isVegan')">Vegan</mat-chip>
+                <mat-chip *ngIf="recipe.isGlutenFree" (click)="setRestrictionFilter('isGlutenFree')">Gluten Free</mat-chip>
+                <mat-chip *ngIf="recipe.isDairyFree" (click)="setRestrictionFilter('isDairyFree')">Dairy Free</mat-chip>
                 <mat-chip *ngFor="let category of recipe.categories" (click)="setCategoryFilter(category.category)">
                   {{category.category}}
                 </mat-chip>
