@@ -38,6 +38,9 @@ td {
   flex-grow: 1;
   flex-basis: 280px;
 }
+.mat-form-field {
+  width: 100%;
+}
 .swap-icon {
   padding: 0 5px;
 }
@@ -45,13 +48,9 @@ td {
   width: 100%;
 }
 .list {
-  min-height: 40px;
   max-height: 60vh;
-  border-radius: 4px;
   overflow: auto;
   display: block;
-  box-shadow: 2px 3px 8px 2px rgba(0, 0, 0, 0.1),
-              2px 4px 5px 0px rgba(0, 0, 0, 0.1);
 }
 .list::-webkit-scrollbar {
   -webkit-appearance: none;
@@ -77,25 +76,37 @@ h3 {
   text-align: center;
   box-sizing: border-box;
   cursor: move;
-  font-size: 14px;
+  font-size: 12px;
   min-height: 40px;
-  padding: 8px 10px;
+  padding: 5px 10px 0;
   position: relative;
-  border-bottom: 1px solid #4e4e4e;
-}
-.box:last-child {
-  border: none;
-  padding-bottom: 17.5px;
+  margin-bottom: 15px;
+  margin-right: 10px;
+  border-radius: 4px;
+  box-shadow: 2px 3px 8px 2px rgba(0, 0, 0, 0.1),
+              2px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  
+  .mat-form-field {
+    width: 50px;
+  }
+  .ingredient-name {
+    font-weight: 900;
+    font-size: 14px;
+    margin: auto;
+  }
+  .optional-toggle {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
 }
 .box-bottom {
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 mat-label {
   font-weight: 700;
 }
 .cdk-drag-preview {
-  box-sizing: border-box;
-  border-radius: 4px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
               0 8px 10px 1px rgba(0, 0, 0, 0.14),
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
@@ -115,6 +126,6 @@ mat-label {
 }
 @media screen and (max-width: 767px) {
   .list {
-    max-height: 200px;
+    max-height: 250px;
   }
 }

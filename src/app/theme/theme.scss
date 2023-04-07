@@ -21,7 +21,7 @@
     .primary-text-color {
         color: map-get($theme, "text-color");
     }
-    .list, .box, .mobile-nav, .recipe-card {
+    .box, .mobile-nav, .recipe-card {
         background-color: map-get($theme, "block-background");
     }
     .highlight-box {
