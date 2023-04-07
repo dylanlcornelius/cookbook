@@ -24,6 +24,7 @@
 .mat-card-image {
     margin: 0 -16px 16px !important;
     object-fit: cover;
+    aspect-ratio: 1/1;
 }
 .mat-card-actions {
     display: flex !important;
