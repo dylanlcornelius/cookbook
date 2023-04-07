@@ -171,6 +171,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     }
   };
 
+  shouldDisplayCategories(): boolean {
+    return !!(this.recipe.categories && this.recipe.categories.length)
+      || this.hasNewCategory
+      || this.recipe.isVegetarian
+      || this.recipe.isVegan
+      || this.recipe.isGlutenFree
+      || this.recipe.isDairyFree;
+  }
+
   setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
   setRestrictionFilter = (filter: string): void => this.utilService.setListFilter(new RestrictionFilter(filter));
