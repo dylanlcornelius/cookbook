@@ -8,7 +8,6 @@ import { ActionService } from '@actionService';
 import { FirestoreService } from './firestore.service';
 import { Recipe } from '@recipe';
 import { FirebaseService } from '@firebaseService';
-import { DocumentData, DocumentReference } from 'firebase/firestore';
 
 describe('FirestoreService', () => {
   let service: FirestoreService;

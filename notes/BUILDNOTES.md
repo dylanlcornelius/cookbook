@@ -9,11 +9,11 @@
 
 
 #### Project:
-- create environment folder and file (export const environment json thingy):
-	- production flag
-	- configs
-		- firebase web api settings
-		- title string
+- Update `src/environments/environment.ts` file:
+  - title string
+  - production flag
+  - firebase web configuration settings
+> The `production` flag builds angular in production mode and enables the service worker
 
 #### Modules:
 ```
