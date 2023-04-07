@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective, FormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { RecipeEditComponent } from './recipe-edit.component';

@@ -6,7 +6,6 @@ import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { ImageUploadComponent } from './image-upload.component';
-import { openSync } from 'fs';
 
 describe('ImageUploadComponent', () => {
   let component: ImageUploadComponent;
