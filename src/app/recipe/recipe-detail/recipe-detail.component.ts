@@ -120,7 +120,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           }
           this.creationDate = this.recipe.creationDate?.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
-          this.recipes = recipes;
+          this.recipes = recipes.map(recipe => {
+            recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+            return recipe;
+          });
           this.userIngredients = this.userIngredientService.buildUserIngredients(userIngredients, ingredients);
           this.ingredients = ingredients;
           this.recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
