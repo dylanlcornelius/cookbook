@@ -113,12 +113,10 @@ describe('RecipeDetailComponent', () => {
         })
       ];
       const ingredients = [new Ingredient({id: 'ingredient'})];
-      const userIngredient = new UserIngredient({
-        ingredients: [
-          { id: 'ingredient' },
-          { id: 'ingredient2' }
-        ]
-      });
+      const userIngredients = [
+        new UserIngredient({ ingredientId: 'ingredient' }),
+        new UserIngredient({ ingredientId: 'ingredient2' })
+      ];
       const recipeHistories = new RecipeHistory({
         timesCooked: 1
       });
@@ -127,9 +125,10 @@ describe('RecipeDetailComponent', () => {
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipes[0])).withArgs().and.returnValue(of(recipes));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
+      spyOn(userIngredientService, 'buildUserIngredients');
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
@@ -144,6 +143,7 @@ describe('RecipeDetailComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
+      expect(userIngredientService.buildUserIngredients).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
@@ -152,14 +152,14 @@ describe('RecipeDetailComponent', () => {
       const user = new User({});
       const recipe = new Recipe({ creationDate: new Date() });
       const ingredients = [new Ingredient({})];
-      const userIngredient = new UserIngredient({});
+      const userIngredients = [new UserIngredient({})];
       const recipeHistories = new RecipeHistory({ lastDateCooked: '17/5/2021' });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(ingredientService, 'buildRecipeIngredients');
@@ -184,14 +184,14 @@ describe('RecipeDetailComponent', () => {
       const user = new User({});
       const recipe = new Recipe({});
       const ingredients = [new Ingredient({})];
-      const userIngredient = new UserIngredient({});
+      const userIngredients = [new UserIngredient({})];
       const recipeHistories = new RecipeHistory({});
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(ingredientService, 'buildRecipeIngredients');

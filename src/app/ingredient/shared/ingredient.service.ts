@@ -50,6 +50,7 @@ export class IngredientService extends FirestoreService {
       if (currentIngredient) {
         result.push({
           id: currentIngredient.id,
+          amount: currentIngredient.amount,
           name: currentIngredient.name,
           uom: addedIngredient.uom || '',
           quantity: this.numberService.toFormattedFraction(addedIngredient.quantity),

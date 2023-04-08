@@ -40,6 +40,7 @@ import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeHistory } from '@recipeHistory';
+import { UOM } from '@uoms';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -131,11 +132,9 @@ describe('RecipeListComponent', () => {
         new Recipe({})
       ];
 
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
-      });
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
 
       const ingredients = [
         new Ingredient({
@@ -147,7 +146,7 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      const histories  = [
+      const histories = [
         new RecipeHistory({
           recipeId: 'recipe',
           timesCooked: 1
@@ -163,7 +162,7 @@ describe('RecipeListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
       spyOn(recipeIngredientService, 'getRecipeCount');
@@ -200,11 +199,9 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
-      });
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
 
       const ingredients = [
         new Ingredient({
@@ -226,7 +223,7 @@ describe('RecipeListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
       spyOn(recipeIngredientService, 'getRecipeCount');
@@ -262,11 +259,9 @@ describe('RecipeListComponent', () => {
         })
       ];
 
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'ingredientId'
-        }]
-      });
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
 
       const ingredients = [
         new Ingredient({
@@ -286,7 +281,7 @@ describe('RecipeListComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
       spyOn(recipeIngredientService, 'getRecipeCount');
@@ -310,6 +305,88 @@ describe('RecipeListComponent', () => {
       const result = router.routeReuseStrategy.shouldReuseRoute(null, null);
 
       expect(result).toEqual(false);
+    }));
+
+    it('should not update recipe ingredients by reference', fakeAsync(() => {
+      const recipes = [
+        new Recipe({
+          id: 'recipe1',
+          ingredients: [{
+            id: 'ingredientId',
+          }],
+          status: RECIPE_STATUS.PUBLISHED,
+          categories: [
+            { category: 'Dessert' }
+          ]
+        }),
+        new Recipe({
+          id: 'recipe2',
+          ingredients: [{
+            id: 'recipe3',
+            isOptional: true,
+            uom: UOM.RECIPE
+          }],
+        }),
+        new Recipe({
+          id: 'recipe3',
+          ingredients: [{
+            id: 'ingredientId',
+          }],
+        })
+      ];
+
+      const userIngredients = [new UserIngredient({
+        ingredientId: 'ingredientId'
+      })];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          name: 'ingredient name'
+        }),
+        new Ingredient({
+          id: 'ingredientId2'
+        })
+      ];
+
+      const histories = [
+        new RecipeHistory({
+          recipeId: 'recipe1',
+          timesCooked: 1
+        })
+      ];
+
+      const element = document.createElement('div');
+      element.id = 'recipe';
+      document.getElementsByClassName('search-bar')[0].appendChild(element);
+      
+      recipeFilterService.recipeId = 'recipe';
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
+      spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
+      spyOn(component, 'initFilters');
+
+      component.load();
+
+      tick();
+      flush();
+      expect(component.dataSource.data[0].image).toEqual('url');
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
+      expect(component.initFilters).toHaveBeenCalled();
+      expect(component.recipes.find(({ id }) => id === 'recipe1').ingredients[0].isOptional).toBeFalse();
+      expect(component.recipes.find(({ id }) => id === 'recipe2').ingredients[0].isOptional).toBeTrue();
+      expect(component.recipes.find(({ id }) => id === 'recipe3').ingredients[0].isOptional).toBeFalse();
     }));
   });
 

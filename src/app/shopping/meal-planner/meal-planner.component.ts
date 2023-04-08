@@ -17,6 +17,7 @@ import { UserIngredient } from '@userIngredient';
 import { Recipe } from '@recipe';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-meal-planner',
@@ -30,8 +31,9 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
-  userIngredient: UserIngredient;
+  userIngredients: UserIngredient[];
   recipes: Recipe[];
+  ingredients: Ingredient[];
 
   recipeControl = new FormControl();
   filteredRecipes: Observable<Recipe[]>;
@@ -74,27 +76,13 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
         const ingredients$ = this.ingredientService.get();
         const mealPlan$ = this.mealPlanService.get(this.householdId);
 
-        combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredient, recipes, ingredients, mealPlan]) => {
-          ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (ingredient.id === myIngredient.id) {
-                myIngredient.uom = ingredient.uom;
-                myIngredient.amount = ingredient.amount;
-              }
-            });
-
-            recipes.forEach(recipe => {
-              recipe.ingredients.forEach(recipeIngredient => {
-                if (ingredient.id === recipeIngredient.id) {
-                  recipeIngredient.amount = ingredient.amount;
-                  recipeIngredient.name = ingredient.name;
-                }
-              });
-            });
+        combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, recipes, ingredients, mealPlan]) => {
+          this.userIngredients = this.userIngredientService.buildUserIngredients(userIngredients, ingredients);
+          this.recipes = recipes.map(recipe => {
+            recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+            return recipe;
           });
-          
-          this.userIngredient = userIngredient;
-          this.recipes = recipes;
+          this.ingredients = ingredients;
 
           mealPlan.recipes = mealPlan.recipes
             .map(planRecipe => recipes.find(({ id }) => id === planRecipe.id))
@@ -136,7 +124,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
       }
     }; 
 
-    this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredient, this.householdId, callback);
+    this.recipeIngredientService.addIngredients(recipe, this.recipes, this.ingredients, this.userIngredients, this.householdId, callback);
   }
 
   addAllIngredients = (success?: boolean, isStart?: boolean): void => {
@@ -151,7 +139,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     const recipe = this.mealPlan.recipes[0];
 
     if (recipe) {
-      this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredient, this.householdId, this.addAllIngredients);
+      this.recipeIngredientService.addIngredients(recipe, this.recipes, this.ingredients, this.userIngredients, this.householdId, this.addAllIngredients);
     }
   };
 

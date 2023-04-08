@@ -39,7 +39,7 @@
           <span class="table-cell" *ngIf="ingredient.isItem">
             {{ingredient.name}}
           </span>
-          <button mat-raised-button color="primary" *ngIf="ingredient.isItem" (click)="removeItem(ingredient.index)">
+          <button mat-raised-button color="primary" *ngIf="ingredient.isItem" (click)="removeItem(ingredient.id)">
             <mat-icon>done</mat-icon>
           </button>
         </div>

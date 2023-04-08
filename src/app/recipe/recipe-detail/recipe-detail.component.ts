@@ -21,6 +21,7 @@ import { HouseholdService } from '@householdService';
 import { TutorialService } from '@tutorialService';
 import { LoadingService } from '@loadingService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -38,8 +39,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   householdId: string;
   hasAuthorPermission: boolean;
   recipe: Recipe;
-  userIngredient: UserIngredient;
-  ingredients = [];
+  userIngredients: UserIngredient[];
+  ingredients: Ingredient[];
   recipes = [];
   recipeImage: string;
   recipeImageProgress;
@@ -102,25 +103,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         const userIngredient$ = this.userIngredientService.get(this.householdId);
         const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
 
-        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredient, recipeHistory]) => {
-          ingredients.forEach(ingredient => {
-            userIngredient.ingredients.forEach(myIngredient => {
-              if (ingredient.id === myIngredient.id) {
-                myIngredient.uom = ingredient.uom;
-                myIngredient.amount = ingredient.amount;
-              }
-            });
-
-            recipes.forEach(recipe => {
-              recipe.ingredients.forEach(recipeIngredient => {
-                if (ingredient.id === recipeIngredient.id) {
-                  recipeIngredient.amount = ingredient.amount;
-                  recipeIngredient.name = ingredient.name;
-                }
-              });
-            });
-          });
-
+        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredients, recipeHistory]) => {
           this.recipe = recipe;
           this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
           this.recipeImage = undefined;
@@ -137,11 +120,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           }
           this.creationDate = this.recipe.creationDate?.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
-          this.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
           this.recipes = recipes;
-          this.userIngredient = userIngredient;
-          this.recipe.ingredients = this.ingredients;
-          this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredient);
+          this.userIngredients = this.userIngredientService.buildUserIngredients(userIngredients, ingredients);
+          this.ingredients = ingredients;
+          this.recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+          this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.ingredients, this.userIngredients);
           this.hasNewCategory = !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
           this.loading = this.loadingService.set(false);
         });
@@ -194,11 +177,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   addIngredients(): void {
-    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.userIngredient, this.householdId);
+    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.ingredients, this.userIngredients, this.householdId);
   }
 
   removeIngredients(): void {
-    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.userIngredient, this.user.uid, this.householdId);
+    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.ingredients, this.userIngredients, this.user.uid, this.householdId);
   }
 
   onRate(rating: number, recipe: Recipe): void {

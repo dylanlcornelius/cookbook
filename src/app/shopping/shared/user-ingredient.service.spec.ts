@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { UserIngredientService } from '@userIngredientService';
 import { FirestoreService } from '@firestoreService';
@@ -7,9 +7,9 @@ import { of } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
 import { User } from '@user';
-import { Ingredient } from '@ingredient';
 import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
+import { Ingredient } from '@ingredient';
 
 describe('UserIngredientService', () => {
   let service: UserIngredientService;
@@ -32,42 +32,21 @@ describe('UserIngredientService', () => {
   });
 
   describe('get', () => {
-    it('should get one document based on an id', () => {
+    it('should get documents based on a uid', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
-      spyOn(service, 'create');
 
-      service.get('uid').subscribe(doc => {
-        expect(doc).toBeDefined();
+      service.get('uid').subscribe(docs => {
+        expect(docs).toBeDefined();
       });
 
       expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.create).not.toHaveBeenCalled();
     });
-
-    it('should create a document if none are found', fakeAsync(() => {
-      spyOn(firebase, 'where');
-      spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service, 'create').and.returnValue('id');
-
-      service.get('uid').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
-
-      tick();
-      expect(firebase.where).toHaveBeenCalled();
-      expect(firebase.query).toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.create).toHaveBeenCalled();
-    }));
 
     it('should get all documents', () => {
       spyOn(firebase, 'where');
@@ -97,14 +76,6 @@ describe('UserIngredientService', () => {
   });
 
   describe('update', () => {
-    it('should update a document', () => {
-      spyOn(FirestoreService.prototype, 'updateOne');
-
-      service.update(new UserIngredient({}), 'id');
-
-      expect(FirestoreService.prototype.updateOne).toHaveBeenCalled();
-    });
-
     it('should update user ingredients', () => {
       spyOn(FirestoreService.prototype, 'updateAll');
 
@@ -114,13 +85,14 @@ describe('UserIngredientService', () => {
     });
   });
 
-  describe('formattedUpdate', () => {
-    it('should update with formatted data', () => {
-      spyOn(service, 'update');
+  describe('buildRecipeIngredients', () => {
+    it('should build ingredients', () => {
+      const userIngredients = [new UserIngredient({ ingredientId: 'id' }), new UserIngredient({ ingredientId: 'id2' })];
+      const ingredients = [new Ingredient({ id: 'id'})];
+      
+      const result = service.buildUserIngredients(userIngredients, ingredients);
 
-      service.formattedUpdate([new Ingredient({})], '', '');
-
-      expect(service.update).toHaveBeenCalled();
+      expect(result.length).toEqual(1);
     });
   });
 

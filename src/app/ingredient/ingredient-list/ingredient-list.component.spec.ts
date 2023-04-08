@@ -61,18 +61,14 @@ describe('IngredientListComponent', () => {
 
   describe('load', () => {
     it('should load ingredients', () => {
-      const userIngredient = new UserIngredient({
-        ingredients: [{
-          id: 'id'
-        }, {}]
-      });
+      const userIngredients = [new UserIngredient({ ingredientId: 'id'}), new UserIngredient({})];
       const ingredients = [new Ingredient({
         id: 'id'
       })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
@@ -133,11 +129,11 @@ describe('IngredientListComponent', () => {
 
   describe('editIngredientEvent', () => {
     it('should update a user ingredient', () => {
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
 
       component.editIngredientEvent();
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
   });
 
@@ -147,11 +143,11 @@ describe('IngredientListComponent', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
 
       component.removeIngredient('id');
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
 
     it('should not remove a user ingredient if it is zero', () => {
@@ -159,11 +155,11 @@ describe('IngredientListComponent', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
 
       component.removeIngredient('id2');
 
-      expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
+      expect(userIngredientService.update).not.toHaveBeenCalled();
     });
   });
 
@@ -173,33 +169,33 @@ describe('IngredientListComponent', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
 
       component.addIngredient('id');
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
 
     it('should not add a user ingredient if there is no user ingredient', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
 
       component.addIngredient('id');
 
-      expect(userIngredientService.formattedUpdate).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
     });
 
     it('should handle an ingredient without an amount', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id'}];
 
-      spyOn(userIngredientService, 'formattedUpdate');
+      spyOn(userIngredientService, 'update');
 
       component.addIngredient('id');
 
-      expect(userIngredientService.formattedUpdate).not.toHaveBeenCalled();
+      expect(userIngredientService.update).not.toHaveBeenCalled();
     });
   });
 

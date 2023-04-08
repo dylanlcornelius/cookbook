@@ -74,12 +74,10 @@ describe('MealPlannerComponent', () => {
 
   describe('load', () => {
     it('should load the meal plan', () => {
-      const userIngredient = new UserIngredient({
-        ingredients: [
-          { id: 'ingredient' },
-          { id: 'ingredient2' }
-        ]
-      });
+      const userIngredients = [
+        new UserIngredient({ ingredientId: 'ingredient' }),
+        new UserIngredient({ ingredientId: 'ingredient2' }),
+      ];
       const recipes = [
         new Recipe({
           id: 'id',
@@ -105,7 +103,7 @@ describe('MealPlannerComponent', () => {
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredient));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(mealPlanService, 'get').and.returnValue(of(mealPlan));
@@ -164,7 +162,7 @@ describe('MealPlannerComponent', () => {
       recipeIngredientService.addIngredients = spy;
 
       component.addIngredients(1);
-      spy.calls.mostRecent().args[4](true);
+      spy.calls.mostRecent().args[5](true);
 
       expect(spy).toHaveBeenCalled();
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
@@ -179,7 +177,7 @@ describe('MealPlannerComponent', () => {
 
       component.addIngredients(1);
       // testing a local callback
-      spy.calls.mostRecent().args[4]();
+      spy.calls.mostRecent().args[5]();
 
       expect(spy).toHaveBeenCalled();
       expect(mealPlanService.formattedUpdate).not.toHaveBeenCalled();

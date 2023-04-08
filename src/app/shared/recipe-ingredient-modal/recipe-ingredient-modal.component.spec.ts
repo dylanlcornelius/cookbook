@@ -54,7 +54,7 @@ describe('RecipeIngredientModalComponent', () => {
   });
 
   describe('add', () => {
-    const userIngredient = new UserIngredient({});
+    const userIngredients = [new UserIngredient({})];
     const householdId = 'default';
 
     beforeEach(() => {
@@ -62,7 +62,7 @@ describe('RecipeIngredientModalComponent', () => {
         () => {},
         'recipe',
         [new Ingredient({})],
-        userIngredient,
+        userIngredients,
         householdId,
       );
       recipeIngredientModalService.setModal(recipeIngredientModal);
@@ -78,7 +78,7 @@ describe('RecipeIngredientModalComponent', () => {
 
       component.add();
 
-      expect(component.params.function).toHaveBeenCalledWith(component.params.ingredients, component.params.userIngredient, component.params.householdId);
+      expect(component.params.function).toHaveBeenCalledWith(component.params.ingredients, component.params.userIngredients, component.params.householdId);
       expect(component.modal.close).toHaveBeenCalled();
     });
 
@@ -96,7 +96,7 @@ describe('RecipeIngredientModalComponent', () => {
 
       component.add();
 
-      expect(component.params.function).toHaveBeenCalledWith([ingredient1], component.params.userIngredient, component.params.householdId);
+      expect(component.params.function).toHaveBeenCalledWith([ingredient1], component.params.userIngredients, component.params.householdId);
       expect(component.modal.close).toHaveBeenCalled();
     });
   });
