@@ -5,7 +5,6 @@ import { Action } from '@actions';
 import { UserItem } from '@userItem';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
-import { Model, ModelObject } from '@model';
 import { SuccessNotification } from '@notification';
 import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
@@ -23,20 +22,14 @@ export class UserItemService extends FirestoreService{
     super('user-items', firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<UserItem>;
+  get(uid: string): Observable<UserItem[]>;
   get(): Observable<UserItem[]>;
-  get(): Observable<UserItem | UserItem[]>; // type for spyOn
-  get(uid?: string): Observable<UserItem | UserItem[]> {
+  get(): Observable<UserItem[]>; // type for spyOn
+  get(uid?: string): Observable<UserItem[]> {
     return new Observable((observer) => {
       if (uid) {
         super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
-          if (docs.length > 0) {
-            observer.next(new UserItem(docs[0]));
-          } else {
-            const userItem = new UserItem({uid: uid});
-            userItem.id = this.create(userItem);
-            observer.next(userItem);
-          }
+          observer.next(docs.map(doc => new UserItem(doc)));
         });
       } else {
         super.get().subscribe(docs => {
@@ -47,13 +40,7 @@ export class UserItemService extends FirestoreService{
   }
 
   create = (data: UserItem): string => super.create(data.getObject());
-  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
-
-  formattedUpdate(data: UserItem["items"], uid: string, id: string): void {
-    const items = data.map(({ name = '' }) => ({ name }));
-    const userIngredient = new UserItem({ uid, items, id });
-    this.update(userIngredient.getObject(), userIngredient.getId());
-  }
+  delete = (id: string): void => super.delete(id);
 
   buyUserItem(actions: number, isCompleted: boolean): void {
     this.currentUserService.getCurrentUser().subscribe(user => {

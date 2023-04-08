@@ -32,7 +32,7 @@ describe('UserIngredientService', () => {
   });
 
   describe('get', () => {
-    it('should get documents based on an id', () => {
+    it('should get documents based on a uid', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));

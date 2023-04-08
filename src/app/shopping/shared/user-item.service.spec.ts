@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UserItemService } from '@userItemService';
 import { UserItem } from '@userItem';
 import { User } from '@user';
@@ -30,42 +30,21 @@ describe('UserItemService', () => {
   });
 
   describe('get', () => {
-    it('should return an existing user item record', () => {
+    it('should get documents based on a uid', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
-      spyOn(service, 'create');
 
-      service.get('uid').subscribe(doc => {
-        expect(doc).toBeDefined();
+      service.get('uid').subscribe(docs => {
+        expect(docs).toBeDefined();
       });
 -
       expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.create).not.toHaveBeenCalled();
     });
-
-    it('should create a user item record and return it', fakeAsync(() => {
-      spyOn(firebase, 'where');
-      spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
-      spyOn(FirestoreService.prototype, 'get');
-      spyOn(service, 'create');
-
-      service.get('uid').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
-
-      tick();
-      expect(firebase.where).toHaveBeenCalled();
-      expect(firebase.query).toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-      expect(service.create).toHaveBeenCalled();
-    }));
 
     it('should get all documents', () => {
       spyOn(firebase, 'where');
@@ -94,31 +73,13 @@ describe('UserItemService', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update a user item record', () => {
-      spyOn(FirestoreService.prototype, 'updateOne');
+  describe('delete', () => {
+    it('should delete a document', () => {
+      spyOn(FirestoreService.prototype, 'delete');
 
-      service.update(new UserItem({}), 'id');
+      service.delete('id');
 
-      expect(FirestoreService.prototype.updateOne).toHaveBeenCalled();
-    });
-
-    it('should update user item records', () => {
-      spyOn(FirestoreService.prototype, 'updateAll');
-
-      service.update([new UserItem({})]);
-
-      expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('formattedUpdate', () => {
-    it('should update with formatted data', () => {
-      spyOn(service, 'update');
-
-      service.formattedUpdate([{ name: undefined }], '', '');
-
-      expect(service.update).toHaveBeenCalled();
+      expect(FirestoreService.prototype.delete).toHaveBeenCalled();
     });
   });
 

@@ -34,7 +34,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   user: User;
   householdId: string;
   userIngredients: UserIngredient[];
-  userItem: UserItem;
+  userItems: UserItem[];
   ingredients: Ingredient[];
   categories: IngredientCategory[];
 
@@ -80,9 +80,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         const userItems$ = this.userItemService.get(this.householdId);
         const ingredients$ = this.ingredientService.get();
 
-        combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, userItem, ingredients]) => {
+        combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, userItems, ingredients]) => {
           this.userIngredients = userIngredients;
-          this.userItem = userItem;
+          this.userItems = userItems;
           this.ingredients = ingredients;
           
           this.displayIngredients = userIngredients.reduce((userIngredientsByCategory, userIngredient) => {
@@ -111,8 +111,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
             return userIngredientsByCategory;
           }, {});
 
-          if (this.userItem.items.length) {
-            this.displayIngredients[IngredientCategory.OTHER] = (this.displayIngredients[IngredientCategory.OTHER] || []).concat(this.userItem.items.map((item, index) => ({ ...item, index, isItem: true })));
+          if (this.userItems.length) {
+            this.displayIngredients[IngredientCategory.OTHER] = (this.displayIngredients[IngredientCategory.OTHER] || []).concat(this.userItems.map((item, index) => ({ ...item, index, isItem: true })));
           }
 
           if (!Object.keys(this.displayIngredients).length) {
@@ -147,7 +147,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
     ingredient.cartQuantity = 0;
     const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
-    this.isCompleted = filteredData.length === 0 && this.userItem.items.length === 0;
+    this.isCompleted = filteredData.length === 0 && this.userItems.length === 0;
 
     this.userIngredientService.update(this.userIngredients);
     this.notificationService.setModal(new SuccessNotification('Ingredient removed!'));
@@ -160,17 +160,17 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.userItemService.formattedUpdate([...this.userItem.items, { name }], this.householdId, this.userItem.id);
+    this.userItemService.create(new UserItem({ uid: this.householdId, name }));
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
     this.ingredientControl.reset();
   }
 
-  removeItem(index: number): void {
-    this.userItem.items = this.userItem.items.filter((_x, i) =>  i !== index);
+  removeItem(id: string): void {
     const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
-    this.isCompleted = filteredData.length === 0 && this.userItem.items.length === 0;
+    const filteredItems = this.userItems.filter(({ id: itemId }) =>  itemId !== id);
+    this.isCompleted = filteredData.length === 0 && filteredItems.length === 0;
 
-    this.userItemService.formattedUpdate(this.userItem.items, this.householdId, this.userItem.id);
+    this.userItemService.delete(id);
     this.notificationService.setModal(new SuccessNotification('Item removed!'));
     this.userItemService.buyUserItem(1, this.isCompleted);
   }
@@ -184,7 +184,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   addAllToPantryEvent = (): void => {
     const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
-    const totalItems = filteredData.length + this.userItem.items.length;
+    const totalItems = filteredData.length + this.userItems.length;
 
     this.userIngredients.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
@@ -197,7 +197,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.userIngredientService.buyUserIngredient(totalItems, this.isCompleted);
 
     this.userIngredientService.update(this.userIngredients);
-    this.userItemService.formattedUpdate([], this.householdId, this.userItem.id);
+    this.userItems.map(({ id }) => {
+      this.userItemService.delete(id);
+    });
   };
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);

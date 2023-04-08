@@ -91,11 +91,7 @@ describe('ShoppingListComponent', () => {
           category: IngredientCategory.BAKING
         })
       ];
-      const userItems = new UserItem({
-        items: [{
-          id: 'itemId'
-        }]
-      });
+      const userItems = [new UserItem({ id: 'itemId' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
@@ -120,11 +116,7 @@ describe('ShoppingListComponent', () => {
       const ingredients = [new Ingredient({
         id: 'ingredientId'
       })];
-      const userItems = new UserItem({
-        items: [{
-          id: 'itemId2'
-        }]
-      });
+      const userItems = [new UserItem({ id: 'itemId2' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
@@ -147,7 +139,7 @@ describe('ShoppingListComponent', () => {
       const ingredients = [new Ingredient({
         id: 'ingredientId'
       })];
-      const userItems = new UserItem({});
+      const userItems = [];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
@@ -188,7 +180,7 @@ describe('ShoppingListComponent', () => {
         new UserIngredient({ ingredientId: 'id', cartQuantity: 10 }),
         new UserIngredient({})
       ];
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
+      component.userItems = [new UserItem({ name: 'name'})];
 
       spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
@@ -206,8 +198,8 @@ describe('ShoppingListComponent', () => {
         new UserIngredient({ ingredientId: 'id', cartQuantity: 0 }),
         new UserIngredient({ cartQUantity: 0 })
       ];
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
-
+      component.userItems = [new UserItem({ name: 'name'})];
+      
       spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
@@ -224,7 +216,7 @@ describe('ShoppingListComponent', () => {
         new UserIngredient({ ingredientId: 'id', cartQuantity: NaN }),
         new UserIngredient({ cartQuantity: NaN })
       ];
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
+      component.userItems = [new UserItem({ name: 'name'})];
 
       spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
@@ -240,43 +232,43 @@ describe('ShoppingListComponent', () => {
 
   describe('addItem', () => {
     it('should update user items', () => {
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
+      component.userItems = [new UserItem({ name: 'name'})];
 
-      spyOn(userItemService, 'formattedUpdate');
+      spyOn(userItemService, 'create');
       spyOn(notificationService, 'setModal');
       spyOn(component.ingredientControl, 'reset');
 
       component.addItem('item');
 
-      expect(userItemService.formattedUpdate).toHaveBeenCalled();
+      expect(userItemService.create).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
       expect(component.ingredientControl.reset).toHaveBeenCalled();
     });
 
     it('should not update user items given an empty string', () => {
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
+      component.userItems = [new UserItem({ name: 'name'})];
 
-      spyOn(userItemService, 'formattedUpdate');
+      spyOn(userItemService, 'create');
       spyOn(notificationService, 'setModal');
       spyOn(component.ingredientControl, 'reset');
 
       component.addItem('    ');
 
-      expect(userItemService.formattedUpdate).not.toHaveBeenCalled();
+      expect(userItemService.create).not.toHaveBeenCalled();
       expect(notificationService.setModal).not.toHaveBeenCalled();
       expect(component.ingredientControl.reset).not.toHaveBeenCalled();
     });
 
     it('should not update user items given a blank item', () => {
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
+      component.userItems = [new UserItem({ name: 'name'})];
       
-      spyOn(userItemService, 'formattedUpdate');
+      spyOn(userItemService, 'create');
       spyOn(notificationService, 'setModal');
       spyOn(component.ingredientControl, 'reset');
 
       component.addItem(null);
 
-      expect(userItemService.formattedUpdate).not.toHaveBeenCalled();
+      expect(userItemService.create).not.toHaveBeenCalled();
       expect(notificationService.setModal).not.toHaveBeenCalled();
       expect(component.ingredientControl.reset).not.toHaveBeenCalled();
     });
@@ -285,15 +277,15 @@ describe('ShoppingListComponent', () => {
   describe('removeItem', () => {
     it('should buy a user item', () => {
       component.userIngredients = [new UserIngredient({ cartQuantity: 0 })];
-      component.userItem = new UserItem({ items: [{ name: 'item'}, { name: 'item2' }] });
+      component.userItems = [new UserItem({ id: '1', name: 'item'}), new UserItem({ id: '2', name: 'item2' })];
 
-      spyOn(userItemService, 'formattedUpdate');
+      spyOn(userItemService, 'delete');
       spyOn(notificationService, 'setModal');
       spyOn(userItemService, 'buyUserItem');
 
-      component.removeItem(1);
+      component.removeItem('2');
 
-      expect(userItemService.formattedUpdate).toHaveBeenCalled();
+      expect(userItemService.delete).toHaveBeenCalled();
       expect(notificationService.setModal);
       expect(userItemService.buyUserItem).toHaveBeenCalled();
     });
@@ -315,17 +307,17 @@ describe('ShoppingListComponent', () => {
         new UserIngredient({ cartQuantity: 10 }),
         new UserIngredient({ cartQuantity: 0 })
       ];
-      component.userItem = new UserItem({ items: [{ name: 'name'}] });
+      component.userItems = [new UserItem({ name: 'name' }), new UserItem({ name: 'name2' })];
 
       spyOn(userIngredientService, 'buyUserIngredient');
       spyOn(userIngredientService, 'update');
-      spyOn(userItemService, 'formattedUpdate');
+      spyOn(userItemService, 'delete');
 
       component.addAllToPantryEvent();
 
-      expect(userIngredientService.buyUserIngredient).toHaveBeenCalledWith(2, true);
+      expect(userIngredientService.buyUserIngredient).toHaveBeenCalledWith(3, true);
       expect(userIngredientService.update).toHaveBeenCalled();
-      expect(userItemService.formattedUpdate).toHaveBeenCalled();
+      expect(userItemService.delete).toHaveBeenCalledTimes(2);
     });
   });
 
