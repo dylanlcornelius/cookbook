@@ -22,8 +22,10 @@ export class Ingredient extends Model {
         this.amount = data.amount || '';
         this.uom = data.uom || '';
         this.calories = data.calories || '';
+        this.quantity = data.quantity;
         this.pantryQuantity = data.pantryQuantity;
         this.cartQuantity = data.cartQuantity;
+        this.selected = data.selected;
         this.isOptional = data.isOptional || false;
     }
 

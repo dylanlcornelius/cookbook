@@ -24,6 +24,7 @@ import { Validation } from '@validation';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { SuccessNotification } from '@notification';
 import { RecipeHistoryService } from '@recipeHistoryService';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-recipe-list',
@@ -45,6 +46,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   dataSource;
   recipes: Recipe[] = [];
   userIngredients: UserIngredient[];
+  ingredients: Ingredient[];
 
   breakpointSubscription: Subscription;
   searchSubscription: Subscription;
@@ -98,30 +100,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
 
         combineLatest([recipes$, ingredients$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$), debounceTime(100)).subscribe(([recipes, ingredients, userIngredients, histories]) => {
-          ingredients.forEach(ingredient => {
-            userIngredients.forEach(userIngredient => {
-              if (ingredient.id === userIngredient.ingredientId) {
-                userIngredient.uom = ingredient.uom;
-                userIngredient.amount = ingredient.amount;
-              }
-            });
-
-            recipes.forEach(recipe => {
-              recipe.ingredients.forEach(recipeIngredient => {
-                if (ingredient.id === recipeIngredient.id) {
-                  recipeIngredient.amount = ingredient.amount;
-                  recipeIngredient.name = ingredient.name;
-                }
-              });
-            });
-          });
-
-          this.userIngredients = userIngredients;
+          this.userIngredients = this.userIngredientService.buildUserIngredients(userIngredients, ingredients);
+          this.ingredients = ingredients;
           this.recipes = recipes
             .filter(recipe => this.householdService.hasUserPermission(household, this.user, recipe))
             .sort(this.sortRecipesByName)
             .sort(this.sortRecipesByImages)
             .map(recipe => {
+              recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
               // account for deleted ingredients
               recipe.ingredients.forEach(recipeIngredient => {
                 if (!recipeIngredient.name) {
@@ -130,7 +116,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
               });
 
               recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, recipe);
-              recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.userIngredients);
+              recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.ingredients, this.userIngredients);
 
               // display new category automatically
               const timesCooked = histories.find(({ recipeId }) => recipeId === recipe.id)?.timesCooked;
@@ -366,11 +352,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   addIngredients(id: string): void {
-    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.userIngredients, this.householdId);
+    this.recipeIngredientService.addIngredients(this.findRecipe(id), this.recipes, this.ingredients, this.userIngredients, this.householdId);
   }
 
   removeIngredients(id: string): void {
-    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.userIngredients, this.user.uid, this.householdId);
+    this.recipeIngredientService.removeIngredients(this.findRecipe(id), this.recipes, this.ingredients, this.userIngredients, this.user.uid, this.householdId);
   }
 
   onRate(rating: number, recipe: Recipe): void {

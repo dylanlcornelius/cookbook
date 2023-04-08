@@ -16,6 +16,8 @@ export class UserIngredient extends Model {
         this.ingredientId = data.ingredientId || '';
         this.pantryQuantity = data.pantryQuantity || 0;
         this.cartQuantity = data.cartQuantity || 0;
+        this.amount = data.amount;
+        this.uom = data.uom;
     }
 
     public getObject(): UserIngredientObject {

@@ -31,31 +31,31 @@ export class RecipeIngredientService {
    * @param recipes all recipes
    * @returns ingredients
    */
-  findRecipeIngredients(recipe: Recipe, recipes: Recipe[]): Ingredient[] {
+  findRecipeIngredients(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[]): Ingredient[] {
     const addedIngredients: Ingredient[] = [];
 
     // sort required ingredients before optional ingredients
-    let startingIngredients = [...recipe.ingredients]
+    let startingIngredients: any = [...recipe.ingredients]
       .sort(({isOptional: a}, {isOptional: b}) => Number(b) - Number(a));
     while (startingIngredients.length) {
-      const ingredient = startingIngredients.pop();
+      const recipeIngredient = startingIngredients.pop();
 
-      const isAdded = addedIngredients.find(({ id }) => id === ingredient.id);
+      const isAdded = addedIngredients.find(({ id }) => id === recipeIngredient.id);
       if (!isAdded) {
-        addedIngredients.push(ingredient);
+        addedIngredients.push(recipeIngredient);
 
-        const ingredientRecipe = recipes.find(({ id }) => id === ingredient.id);
+        const ingredientRecipe = recipes.find(({ id }) => id === recipeIngredient.id);
         if (ingredientRecipe) {
-          const recipeIngredients = ingredientRecipe.ingredients;
-          recipeIngredients.forEach(current => {
+          const recipeIngredients = ingredientRecipe.ingredients.map(current => {
+            const ingredient = ingredients.find(({ id }) => id === current.id);
             // recipe ingredient should allow optional
-            current.isOptional = current.isOptional || ingredient.isOptional;
+            return {...current, isOptional: current.isOptional || recipeIngredient.isOptional, amount: ingredient?.amount || current.amount };
           });
           startingIngredients = startingIngredients.concat(recipeIngredients);
         }
       } else {
-        // ingredient should always prioritize required
-        isAdded.isOptional = isAdded.isOptional && ingredient.isOptional;
+        // recipe ingredient should always prioritize required
+        isAdded.isOptional = isAdded.isOptional && recipeIngredient.isOptional;
       }
     }
 
@@ -89,8 +89,8 @@ export class RecipeIngredientService {
     return addedRecipes.filter(({ uom }) => uom === UOM.RECIPE).map(({ id }) => id).concat(recipe.id);
   }
 
-  getRecipeCount(recipe: Recipe, recipes: Recipe[], userIngredients: UserIngredient[]): number {
-    const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
+  getRecipeCount(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[], userIngredients: UserIngredient[]): number {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
 
     let recipeCount;
     let ingredientCount = 0;
@@ -124,8 +124,8 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], userIngredients: UserIngredient[], householdId: string, callback?: Function): void {
-    const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
+  addIngredients(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[], userIngredients: UserIngredient[], householdId: string, callback?: Function): void {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
 
     if (recipeIngredients.length > 0) {
       this.recipeIngredientModalService.setModal(new RecipeIngredientModal(
@@ -171,8 +171,8 @@ export class RecipeIngredientService {
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
   };
 
-  removeIngredients(recipe: Recipe, recipes: Recipe[], userIngredients: UserIngredient[], uid: string, householdId: string): void {
-    const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
+  removeIngredients(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[], userIngredients: UserIngredient[], uid: string, householdId: string): void {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
 
     if (recipeIngredients.length) {
       recipeIngredients.forEach(recipeIngredient => {

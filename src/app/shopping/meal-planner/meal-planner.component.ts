@@ -17,6 +17,7 @@ import { UserIngredient } from '@userIngredient';
 import { Recipe } from '@recipe';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
+import { Ingredient } from '@ingredient';
 
 @Component({
   selector: 'app-meal-planner',
@@ -32,6 +33,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
   householdId: string;
   userIngredients: UserIngredient[];
   recipes: Recipe[];
+  ingredients: Ingredient[];
 
   recipeControl = new FormControl();
   filteredRecipes: Observable<Recipe[]>;
@@ -75,26 +77,12 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
         const mealPlan$ = this.mealPlanService.get(this.householdId);
 
         combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, recipes, ingredients, mealPlan]) => {
-          ingredients.forEach(ingredient => {
-            userIngredients.forEach(userIngredient => {
-              if (ingredient.id === userIngredient.ingredientId) {
-                userIngredient.uom = ingredient.uom;
-                userIngredient.amount = ingredient.amount;
-              }
-            });
-
-            recipes.forEach(recipe => {
-              recipe.ingredients.forEach(recipeIngredient => {
-                if (ingredient.id === recipeIngredient.id) {
-                  recipeIngredient.amount = ingredient.amount;
-                  recipeIngredient.name = ingredient.name;
-                }
-              });
-            });
+          this.userIngredients = this.userIngredientService.buildUserIngredients(userIngredients, ingredients);
+          this.recipes = recipes.map(recipe => {
+            recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
+            return recipe;
           });
-          
-          this.userIngredients = userIngredients;
-          this.recipes = recipes;
+          this.ingredients = ingredients;
 
           mealPlan.recipes = mealPlan.recipes
             .map(planRecipe => recipes.find(({ id }) => id === planRecipe.id))
@@ -136,7 +124,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
       }
     }; 
 
-    this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredients, this.householdId, callback);
+    this.recipeIngredientService.addIngredients(recipe, this.recipes, this.ingredients, this.userIngredients, this.householdId, callback);
   }
 
   addAllIngredients = (success?: boolean, isStart?: boolean): void => {
@@ -151,7 +139,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     const recipe = this.mealPlan.recipes[0];
 
     if (recipe) {
-      this.recipeIngredientService.addIngredients(recipe, this.recipes, this.userIngredients, this.householdId, this.addAllIngredients);
+      this.recipeIngredientService.addIngredients(recipe, this.recipes, this.ingredients, this.userIngredients, this.householdId, this.addAllIngredients);
     }
   };
 

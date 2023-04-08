@@ -9,6 +9,7 @@ import { Model } from '@model';
 import { SuccessNotification } from '@notification';
 import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
+import { Ingredient } from '@ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,20 @@ export class UserIngredientService extends FirestoreService {
 
   create = (data: UserIngredient): string => super.create(data.getObject());
   update = (data: Model[]): void => super.update(data);
+
+  buildUserIngredients(userIngredients: UserIngredient[], ingredients: Ingredient[]): UserIngredient[] {
+    return userIngredients.reduce((result, userIngredient) => {
+      const currentIngredient = ingredients.find(ingredient => ingredient.id === userIngredient.ingredientId);
+      if (currentIngredient) {
+        result.push(new UserIngredient({
+          ...userIngredient,
+          amount: currentIngredient.amount,
+          uom: currentIngredient.uom || '',
+        }));
+      }
+      return result;
+    }, []);
+  }
 
   buyUserIngredient(actions: number, isCompleted: boolean): void {
     this.currentUserService.getCurrentUser().subscribe(user => {

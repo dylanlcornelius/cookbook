@@ -162,7 +162,7 @@ describe('MealPlannerComponent', () => {
       recipeIngredientService.addIngredients = spy;
 
       component.addIngredients(1);
-      spy.calls.mostRecent().args[4](true);
+      spy.calls.mostRecent().args[5](true);
 
       expect(spy).toHaveBeenCalled();
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
@@ -177,7 +177,7 @@ describe('MealPlannerComponent', () => {
 
       component.addIngredients(1);
       // testing a local callback
-      spy.calls.mostRecent().args[4]();
+      spy.calls.mostRecent().args[5]();
 
       expect(spy).toHaveBeenCalled();
       expect(mealPlanService.formattedUpdate).not.toHaveBeenCalled();

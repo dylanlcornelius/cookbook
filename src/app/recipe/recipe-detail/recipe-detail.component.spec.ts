@@ -128,6 +128,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
+      spyOn(userIngredientService, 'buildUserIngredients');
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
@@ -142,6 +143,7 @@ describe('RecipeDetailComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
+      expect(userIngredientService.buildUserIngredients).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));

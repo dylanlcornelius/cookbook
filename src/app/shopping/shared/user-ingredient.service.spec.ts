@@ -9,6 +9,7 @@ import { ActionService } from '@actionService';
 import { User } from '@user';
 import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
+import { Ingredient } from '@ingredient';
 
 describe('UserIngredientService', () => {
   let service: UserIngredientService;
@@ -81,6 +82,17 @@ describe('UserIngredientService', () => {
       service.update([new UserIngredient({})]);
 
       expect(FirestoreService.prototype.updateAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('buildRecipeIngredients', () => {
+    it('should build ingredients', () => {
+      const userIngredients = [new UserIngredient({ ingredientId: 'id' }), new UserIngredient({ ingredientId: 'id2' })];
+      const ingredients = [new Ingredient({ id: 'id'})];
+      
+      const result = service.buildUserIngredients(userIngredients, ingredients);
+
+      expect(result.length).toEqual(1);
     });
   });
 
