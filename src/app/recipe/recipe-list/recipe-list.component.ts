@@ -28,6 +28,7 @@ import { Ingredient } from '@ingredient';
 import { Config } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { FirebaseService } from '@firebaseService';
 
 @Component({
   selector: 'app-recipe-list',
@@ -76,6 +77,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private mealPlanService: MealPlanService,
     private recipeHistoryService: RecipeHistoryService,
     private configService: ConfigService,
+    private firebase: FirebaseService,
   ) { }
 
   identify = this.utilService.identify;
@@ -280,6 +282,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       if (this.dataSource.paginator) {
         this.dataSource.paginator.firstPage();
       }
+      this.firebase.logEvent('search', { search_term: searchFilter });
     });
   }
 
@@ -400,6 +403,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipeService.setForm(null);
     this.router.navigate(['/recipe/edit']);
   };
+
+  openRecipeDetail(recipe: Recipe): void {
+    this.router.navigate(['/recipe/detail/', recipe.id]);
+    this.firebase.logEvent('select_content', { content_type: 'recipe', item_id: recipe.id, item_name: recipe.name });
+  }
 
   pageEvent(event: PageEvent): PageEvent {
     this.recipeFilterService.pageIndex = event.pageIndex;

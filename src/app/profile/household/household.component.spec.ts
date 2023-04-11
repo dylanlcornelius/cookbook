@@ -8,6 +8,7 @@ import { UserService } from '@userService';
 import { of } from 'rxjs';
 
 import { HouseholdComponent } from './household.component';
+import { FirebaseService } from '@firebaseService';
 
 describe('HouseholdComponent', () => {
   let component: HouseholdComponent;
@@ -16,6 +17,7 @@ describe('HouseholdComponent', () => {
   let householdService: HouseholdService;
   let notificationService: NotificationService;
   let validationService: ValidationService;
+  let firebase: FirebaseService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -36,6 +38,7 @@ describe('HouseholdComponent', () => {
     householdService = TestBed.inject(HouseholdService);
     notificationService = TestBed.inject(NotificationService);
     validationService = TestBed.inject(ValidationService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should create', () => {
@@ -311,11 +314,13 @@ describe('HouseholdComponent', () => {
 
       spyOn(householdService, 'update');
       spyOn(notificationService, 'setModal');
+      spyOn(firebase, 'logEvent');
 
       component.acceptInviteEvent(household);
 
       expect(householdService.update).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
     });
   });
 });

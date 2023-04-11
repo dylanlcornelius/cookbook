@@ -44,6 +44,7 @@ import { RecipeHistory } from '@recipeHistory';
 import { UOM } from '@uoms';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
+import { FirebaseService } from '@firebaseService';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -64,6 +65,7 @@ describe('RecipeListComponent', () => {
   let notificationService: NotificationService;
   let recipeHistoryService: RecipeHistoryService;
   let configService: ConfigService;
+  let firebase: FirebaseService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -115,6 +117,7 @@ describe('RecipeListComponent', () => {
     notificationService = TestBed.inject(NotificationService);
     recipeHistoryService = TestBed.inject(RecipeHistoryService);
     configService = TestBed.inject(ConfigService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should create', () => {
@@ -427,6 +430,7 @@ describe('RecipeListComponent', () => {
       spyOn(component, 'setFilters');
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(component, 'setSelectedFilterCount');
+      spyOn(firebase, 'logEvent');
 
       component.initFilters();
       component.searchFilter$.next('value');
@@ -436,6 +440,7 @@ describe('RecipeListComponent', () => {
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
     }));
 
     it('should only apply a search filter', fakeAsync(() => {
@@ -460,6 +465,7 @@ describe('RecipeListComponent', () => {
       spyOn(component.dataSource.paginator, 'firstPage');
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
       spyOn(component, 'setSelectedFilterCount');
+      spyOn(firebase, 'logEvent');
 
       component.initFilters();
       component.initFilters();
@@ -471,6 +477,7 @@ describe('RecipeListComponent', () => {
       expect(component.searchFilter).toEqual('value');
       expect(component.setFilters).toHaveBeenCalled();
       expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
     }));
   });
 
@@ -768,6 +775,19 @@ describe('RecipeListComponent', () => {
 
       expect(recipeService.setForm).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('openRecipeDetail', () => {
+    it('should navigate to the detail page', () => {
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      spyOn(firebase, 'logEvent');
+
+      component.openRecipeDetail(new Recipe({}));
+
+      expect(router.navigate).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
     });
   });
 

@@ -24,7 +24,7 @@ SPA: Yes
 
 ##### PRODUCTION: 
 ```
-ng build -c product
+ng build -c production
 ```
 
 #### Deploy build
@@ -37,3 +37,4 @@ firebase deploy
 firebase projects:list
 firebase use <project_id>
 ```
+> If firebase fails to list projects, try running `firebase login --reauth`

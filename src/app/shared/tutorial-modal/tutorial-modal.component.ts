@@ -7,6 +7,7 @@ import { TutorialService } from '@tutorialService';
 import { Router } from '@angular/router';
 import { LoadingService } from '@loadingService';
 import { fadeInAnimation } from 'src/app/theme/animations';
+import { FirebaseService } from '@firebaseService';
 
 @Component({
   selector: 'app-tutorial-modal',
@@ -29,7 +30,8 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
     private router: Router,
     private loadingService: LoadingService,
     private tutorialModalService: TutorialModalService,
-    private tutorialService: TutorialService
+    private tutorialService: TutorialService,
+    private firebase: FirebaseService,
   ) { }
 
   ngOnInit() {
@@ -120,6 +122,7 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
   next(): void {
     this.tutorialIndex++;
     if (this.tutorialIndex >= this.tutorials.length) {
+      this.firebase.logEvent('tutorial_complete');
       this.close();
     } else {
       this.changeTutorial();

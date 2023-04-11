@@ -27,6 +27,9 @@ jobs:
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_STORAGE: ${{ secrets.FIREBASE_STORAGE }}
+          FIREBASE_MESSAGING_ID: ${{ secrets.FIREBASE_MESSAGING_ID }}
+          FIREBASE_APP_ID: ${{ FIREBASE_APP_ID }}
+          FIREBASE_MEASUREMENT_ID: ${{ FIREBASE_MEASUREMENT_ID }}
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:

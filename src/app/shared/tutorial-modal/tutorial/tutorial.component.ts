@@ -12,6 +12,10 @@ export class TutorialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.load();
+  }
+
+  load(): void {
     this.tutorialService.openTutorial(false);
   }
 }

@@ -6,10 +6,12 @@ import { Tutorial } from '@tutorial';
 import { of } from 'rxjs';
 
 import { TutorialService } from './tutorial.service';
+import { FirebaseService } from '@firebaseService';
 
 describe('TutorialService', () => {
   let service: TutorialService;
   let tutorialModalService: TutorialModalService;
+  let firebase: FirebaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,6 +21,7 @@ describe('TutorialService', () => {
     });
     service = TestBed.inject(TutorialService);
     tutorialModalService = TestBed.inject(TutorialModalService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
@@ -86,21 +89,25 @@ describe('TutorialService', () => {
   describe('openTutorial', () => {
     it('should open the tutorial modal', () => {
       spyOn(service, 'commitAction');
+      spyOn(firebase, 'logEvent');
       spyOn(tutorialModalService, 'setModal');
 
       service.openTutorial(false);
 
       expect(service.commitAction).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
       expect(tutorialModalService.setModal).toHaveBeenCalled();
     });
 
     it('should open the tutorial modal with a starting url', () => {
       spyOn(service, 'commitAction');
+      spyOn(firebase, 'logEvent');
       spyOn(tutorialModalService, 'setModal');
 
       service.openTutorial(true);
 
       expect(service.commitAction).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
       expect(tutorialModalService.setModal).toHaveBeenCalled();
     });
   });
