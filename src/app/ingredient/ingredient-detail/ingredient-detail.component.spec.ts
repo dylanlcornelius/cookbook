@@ -69,7 +69,7 @@ describe('IngredientsDetailComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
       expect(component).toBeTruthy();
-      expect(component.ingredient.category).toEqual('Baking');
+      expect(component.ingredient.displayCategory).toEqual('Baking');
     });
 
     it('should load an ingredient without data', () => {

@@ -70,11 +70,11 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       this.loading = this.loadingService.set(true);
       this.id = params['ingredient-id'];
       this.ingredientsForm = this.formBuilder.group({
-        'name': [null, Validators.required],
-        'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
-        'uom': [null, Validators.required],
-        'category': [null, Validators.required],
-        'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+        name: [null, Validators.required],
+        amount: [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
+        uom: [null, Validators.required],
+        category: [null, Validators.required],
+        calories: [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       });
 
       const observables$: [Observable<Config[]>, Observable<Ingredient>?] = [configs$];

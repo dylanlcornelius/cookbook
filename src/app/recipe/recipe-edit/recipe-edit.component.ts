@@ -29,6 +29,9 @@ import { StepperOrientation } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ValidationService } from '@modalService';
 import { Validation } from '@validation';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
+import { ConfigType } from '@configType';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -61,6 +64,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
   ingredients;
   recipeCategories;
+  types: Config[];
 
   uoms: Array<UOM>;
 
@@ -88,6 +92,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private uomService: UomService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
+    private configService: ConfigService,
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -125,6 +130,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
     const ingredients$ = this.ingredientService.get();
     const recipes$ = this.recipeService.get();
+    const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
 
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
@@ -136,6 +142,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         time: [''],
         servings: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
         calories: ['', [Validators.min(1), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+        type: [''],
         isVegetarian: [false],
         isVegan: [false],
         isGlutenFree: [false],
@@ -145,7 +152,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         ingredients: this.formBuilder.array([])
       });
 
-      const observables$: [Observable<Ingredient[]>, Observable<Recipe[]>, Observable<Recipe>?] = [ingredients$, recipes$];
+      const observables$: [Observable<Ingredient[]>, Observable<Recipe[]>, Observable<Config[]>, Observable<Recipe>?] = [ingredients$, recipes$, configs$];
       if (this.id) {
         observables$.push(this.recipeService.get(this.id));
         this.title = 'Edit a Recipe';
@@ -153,9 +160,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.title = 'Add a New Recipe';
       }
 
-      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes, recipe]: [Ingredient[], Recipe[], Recipe?]) => {
-        this.recipes = recipes;
+      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes, configs, recipe]: [Ingredient[], Recipe[], Config[], Recipe?]) => {
         this.ingredients = ingredients;
+        this.recipes = recipes;
+        this.types = configs;
         this.originalRecipe = recipe;
 
         if (this.loading) {
@@ -202,6 +210,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         time: this.recipe.time,
         servings: this.recipe.servings,
         calories: this.recipe.calories,
+        type: this.recipe.type,
         isVegetarian: this.recipe.isVegetarian,
         isVegan: this.recipe.isVegan,
         isGlutenFree: this.recipe.isGlutenFree,
@@ -231,15 +240,16 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.recipeCategories = this.categoryControl.valueChanges.pipe(
       startWith(''),
       map(value => this.recipes
-        .reduce((allCategories, recipe) => {
-          recipe.clearNewCategory();
-          recipe.categories.forEach(({ category }) => {
-            const isFound = allCategories.find(currentCategory => currentCategory === category);
+        .reduce((allCategories, { categories }) => {
+          categories
+            .filter(({ category }) => category !== 'New!')
+            .forEach(({ category }) => {
+              const isFound = allCategories.find(currentCategory => currentCategory === category);
 
-            if (!isFound) {
-              allCategories.push(category);
-            }
-          });
+              if (!isFound) {
+                allCategories.push(category);
+              }
+            });
           return allCategories;
         }, [])
         .filter(category => category.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : ''))

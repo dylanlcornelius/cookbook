@@ -8,7 +8,8 @@ import {
   SearchFilter,
   StatusFilter,
   ImageFilter,
-  RestrictionFilter
+  RestrictionFilter,
+  TypeFilter
 } from '@recipeFilterService';
 import { Recipe, RECIPE_STATUS } from '@recipe';
 
@@ -43,6 +44,12 @@ describe('RecipeFilterService', () => {
       expect(result).toBeTrue();
     });
 
+    it('should filter by type', () => {
+      const result = service.recipeFilterPredicate(new Recipe({type: 'SALAD'}), [new TypeFilter('SALAD')]);
+
+      expect(result).toBeTrue();
+    });
+
     it('should filter by restriction', () => {
       const result = service.recipeFilterPredicate(new Recipe({isVegetarian: true}), [new RestrictionFilter('isVegetarian')]);
 
@@ -59,6 +66,12 @@ describe('RecipeFilterService', () => {
       const result = service.recipeFilterPredicate(new Recipe({categories: [{category: 'category'}]}), [new CategoryFilter('test')]);
 
       expect(result).toBeFalse();
+    });
+
+    it('should filter by New!', () => {
+      const result = service.recipeFilterPredicate(new Recipe({hasNewCategory: true}), [new CategoryFilter('New!')]);
+
+      expect(result).toBeTrue();
     });
 
     it('should filter by rating', () => {

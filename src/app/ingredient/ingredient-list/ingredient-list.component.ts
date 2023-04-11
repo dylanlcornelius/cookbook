@@ -72,9 +72,8 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         const ingredients$ = this.ingredientService.get();
         const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
         combineLatest([userIngredients$, ingredients$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, ingredients, configs]) => {
-          this.ingredients = ingredients.map(originalIngredient => {
-            const ingredient = new Ingredient({ ...originalIngredient });
-            ingredient.category = configs.find(({ value }) => value === ingredient.category)?.displayValue || 'Other';
+          this.ingredients = ingredients.map(ingredient => {
+            ingredient.displayCategory = configs.find(({ value }) => value === ingredient.category)?.displayValue || 'Other';
             ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
             userIngredients.forEach(userIngredient => {

@@ -45,6 +45,15 @@
         </mat-error>
       </mat-form-field>
 
+      <mat-form-field class="form-field">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of types" [value]="type.value">
+            {{type.displayValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <div class="form-field">
         <h6>Dietary Restrictions</h6>
 
@@ -70,7 +79,7 @@
           </span>
         </div>
       </div>
-  
+
       <mat-form-field class="form-field">
         <mat-chip-list #categoryList>
           <mat-chip *ngFor="let category of recipesForm.get('categories')['controls']; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">

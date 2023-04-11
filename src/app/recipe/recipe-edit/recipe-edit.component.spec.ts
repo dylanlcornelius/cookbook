@@ -18,10 +18,13 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ValidationService } from '@modalService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -34,6 +37,7 @@ describe('RecipeEditComponent', () => {
   let ingredientService: IngredientService;
   let validationService: ValidationService;
   let tutorialService: TutorialService;
+  let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,6 +52,7 @@ describe('RecipeEditComponent', () => {
         MatInputModule,
         MatChipsModule,
         MatCheckboxModule,
+        MatSelectModule,
         BrowserAnimationsModule,
       ],
       declarations: [ RecipeEditComponent ],
@@ -74,6 +79,7 @@ describe('RecipeEditComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
+    configService = TestBed.inject(ConfigService);
 
     component.recipesForm = formBuilder.group({
       name: [],
@@ -122,11 +128,15 @@ describe('RecipeEditComponent', () => {
           id: 'id3'
         })
       ];
+      const configs = [
+        new Config({})
+      ];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of(recipes));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));  
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
@@ -140,6 +150,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
@@ -159,11 +170,13 @@ describe('RecipeEditComponent', () => {
       const ingredients = [new Ingredient({
         id: 'id'
       })];
+      const configs = [];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
@@ -176,6 +189,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
@@ -196,11 +210,13 @@ describe('RecipeEditComponent', () => {
           id: 'id3'
         })
       ];
+      const configs = [];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients');
@@ -213,6 +229,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(1);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
@@ -233,11 +250,13 @@ describe('RecipeEditComponent', () => {
           id: 'id3'
         })
       ];
+      const configs = [];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get').withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(new Recipe({})));
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
@@ -250,6 +269,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(1);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
@@ -269,6 +289,7 @@ describe('RecipeEditComponent', () => {
       const ingredients = [new Ingredient({
         id: 'id'
       })];
+      const configs = [];
 
       const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
 
@@ -276,6 +297,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(ingredients$);
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
@@ -290,6 +312,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.get).toHaveBeenCalledTimes(2);
       expect(component.addCategory).not.toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalledTimes(1);
