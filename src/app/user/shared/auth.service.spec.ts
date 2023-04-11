@@ -63,6 +63,7 @@ describe('AuthService', () => {
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
       spyOn(actionService, 'commitAction');
+      spyOn(firebase, 'logEvent');
       spyOn(router, 'navigate');
 
       service.handleUserChange(undefined);
@@ -73,6 +74,7 @@ describe('AuthService', () => {
       expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).not.toHaveBeenCalled();
       expect(actionService.commitAction).not.toHaveBeenCalled();
+      expect(firebase.logEvent).not.toHaveBeenCalled();
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
@@ -83,6 +85,7 @@ describe('AuthService', () => {
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
       spyOn(actionService, 'commitAction');
+      spyOn(firebase, 'logEvent');
       spyOn(router, 'navigate');
 
       service.handleUserChange({ uid: 'uid' });
@@ -93,6 +96,7 @@ describe('AuthService', () => {
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -105,6 +109,7 @@ describe('AuthService', () => {
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
       spyOn(actionService, 'commitAction');
+      spyOn(firebase, 'logEvent');
       spyOn(router, 'navigate');
 
       service.handleUserChange({ uid: 'uid' });
@@ -115,6 +120,7 @@ describe('AuthService', () => {
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -127,6 +133,7 @@ describe('AuthService', () => {
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
       spyOn(actionService, 'commitAction');
+      spyOn(firebase, 'logEvent');
       spyOn(router, 'navigate');
 
       service.handleUserChange({ uid: 'uid' });
@@ -137,6 +144,7 @@ describe('AuthService', () => {
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
       expect(actionService.commitAction).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
     });
   });

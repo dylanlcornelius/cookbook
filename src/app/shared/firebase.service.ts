@@ -3,6 +3,7 @@ import { collection, getFirestore, doc, setDoc, deleteDoc, onSnapshot, addDoc, w
 import { getApps, initializeApp } from 'firebase/app';
 import { getAuth, signInWithRedirect, GoogleAuthProvider, Auth } from 'firebase/auth';
 import { deleteObject, FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,6 +14,7 @@ export class FirebaseService {
   firestore: Firestore;
   auth: Auth;
   storage: FirebaseStorage;
+  analytics: Analytics;
 
   // FIREBASE
   initializeApp = initializeApp;
@@ -43,6 +45,10 @@ export class FirebaseService {
   getDownloadURL = getDownloadURL;
   uploadBytesResumable = (ref: any, file: any, options: any): any => uploadBytesResumable(ref, file, options);
   deleteObject = deleteObject;
+
+  // ANALYTICS
+  getAnalytics = getAnalytics;
+  logEvent = (event: string, args?: any): void => logEvent(this.analytics, event, args);
 }
 
 export {

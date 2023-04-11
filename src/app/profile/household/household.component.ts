@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { FirebaseService } from '@firebaseService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
@@ -39,6 +40,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private validationService: ValidationService,
     private notificationService: NotificationService,
+    private firebase: FirebaseService,
   ) { }
 
   ngOnInit() {
@@ -188,5 +190,6 @@ export class HouseholdComponent implements OnInit, OnDestroy {
     household.inviteIds = household.inviteIds.filter(uid => uid !== this.user.uid);
     this.householdService.update(household.getObject(), household.getId());
     this.notificationService.setModal(new SuccessNotification('Invitation accepted'));
+    this.firebase.logEvent('join_group', { group_id: household.id, group_name: household.name });
   };
 }

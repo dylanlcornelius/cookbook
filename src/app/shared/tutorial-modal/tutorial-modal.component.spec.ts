@@ -7,6 +7,7 @@ import { TutorialService } from '@tutorialService';
 import { BehaviorSubject, of } from 'rxjs';
 
 import { TutorialModalComponent } from './tutorial-modal.component';
+import { FirebaseService } from '@firebaseService';
 
 describe('TutorialModalComponent', () => {
   let component: TutorialModalComponent;
@@ -14,6 +15,7 @@ describe('TutorialModalComponent', () => {
   let tutorialModalService: TutorialModalService;
   let tutorialService: TutorialService;
   let loadingService: LoadingService;
+  let firebase: FirebaseService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -35,6 +37,7 @@ describe('TutorialModalComponent', () => {
     tutorialModalService = TestBed.inject(TutorialModalService);
     tutorialService = TestBed.inject(TutorialService);
     loadingService = TestBed.inject(LoadingService);
+    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should create', () => {
@@ -255,11 +258,13 @@ describe('TutorialModalComponent', () => {
         new Tutorial({})
       ];
 
+      spyOn(firebase, 'logEvent');
       spyOn(component, 'close');
       spyOn(component, 'changeTutorial');
 
       component.next();
 
+      expect(firebase.logEvent).not.toHaveBeenCalled();
       expect(component.close).not.toHaveBeenCalled();
       expect(component.changeTutorial).toHaveBeenCalled();
     });
@@ -271,11 +276,13 @@ describe('TutorialModalComponent', () => {
         new Tutorial({})
       ];
 
+      spyOn(firebase, 'logEvent');
       spyOn(component, 'close');
       spyOn(component, 'changeTutorial');
 
       component.next();
 
+      expect(firebase.logEvent).toHaveBeenCalled();
       expect(component.close).toHaveBeenCalled();
       expect(component.changeTutorial).not.toHaveBeenCalled();
     });

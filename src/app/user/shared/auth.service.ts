@@ -47,6 +47,8 @@ export class AuthService {
 
         current.id = this.userService.create(current);
         isNewUser = true;
+
+        this.firebase.logEvent('sign_up', { method: 'Google' });
       }
       
       this.currentUserService.setCurrentUser(current);
@@ -54,6 +56,7 @@ export class AuthService {
       this.currentUserService.setIsGuest(false);
 
       this.actionService.commitAction(user.uid, Action.LOGIN, 1);
+      this.firebase.logEvent('login', { method: 'Google' });
 
       // use replace url to pop empty route from history
       if (isNewUser) {

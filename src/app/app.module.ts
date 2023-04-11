@@ -58,6 +58,7 @@ export class AppModule {
         firebase.firestore = firebase.getFirestore();
         firebase.auth = firebase.getAuth();
         firebase.storage = firebase.getStorage();
+        firebase.analytics = firebase.getAnalytics();
   
         firebase.enableMultiTabIndexedDbPersistence(firebase.firestore);
       }

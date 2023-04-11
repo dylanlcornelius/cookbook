@@ -25,6 +25,7 @@ import { TutorialService } from '@tutorialService';
 import { RecipeFilterService } from '@recipeFilterService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
+import { FirebaseService } from '@firebaseService';
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -43,6 +44,7 @@ describe('RecipeDetailComponent', () => {
   let validationService: ValidationService;
   let tutorialService: TutorialService;
   let mealPlanService: MealPlanService;
+  let firebase: FirebaseService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -80,6 +82,7 @@ describe('RecipeDetailComponent', () => {
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
     mealPlanService = TestBed.inject(MealPlanService);
+    firebase = TestBed.inject(FirebaseService);
 
     component.recipe = new Recipe({ id: 'recipe' });
   });
@@ -387,13 +390,18 @@ describe('RecipeDetailComponent', () => {
   });
 
   describe('copyShareableLink', () => {
-    it('should copy the current route', () => {
+    it('should copy the current route', fakeAsync(() => {
       spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.resolve());
+      spyOn(notificationService, 'setModal');
+      spyOn(firebase, 'logEvent');
 
       component.copyShareableLink();
+      tick();
 
       expect(navigator.clipboard.writeText).toHaveBeenCalled();
-    });
+      expect(notificationService.setModal).toHaveBeenCalled();
+      expect(firebase.logEvent).toHaveBeenCalled();
+    }));
   });
 
   describe('updateTimesCooked', () => {

@@ -22,6 +22,7 @@ import { TutorialService } from '@tutorialService';
 import { LoadingService } from '@loadingService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { Ingredient } from '@ingredient';
+import { FirebaseService } from '@firebaseService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -67,6 +68,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private validationService: ValidationService,
     private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
+    private firebase: FirebaseService,
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -194,6 +196,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   copyShareableLink(): void {
     navigator.clipboard.writeText(window.location.href).then(() => {
       this.notificationService.setModal(new SuccessNotification('Link copied!'));
+      this.firebase.logEvent('share', { method: 'link', content_type: 'recipe', item_id: this.recipe.id, item_name: this.recipe.name });
     });
   }
 
