@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { Ingredient } from '@ingredient';
@@ -10,7 +10,8 @@ import { Validation } from '@validation';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
-import { IngredientCategory } from '@ingredientCategory';
+import { ConfigService } from '@configService';
+import { ConfigType } from '@configType';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -31,6 +32,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     private numberService: NumberService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
+    private configService: ConfigService,
   ) { }
 
   ngOnInit() {
@@ -45,10 +47,12 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   load(): void {
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
+      const ingredient$ = this.ingredientService.get(params['id']);
+      const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
       
-      this.ingredientService.get(params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-        this.ingredient = data;
-        this.ingredient.category = IngredientCategory[this.ingredient.category] || this.ingredient.category;
+      combineLatest([ingredient$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredient, configs]) => {
+        this.ingredient = ingredient;
+        this.ingredient.category = configs.find(({ value }) => value === this.ingredient.category)?.displayValue || 'Other';
         this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
         this.loading = this.loadingService.set(false);
       });

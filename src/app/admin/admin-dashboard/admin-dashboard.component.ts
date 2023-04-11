@@ -120,7 +120,7 @@ export class AdminDashboardComponent implements OnDestroy {
   contexts = [
     new Context(
       'Configurations',
-      ['name', 'value'],
+      ['name', 'value', 'displayValue', 'order'],
       this.configService,
       this.revert,
       this.save,
