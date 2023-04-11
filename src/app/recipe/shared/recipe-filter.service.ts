@@ -39,6 +39,7 @@ export class RecipeFilterService {
 
 export enum FILTER_TYPE {
   AUTHOR = 'AUTHOR',
+  TYPE = 'TYPE',
   RESTRICTION = 'RESTRICTION',
   CATEGORY = 'CATEGORY',
   RATING = 'RATING',
@@ -71,6 +72,11 @@ export class AuthorFilter extends Filter {
   filterPredicate = (recipe: Recipe): boolean => this.equals(recipe.author, this.value);
 }
 
+export class TypeFilter extends Filter {
+  type = FILTER_TYPE.TYPE;
+  filterPredicate = (recipe: Recipe): boolean => this.equals(recipe.type, this.value);
+}
+
 export class RestrictionFilter extends Filter {
   type = FILTER_TYPE.RESTRICTION;
   filterPredicate = (recipe: Recipe): boolean => recipe[this.value] === true;
@@ -78,7 +84,7 @@ export class RestrictionFilter extends Filter {
 
 export class CategoryFilter extends Filter {
   type = FILTER_TYPE.CATEGORY;
-  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.equals(category, this.value));
+  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.equals(category, this.value)) || (recipe.hasNewCategory && this.value === 'New!');
 }
 
 export class RatingFilter extends Filter {
@@ -101,6 +107,7 @@ export class SearchFilter extends Filter {
   filterPredicate = (recipe: Recipe): boolean => {
     return this.contains(recipe.name, this.value)
       || this.contains(recipe.description, this.value)
+      || this.contains(recipe.type, this.value)
       || !!recipe.categories.find(({ category }) => this.contains(category, this.value))
       || !!recipe.steps.find(({ step }) => this.contains(step, this.value))
       || !!recipe.ingredients.find(({ name }) => this.contains(name, this.value))

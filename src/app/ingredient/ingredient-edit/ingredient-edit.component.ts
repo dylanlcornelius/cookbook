@@ -9,12 +9,14 @@ import {
 } from '@angular/forms';
 import { UOM } from '@uoms';
 import { ErrorMatcher } from '../../util/error-matcher';
-import { Subject } from 'rxjs';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { Ingredient } from '@ingredient';
-import { IngredientCategory } from '@ingredientCategory';
+import { Config } from '@config';
+import { ConfigService } from '@configService';
+import { ConfigType } from '@configType';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -30,10 +32,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   ingredient: Ingredient;
   id: string;
   uoms: Array<UOM>;
-  categories: Array<{
-    key: string,
-    value: IngredientCategory
-  }>;
+  categories: Config[];
 
   matcher = new ErrorMatcher();
 
@@ -50,20 +49,12 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
     private tutorialService: TutorialService,
+    private configService: ConfigService,
   ) {
     this.uoms = Object.values(UOM);
-    this.categories = Object.entries(IngredientCategory).map(([key, value]) => ({ key, value }));
   }
 
   ngOnInit() {
-    this.ingredientsForm = this.formBuilder.group({
-      'name': [null, Validators.required],
-      'amount': [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
-      'uom': [null, Validators.required],
-      'category': [null, Validators.required],
-      'calories': [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-    });
-
     this.load();
   }
 
@@ -73,29 +64,42 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   public load(): void {
+    const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
       this.id = params['ingredient-id'];
+      this.ingredientsForm = this.formBuilder.group({
+        name: [null, Validators.required],
+        amount: [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
+        uom: [null, Validators.required],
+        category: [null, Validators.required],
+        calories: [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      });
 
+      const observables$: [Observable<Config[]>, Observable<Ingredient>?] = [configs$];
       if (this.id) {
-        this.ingredientService.get(this.id).pipe(takeUntil(this.unsubscribe$)).subscribe(ingredient => {
-          this.ingredient = ingredient;
-
-          this.ingredientsForm.patchValue({
-            name: ingredient.name,
-            category: ingredient.category,
-            amount: ingredient.amount || '',
-            uom: ingredient.uom || '',
-            calories: ingredient.calories
-          });
-          this.title = 'Edit an Ingredient';
-          this.loading = this.loadingService.set(false);
-        });
+        observables$.push(this.ingredientService.get(this.id));
+        this.title = 'Edit an Ingredient';
       } else {
-        this.id = undefined;
         this.title = 'Add a new Ingredient';
-        this.loading = this.loadingService.set(false);
       }
+
+      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([configs, ingredient]: [Config[], Ingredient?]) => {
+        this.categories = configs;
+        this.ingredient = ingredient;
+
+        if (ingredient) {
+          this.ingredientsForm.patchValue({
+            name: this.ingredient.name,
+            category: this.ingredient.category,
+            amount: this.ingredient.amount || '',
+            uom: this.ingredient.uom || '',
+            calories: this.ingredient.calories
+          });
+        }
+        this.loading = this.loadingService.set(false);
+      });
     });
   }
 

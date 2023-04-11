@@ -11,7 +11,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { AuthorFilter, CategoryFilter, RecipeFilterService, RestrictionFilter } from '@recipeFilterService';
+import { AuthorFilter, CategoryFilter, RecipeFilterService, RestrictionFilter, TypeFilter } from '@recipeFilterService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
@@ -22,6 +22,8 @@ import { TutorialService } from '@tutorialService';
 import { LoadingService } from '@loadingService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { Ingredient } from '@ingredient';
+import { ConfigType } from '@configType';
+import { ConfigService } from '@configService';
 import { FirebaseService } from '@firebaseService';
 
 @Component({
@@ -68,6 +70,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private validationService: ValidationService,
     private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
+    private configService: ConfigService,
     private firebase: FirebaseService,
   ) {
     this.online$ = this.utilService.online$;
@@ -104,8 +107,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         const recipes$ = this.recipeService.get();
         const userIngredient$ = this.userIngredientService.get(this.householdId);
         const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
+        const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
 
-        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredients, recipeHistory]) => {
+        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredients, recipeHistory, configs]) => {
           this.recipe = recipe;
           this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
           this.recipeImage = undefined;
@@ -130,6 +134,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.ingredients = ingredients;
           this.recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
           this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.ingredients, this.userIngredients);
+          this.recipe.displayType = configs.find(({ value }) => value === this.recipe.type)?.displayValue || '';
           this.hasNewCategory = !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
           this.loading = this.loadingService.set(false);
         });
@@ -165,12 +170,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       || this.recipe.isVegetarian
       || this.recipe.isVegan
       || this.recipe.isGlutenFree
-      || this.recipe.isDairyFree;
+      || this.recipe.isDairyFree
+      || !!this.recipe.type;
   }
 
   setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
   setRestrictionFilter = (filter: string): void => this.utilService.setListFilter(new RestrictionFilter(filter));
+  setTypeFilter = (filter: string): void => this.utilService.setListFilter(new TypeFilter(filter));
 
   changeStatus = (): void => this.recipeService.changeStatus(this.recipe);
 

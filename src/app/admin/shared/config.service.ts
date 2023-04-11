@@ -19,17 +19,17 @@ export class ConfigService extends FirestoreService {
     super('configs', firebase, currentUserService, actionService);
   }
 
-  get(name: string): Observable<Config>;
+  get(name: string): Observable<Config[]>;
   get(): Observable<Config[]>;
-  get(name?: string): Observable<Config | Config[]> {
+  get(name?: string): Observable<Config[]> {
     return new Observable(observer => {
       if (name) {
         super.getMany(this.firebase.query(this.ref, this.firebase.where('name', '==', name))).subscribe(docs => {
-          observer.next(new Config(docs[0]));
+          observer.next(docs.map(doc => new Config(doc)).sort(this.sortByOrder));
         });
       } else {
         super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new Config(doc)));
+          observer.next(docs.map(doc => new Config(doc)).sort(this.sortByOrder).sort(this.sortByName));
         });
       }
     });
@@ -38,4 +38,6 @@ export class ConfigService extends FirestoreService {
   create = (data: ModelObject): string => super.create(data);
   update = (data: Config[]): void => super.updateAll(data);
   delete = (id: string): void => super.delete(id);
+  sortByOrder = (a: Config, b: Config): number => a.order - b.order;
+  sortByName = (a: Config, b: Config): number => a.name.localeCompare(b.name);
 }

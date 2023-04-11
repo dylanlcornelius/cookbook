@@ -120,7 +120,7 @@ export class AdminDashboardComponent implements OnDestroy {
   contexts = [
     new Context(
       'Configurations',
-      ['name', 'value'],
+      ['name', 'value', 'displayValue', 'order'],
       this.configService,
       this.revert,
       this.save,
@@ -171,7 +171,7 @@ export class AdminDashboardComponent implements OnDestroy {
     ),
     new Context(
       'Recipes',
-      ['name', 'link', 'description', 'time', 'calories', 'servings', 'categories', 'steps', 'meanRating', 'ratings', 'uid', 'author', 'status', 'hasImage', 'isVegetarian', 'isVegan', 'isGlutenFree', 'isDairyFree'],
+      ['name', 'link', 'description', 'time', 'calories', 'servings', 'categories', 'steps', 'meanRating', 'ratings', 'uid', 'author', 'status', 'hasImage', 'isVegetarian', 'isVegan', 'isGlutenFree', 'isDairyFree', 'type'],
       this.recipeService,
       this.revert,
       this.save,

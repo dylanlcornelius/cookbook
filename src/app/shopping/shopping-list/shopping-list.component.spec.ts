@@ -20,7 +20,8 @@ import { TutorialService } from '@tutorialService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from '@numberService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { IngredientCategory } from '@ingredientCategory';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -35,6 +36,7 @@ describe('ShoppingListComponent', () => {
   let tutorialService: TutorialService;
   let recipeIngredientService: RecipeIngredientService;
   let numberService: NumberService;
+  let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -69,6 +71,7 @@ describe('ShoppingListComponent', () => {
     tutorialService = TestBed.inject(TutorialService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     numberService = TestBed.inject(NumberService);
+    configService = TestBed.inject(ConfigService);
   });
 
   it('should create', () => {
@@ -79,25 +82,35 @@ describe('ShoppingListComponent', () => {
     it('should load ingredients and items', () => {
       const userIngredients = [
         new UserIngredient({ ingredientId: 'ingredientId', cartQuantity: 1 }),
-        new UserIngredient({ ingredientId: 'ingredientId2', cartQuantity: 2 })
+        new UserIngredient({ ingredientId: 'ingredientId2', cartQuantity: 2 }),
+        new UserIngredient({ ingredientId: 'ingredientId3', cartQuantity: 2 }),
       ];
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
-          category: IngredientCategory.BAKING
+          category: 'BAKING'
         }),
         new Ingredient({
           id: 'ingredientId2',
-          category: IngredientCategory.BAKING
+          category: 'FAKE_CATEGORY'
+        }),
+        new Ingredient({
+          id: 'ingredientId3',
+          category: 'CANNED'
         })
       ];
       const userItems = [new UserItem({ id: 'itemId' })];
+      const configs = [
+        new Config({ value: 'BAKING', displayValue: 'Baking' }),
+        new Config({ value: 'CANNED', displayValue: 'Canned' }),
+      ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userItemService, 'get').and.returnValue(of(userItems));
+      spyOn(configService, 'get').and.returnValue(of(configs));
 
       component.load();
       fixture.detectChanges();
@@ -109,6 +122,7 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
     });
 
     it('should not load unavailable ingredients and items', () => {
@@ -117,12 +131,14 @@ describe('ShoppingListComponent', () => {
         id: 'ingredientId'
       })];
       const userItems = [new UserItem({ id: 'itemId2' })];
+      const configs = [];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userItemService, 'get').and.returnValue(of(userItems));
+      spyOn(configService, 'get').and.returnValue(of(configs));
 
       component.load();
 
@@ -132,6 +148,7 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
     });
 
     it('should handle empty user ingredients and user items', () => {
@@ -140,12 +157,14 @@ describe('ShoppingListComponent', () => {
         id: 'ingredientId'
       })];
       const userItems = [];
+      const configs = [];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(userItemService, 'get').and.returnValue(of(userItems));
+      spyOn(configService, 'get').and.returnValue(of(configs));
 
       component.load();
 
@@ -155,6 +174,7 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(userItemService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
     });
   });
 

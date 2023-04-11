@@ -10,6 +10,8 @@ import { IngredientListComponent } from '../ingredient-list/ingredient-list.comp
 import { ValidationService } from '@modalService';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
@@ -18,6 +20,7 @@ describe('IngredientsDetailComponent', () => {
   let numberService: NumberService;
   let validationService: ValidationService;
   let tutorialService: TutorialService;
+  let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,19 +51,39 @@ describe('IngredientsDetailComponent', () => {
     numberService = TestBed.inject(NumberService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
+    configService = TestBed.inject(ConfigService);
   });
 
   describe('load', () => {
-    it('should create', () => {
+    it('should load an ingredient', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
   
-      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({ category: 'BAKING' })));
+      spyOn(configService, 'get').and.returnValue(of([new Config({ value: 'BAKING', displayValue: 'Baking' })]));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
       
       component.load();
   
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+      expect(numberService.toFormattedFraction).toHaveBeenCalled();
+      expect(component).toBeTruthy();
+      expect(component.ingredient.displayCategory).toEqual('Baking');
+    });
+
+    it('should load an ingredient without data', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ id: 'id' });
+  
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'get').and.returnValue(of([]));
+      spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
+      
+      component.load();
+  
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
       expect(component).toBeTruthy();
     });

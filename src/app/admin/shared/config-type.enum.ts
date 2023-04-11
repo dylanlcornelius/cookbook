@@ -1,0 +1,4 @@
+export enum ConfigType {
+  INGREDIENT_CATEGORY = 'INGREDIENT_CATEGORY',
+  RECIPE_TYPE = 'RECIPE_TYPE',
+}

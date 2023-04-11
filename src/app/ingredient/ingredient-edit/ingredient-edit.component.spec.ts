@@ -12,6 +12,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
 import { of } from 'rxjs';
 import { TutorialService } from '@tutorialService';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
 
 describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
@@ -19,6 +21,7 @@ describe('IngredientEditComponent', () => {
   let ingredientService: IngredientService;
   let formBuilder: FormBuilder;
   let tutorialService: TutorialService;
+  let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -50,6 +53,7 @@ describe('IngredientEditComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     formBuilder = TestBed.inject(FormBuilder);
     tutorialService = TestBed.inject(TutorialService);
+    configService = TestBed.inject(ConfigService);
   });
 
   it('should create', () => {
@@ -62,11 +66,13 @@ describe('IngredientEditComponent', () => {
       route.params = of({ 'ingredient-id': 'id' });
 
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
   
       fixture = TestBed.createComponent(IngredientEditComponent);
       fixture.detectChanges();
   
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
     });
   });
 

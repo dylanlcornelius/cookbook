@@ -39,6 +39,7 @@
       "@tutorialService": ["src/app/shared/tutorial-modal/tutorial.service"],
       "@config": ["src/app/admin/shared/config.model"],
       "@configService": ["src/app/admin/shared/config.service"],
+      "@configType": ["src/app/admin/shared/config-type.enum"],
       "@feedback": ["src/app/admin/shared/feedback.model"],
       "@feedbackService": ["src/app/admin/shared/feedback.service"],
       "@context": ["src/app/admin/shared/context.model"],

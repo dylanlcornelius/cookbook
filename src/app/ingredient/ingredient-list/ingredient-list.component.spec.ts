@@ -15,6 +15,8 @@ import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
+import { Config } from '@config';
+import { ConfigService } from '@configService';
 
 describe('IngredientListComponent', () => {
   let component: IngredientListComponent;
@@ -25,6 +27,7 @@ describe('IngredientListComponent', () => {
   let ingredientService: IngredientService;
   let numberService: NumberService;
   let tutorialService: TutorialService;
+  let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -53,6 +56,7 @@ describe('IngredientListComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
     tutorialService = TestBed.inject(TutorialService);
+    configService = TestBed.inject(ConfigService);
   });
 
   it('should create', () => {
@@ -62,14 +66,14 @@ describe('IngredientListComponent', () => {
   describe('load', () => {
     it('should load ingredients', () => {
       const userIngredients = [new UserIngredient({ ingredientId: 'id'}), new UserIngredient({})];
-      const ingredients = [new Ingredient({
-        id: 'id'
-      })];
+      const ingredients = [new Ingredient({ id: 'id', category: 'BAKING' })];
+      const configs = [new Config({ value: 'BAKING', displayValue: 'Baking' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       component.load();
@@ -78,6 +82,29 @@ describe('IngredientListComponent', () => {
       expect(householdService.get).toHaveBeenCalled();
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+      expect(numberService.toFormattedFraction).toHaveBeenCalled();
+    });
+
+    it('should load ingredients without data', () => {
+      const userIngredients = [new UserIngredient({ ingredientId: 'id'}), new UserIngredient({})];
+      const ingredients = [new Ingredient({ id: 'id'})];
+      const configs = [new Config({ value: 'BAKING', displayValue: 'Baking' })];
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
+      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
+
+      component.load();
+
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
     });
   });
@@ -139,7 +166,7 @@ describe('IngredientListComponent', () => {
 
   describe('removeIngredient', () => {
     it('should remove a user ingredient', () => {
-      component.userIngredients = [{id: 'id', cartQuantity: 1}];
+      component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
@@ -151,7 +178,7 @@ describe('IngredientListComponent', () => {
     });
 
     it('should not remove a user ingredient if it is zero', () => {
-      component.userIngredients = [{id: 'id', cartQuantity: 1}];
+      component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
@@ -165,7 +192,7 @@ describe('IngredientListComponent', () => {
 
   describe('addIngredient', () => {
     it('should add a user ingredient', () => {
-      component.userIngredients = [{id: 'id'}];
+      component.userIngredients = [new UserIngredient({ ingredientId: 'id' })];
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id', amount: 1}];
 
