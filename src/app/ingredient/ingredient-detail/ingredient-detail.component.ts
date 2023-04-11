@@ -52,7 +52,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       
       combineLatest([ingredient$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredient, configs]) => {
         this.ingredient = ingredient;
-        this.ingredient.category = configs.find(({ value }) => value === this.ingredient.category)?.displayValue || 'Other';
+        this.ingredient.displayCategory = configs.find(({ value }) => value === this.ingredient.category)?.displayValue || 'Other';
         this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
         this.loading = this.loadingService.set(false);
       });

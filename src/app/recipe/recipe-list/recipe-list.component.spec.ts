@@ -11,7 +11,8 @@ import {
   SearchFilter,
   StatusFilter,
   ImageFilter,
-  RestrictionFilter
+  RestrictionFilter,
+  TypeFilter
 } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
@@ -41,6 +42,8 @@ import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeHistory } from '@recipeHistory';
 import { UOM } from '@uoms';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -60,6 +63,7 @@ describe('RecipeListComponent', () => {
   let mealPlanService: MealPlanService;
   let notificationService: NotificationService;
   let recipeHistoryService: RecipeHistoryService;
+  let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -110,6 +114,7 @@ describe('RecipeListComponent', () => {
     mealPlanService = TestBed.inject(MealPlanService);
     notificationService = TestBed.inject(NotificationService);
     recipeHistoryService = TestBed.inject(RecipeHistoryService);
+    configService = TestBed.inject(ConfigService);
   });
 
   it('should create', () => {
@@ -131,11 +136,9 @@ describe('RecipeListComponent', () => {
         }),
         new Recipe({})
       ];
-
       const userIngredients = [new UserIngredient({
         ingredientId: 'ingredientId'
       })];
-
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
@@ -145,13 +148,13 @@ describe('RecipeListComponent', () => {
           id: 'ingredientId2'
         })
       ];
-
       const histories = [
         new RecipeHistory({
           recipeId: 'recipe',
           timesCooked: 1
         })
       ];
+      const configs = [new Config({})];
 
       const element = document.createElement('div');
       element.id = 'recipe';
@@ -165,6 +168,7 @@ describe('RecipeListComponent', () => {
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(component, 'initFilters');
@@ -180,6 +184,7 @@ describe('RecipeListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.initFilters).toHaveBeenCalled();
@@ -198,11 +203,9 @@ describe('RecipeListComponent', () => {
           }]
         })
       ];
-
       const userIngredients = [new UserIngredient({
         ingredientId: 'ingredientId'
       })];
-
       const ingredients = [
         new Ingredient({
           id: 'ingredientId'
@@ -211,12 +214,12 @@ describe('RecipeListComponent', () => {
           id: 'ingredientId2'
         })
       ];
-
       const histories  = [
         new RecipeHistory({
           recipeId: 'recipe'
         })
       ];
+      const configs = [];
 
       recipeFilterService.recipeId = 'recipe';
 
@@ -226,6 +229,7 @@ describe('RecipeListComponent', () => {
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(component, 'initFilters');
@@ -241,6 +245,7 @@ describe('RecipeListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.initFilters).toHaveBeenCalled();
@@ -258,11 +263,9 @@ describe('RecipeListComponent', () => {
           author: ''
         })
       ];
-
       const userIngredients = [new UserIngredient({
         ingredientId: 'ingredientId'
       })];
-
       const ingredients = [
         new Ingredient({
           id: 'ingredientId'
@@ -271,12 +274,12 @@ describe('RecipeListComponent', () => {
           id: 'ingredientId2'
         })
       ];
-
       const histories  = [
         new RecipeHistory({
           recipeId: 'recipe'
         })
       ];
+      const configs = [];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
@@ -284,6 +287,7 @@ describe('RecipeListComponent', () => {
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeIngredientService, 'getRecipeCount');
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(component, 'initFilters');
@@ -298,6 +302,7 @@ describe('RecipeListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.initFilters).toHaveBeenCalled();
@@ -334,11 +339,9 @@ describe('RecipeListComponent', () => {
           }],
         })
       ];
-
       const userIngredients = [new UserIngredient({
         ingredientId: 'ingredientId'
       })];
-
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
@@ -348,13 +351,13 @@ describe('RecipeListComponent', () => {
           id: 'ingredientId2'
         })
       ];
-
       const histories = [
         new RecipeHistory({
           recipeId: 'recipe1',
           timesCooked: 1
         })
       ];
+      const configs = [];
 
       const element = document.createElement('div');
       element.id = 'recipe';
@@ -368,6 +371,7 @@ describe('RecipeListComponent', () => {
       spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(recipeHistoryService, 'get').and.returnValue(of(histories));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(component, 'initFilters');
 
@@ -382,6 +386,7 @@ describe('RecipeListComponent', () => {
       expect(userIngredientService.get).toHaveBeenCalled();
       expect(ingredientService.get).toHaveBeenCalled();
       expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.initFilters).toHaveBeenCalled();
       expect(component.recipes.find(({ id }) => id === 'recipe1').ingredients[0].isOptional).toBeFalse();
@@ -396,19 +401,23 @@ describe('RecipeListComponent', () => {
 
       component.recipes = [
         new Recipe({
+          type: 'SALAD',
           categories: [{ category: 'thing' }, { category: 'thingy'}],
-          author: 'author'
+          author: 'author',
+          hasNewCategory: true
         }),
         new Recipe({
           categories: [],
           author: 'author2'
         })
       ];
+      component.types = [new Config({})];
 
       recipeFilterService.selectedFilters = [
         new RatingFilter(1),
-        new CategoryFilter(''),
+        new CategoryFilter('New!'),
         new AuthorFilter('author'),
+        new TypeFilter('SALAD'),
         new RestrictionFilter('isVegetarian'),
         new SearchFilter('search'),
         new StatusFilter(RECIPE_STATUS.PUBLISHED),
@@ -445,6 +454,7 @@ describe('RecipeListComponent', () => {
         }),
         new Recipe({})
       ];
+      component.types = [];
 
       spyOn(component, 'setFilters');
       spyOn(component.dataSource.paginator, 'firstPage');
@@ -576,7 +586,27 @@ describe('RecipeListComponent', () => {
     it('should call a filter function', () => {
       spyOn(utilService, 'setListFilter');
 
-      component.setCategoryFilter(new CategoryFilter('1'));
+      component.setCategoryFilter('1');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
+    });
+  });
+
+  describe('setRestrictionFilter', () => {
+    it('should call a filter function', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setRestrictionFilter('1');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
+    });
+  });
+
+  describe('setTypeFilter', () => {
+    it('should call a filter function', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setTypeFilter('1');
 
       expect(utilService.setListFilter).toHaveBeenCalled();
     });
