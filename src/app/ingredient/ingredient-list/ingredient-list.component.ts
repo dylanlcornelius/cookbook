@@ -13,7 +13,9 @@ import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
-import { IngredientCategory } from '@ingredientCategory';
+import { UserIngredient } from '@userIngredient';
+import { ConfigType } from '@configType';
+import { ConfigService } from '@configService';
 
 @Component({
   selector: 'app-ingredient-list',
@@ -28,6 +30,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
   dataSource;
 
+  ingredients: Ingredient[];
   userIngredients = [];
 
   user: User;
@@ -44,6 +47,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
     private tutorialService: TutorialService,
+    private configService: ConfigService,
   ) {}
 
   ngOnInit() {
@@ -66,9 +70,11 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
         const userIngredients$ = this.userIngredientService.get(this.householdId);
         const ingredients$ = this.ingredientService.get();
-        combineLatest([userIngredients$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, ingredients]) => {
-          ingredients.forEach(ingredient => {
-            ingredient.category = IngredientCategory[ingredient.category] || ingredient.category;
+        const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+        combineLatest([userIngredients$, ingredients$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, ingredients, configs]) => {
+          this.ingredients = ingredients.map(originalIngredient => {
+            const ingredient = new Ingredient({ ...originalIngredient });
+            ingredient.category = configs.find(({ value }) => value === ingredient.category)?.displayValue || 'Other';
             ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
             userIngredients.forEach(userIngredient => {
@@ -77,9 +83,11 @@ export class IngredientListComponent implements OnInit, OnDestroy {
                 ingredient.cartQuantity = userIngredient.cartQuantity;
               }
             });
+
+            return ingredient;
           });
 
-          this.dataSource = new MatTableDataSource(ingredients);
+          this.dataSource = new MatTableDataSource(this.ingredients);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.userIngredients = userIngredients;
@@ -122,7 +130,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   };
 
   removeIngredient(id: string): void {
-    const data = this.userIngredients.find(x => x.id === id);
+    const data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     const ingredient = this.findIngredient(id);
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
       data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
@@ -132,14 +140,19 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   addIngredient(id: string): void {
-    const data = this.userIngredients.find(x => x.id === id);
+    const data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     const ingredient = this.findIngredient(id);
     if (ingredient.amount) {
       if (data) {
         data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
         ingredient.cartQuantity = Number(ingredient.cartQuantity) + Number(ingredient.amount);
       } else {
-        this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: Number(ingredient.amount)});
+        this.userIngredients.push(new UserIngredient({
+          ingredientId: id,
+          pantryQuantity: 0,
+          cartQuantity: Number(ingredient.amount),
+          uid: this.householdId,
+        }));
         ingredient.cartQuantity = Number(ingredient.amount);
       }
       this.userIngredientService.update(this.userIngredients);

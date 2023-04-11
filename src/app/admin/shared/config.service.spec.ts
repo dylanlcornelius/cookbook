@@ -22,14 +22,14 @@ describe('ConfigService', () => {
   });
 
   describe('getConfigs', () => {
-    it('should get one document based on an id', () => {
+    it('should get documents based on a name', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
       spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
       spyOn(FirestoreService.prototype, 'get');
 
-      service.get('name').subscribe(doc => {
-        expect(doc).toBeDefined();
+      service.get('name').subscribe(docs => {
+        expect(docs).toBeDefined();
       });
 
       expect(firebase.where).toHaveBeenCalled();
@@ -82,6 +82,22 @@ describe('ConfigService', () => {
       service.delete('id');
 
       expect(FirestoreService.prototype.delete).toHaveBeenCalled();
+    });
+  });
+
+  describe('sortByOrder', () => {
+    it('should sort two configs by order', () => {
+      const result = service.sortByOrder(new Config({ order: 2 }), new Config({ order: 1 }));
+
+      expect(result).toEqual(1);
+    });
+  });
+
+  describe('sortByName', () => {
+    it('should sort two configs by name', () => {
+      const result = service.sortByName(new Config({ name: 'RECIPE_TYPE' }), new Config({ name: 'INGREDIENT_CATEGORY' }));
+
+      expect(result).toEqual(1);
     });
   });
 });

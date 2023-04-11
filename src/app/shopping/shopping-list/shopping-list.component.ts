@@ -18,8 +18,10 @@ import { UserIngredient } from '@userIngredient';
 import { UserItem } from '@userItem';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from '@numberService';
-import { IngredientCategory } from '@ingredientCategory';
 import { KeyValue } from '@angular/common';
+import { Config } from '@config';
+import { ConfigService } from '@configService';
+import { ConfigType } from '@configType';
 
 @Component({
   selector: 'app-shopping-list',
@@ -36,7 +38,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   userIngredients: UserIngredient[];
   userItems: UserItem[];
   ingredients: Ingredient[];
-  categories: IngredientCategory[];
+  categories: Config[];
 
   ingredientControl = new FormControl();
   filteredIngredients: Observable<Ingredient[]>;
@@ -54,9 +56,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private tutorialService: TutorialService,
     private recipeIngredientService: RecipeIngredientService,
     private numberService: NumberService,
-  ) {
-    this.categories = Object.values(IngredientCategory);
-  }
+    private configService: ConfigService,
+  ) { }
 
   ngOnInit() {
     this.load();
@@ -79,11 +80,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         const userIngredients$ = this.userIngredientService.get(this.householdId);
         const userItems$ = this.userItemService.get(this.householdId);
         const ingredients$ = this.ingredientService.get();
+        const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
 
-        combineLatest([userIngredients$, userItems$, ingredients$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, userItems, ingredients]) => {
+        combineLatest([userIngredients$, userItems$, ingredients$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, userItems, ingredients, configs]) => {
           this.userIngredients = userIngredients;
           this.userItems = userItems;
           this.ingredients = ingredients;
+          this.categories = configs;
           
           this.displayIngredients = userIngredients.reduce((userIngredientsByCategory, userIngredient) => {
             const ingredient = ingredients.find(({ id }) => id === userIngredient.ingredientId);
@@ -93,7 +96,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
             }
 
             if (ingredient && userIngredient.cartQuantity !== 0) {
-              const category = IngredientCategory[ingredient.category] || ingredient.category;
+              const category = this.categories.find(({ value }) => value === ingredient.category)?.displayValue || 'Other';
               
               if (!userIngredientsByCategory[category]) {
                 userIngredientsByCategory[category] = [];
@@ -112,7 +115,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
           }, {});
 
           if (this.userItems.length) {
-            this.displayIngredients[IngredientCategory.OTHER] = (this.displayIngredients[IngredientCategory.OTHER] || []).concat(this.userItems.map((item, index) => ({ ...item, index, isItem: true })));
+            this.displayIngredients['Other'] = (this.displayIngredients['Other'] || []).concat(this.userItems.map((item, index) => ({ ...item, index, isItem: true })));
           }
 
           if (!Object.keys(this.displayIngredients).length) {
@@ -130,7 +133,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   categoryOrder = ({ key: a }: KeyValue<string, any>, {key: b }: KeyValue<string, any>): number => {
-    return this.categories.findIndex(value => value === a) - this.categories.findIndex(value => value === b);
+    return this.categories.find(({ displayValue }) => displayValue === a)?.order - this.categories.find(({ displayValue }) => displayValue === b)?.order;
   };
 
   addIngredient(ingredient: Ingredient): void {

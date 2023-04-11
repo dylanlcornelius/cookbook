@@ -35,8 +35,8 @@
     <mat-form-field class="form-field">
       <mat-label>Category</mat-label>
       <mat-select formControlName="category" required>
-        <mat-option *ngFor="let category of categories" [value]="category.key">
-          {{category.value}}
+        <mat-option *ngFor="let category of categories" [value]="category.value">
+          {{category.displayValue}}
         </mat-option>
       </mat-select>
       <mat-error>
