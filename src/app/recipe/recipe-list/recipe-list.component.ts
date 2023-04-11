@@ -256,7 +256,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
             icon: 'more_vert',
             values: [
               { displayName: 'Authors', name: 'author', values: authors },
-              { displayName: 'types', name: 'type', values: types },
+              { displayName: 'Types', name: 'type', values: types },
               { displayName: 'Restrictions', name: 'restriction', values: restrictions },
               { displayName: 'Ratings', name: 'ratings', values: ratings },
               { displayName: 'Statuses', name: 'statuses', values: statuses },
