@@ -109,7 +109,11 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  onFormSubmit(formDirective: FormGroupDirective): void {
+  onSubmit(formDirective: FormGroupDirective): void {
+    if (this.ingredientsForm.invalid) {
+      return;
+    }
+
     const form = this.ingredientsForm.value;
 
     if (this.id) {

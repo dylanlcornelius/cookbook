@@ -64,6 +64,11 @@ export class NewUserComponent implements OnInit, OnDestroy {
     this.currentUserService.setCurrentUser(this.user);
   };
 
+  markAsTouched(): void {
+    this.firstNameControl.markAsTouched();
+    this.lastNameControl.markAsTouched();
+  }
+
   submit(): void {
     let hasChange = false;
 

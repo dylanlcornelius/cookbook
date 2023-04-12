@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedbackComponent } from './feedback.component';
-import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { User } from '@user';
 import { NotificationService } from '@modalService';
@@ -63,10 +63,11 @@ describe('FeedbackComponent', () => {
     });
   });
 
-  describe('onFormSubmit', () => {
-    it('should update a user record', () => {
+  describe('onSubmit', () => {
+    it('should do nothing for an invalid form', () => {
       const formDirective = new FormGroupDirective([], []);
 
+      component.form = new FormBuilder().group({ name: [null, Validators.required] });
       component.user = new User({});
 
       spyOn(feedbackService, 'create');
@@ -74,7 +75,26 @@ describe('FeedbackComponent', () => {
       spyOn(formDirective, 'resetForm');
       spyOn(component.modal, 'close');
 
-      component.onFormSubmit(formDirective);
+      component.onSubmit(formDirective);
+
+      expect(feedbackService.create).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
+      expect(formDirective.resetForm).not.toHaveBeenCalled();
+      expect(component.modal.close).not.toHaveBeenCalled();
+    });
+
+    it('should update a user record', () => {
+      const formDirective = new FormGroupDirective([], []);
+
+      component.form = new FormBuilder().group({});
+      component.user = new User({});
+
+      spyOn(feedbackService, 'create');
+      spyOn(notificationService, 'setModal');
+      spyOn(formDirective, 'resetForm');
+      spyOn(component.modal, 'close');
+
+      component.onSubmit(formDirective);
 
       expect(feedbackService.create).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();

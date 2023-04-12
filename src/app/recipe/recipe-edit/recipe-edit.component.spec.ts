@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { RecipeEditComponent } from './recipe-edit.component';
@@ -25,6 +25,8 @@ import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/m
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
+import { FormValidationDirective } from 'src/app/shared/form-validation.directive';
+import { MatStepper } from '@angular/material/stepper';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -54,7 +56,10 @@ describe('RecipeEditComponent', () => {
         MatSelectModule,
         BrowserAnimationsModule,
       ],
-      declarations: [ RecipeEditComponent ],
+      declarations: [
+        RecipeEditComponent,
+        FormValidationDirective,
+      ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
       ]
@@ -603,7 +608,65 @@ describe('RecipeEditComponent', () => {
     });
   });
 
-  describe('submitForm', () => {
+  describe('stepperOnSubmit', () => {
+    it('should return the default recipe step', () => {
+      component.stepper = { selectedIndex: 2 } as MatStepper;
+
+      const result = component.stepperOnSubmit('steps');
+
+      expect(result).toEqual('step');
+      expect(component.stepper.selectedIndex).toEqual(1);
+    });
+
+    it('should return the default recipe step', () => {
+      component.stepper = { selectedIndex: 1 } as MatStepper;
+
+      const result = component.stepperOnSubmit('ingredients');
+
+      expect(result).toEqual('quantity');
+      expect(component.stepper.selectedIndex).toEqual(2);
+    });
+
+    it('should return the default recipe step', () => {
+      component.stepper = { selectedIndex: 2 } as MatStepper;
+
+      const result = component.stepperOnSubmit('description');
+
+      expect(result).toEqual('description');
+      expect(component.stepper.selectedIndex).toEqual(0);
+    });
+  });
+
+  describe('onSubmit', () => {
+    it('should do nothing for an invalid form', () => {
+      component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33, creationDate: 'test'});
+      component.recipesForm = new FormBuilder().group({
+        'ingredients': new FormBuilder().array([new FormBuilder().group({'name': [null, Validators.required]})])
+      });
+      component.id = 'id';
+
+      const router = TestBed.inject(Router);
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
+      spyOn(recipeService, 'update');
+      spyOn(router, 'navigate');
+
+      
+      component.onSubmit('Save');
+
+      expect(currentUserService.getCurrentUser).not.toHaveBeenCalled();
+      expect(recipeService.update).not.toHaveBeenCalledWith(new Recipe({
+        ingredients: [{}],
+        uid: '',
+        author: '3',
+        hasImage: true,
+        meanRating: 0.33,
+        ratings: [],
+        creationDate: 'test'
+      }).getObject(), 'id');
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
     it('should update a recipe', () => {
       component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33, creationDate: 'test'});
       component.recipesForm = new FormBuilder().group({
@@ -617,7 +680,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
-      component.submitForm(false);
+      component.onSubmit('Save');
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalledWith(new Recipe({
@@ -641,7 +704,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'create').and.returnValue('id');
       spyOn(router, 'navigate');
 
-      component.submitForm(false);
+      component.onSubmit('Save');
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.create).toHaveBeenCalledWith(new Recipe({
@@ -678,7 +741,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
-      component.submitForm(true);
+      component.onSubmit('New');
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalledWith(new Recipe({

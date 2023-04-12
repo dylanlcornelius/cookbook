@@ -213,7 +213,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   };
 
-  onFormSubmit(form: any): void {
+  onSubmit(): void {
+    if (this.userForm.invalid) {
+      return;
+    }
+
+    const form = this.userForm.value;
     form.creationDate = this.user.creationDate;
     form.hasPlanner = this.user.hasPlanner;
     const user = new User(form);

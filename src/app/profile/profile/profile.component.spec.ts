@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ProfileComponent } from './profile.component';
 import { UserService } from '@userService';
@@ -282,8 +282,9 @@ describe('ProfileComponent', () => {
     });
   });
 
-  describe('onFormSubmit', () => {
-    it('should update a user record', () => {
+  describe('onSubmit', () => {
+    it('should do nothing for an invalid form', () => {
+      component.userForm = new FormBuilder().group({ name: [null, Validators.required] });
       component.currentUser = new User({});
       component.user = component.currentUser;
 
@@ -291,7 +292,23 @@ describe('ProfileComponent', () => {
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(notificationService, 'setModal');
 
-      component.onFormSubmit({});
+      component.onSubmit();
+
+      expect(userService.update).not.toHaveBeenCalled();
+      expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
+      expect(notificationService.setModal).not.toHaveBeenCalled();
+    });
+
+    it('should update a user record', () => {
+      component.userForm = new FormBuilder().group({});
+      component.currentUser = new User({});
+      component.user = component.currentUser;
+
+      spyOn(userService, 'update');
+      spyOn(currentUserService, 'setCurrentUser');
+      spyOn(notificationService, 'setModal');
+
+      component.onSubmit();
 
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
@@ -299,6 +316,7 @@ describe('ProfileComponent', () => {
     });
 
     it('should update a user record and not set current user for admins', () => {
+      component.userForm = new FormBuilder().group({});
       component.currentUser = new User({});
       component.user = new User({});
 
@@ -306,7 +324,7 @@ describe('ProfileComponent', () => {
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(notificationService, 'setModal');
 
-      component.onFormSubmit({});
+      component.onSubmit();
 
       expect(userService.update).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();

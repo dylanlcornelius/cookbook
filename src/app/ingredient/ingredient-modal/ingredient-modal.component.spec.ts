@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { IngredientModalComponent } from './ingredient-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -55,26 +55,53 @@ describe('IngredientModalComponent', () => {
     });
   });
 
-  describe('confirm', () => {
+  describe('onSubmit', () => {
+    it('should do nothing for an invalid form', () => {
+      spyOn(numberService, 'toFormattedFraction');
+
+      component.Params = {
+        function: () => {},
+        data: {
+          ingredientId: 'id'
+        },
+        userIngredients: [{ingredientId: 'id'}],
+        dataSource: {
+          data: [{id: 'id', pantryQuatity: 10}]
+        },
+        text: ''
+      };
+      component.form = new FormBuilder().group({ name: [null, Validators.required] });
+
+      spyOn(component.params, 'function');
+      spyOn(component.modal, 'close');
+
+      component.onSubmit();
+
+      expect(numberService.toFormattedFraction).toHaveBeenCalled();
+      expect(component.params.function).not.toHaveBeenCalled();
+      expect(component.modal.close).not.toHaveBeenCalled();
+    });
+
     it('should change an ingredient pantry quantity', () => {
       spyOn(numberService, 'toFormattedFraction');
 
       component.Params = {
         function: () => {},
         data: {
-          id: 'id'
+          ingredientId: 'id'
         },
-        userIngredients: [{id: 'id'}],
+        userIngredients: [{ingredientId: 'id'}],
         dataSource: {
           data: [{id: 'id', pantryQuatity: 10}]
         },
         text: ''
       };
+      component.form = new FormBuilder().group({ pantryQuantity: [null] });
 
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
 
-      component.confirm();
+      component.onSubmit();
 
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
       expect(component.params.function).toHaveBeenCalled();

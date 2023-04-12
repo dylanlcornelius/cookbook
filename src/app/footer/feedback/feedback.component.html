@@ -6,7 +6,7 @@
 
   <h2>Feedback Form</h2>
 
-  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onFormSubmit(formDirective)">
+  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)" appFormValidation>
     <mat-form-field class="form-field">
       <textarea matInput placeholder="Please enter your feedback here" formControlName="description" cdkTextareaAutosize cdkAutosizeMinRows="10"></textarea>
       <mat-error>
@@ -15,7 +15,7 @@
     </mat-form-field>
 
     <div class="button-row">
-      <button mat-mini-fab matTooltip="Submit Feedback" type="submit" [disabled]="!form.valid" color="primary">
+      <button mat-mini-fab matTooltip="Submit Feedback" type="submit" color="primary">
         <mat-icon>done</mat-icon>
       </button>
     </div>

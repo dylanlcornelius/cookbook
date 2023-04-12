@@ -59,7 +59,11 @@ export class FeedbackComponent implements OnInit {
     this.modal.close();
   }
 
-  onFormSubmit(formDirective: FormGroupDirective): void {
+  onSubmit(formDirective: FormGroupDirective): void {
+    if (this.form.invalid) {
+      return;
+    }
+
     const form = this.form.value;
     form.author = this.user.name;
     form.uid = this.user.uid;
