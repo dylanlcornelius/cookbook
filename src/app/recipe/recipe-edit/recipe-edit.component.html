@@ -105,7 +105,7 @@
     </ng-template>
   
     <ng-template #stepsStep>
-      <div formArrayName="steps">
+      <div formArrayName="steps" id="recipe-steps-div">
         <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()">
           <mat-icon>add</mat-icon>
         </button>
@@ -133,7 +133,7 @@
         <div class="list-container">
           <h3>Added Ingredients</h3>
       
-          <div formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
+          <div id="added-ingredients-div" formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
           [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
             <div class="container box" *ngFor="let ingredient of recipesForm.get('ingredients')['controls']; let i = index"
                 cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
@@ -189,7 +189,7 @@
             </mat-placeholder>
           </mat-form-field>
 
-          <div class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
+          <div id="available-ingredients-div" class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
               [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="dropAvailable($event)">
             <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag [cdkDragData]="ingredient">
               <mat-label class="ingredient-name col-12">
@@ -207,7 +207,7 @@
       <app-uom-table></app-uom-table>
     </ng-template>
 
-    <mat-stepper [orientation]="(stepperOrientation | async)!" #stepper>
+    <mat-stepper [orientation]="(stepperOrientation | async)!" #stepper [selectedIndex]="selectedIndex">
       <mat-step [editable]="true">
         <ng-template matStepLabel>Information</ng-template>
   

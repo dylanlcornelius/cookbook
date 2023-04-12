@@ -17,6 +17,12 @@
   word-break: break-word;
   transition: all 0.3s ease-in-out;
 }
+.description {
+  padding: 10px;
+}
+.steps {
+  align-self: center;
+}
 .close-button {
   z-index: 301;
   position: fixed;

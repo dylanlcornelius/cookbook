@@ -105,6 +105,7 @@ describe('RecipeEditComponent', () => {
     it('should load recipes with data', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
+      route.queryParams = of({ step: 1 });
 
       const recipe = new Recipe({
         name: 'Title',
@@ -163,6 +164,7 @@ describe('RecipeEditComponent', () => {
     it('should load recipes without data', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
+      route.queryParams = of({});
 
       const recipe = new Recipe({
         ingredients: [{
@@ -282,6 +284,7 @@ describe('RecipeEditComponent', () => {
     it('should reload a recipe', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
+      route.queryParams = of({});
 
       const recipe = new Recipe({
         ingredients: [{

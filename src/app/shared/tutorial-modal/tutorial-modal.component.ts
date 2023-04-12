@@ -98,7 +98,7 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
     
     this.tutorial = this.tutorials[this.tutorialIndex];
     if (this.router.url != this.tutorial.url) {
-      this.router.navigate([this.tutorial.url], { skipLocationChange: true }).then(() => {
+      this.router.navigateByUrl(this.tutorial.url, { skipLocationChange: true }).then(() => {
         this.loadingService.get()
           .pipe(takeWhile((loading: boolean) => loading, true))
           .subscribe((loading: boolean) => {

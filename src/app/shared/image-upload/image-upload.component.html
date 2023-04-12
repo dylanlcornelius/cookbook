@@ -1,4 +1,4 @@
-<div *ngIf="(online$ | async)">
+<div *ngIf="(online$ | async)" id="image-upload-button">
     <input #uploadFile type="file" id="uploadFile" style="display: none" (change)="readFile($event)" accept="image/jpeg, .jpeg, image/png, .png, image/pjpeg, .jpg, .docx, .pdf"/>
     <button mat-button matTooltip="Add Image" (click)="uploadFile.click()" [hidden]="image"><mat-icon>add_a_photo</mat-icon></button>
     <button mat-button matTooltip="Delete Image" (click)="deleteFile(id)" [hidden]="!image"><mat-icon>no_photography</mat-icon></button>
