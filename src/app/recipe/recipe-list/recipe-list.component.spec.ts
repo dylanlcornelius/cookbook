@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource, MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { of } from 'rxjs/internal/observable/of';
 import { RecipeService } from '@recipeService';
 import {
@@ -35,7 +35,7 @@ import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { NotificationService, ValidationService } from '@modalService';
 import { BehaviorSubject } from 'rxjs';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatLegacyPaginatorModule as MatPaginatorModule, LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';

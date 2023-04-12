@@ -46,7 +46,6 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     private router: Router,
     public route: ActivatedRoute,
     private loadingService: LoadingService,
-    private formBuilder: FormBuilder,
     private ingredientService: IngredientService,
     private tutorialService: TutorialService,
     private configService: ConfigService,
@@ -69,7 +68,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
       this.id = params['ingredient-id'];
-      this.ingredientsForm = this.formBuilder.group({
+      this.ingredientsForm = new FormBuilder().group({
         name: [null, Validators.required],
         amount: [null, [Validators.required, Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
         uom: [null, Validators.required],

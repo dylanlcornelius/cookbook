@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormGroupDirective, FormBuilder } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IngredientService } from '@ingredientService';
 
@@ -19,7 +19,6 @@ describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
   let fixture: ComponentFixture<IngredientEditComponent>;
   let ingredientService: IngredientService;
-  let formBuilder: FormBuilder;
   let tutorialService: TutorialService;
   let configService: ConfigService;
 
@@ -51,7 +50,6 @@ describe('IngredientEditComponent', () => {
     fixture.detectChanges();
     component.load = load;
     ingredientService = TestBed.inject(IngredientService);
-    formBuilder = TestBed.inject(FormBuilder);
     tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
   });
@@ -74,6 +72,20 @@ describe('IngredientEditComponent', () => {
       expect(ingredientService.get).toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
     });
+
+    it('should not get an ingredient', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({});
+
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
+  
+      fixture = TestBed.createComponent(IngredientEditComponent);
+      fixture.detectChanges();
+  
+      expect(ingredientService.get).not.toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+    });
   });
 
   describe('onFormSubmit', () => {
@@ -87,7 +99,7 @@ describe('IngredientEditComponent', () => {
       const router = TestBed.inject(Router);
       component.id = 'id';
       component.ingredient = new Ingredient({});
-      component.ingredientsForm = formBuilder.group({});
+      component.ingredientsForm = new FormBuilder().group({});
 
       spyOn(ingredientService, 'update');
       spyOn(component.handleIngredientCreate, 'emit');
@@ -102,7 +114,7 @@ describe('IngredientEditComponent', () => {
 
     it('should create an ingredient', () => {
       const router = TestBed.inject(Router);
-      component.ingredientsForm = formBuilder.group({});
+      component.ingredientsForm = new FormBuilder().group({});
 
       spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');
@@ -118,7 +130,7 @@ describe('IngredientEditComponent', () => {
     it('should create an ingredient from the quick view', () => {
       const router = TestBed.inject(Router);
       component.isQuickView = true;
-      component.ingredientsForm = formBuilder.group({});
+      component.ingredientsForm = new FormBuilder().group({});
 
       spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');

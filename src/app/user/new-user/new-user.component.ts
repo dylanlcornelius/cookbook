@@ -20,7 +20,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
   user: User;
   firstNameControl = new FormControl();
   lastNameControl = new FormControl();
-  nameGroup = this.formBuilder.group({
+  nameGroup = new FormBuilder().group({
     firstNameControl: this.firstNameControl,
     lastNameControl: this.lastNameControl,
   });
@@ -29,7 +29,6 @@ export class NewUserComponent implements OnInit, OnDestroy {
   userImageProgress;
 
   constructor(
-    private formBuilder: FormBuilder,
     private currentUserService: CurrentUserService,
     private userService: UserService,
     private imageService: ImageService,

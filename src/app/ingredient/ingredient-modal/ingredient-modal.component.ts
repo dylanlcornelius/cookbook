@@ -51,12 +51,11 @@ export class IngredientModalComponent implements OnInit {
   modal: ModalComponent;
 
   constructor(
-    private formBuilder: FormBuilder,
     private numberService: NumberService,
   ) {}
 
   ngOnInit() {
-    this.ingredientModalForm = this.formBuilder.group({
+    this.ingredientModalForm = new FormBuilder().group({
       'pantryQuantity': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]]
     });
   }

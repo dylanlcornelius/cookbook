@@ -29,10 +29,9 @@ export class FeedbackComponent implements OnInit {
   constructor(
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
-    private formBuilder: FormBuilder,
     private feedbackService: FeedbackService,
     private notificationService: NotificationService,
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.load();
@@ -43,7 +42,7 @@ export class FeedbackComponent implements OnInit {
     const user$ = this.currentUserService.getCurrentUser();
 
     user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.form = this.formBuilder.group({
+      this.form = new FormBuilder().group({
         'description': [null, Validators.required],
       });
 

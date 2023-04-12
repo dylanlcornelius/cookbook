@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
-@include mat.core();
+@include mat.all-legacy-component-typographies();
+@include mat.legacy-core();
 
 @mixin theme($theme) {
     .header {
@@ -40,7 +40,15 @@
 $light-primary: mat.define-palette(mat.$indigo-palette);
 $light-accent: mat.define-palette(mat.$pink-palette);
 $light-warn: mat.define-palette(mat.$orange-palette);
-$light-mat-theme: mat.define-light-theme($light-primary, $light-accent, $light-warn);
+$light-mat-theme: mat.define-light-theme((
+  color: (
+    primary: $light-primary,
+    accent: $light-accent,
+    warn: $light-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
 $light-theme: (
     header-background: linear-gradient(-45deg, #373BA6, #212463),
     modal-background: linear-gradient(180deg, #ffffff, #f5f5f5),
@@ -54,14 +62,22 @@ $light-theme: (
     shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.3)
 );
 
-@include mat.all-component-themes($light-mat-theme);
+@include mat.all-legacy-component-themes($light-mat-theme);
 @include theme($light-theme);
 
 // dark theme
 $dark-primary: mat.define-palette(mat.$blue-palette);
 $dark-accent: mat.define-palette(mat.$indigo-palette, 300);
 $dark-warn: mat.define-palette(mat.$red-palette);
-$dark-mat-theme: mat.define-dark-theme($dark-primary, $dark-accent, $dark-warn);
+$dark-mat-theme: mat.define-dark-theme((
+  color: (
+    primary: $dark-primary,
+    accent: $dark-accent,
+    warn: $dark-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
 $dark-theme: (
     header-background: linear-gradient(60deg, #029ef5 -10%, #473873 90%),
     modal-background: linear-gradient(180deg, #373BA6, #212463),
@@ -76,6 +92,6 @@ $dark-theme: (
 );
 
 .dark {
-    @include mat.all-component-themes($dark-mat-theme);
+    @include mat.all-legacy-component-colors($dark-mat-theme);
     @include theme($dark-theme);
 }

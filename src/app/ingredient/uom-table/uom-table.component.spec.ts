@@ -4,12 +4,12 @@ import { UomTableComponent } from './uom-table.component';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('UomTableComponent', () => {

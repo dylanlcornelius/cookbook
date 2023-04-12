@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
@@ -60,7 +60,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
@@ -103,7 +102,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
         this.householdId = household.id;
 
-        this.userForm = this.formBuilder.group({
+        this.userForm = new FormBuilder().group({
           uid: [this.user.uid],
           firstName : [this.user.firstName, Validators.required],
           lastName : [this.user.lastName, Validators.required],

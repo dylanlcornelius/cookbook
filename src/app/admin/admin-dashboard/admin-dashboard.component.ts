@@ -13,7 +13,7 @@ import { NavigationService } from '@navigationService';
 import { Validation } from '@validation';
 import { Context } from '@context';
 import { Model } from '@model';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
 import { CommentService } from '@commentService';
 import { HouseholdService } from '@householdService';
 import { RecipeHistoryService } from '@recipeHistoryService';

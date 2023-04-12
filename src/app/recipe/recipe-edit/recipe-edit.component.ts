@@ -83,7 +83,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     public route: ActivatedRoute,
-    private formBuilder: FormBuilder,
     private breakpointObserver: BreakpointObserver,
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
@@ -135,7 +134,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.loading = this.loadingService.set(true);
       this.id = params['id'];
-      this.recipesForm = this.formBuilder.group({
+      this.recipesForm = new FormBuilder().group({
         name: ['', [Validators.required, TitleCaseValidator()]],
         link: [''],
         description: ['', [Validators.pattern(SentencePattern)]],
@@ -147,9 +146,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         isVegan: [false],
         isGlutenFree: [false],
         isDairyFree: [false],
-        categories: this.formBuilder.array([]),
-        steps: this.formBuilder.array([]),
-        ingredients: this.formBuilder.array([])
+        categories: new FormBuilder().array([]),
+        steps: new FormBuilder().array([]),
+        ingredients: new FormBuilder().array([])
       });
 
       const observables$: [Observable<Ingredient[]>, Observable<Recipe[]>, Observable<Config[]>, Observable<Recipe>?] = [ingredients$, recipes$, configs$];
@@ -258,7 +257,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   initCategory(category: string): FormGroup {
-    return this.formBuilder.group({
+    return new FormBuilder().group({
       category: category
     });
   }
@@ -282,7 +281,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   initStep(): FormGroup {
-    return this.formBuilder.group({
+    return new FormBuilder().group({
       step: ['', [Validators.pattern(SentencePattern)]]
     });
   }
@@ -326,7 +325,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   initIngredient(): FormGroup {
-    return this.formBuilder.group({
+    return new FormBuilder().group({
       id: [null],
       quantity: [null, [Validators.required, Validators.min(0.00001), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]],
       uom: [null, [Validators.required]],
