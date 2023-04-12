@@ -7,11 +7,11 @@ import { IngredientEditComponent } from './ingredient-edit/ingredient-edit.compo
 import { UomTableComponent } from './uom-table/uom-table.component';
 
 const routes: Routes = [
-  { path: 'list', component: IngredientListComponent },
-  { path: 'detail/:id', component: IngredientDetailComponent },
-  { path: 'edit', redirectTo: 'edit/', pathMatch: 'full' },
-  { path: 'edit/:ingredient-id', component: IngredientEditComponent }, // must use ingredient-id, as the recipe-edit page uses id
-  { path: 'uom', component: UomTableComponent },
+  { path: 'list', title: 'Ingredients List', component: IngredientListComponent },
+  { path: 'detail/:id', title: 'Ingredient', component: IngredientDetailComponent },
+  { path: 'edit', title: 'Edit Ingredient', redirectTo: 'edit/', pathMatch: 'full' },
+  { path: 'edit/:ingredient-id', title: 'Edit Ingredient', component: IngredientEditComponent }, // must use ingredient-id, as the recipe-edit page uses id
+  { path: 'uom', title: 'Unit of Measurements Table', component: UomTableComponent },
 ];
 
 @NgModule({

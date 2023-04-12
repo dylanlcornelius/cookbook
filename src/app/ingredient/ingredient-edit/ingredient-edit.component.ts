@@ -17,6 +17,7 @@ import { Ingredient } from '@ingredient';
 import { Config } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { TitleService } from '@TitleService';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -45,6 +46,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     public route: ActivatedRoute,
+    private titleService: TitleService,
     private loadingService: LoadingService,
     private ingredientService: IngredientService,
     private tutorialService: TutorialService,
@@ -81,7 +83,10 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
         observables$.push(this.ingredientService.get(this.id));
         this.title = 'Edit an Ingredient';
       } else {
-        this.title = 'Add a new Ingredient';
+        if (!this.isQuickView) {
+          this.titleService.set('Create a New Ingredient');
+        }
+        this.title = 'Create a New Ingredient';
       }
 
       combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([configs, ingredient]: [Config[], Ingredient?]) => {
@@ -89,6 +94,8 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
         this.ingredient = ingredient;
 
         if (ingredient) {
+          this.titleService.set(`Edit ${ingredient.name}`);
+
           this.ingredientsForm.patchValue({
             name: this.ingredient.name,
             category: this.ingredient.category,

@@ -1,6 +1,4 @@
-import { environment } from '../environments/environment';
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { fadeComponentAnimation } from 'src/app/theme/animations';
@@ -22,11 +20,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private overlayContainer: OverlayContainer,
-    private title: Title,
     private currentUserService: CurrentUserService
-  ) {
-    this.title.setTitle(environment.title);
-  }
+  ) { }
 
   ngOnInit() {
     this.user = this.currentUserService.getCurrentUser();
