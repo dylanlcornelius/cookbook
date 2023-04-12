@@ -15,7 +15,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -72,6 +72,7 @@
       "@householdService": ["src/app/profile/shared/household.service"],
       "@comment": ["src/app/recipe/shared/comment.model"],
       "@commentService": ["src/app/recipe/shared/comment.service"],
-    }
+    },
+    "useDefineForClassFields": false
   }
 }
