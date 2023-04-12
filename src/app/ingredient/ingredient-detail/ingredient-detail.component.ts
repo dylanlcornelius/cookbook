@@ -12,6 +12,7 @@ import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { TitleService } from '@TitleService';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -26,6 +27,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private titleService: TitleService,
     private loadingService: LoadingService,
     private ingredientService: IngredientService,
     private notificationService: NotificationService,
@@ -51,6 +53,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
       
       combineLatest([ingredient$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredient, configs]) => {
+        this.titleService.set(ingredient.name);
         this.ingredient = ingredient;
         this.ingredient.displayCategory = configs.find(({ value }) => value === this.ingredient.category)?.displayValue || 'Other';
         this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);

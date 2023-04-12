@@ -26,6 +26,7 @@
     "paths": {
       "@sharedModule": ["src/app/shared/shared.module"],
       "@model": ["src/app/shared/model"],
+      "@TitleService": ["src/app/shared/title.service"],
       "@utilService": ["src/app/shared/util.service"],
       "@firebaseService": ["src/app/shared/firebase.service"],
       "@firestoreService": ["src/app/shared/firestore.service"],

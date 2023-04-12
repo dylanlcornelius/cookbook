@@ -25,6 +25,7 @@ import { Ingredient } from '@ingredient';
 import { ConfigType } from '@configType';
 import { ConfigService } from '@configService';
 import { FirebaseService } from '@firebaseService';
+import { TitleService } from '@TitleService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -55,6 +56,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private titleService: TitleService,
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
@@ -110,6 +112,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
 
         combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredients, recipeHistory, configs]) => {
+          this.titleService.set(recipe.name);
           this.recipe = recipe;
           this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
           this.recipeImage = undefined;

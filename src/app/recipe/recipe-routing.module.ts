@@ -6,11 +6,11 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 
 const routes: Routes = [
-  {path: 'list', redirectTo: 'list/', pathMatch: 'full'},
-  {path: 'list/:id', component: RecipeListComponent},
-  {path: 'detail/:id', component: RecipeDetailComponent},
-  {path: 'edit', redirectTo: 'edit/', pathMatch: 'full'},
-  {path: 'edit/:id', component: RecipeEditComponent},
+  {path: 'list', title: 'Recipe List', redirectTo: 'list/', pathMatch: 'full'},
+  {path: 'list/:id', title: 'Recipe List', component: RecipeListComponent},
+  {path: 'detail/:id', title: 'Recipe', component: RecipeDetailComponent},
+  {path: 'edit', title: 'Edit Recipe', redirectTo: 'edit/', pathMatch: 'full'},
+  {path: 'edit/:id', title: 'Edit Recipe', component: RecipeEditComponent},
 ];
 
 @NgModule({

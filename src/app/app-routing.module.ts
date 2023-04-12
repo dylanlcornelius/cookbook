@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules, TitleStrategy } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './user/login/login.component';
@@ -10,15 +10,16 @@ import { NewUserComponent } from './user/new-user/new-user.component';
 import { LoginGuard } from './user/shared/login.guard';
 import { UserPendingGuard } from './user/shared/user-pending.guard';
 import { AdminGuard } from './admin/shared/admin.guard';
+import { TitleService } from '@TitleService';
 
 // LoginGuard: any component without a guard will need to check for a user id
 const routes: Routes = [
-  {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: 'home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
-  {path: 'login', component: LoginComponent},
-  {path: 'user-pending', component: UserPendingComponent, canActivate: [LoginGuard]},
-  {path: 'new-user', component: NewUserComponent, canActivate: [LoginGuard]},
-  {path: 'tutorial', component: TutorialComponent, canActivate: [LoginGuard]},
+  {path: '', title: 'Home', redirectTo: 'home', pathMatch: 'full'},
+  {path: 'home', title: 'Home', component: HomeComponent, canActivate: [LoginGuard, UserPendingGuard]},
+  {path: 'login', title: 'Login', component: LoginComponent},
+  {path: 'user-pending', title: 'User Pending', component: UserPendingComponent, canActivate: [LoginGuard]},
+  {path: 'new-user', title: 'New User', component: NewUserComponent, canActivate: [LoginGuard]},
+  {path: 'tutorial', title: 'Tutorial', component: TutorialComponent, canActivate: [LoginGuard]},
   {path: 'recipe', loadChildren: () => import('./recipe/recipe.module').then(m => m.RecipeModule), canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'ingredient', loadChildren: () => import ('./ingredient/ingredient.module').then(m => m.IngredientModule), canActivateChild: [LoginGuard, UserPendingGuard]},
   {path: 'shopping', loadChildren: () => import('./shopping/shopping.module').then(m => m.ShoppingModule), canActivateChild: [LoginGuard, UserPendingGuard]},
@@ -29,6 +30,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, onSameUrlNavigation: 'reload' })],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    { provide: TitleStrategy, useClass: TitleService }
+  ]
 })
 export class AppRoutingModule { }

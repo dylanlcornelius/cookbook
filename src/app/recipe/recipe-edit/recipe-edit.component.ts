@@ -32,6 +32,7 @@ import { Validation } from '@validation';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
 import { ConfigType } from '@configType';
+import { TitleService } from '@TitleService';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
@@ -83,6 +84,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     public route: ActivatedRoute,
+    private titleService: TitleService,
     private breakpointObserver: BreakpointObserver,
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
@@ -156,7 +158,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         observables$.push(this.recipeService.get(this.id));
         this.title = 'Edit a Recipe';
       } else {
-        this.title = 'Add a New Recipe';
+        this.titleService.set('Create a New Recipe');
+        this.title = 'Create a New Recipe';
       }
 
       combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes, configs, recipe]: [Ingredient[], Recipe[], Config[], Recipe?]) => {
@@ -190,6 +193,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     if (this.recipe) {
+      this.titleService.set(`Edit ${this.recipe.name}`);
+
       this.recipe.categories.forEach(() => {
         this.addCategory();
       });

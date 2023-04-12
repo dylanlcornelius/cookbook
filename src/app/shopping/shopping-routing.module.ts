@@ -5,8 +5,8 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { MealPlannerComponent } from './meal-planner/meal-planner.component';
 
 const routes: Routes = [
-  { path: 'list', component: ShoppingListComponent },
-  { path: 'plan', component: MealPlannerComponent },
+  { path: 'list', title: 'Shopping List', component: ShoppingListComponent },
+  { path: 'plan', title: 'Meal Planner', component: MealPlannerComponent },
 ];
 
 @NgModule({
