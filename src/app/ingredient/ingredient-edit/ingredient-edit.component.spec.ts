@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormGroupDirective, FormBuilder } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IngredientService } from '@ingredientService';
 
@@ -70,6 +70,20 @@ describe('IngredientEditComponent', () => {
       fixture.detectChanges();
   
       expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+    });
+
+    it('should not get an ingredient', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({});
+
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
+  
+      fixture = TestBed.createComponent(IngredientEditComponent);
+      fixture.detectChanges();
+  
+      expect(ingredientService.get).not.toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
     });
   });

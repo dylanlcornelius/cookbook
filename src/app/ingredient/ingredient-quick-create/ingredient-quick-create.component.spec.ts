@@ -1,14 +1,20 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ModalComponent } from '@modalComponent';
 import { IngredientEditComponent } from '../ingredient-edit/ingredient-edit.component';
 
 import { IngredientQuickCreateComponent } from './ingredient-quick-create.component';
+
+@Component({
+  selector: 'app-ingredient-edit',
+  template: '<p>Mock Ingredient Edit Component</p>'
+})
+class MockIngredientEditComponent {}
 
 describe('IngredientQuickCreateComponent', () => {
   let component: IngredientQuickCreateComponent;
@@ -29,7 +35,7 @@ describe('IngredientQuickCreateComponent', () => {
       declarations: [
         IngredientQuickCreateComponent,
         ModalComponent,
-        IngredientEditComponent,
+        MockIngredientEditComponent,
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA
@@ -50,6 +56,8 @@ describe('IngredientQuickCreateComponent', () => {
 
   describe('open', () => {
     it('should load the component and open the modal', () => {
+      component.edit = { load: () => {} } as unknown as IngredientEditComponent;
+
       spyOn(component.edit, 'load');
       spyOn(component.modal, 'open');
 

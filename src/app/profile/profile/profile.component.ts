@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,

@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
 import { TutorialService } from '@tutorialService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from '@numberService';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
 

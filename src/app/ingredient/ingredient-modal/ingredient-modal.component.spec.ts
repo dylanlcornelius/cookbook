@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IngredientModalComponent } from './ingredient-modal.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModalComponent } from '@modalComponent';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NumberService } from '@numberService';
 
