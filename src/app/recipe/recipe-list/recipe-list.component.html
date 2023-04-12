@@ -6,7 +6,7 @@
   <mat-paginator [pageIndex]="pageIndex" [hidePageSize]="true" [pageSizeOptions]="[100]" (page)="pageEvent($event)" class="full-width"></mat-paginator>
 
   <div class="button-row">
-    <button mat-mini-fab matTooltip="Add Recipe" color="primary" (click)="openRecipeEditor()">
+    <button mat-mini-fab matTooltip="Add Recipe" color="primary" id="create-recipe-button" (click)="openRecipeEditor()">
       <mat-icon>add</mat-icon>
     </button>
     <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">

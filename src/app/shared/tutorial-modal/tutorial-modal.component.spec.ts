@@ -157,14 +157,14 @@ describe('TutorialModalComponent', () => {
       ];
 
       const router = TestBed.inject(Router);
-      spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+      spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
       spyOn(loadingService, 'get').and.returnValue(new BehaviorSubject(false));
       spyOn(component, 'initModal');
 
       component.changeTutorial();
       tick();
 
-      expect(router.navigate).toHaveBeenCalled();
+      expect(router.navigateByUrl).toHaveBeenCalled();
       expect(loadingService.get).toHaveBeenCalled();
       expect(component.initModal).toHaveBeenCalled();
     }));
@@ -177,14 +177,14 @@ describe('TutorialModalComponent', () => {
       ];
 
       const router = TestBed.inject(Router);
-      spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+      spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
       spyOn(loadingService, 'get').and.returnValue(new BehaviorSubject(true));
       spyOn(component, 'initModal');
 
       component.changeTutorial();
       tick();
 
-      expect(router.navigate).toHaveBeenCalled();
+      expect(router.navigateByUrl).toHaveBeenCalled();
       expect(loadingService.get).toHaveBeenCalled();
       expect(component.initModal).not.toHaveBeenCalled();
     }));
@@ -197,13 +197,13 @@ describe('TutorialModalComponent', () => {
       ];
 
       const router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      spyOn(router, 'navigateByUrl');
       spyOn(loadingService, 'get');
       spyOn(component, 'initModal');
 
       component.changeTutorial();
 
-      expect(router.navigate).not.toHaveBeenCalled();
+      expect(router.navigateByUrl).not.toHaveBeenCalled();
       expect(loadingService.get).not.toHaveBeenCalled();
       expect(component.initModal).toHaveBeenCalled();
     });
@@ -216,13 +216,13 @@ describe('TutorialModalComponent', () => {
       ];
 
       const router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      spyOn(router, 'navigateByUrl');
       spyOn(loadingService, 'get');
       spyOn(component, 'initModal');
 
       component.changeTutorial();
 
-      expect(router.navigate).not.toHaveBeenCalled();
+      expect(router.navigateByUrl).not.toHaveBeenCalled();
       expect(loadingService.get).not.toHaveBeenCalled();
       expect(component.initModal).toHaveBeenCalled();
     });

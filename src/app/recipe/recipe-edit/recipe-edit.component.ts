@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { SPACE, COMMA, TAB } from '@angular/cdk/keycodes';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { RecipeService } from '@recipeService';
 import {
   FormBuilder,
@@ -48,6 +48,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   loading = true;
   title: string;
+  selectedIndex = 0;
 
   id: string;
   originalRecipe: Recipe;
@@ -130,6 +131,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   load(): void {
     this.stepperOrientation = this.breakpointObserver.observe('(min-width: 768px)').pipe(map(({ matches }) => matches ? 'horizontal' : 'vertical'));
 
+    const queryParams$ = this.route.queryParams;
     const ingredients$ = this.ingredientService.get();
     const recipes$ = this.recipeService.get();
     const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
@@ -154,7 +156,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         ingredients: new FormBuilder().array([])
       });
 
-      const observables$: [Observable<Ingredient[]>, Observable<Recipe[]>, Observable<Config[]>, Observable<Recipe>?] = [ingredients$, recipes$, configs$];
+      const observables$: [
+        Observable<Params>,
+        Observable<Ingredient[]>,
+        Observable<Recipe[]>,
+        Observable<Config[]>,
+        Observable<Recipe>?
+      ] = [queryParams$, ingredients$, recipes$, configs$];
       if (this.id) {
         observables$.push(this.recipeService.get(this.id));
         this.title = 'Edit a Recipe';
@@ -162,7 +170,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.title = 'Add a New Recipe';
       }
 
-      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredients, recipes, configs, recipe]: [Ingredient[], Recipe[], Config[], Recipe?]) => {
+      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([queryParams, ingredients, recipes, configs, recipe]: [Params[], Ingredient[], Recipe[], Config[], Recipe?]) => {
+        this.selectedIndex = queryParams['step'] || 0;
         this.ingredients = ingredients;
         this.recipes = recipes;
         this.types = configs;
