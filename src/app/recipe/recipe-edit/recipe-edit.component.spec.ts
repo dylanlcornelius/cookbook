@@ -33,7 +33,6 @@ describe('RecipeEditComponent', () => {
   let currentUserService: CurrentUserService;
   let recipeService: RecipeService;
   let uomService: UomService;
-  let formBuilder: FormBuilder;
   let ingredientService: IngredientService;
   let validationService: ValidationService;
   let tutorialService: TutorialService;
@@ -75,22 +74,21 @@ describe('RecipeEditComponent', () => {
     currentUserService = TestBed.inject(CurrentUserService);
     recipeService = TestBed.inject(RecipeService);
     uomService = TestBed.inject(UomService);
-    formBuilder = TestBed.inject(FormBuilder);
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
     tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
 
-    component.recipesForm = formBuilder.group({
+    component.recipesForm = new FormBuilder().group({
       name: [],
       link: [],
       description: [],
       time: [],
       servings: [],
       calories: [],
-      categories: formBuilder.array([]),
-      steps: formBuilder.array([]),
-      ingredients: formBuilder.array([])
+      categories: new FormBuilder().array([]),
+      steps: new FormBuilder().array([]),
+      ingredients: new FormBuilder().array([])
     });
   });
 
@@ -331,7 +329,7 @@ describe('RecipeEditComponent', () => {
 
   describe('addCategory', () => {
     it('should add a control', () => {
-      spyOn(component, 'initCategory').and.returnValue(formBuilder.group({}));
+      spyOn(component, 'initCategory').and.returnValue(new FormBuilder().group({}));
 
       component.addCategory();
 
@@ -367,8 +365,8 @@ describe('RecipeEditComponent', () => {
 
   describe('removeCategory', () => {
     it('should remove a control', () => {
-      component.recipesForm = formBuilder.group({
-        'categories': formBuilder.array([{}])
+      component.recipesForm = new FormBuilder().group({
+        'categories': new FormBuilder().array([{}])
       });
 
       component.removeCategory(0);
@@ -388,7 +386,7 @@ describe('RecipeEditComponent', () => {
 
   describe('addStep', () => {
     it('should add a control', () => {
-      spyOn(component, 'initStep').and.returnValue(formBuilder.group({}));
+      spyOn(component, 'initStep').and.returnValue(new FormBuilder().group({}));
 
       component.addStep();
 
@@ -400,8 +398,8 @@ describe('RecipeEditComponent', () => {
 
   describe('removeStep', () => {
     it('should remove a control', () => {
-      component.recipesForm = formBuilder.group({
-        'steps': formBuilder.array([{}])
+      component.recipesForm = new FormBuilder().group({
+        'steps': new FormBuilder().array([{}])
       });
 
       component.removeStep(0);
@@ -502,7 +500,7 @@ describe('RecipeEditComponent', () => {
   // setValue - no form controls registered with this group yet
   describe('addIngredient', () => {
     it('should add a control', () => {
-      spyOn(component, 'initIngredient').and.returnValue(formBuilder.group({}));
+      spyOn(component, 'initIngredient').and.returnValue(new FormBuilder().group({}));
 
       component.addIngredient(0, new Ingredient({
         id: 'id'
@@ -514,7 +512,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should add a control without initial data', () => {
-      spyOn(component, 'initIngredient').and.returnValue(formBuilder.group({}));
+      spyOn(component, 'initIngredient').and.returnValue(new FormBuilder().group({}));
 
       component.addIngredient(0);
 
@@ -527,8 +525,8 @@ describe('RecipeEditComponent', () => {
 
   describe('removeIngredient', () => {
     it('should remove a control', () => {
-      component.recipesForm = formBuilder.group({
-        'ingredients': formBuilder.array([{}])
+      component.recipesForm = new FormBuilder().group({
+        'ingredients': new FormBuilder().array([{}])
       });
 
       component.removeIngredient(0);
@@ -586,9 +584,9 @@ describe('RecipeEditComponent', () => {
   describe('resetFormEvent', () => {
     it('should clear and reset the recipe form', () => {
       component.recipesForm = new FormGroup({
-        categories: formBuilder.array([]),
-        steps: formBuilder.array([]),
-        ingredients: formBuilder.array([])
+        categories: new FormBuilder().array([]),
+        steps: new FormBuilder().array([]),
+        ingredients: new FormBuilder().array([])
       });
 
       const formDirective = new FormGroupDirective([], []);
@@ -608,8 +606,8 @@ describe('RecipeEditComponent', () => {
   describe('submitForm', () => {
     it('should update a recipe', () => {
       component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33, creationDate: 'test'});
-      component.recipesForm = formBuilder.group({
-        'ingredients': formBuilder.array([formBuilder.group({'name': []})])
+      component.recipesForm = new FormBuilder().group({
+        'ingredients': new FormBuilder().array([new FormBuilder().group({'name': []})])
       });
       component.id = 'id';
 
@@ -669,8 +667,8 @@ describe('RecipeEditComponent', () => {
 
     it('should update a recipe and redirect to creating a new recipe', () => {
       component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
-      component.recipesForm = formBuilder.group({
-        'ingredients': formBuilder.array([formBuilder.group({'name': []})])
+      component.recipesForm = new FormBuilder().group({
+        'ingredients': new FormBuilder().array([new FormBuilder().group({'name': []})])
       });
       component.id = 'id';
 

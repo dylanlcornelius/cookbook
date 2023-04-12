@@ -50,12 +50,10 @@ export class RecipeHistoryModalComponent implements OnInit {
   @ViewChild(ModalComponent)
   modal: ModalComponent;
 
-  constructor(
-    private formBuilder: FormBuilder,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
-    this.form = this.formBuilder.group({
+    this.form = new FormBuilder().group({
       'timesCooked': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+/)]]
     });
   }

@@ -19,7 +19,6 @@ describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
   let fixture: ComponentFixture<IngredientEditComponent>;
   let ingredientService: IngredientService;
-  let formBuilder: FormBuilder;
   let tutorialService: TutorialService;
   let configService: ConfigService;
 
@@ -51,7 +50,6 @@ describe('IngredientEditComponent', () => {
     fixture.detectChanges();
     component.load = load;
     ingredientService = TestBed.inject(IngredientService);
-    formBuilder = TestBed.inject(FormBuilder);
     tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
   });
@@ -87,7 +85,7 @@ describe('IngredientEditComponent', () => {
       const router = TestBed.inject(Router);
       component.id = 'id';
       component.ingredient = new Ingredient({});
-      component.ingredientsForm = formBuilder.group({});
+      component.ingredientsForm = new FormBuilder().group({});
 
       spyOn(ingredientService, 'update');
       spyOn(component.handleIngredientCreate, 'emit');
@@ -102,7 +100,7 @@ describe('IngredientEditComponent', () => {
 
     it('should create an ingredient', () => {
       const router = TestBed.inject(Router);
-      component.ingredientsForm = formBuilder.group({});
+      component.ingredientsForm = new FormBuilder().group({});
 
       spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');
@@ -118,7 +116,7 @@ describe('IngredientEditComponent', () => {
     it('should create an ingredient from the quick view', () => {
       const router = TestBed.inject(Router);
       component.isQuickView = true;
-      component.ingredientsForm = formBuilder.group({});
+      component.ingredientsForm = new FormBuilder().group({});
 
       spyOn(ingredientService, 'create').and.returnValue('id');
       spyOn(component.handleIngredientCreate, 'emit');

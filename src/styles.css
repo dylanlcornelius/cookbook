@@ -108,6 +108,7 @@ dt {
   font-size: 20px;
   line-height: 0.5;
   vertical-align: bottom;
+  overflow: visible;
 }
 
 .mat-progress-bar,
