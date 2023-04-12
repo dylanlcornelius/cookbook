@@ -3,7 +3,7 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onFormSubmit(formDirective)">
+  <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)" appFormValidation>
     <mat-form-field class="form-field">
       <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required>
       <mat-error>
@@ -64,7 +64,7 @@
         </button>
       </div>
 
-      <button mat-mini-fab matTooltip="Save Ingredient" type="submit" [disabled]="!ingredientsForm.valid" color="primary">
+      <button mat-mini-fab matTooltip="Save Ingredient" type="submit" color="primary">
         <mat-icon>done</mat-icon>
       </button>
     </div>

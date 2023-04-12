@@ -62,7 +62,11 @@ export class RecipeHistoryModalComponent implements OnInit {
     this.modal.close();
   }
 
-  confirm(): void {
+  onSubmit(): void {
+    if (this.form.invalid) {
+      return;
+    }
+
     this.params.function(
       this.params.recipeId,
       this.params.uid,

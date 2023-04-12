@@ -24,6 +24,7 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TutorialModalComponent } from './tutorial-modal/tutorial-modal.component';
 import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component';
 import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
+import { FormValidationDirective } from './form-validation.directive';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
     TutorialModalComponent,
     TutorialComponent,
     OptionalIngredientsPipe,
+    FormValidationDirective,
   ],
   imports: [
     CommonModule,
@@ -79,6 +81,7 @@ import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
     ImageUploadComponent,
     TutorialModalComponent,
     OptionalIngredientsPipe,
+    FormValidationDirective,
   ]
 })
 export class SharedModule { }

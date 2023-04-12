@@ -134,7 +134,7 @@ describe('IngredientListComponent', () => {
     it('should change a user ingredient', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id'}];
-      component.userIngredients = [{id: 'id', cartQuantity: 1}];
+      component.userIngredients = [{ingredientId: 'id', cartQuantity: 1}];
       
       component.editIngredient('id');
 
@@ -145,7 +145,7 @@ describe('IngredientListComponent', () => {
     it('should not change a user ingredient if it does not exist', () => {
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{id: 'id2'}];
-      component.userIngredients = [{id: 'id'}];
+      component.userIngredients = [{ingredientId: 'id'}];
       
       component.editIngredient('id2');
 

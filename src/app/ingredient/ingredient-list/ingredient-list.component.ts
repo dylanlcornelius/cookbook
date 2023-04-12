@@ -109,10 +109,15 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   editIngredient(id: string): void {
-    let data = this.userIngredients.find(x => x.id === id);
+    let data = this.userIngredients.find(({ ingredientId })=> ingredientId === id);
     if (!data) {
-      this.userIngredients.push({id: id, pantryQuantity: 0, cartQuantity: 0});
-      data = this.userIngredients.find(x => x.id === id);
+      this.userIngredients.push(new UserIngredient({
+        ingredientId: id,
+        pantryQuantity: 0,
+        cartQuantity: 0,
+        uid: this.householdId,
+      }));
+      data = this.userIngredients.find(({ ingredientId })=> ingredientId === id);
     }
 
     this.ingredientModalParams = {

@@ -1,4 +1,4 @@
-<button mat-raised-button color="primary" matTooltip="Create Ingredient" (click)="open()">Create!</button>
+<button mat-raised-button type="button" color="primary" matTooltip="Create Ingredient" (click)="open()">Create!</button>
 
 <app-modal [params]="params">
     <app-ingredient-edit [isQuickView]="true" (handleIngredientCreate)="close()"></app-ingredient-edit>

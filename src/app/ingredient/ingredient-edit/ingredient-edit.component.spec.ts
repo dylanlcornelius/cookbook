@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, FormGroupDirective, FormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroupDirective, FormBuilder, Validators } from '@angular/forms';
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -88,11 +88,29 @@ describe('IngredientEditComponent', () => {
     });
   });
 
-  describe('onFormSubmit', () => {
+  describe('onSubmit', () => {
     const formDirective = new FormGroupDirective([], []);
 
     beforeEach(() => {
       spyOn(formDirective, 'resetForm');
+    });
+
+    it('should do nothing for an invalid form', () => {
+      const router = TestBed.inject(Router);
+      component.id = 'id';
+      component.ingredient = new Ingredient({});
+      component.ingredientsForm = new FormBuilder().group({ name: [null, Validators.required] });
+
+      spyOn(ingredientService, 'update');
+      spyOn(component.handleIngredientCreate, 'emit');
+      spyOn(router, 'navigate');
+
+      component.onSubmit(formDirective);
+
+      expect(ingredientService.update).not.toHaveBeenCalled();
+      expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+      expect(formDirective.resetForm).not.toHaveBeenCalled();
     });
 
     it('should update an ingredient', () => {
@@ -105,11 +123,12 @@ describe('IngredientEditComponent', () => {
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(formDirective);
+      component.onSubmit(formDirective);
 
       expect(ingredientService.update).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+      expect(formDirective.resetForm).toHaveBeenCalled();
     });
 
     it('should create an ingredient', () => {
@@ -120,11 +139,12 @@ describe('IngredientEditComponent', () => {
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(formDirective);
+      component.onSubmit(formDirective);
 
       expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
+      expect(formDirective.resetForm).toHaveBeenCalled();
     });
 
     it('should create an ingredient from the quick view', () => {
@@ -136,14 +156,11 @@ describe('IngredientEditComponent', () => {
       spyOn(component.handleIngredientCreate, 'emit');
       spyOn(router, 'navigate');
 
-      component.onFormSubmit(formDirective);
+      component.onSubmit(formDirective);
 
       expect(ingredientService.create).toHaveBeenCalled();
       expect(component.handleIngredientCreate.emit).toHaveBeenCalled();
       expect(router.navigate).not.toHaveBeenCalled();
-    });
-
-    afterEach(() => {
       expect(formDirective.resetForm).toHaveBeenCalled();
     });
   });

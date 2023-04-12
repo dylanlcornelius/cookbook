@@ -13,7 +13,7 @@
         <div class="profile container">
           <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
   
-          <form [formGroup]="userForm" (ngSubmit)="onFormSubmit(userForm.value)">
+          <form [formGroup]="userForm" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation>
             <div class="container">
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
@@ -59,7 +59,7 @@
             </div>
             
             <div class="button-row">
-              <button mat-mini-fab type="submit" matTooltip="Save Settings" [disabled]="!userForm.valid" color="primary">
+              <button mat-mini-fab type="submit" matTooltip="Save Settings" color="primary">
                 <mat-icon>done</mat-icon>
               </button>
               <button mat-mini-fab matTooltip="Tutorial" type="button" color="primary" (click)="openTutorial()">

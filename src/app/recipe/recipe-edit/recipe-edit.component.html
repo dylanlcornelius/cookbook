@@ -3,7 +3,7 @@
 <h2>{{this.title}}</h2>
 
 <div *ngIf="!loading">
-  <form [formGroup]="recipesForm" #formDirective="ngForm">
+  <form [formGroup]="recipesForm" #formDirective="ngForm" (ngSubmit)="onSubmit($event.submitter.name)" appFormValidation [stepperOnSubmit]="stepperOnSubmit">
     <ng-template #recipeStep>
       <mat-form-field class="form-field">
         <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required/>
@@ -206,49 +206,49 @@
       </div>
       <app-uom-table></app-uom-table>
     </ng-template>
+
+    <mat-stepper [orientation]="(stepperOrientation | async)!" #stepper>
+      <mat-step [editable]="true">
+        <ng-template matStepLabel>Information</ng-template>
+  
+        <ng-container *ngTemplateOutlet="recipeStep"></ng-container>
+  
+        <div class="stepper-button-row">
+          <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
+          <button mat-button matStepperNext type="button">Next</button>
+          <button mat-button type="submit" name="New">Save &#38; New</button>
+          <button mat-button type="submit" name="Save">Save</button>
+        </div>
+      </mat-step>
+      
+      <mat-step [editable]="true">
+        <ng-template matStepLabel>Steps</ng-template>
+  
+        <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
+  
+        <div class="stepper-button-row">
+          <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
+          <button mat-button matStepperPrevious type="button">Back</button>
+          <button mat-button matStepperNext type="button">Next</button>
+          <button mat-button type="submit" name="New">Save &#38; New</button>
+          <button mat-button type="submit" name="Save">Save</button>
+        </div>
+      </mat-step>
+  
+      <mat-step [editable]="true">
+        <ng-template matStepLabel>Ingredients</ng-template>
+  
+        <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
+  
+        <div class="stepper-button-row">
+          <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
+          <button mat-button matStepperPrevious type="button">Back</button>
+          <button mat-button type="submit" name="New">Save &#38; New</button>
+          <button mat-button type="submit" name="Save">Save</button>
+        </div>
+      </mat-step>
+    </mat-stepper>
   </form>
-
-  <mat-stepper [orientation]="(stepperOrientation | async)!">
-    <mat-step [editable]="true">
-      <ng-template matStepLabel>Information</ng-template>
-
-      <ng-container *ngTemplateOutlet="recipeStep"></ng-container>
-
-      <div class="stepper-button-row">
-        <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
-        <button mat-button matStepperNext type="button">Next</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
-      </div>
-    </mat-step>
-    
-    <mat-step [editable]="true">
-      <ng-template matStepLabel>Steps</ng-template>
-
-      <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
-
-      <div class="stepper-button-row">
-        <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button mat-button matStepperNext type="button">Next</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
-      </div>
-    </mat-step>
-
-    <mat-step [editable]="true">
-      <ng-template matStepLabel>Ingredients</ng-template>
-
-      <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
-
-      <div class="stepper-button-row">
-        <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(true)">Save &#38; New</button>
-        <button mat-button type="button" [disabled]="!recipesForm.valid" (click)="submitForm(false)">Save</button>
-      </div>
-    </mat-step>
-  </mat-stepper>
 
   <div class="button-row">
     <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="id">

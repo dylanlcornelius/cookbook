@@ -3,18 +3,21 @@
     <h4>{{params?.text}}</h4>
   </div>
   <br/>
-  <form class="center" [formGroup]="ingredientModalForm">
-    <mat-form-field>
-      <input matInput placeholder="Pantry Quantity" formControlName="pantryQuantity" [errorStateMatcher]="matcher"/>
-      <mat-error>
-        <span *ngIf="!ingredientModalForm.get('pantryQuantity').valid && ingredientModalForm.get('pantryQuantity').touched">Please enter a valid Pantry Quantity</span>
-      </mat-error>
-    </mat-form-field>
+  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation>
+    <div class="center">
+      <mat-form-field>
+        <input matInput placeholder="Pantry Quantity" formControlName="pantryQuantity" [errorStateMatcher]="matcher"/>
+        <mat-error>
+          <span *ngIf="!form.get('pantryQuantity').valid && form.get('pantryQuantity').touched">Please enter a valid Pantry Quantity</span>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
+    <br/>
+    <div class="center">
+      <button mat-raised-button color="primary" type="submit" style="margin-right: 20px;">Confirm</button>
+      <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+    </div>
   </form>
-  <br/>
-  <div class="center">
-    <button mat-raised-button color="primary" [disabled]="!ingredientModalForm.valid" (click)="confirm()"  style="margin-right: 20px;">Confirm</button>
-    <button mat-raised-button color="warn" (click)="cancel()">Cancel</button>
-  </div>
 </app-modal>
   

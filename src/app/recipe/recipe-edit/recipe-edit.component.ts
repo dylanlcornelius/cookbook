@@ -25,7 +25,7 @@ import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
 import { TutorialService } from '@tutorialService';
-import { StepperOrientation } from '@angular/material/stepper';
+import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ValidationService } from '@modalService';
 import { Validation } from '@validation';
@@ -71,6 +71,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   matcher = new ErrorMatcher();
   selectable;
   stepperOrientation: Observable<StepperOrientation>;
+  
+  @ViewChild('stepper')
+  stepper: MatStepper;
 
   @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
 
@@ -394,7 +397,24 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.initForm();
   };
 
-  submitForm(createNew: boolean): void {
+  stepperOnSubmit = (key: string): string => {
+    if (key === 'steps') {
+      this.stepper.selectedIndex = 1;
+      return 'step';
+    }
+    if (key === 'ingredients') {
+      this.stepper.selectedIndex = 2;
+      return 'quantity';
+    }
+    this.stepper.selectedIndex = 0;
+    return key;
+  };
+
+  onSubmit(buttonName: string): void {
+    if (this.recipesForm.invalid) {
+      return;
+    }
+
     this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       const form = this.recipesForm.value;
 
@@ -421,7 +441,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
       this.originalRecipe = this.recipesForm.value;
 
-      if (createNew) {
+      if (buttonName === 'New') {
         this.router.navigate(['/recipe/edit']);
       } else {
         this.router.navigate(['/recipe/detail/', recipeId]);

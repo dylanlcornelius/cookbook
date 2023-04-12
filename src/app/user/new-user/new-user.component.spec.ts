@@ -102,6 +102,18 @@ describe('NewUserComponent', () => {
     });
   });
 
+  describe('markAsTouched', () => {
+    it('should update a user image', () => {
+      spyOn(component.firstNameControl, 'markAsTouched');
+      spyOn(component.lastNameControl, 'markAsTouched');
+
+      component.markAsTouched();
+
+      expect(component.firstNameControl.markAsTouched).toHaveBeenCalled();
+      expect(component.lastNameControl.markAsTouched).toHaveBeenCalled();
+    });
+  });
+
   describe('submit', () => {
     it('should update a user', () => {
       spyOn(userService, 'update');

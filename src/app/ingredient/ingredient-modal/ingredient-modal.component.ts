@@ -30,7 +30,7 @@ import { ErrorMatcher } from '../../util/error-matcher';
   styleUrls: ['./ingredient-modal.component.scss']
 })
 export class IngredientModalComponent implements OnInit {
-  ingredientModalForm: FormGroup;
+  form: FormGroup;
   pantryQuantity: number;
 
   matcher = new ErrorMatcher();
@@ -41,7 +41,7 @@ export class IngredientModalComponent implements OnInit {
   set Params(params: { function: Function, data: any, userIngredients: any, dataSource: any, text: string }) {
     this.params = params;
     if (this.params) {
-      this.ingredientModalForm.patchValue({
+      this.form.patchValue({
         pantryQuantity: this.numberService.toFormattedFraction(this.params.data.pantryQuantity)
       });
     }
@@ -55,7 +55,7 @@ export class IngredientModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.ingredientModalForm = new FormBuilder().group({
+    this.form = new FormBuilder().group({
       'pantryQuantity': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]]
     });
   }
@@ -64,11 +64,15 @@ export class IngredientModalComponent implements OnInit {
     this.modal.close();
   }
 
-  confirm(): void {
-    this.params.userIngredients.find(x => x.id === this.params.data.id)
-      .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
-    this.params.dataSource.data.find(x => x.id === this.params.data.id)
-      .pantryQuantity = this.ingredientModalForm.get('pantryQuantity').value;
+  onSubmit(): void {
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.params.userIngredients.find(({ ingredientId }) => ingredientId === this.params.data.ingredientId)
+      .pantryQuantity = this.form.get('pantryQuantity').value;
+    this.params.dataSource.data.find(({ id }) => id === this.params.data.ingredientId)
+      .pantryQuantity = this.form.get('pantryQuantity').value;
     this.params.function();
     this.modal.close();
   }
