@@ -16,7 +16,7 @@ import { FirebaseService } from '@firebaseService';
   animations: [fadeInAnimation]
 })
 export class TutorialModalComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   params: TutorialModal;
 
   tutorials: Tutorial[];

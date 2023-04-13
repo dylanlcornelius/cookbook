@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   navs: Navigation[] = [];
 
   constructor(

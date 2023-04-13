@@ -14,7 +14,7 @@ import Compressor from 'compressorjs';
   styleUrls: ['./image-upload.component.scss']
 })
 export class ImageUploadComponent implements OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   online$: Observable<boolean>;
 
   @Input()

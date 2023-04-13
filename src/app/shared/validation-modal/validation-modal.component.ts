@@ -11,7 +11,7 @@ import { ModalComponent } from '@modalComponent';
   styleUrls: ['./validation-modal.component.scss']
 })
 export class ValidationModalComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   params: Validation;
 
   @ViewChild(ModalComponent)

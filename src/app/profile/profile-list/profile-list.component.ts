@@ -19,7 +19,7 @@ import { User } from '@user';
   styleUrls: ['./profile-list.component.scss']
 })
 export class ProfileListComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
 
   dataSource;

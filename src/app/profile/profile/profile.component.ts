@@ -30,7 +30,7 @@ import { TutorialService } from '@tutorialService';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   online$: Observable<boolean>;
   loading = true;
 

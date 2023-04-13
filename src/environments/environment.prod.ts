@@ -1,5 +1,5 @@
 export const environment = {
-  title: '',
+  title: 'The Cookbook',
   production: true,
   firebase: {}
 };

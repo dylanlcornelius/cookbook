@@ -25,7 +25,7 @@ import { Ingredient } from '@ingredient';
   styleUrls: ['./meal-planner.component.scss']
 })
 export class MealPlannerComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
   isCompleted = false;
 

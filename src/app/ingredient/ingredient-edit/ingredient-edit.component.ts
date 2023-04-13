@@ -25,7 +25,7 @@ import { TitleService } from '@TitleService';
   styleUrls: ['./ingredient-edit.component.scss']
 })
 export class IngredientEditComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
   title: string;
 

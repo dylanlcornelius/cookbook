@@ -20,7 +20,7 @@ import { TitleService } from '@TitleService';
   styleUrls: ['./ingredient-detail.component.scss']
 })
 export class IngredientDetailComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
   ingredient: Ingredient;
 

@@ -33,7 +33,7 @@ import { TitleService } from '@TitleService';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   online$: Observable<boolean>;
 
   loading = true;

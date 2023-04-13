@@ -29,7 +29,7 @@ import { ConfigType } from '@configType';
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
   isCompleted = false;
 
