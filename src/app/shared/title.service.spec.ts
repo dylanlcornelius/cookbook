@@ -3,6 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TitleService } from './title.service';
 import { Router, TitleStrategy } from '@angular/router';
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   template: ''
@@ -32,7 +33,7 @@ describe('TitleService', () => {
       router.navigateByUrl('/home');
       tick();
 
-      expect(document.title).toEqual('Home - Dev Cookbook');
+      expect(document.title).toEqual(`Home - ${environment.title}`);
     }));
   });
 });
