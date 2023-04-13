@@ -21,7 +21,7 @@ import { FeedbackService } from '@feedbackService';
   animations: [fadeInAnimation, fadeInFastAnimation, slideInOutAnimation]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   title: string;
   user: User;
   isLoggedIn: Observable<boolean>;

@@ -46,7 +46,7 @@ const SentencePattern = /^([A-Z].*(\.|\?|!)\s)*[A-Z].*(\.|\?|!)$/s;
   styleUrls: ['./recipe-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
   title: string;
   selectedIndex = 0;

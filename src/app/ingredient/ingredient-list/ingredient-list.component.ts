@@ -23,7 +23,7 @@ import { ConfigService } from '@configService';
   styleUrls: ['./ingredient-list.component.scss']
 })
 export class IngredientListComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
   ingredientModalParams;
 

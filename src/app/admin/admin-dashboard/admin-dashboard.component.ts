@@ -26,7 +26,7 @@ import { FeedbackService } from '@feedbackService';
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   private refresh$ = new BehaviorSubject(undefined);
   private context$;
 

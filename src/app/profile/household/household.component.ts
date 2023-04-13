@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./household.component.scss']
 })
 export class HouseholdComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   loading = true;
 
   user: User;

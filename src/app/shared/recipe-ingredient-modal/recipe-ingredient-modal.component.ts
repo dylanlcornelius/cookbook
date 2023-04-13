@@ -11,7 +11,7 @@ import { RecipeIngredientModalService } from '@modalService';
   styleUrls: ['./recipe-ingredient-modal.component.scss']
 })
 export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   params: RecipeIngredientModal;
 
   @ViewChild(ModalComponent)

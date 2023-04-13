@@ -14,7 +14,7 @@ import { ErrorMatcher } from 'src/app/util/error-matcher';
   styleUrls: ['./new-user.component.scss']
 })
 export class NewUserComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   matcher = new ErrorMatcher();
 
   user: User;

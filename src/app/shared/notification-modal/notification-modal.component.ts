@@ -12,7 +12,7 @@ const DISPLAY_TIME = 2000;
   styleUrls: ['./notification-modal.component.scss']
 })
 export class NotificationModalComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
   params: Notification;
 
   constructor(
