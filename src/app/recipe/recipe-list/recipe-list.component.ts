@@ -130,6 +130,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
               const timesCooked = histories.find(({ recipeId }) => recipeId === recipe.id)?.timesCooked;
               recipe.hasNewCategory = !timesCooked || (timesCooked === 1 && !recipe.hasImage);
+              recipe.hasNeedsImageCategory = recipe.hasAuthorPermission && timesCooked && !recipe.hasImage;
 
               this.imageService.download(recipe).then(url => {
                 if (url) {
@@ -213,6 +214,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       if (categories.find(c => c.name === 'New!') === undefined && recipe.hasNewCategory) {
         const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === 'New!') !== undefined;
         categories.push({ displayName: 'New!', name: 'New!', checked: checked, filter: new CategoryFilter('New!') });
+      }
+
+      if (categories.find(c => c.name === 'Needs Image') === undefined && recipe.hasNeedsImageCategory) {
+        const checked = filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === 'Needs Image') !== undefined;
+        categories.push({ displayName: 'Needs Image', name: 'Needs Image', checked: checked, filter: new CategoryFilter('Needs Image') });
       }
 
       if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {

@@ -296,6 +296,15 @@ describe('RecipeDetailComponent', () => {
       expect(result).toBeTrue();
     });
 
+    it('should return true when the recipe has the needs image category', () => {
+      component.recipe = new Recipe({});
+      component.hasNeedsImageCategory = true;
+
+      const result = component.shouldDisplayCategories();
+
+      expect(result).toBeTrue();
+    });
+
     it('should return true when there is a dietary restirction', () => {
       component.recipe = new Recipe({ isDairyFree: true });
 

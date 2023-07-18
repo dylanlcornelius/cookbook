@@ -407,7 +407,8 @@ describe('RecipeListComponent', () => {
           type: 'SALAD',
           categories: [{ category: 'thing' }, { category: 'thingy'}],
           author: 'author',
-          hasNewCategory: true
+          hasNewCategory: true,
+          hasNeedsImageCategory: true
         }),
         new Recipe({
           categories: [],
@@ -419,6 +420,7 @@ describe('RecipeListComponent', () => {
       recipeFilterService.selectedFilters = [
         new RatingFilter(1),
         new CategoryFilter('New!'),
+        new CategoryFilter('Needs Image'),
         new AuthorFilter('author'),
         new TypeFilter('SALAD'),
         new RestrictionFilter('isVegetarian'),

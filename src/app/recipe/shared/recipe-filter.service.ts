@@ -84,7 +84,7 @@ export class RestrictionFilter extends Filter {
 
 export class CategoryFilter extends Filter {
   type = FILTER_TYPE.CATEGORY;
-  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.equals(category, this.value)) || (recipe.hasNewCategory && this.value === 'New!');
+  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.equals(category, this.value)) || (recipe.hasNewCategory && this.value === 'New!') || (recipe.hasNeedsImageCategory && this.value === 'Needs Image');
 }
 
 export class RatingFilter extends Filter {

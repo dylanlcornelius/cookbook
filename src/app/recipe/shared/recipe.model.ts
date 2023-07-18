@@ -38,6 +38,7 @@ export class Recipe extends Model {
     uom = UOM.RECIPE;
     hasAuthorPermission: boolean;
     hasNewCategory: boolean;
+    hasNeedsImageCategory: boolean;
     displayType: string;
 
     constructor(data: any) {
@@ -64,16 +65,17 @@ export class Recipe extends Model {
         this.isDairyFree = data.isDairyFree || false;
         this.type = data.type || '';
         this.hasNewCategory = data.hasNewCategory || false;
+        this.hasNeedsImageCategory = data.hasNeedsImageCategory || false;
     }
 
     public getObject(): RecipeObject {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {id, count, image, amount, uom, hasAuthorPermission, hasNewCategory, displayType, ...recipe} = this;
-      return recipe;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, count, image, amount, uom, hasAuthorPermission, hasNewCategory, hasNeedsImageCategory, displayType, ...recipe } = this;
+        return recipe;
     }
 }
 
-export type RecipeObject = Omit<Recipe, 'id' | 'getId' | 'getObject' | 'count' | 'image' | 'amount' | 'uom' | 'hasAuthorPermission' | 'hasNewCategory' | 'displayType'>;
+export type RecipeObject = Omit<Recipe, 'id' | 'getId' | 'getObject' | 'count' | 'image' | 'amount' | 'uom' | 'hasAuthorPermission' | 'hasNewCategory' | 'hasNeedsImageCategory' | 'displayType'>;
 
 export enum RECIPE_STATUS {
     PUBLISHED = 'published',

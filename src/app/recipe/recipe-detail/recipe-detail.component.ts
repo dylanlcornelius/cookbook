@@ -52,6 +52,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   lastDateCooked: string;
   creationDate: string;
   hasNewCategory = false;
+  hasNeedsImageCategory = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -139,6 +140,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.ingredients, this.userIngredients);
           this.recipe.displayType = configs.find(({ value }) => value === this.recipe.type)?.displayValue || '';
           this.hasNewCategory = !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
+          this.hasNeedsImageCategory = this.hasAuthorPermission && this.timesCooked && !this.recipe.hasImage;
           this.loading = this.loadingService.set(false);
         });
       });
@@ -170,6 +172,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   shouldDisplayCategories(): boolean {
     return !!(this.recipe.categories && this.recipe.categories.length)
       || this.hasNewCategory
+      || this.hasNeedsImageCategory
       || this.recipe.isVegetarian
       || this.recipe.isVegan
       || this.recipe.isGlutenFree

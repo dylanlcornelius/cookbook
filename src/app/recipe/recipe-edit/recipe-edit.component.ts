@@ -258,7 +258,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       map(value => this.recipes
         .reduce((allCategories, { categories }) => {
           categories
-            .filter(({ category }) => category !== 'New!')
+            .filter(({ category }) => category !== 'New!' && category !== 'Needs Image')
             .forEach(({ category }) => {
               const isFound = allCategories.find(currentCategory => currentCategory === category);
 
