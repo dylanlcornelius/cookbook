@@ -1,24 +1,24 @@
 .home-container {
-    text-align: center;
+  text-align: center;
 }
 .container {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    margin-top: 5%;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  margin-top: 5%;
 }
 .nav-tile {
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .nav-tile:hover {
-    color: darkgray;
+  color: darkgray;
 }
 .nav-tile:focus {
-    outline: none;
-    color: grey;
+  outline: none;
+  color: grey;
 }
 .nav-icon {
-    font-size: 50px;
-    height: 50px;
-    width: 50px;
-    margin: 15px 25px;
+  font-size: 50px;
+  height: 50px;
+  width: 50px;
+  margin: 15px 25px;
 }

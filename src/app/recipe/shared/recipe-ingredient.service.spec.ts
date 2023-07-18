@@ -44,26 +44,18 @@ describe('RecipeIngredientService', () => {
         new Recipe({
           id: '1',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'a'}),
-            new Ingredient({id: '2', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'a' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'b'}),
-            new Ingredient({id: '3', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'b' }), new Ingredient({ id: '3', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'c'})
-          ]
-        })
+          ingredients: [new Ingredient({ id: 'c' })],
+        }),
       ];
 
       const result = service.findRecipeIngredients(recipes[0], recipes, []);
@@ -76,31 +68,20 @@ describe('RecipeIngredientService', () => {
         new Recipe({
           id: '1',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'a'}),
-            new Ingredient({id: '2', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'a' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'b'}),
-            new Ingredient({id: '3', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'b' }), new Ingredient({ id: '3', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'c'}),
-            new Ingredient({id: '2', uom: UOM.RECIPE})
-          ]
-        })
+          ingredients: [new Ingredient({ id: 'c' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
+        }),
       ];
-      const ingredients = [
-        new Ingredient({ id: 'b' })
-      ];
+      const ingredients = [new Ingredient({ id: 'b' })];
 
       const result = service.findRecipeIngredients(recipes[0], recipes, ingredients);
 
@@ -113,31 +94,29 @@ describe('RecipeIngredientService', () => {
           id: '1',
           uom: UOM.RECIPE,
           ingredients: [
-            new Ingredient({id: 'a'}),
-            new Ingredient({id: 'b'}),
-            new Ingredient({id: 'c', isOptional: true}),
-            new Ingredient({id: 'd', isOptional: true}),
-            new Ingredient({id: '2', uom: UOM.RECIPE}),
-            new Ingredient({id: '3', uom: UOM.RECIPE})
-          ]
+            new Ingredient({ id: 'a' }),
+            new Ingredient({ id: 'b' }),
+            new Ingredient({ id: 'c', isOptional: true }),
+            new Ingredient({ id: 'd', isOptional: true }),
+            new Ingredient({ id: '2', uom: UOM.RECIPE }),
+            new Ingredient({ id: '3', uom: UOM.RECIPE }),
+          ],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
           ingredients: [
-            new Ingredient({id: 'a'}),
-            new Ingredient({id: 'b', isOptional: true}),
-            new Ingredient({id: 'c'}),
-            new Ingredient({id: 'd', isOptional: true}),
-          ]
+            new Ingredient({ id: 'a' }),
+            new Ingredient({ id: 'b', isOptional: true }),
+            new Ingredient({ id: 'c' }),
+            new Ingredient({ id: 'd', isOptional: true }),
+          ],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'd', isOptional: true}),
-          ]
-        })
+          ingredients: [new Ingredient({ id: 'd', isOptional: true })],
+        }),
       ];
 
       const result = service.findRecipeIngredients(recipes[0], recipes, []);
@@ -152,26 +131,18 @@ describe('RecipeIngredientService', () => {
         new Recipe({
           id: '1',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'a'}),
-            new Ingredient({id: '2', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'a' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'b'}),
-            new Ingredient({id: '3', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'b' }), new Ingredient({ id: '3', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'c'})
-          ]
-        })
+          ingredients: [new Ingredient({ id: 'c' })],
+        }),
       ];
 
       const result = service.findRecipeIds(recipes[0], recipes);
@@ -185,27 +156,18 @@ describe('RecipeIngredientService', () => {
         new Recipe({
           id: '1',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'a'}),
-            new Ingredient({id: '2', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'a' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'b'}),
-            new Ingredient({id: '3', uom: UOM.RECIPE})
-          ]
+          ingredients: [new Ingredient({ id: 'b' }), new Ingredient({ id: '3', uom: UOM.RECIPE })],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [
-            new Ingredient({id: 'c'}),
-            new Ingredient({id: '2', uom: UOM.RECIPE})
-          ]
-        })
+          ingredients: [new Ingredient({ id: 'c' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
+        }),
       ];
 
       const result = service.findRecipeIds(recipes[0], recipes);
@@ -220,19 +182,23 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredient = [new UserIngredient({
-        ingredientId: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      })];
+      const userIngredient = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+          pantryQuantity: 10,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(10);
@@ -250,11 +216,13 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
       const userIngredients = [
@@ -262,14 +230,14 @@ describe('RecipeIngredientService', () => {
           ingredientId: 'ingredientId',
           uom: 'y',
           amount: 2,
-          pantryQuantity: 10
+          pantryQuantity: 10,
         }),
         new UserIngredient({
           ingredientId: 'ingredientId',
           uom: 'y',
           amount: 2,
-          pantryQuantity: 10
-        })
+          pantryQuantity: 10,
+        }),
       ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
@@ -288,19 +256,23 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+          pantryQuantity: 10,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(null);
@@ -317,18 +289,22 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId2',
-        uom: 'y',
-        amount: 2
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId2',
+          uom: 'y',
+          amount: 2,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal');
@@ -346,25 +322,29 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10,
-          name: null
-        },
-        {
-          id: 'ingredientId2',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+            name: null,
+          },
+          {
+            id: 'ingredientId2',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId2',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: 10
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId2',
+          uom: 'y',
+          amount: 2,
+          pantryQuantity: 10,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(10);
@@ -382,11 +362,13 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
       const userIngredients = [];
@@ -409,7 +391,7 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [new Ingredient({})]
+        ingredients: [new Ingredient({})],
       });
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
@@ -427,9 +409,9 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 0,
-        ingredients: []
+        ingredients: [],
       });
-      
+
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(recipeIngredientModalService, 'setModal');
       spyOn(notificationService, 'setModal');
@@ -440,14 +422,14 @@ describe('RecipeIngredientService', () => {
       expect(recipeIngredientModalService.setModal).not.toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
     });
-    
+
     it('should show an error if the uom conversion is invalid and call the callback', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 0,
-        ingredients: []
+        ingredients: [],
       });
-      
+
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(recipeIngredientModalService, 'setModal');
       spyOn(notificationService, 'setModal');
@@ -462,17 +444,21 @@ describe('RecipeIngredientService', () => {
 
   describe('addIngredientsEvent', () => {
     it('should add an ingredient to the cart', () => {
-      const ingredients = [new Ingredient({
-        id: 'ingredientId',
-        uom: 'x',
-        quantity: 10
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId',
-        uom: 'y',
-        amount: 2
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+        }),
+      ];
 
       spyOn(numberService, 'toDecimal').and.returnValue(10);
       spyOn(uomService, 'convert').and.returnValue(5);
@@ -488,16 +474,20 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should show an error if the uom conversion is invalid', () => {
-       const ingredients =  [new Ingredient({
-        id: 'ingredientId',
-        uom: 'x',
-        quantity: 10
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId'
-      })];
-      
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
+
       spyOn(numberService, 'toDecimal').and.returnValue(null);
       spyOn(uomService, 'convert').and.returnValue(false);
       spyOn(userIngredientService, 'update');
@@ -512,16 +502,20 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should skip ingredients that are not available', () => {
-      const ingredients = [new Ingredient({
-        id: 'ingredientId',
-        uom: 'x',
-        quantity: 10
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId2'
-      })];
-      
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId2',
+        }),
+      ];
+
       spyOn(numberService, 'toDecimal');
       spyOn(uomService, 'convert');
       spyOn(userIngredientService, 'update');
@@ -541,19 +535,23 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId',
-        uom: 'y',
-        amount: 2,
-        pantryQuantity: NaN
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+          pantryQuantity: NaN,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(10);
@@ -576,14 +574,18 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({ ingredientId: 'ingredientId', uom: 'y', amount: 2 })];
+      const userIngredients = [
+        new UserIngredient({ ingredientId: 'ingredientId', uom: 'y', amount: 2 }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(10);
@@ -606,14 +608,18 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({ ingredientId: 'ingredientId', uom: 'y', amount: 2 })];
+      const userIngredients = [
+        new UserIngredient({ ingredientId: 'ingredientId', uom: 'y', amount: 2 }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(null);
@@ -636,18 +642,22 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId2',
-        uom: 'y',
-        amount: 2
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId2',
+          uom: 'y',
+          amount: 2,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal');
@@ -667,7 +677,7 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should do nothing if recipe count if NaN', () => {
-      const recipe = new Recipe({id: 'id'});
+      const recipe = new Recipe({ id: 'id' });
       const userIngredients = [new UserIngredient({})];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
@@ -691,48 +701,59 @@ describe('RecipeIngredientService', () => {
       const recipe = new Recipe({
         id: 'id',
         count: 1,
-        ingredients: [{
-          id: 'ingredientId',
-          uom: 'x',
-          quantity: 10
-        }, {
-          id: 'id2',
-          uom: UOM.RECIPE,
-          quantity: 10
-        }, {
-          id: 'id3',
-          uom: UOM.RECIPE,
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+          {
+            id: 'id2',
+            uom: UOM.RECIPE,
+            quantity: 10,
+          },
+          {
+            id: 'id3',
+            uom: UOM.RECIPE,
+            quantity: 10,
+          },
+        ],
       });
 
       const recipe2 = new Recipe({
         id: 'id2',
-        ingredients: [{
-          id: 'ingredientId2',
-          uom: 'x',
-          quantity: 10
-        }, {
-          id: 'id3',
-          uom: UOM.RECIPE,
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId2',
+            uom: 'x',
+            quantity: 10,
+          },
+          {
+            id: 'id3',
+            uom: UOM.RECIPE,
+            quantity: 10,
+          },
+        ],
       });
 
       const recipe3 = new Recipe({
         id: 'id3',
-        ingredients: [{
-          id: 'ingredientId3',
-          uom: 'x',
-          quantity: 10
-        }]
+        ingredients: [
+          {
+            id: 'ingredientId3',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
       });
 
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId',
-        uom: 'y',
-        amount: 2
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+        }),
+      ];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.returnValue(10);
@@ -741,7 +762,14 @@ describe('RecipeIngredientService', () => {
       spyOn(notificationService, 'setModal');
       spyOn(recipeHistoryService, 'add');
 
-      service.removeIngredients(recipe, [recipe, recipe2, recipe3], [], userIngredients, 'uid', 'householdId');
+      service.removeIngredients(
+        recipe,
+        [recipe, recipe2, recipe3],
+        [],
+        userIngredients,
+        'uid',
+        'householdId'
+      );
 
       expect(service.findRecipeIngredients).toHaveBeenCalled();
       expect(numberService.toDecimal).toHaveBeenCalled();

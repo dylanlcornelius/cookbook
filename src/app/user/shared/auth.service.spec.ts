@@ -19,9 +19,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ]
+      imports: [RouterModule.forRoot([])],
     });
     service = TestBed.inject(AuthService);
     firebase = TestBed.inject(FirebaseService);
@@ -45,7 +43,7 @@ describe('AuthService', () => {
 
       expect(firebase.onAuthStateChanged).toHaveBeenCalled();
     });
-    
+
     it('should not setup auth state watcher', () => {
       spyOn(firebase, 'onAuthStateChanged');
 

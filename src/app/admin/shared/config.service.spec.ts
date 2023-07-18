@@ -9,7 +9,7 @@ import { FirebaseService } from '@firebaseService';
 describe('ConfigService', () => {
   let service: ConfigService;
   let firebase: FirebaseService;
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ConfigService);
@@ -95,7 +95,10 @@ describe('ConfigService', () => {
 
   describe('sortByName', () => {
     it('should sort two configs by name', () => {
-      const result = service.sortByName(new Config({ name: 'RECIPE_TYPE' }), new Config({ name: 'INGREDIENT_CATEGORY' }));
+      const result = service.sortByName(
+        new Config({ name: 'RECIPE_TYPE' }),
+        new Config({ name: 'INGREDIENT_CATEGORY' })
+      );
 
       expect(result).toEqual(1);
     });

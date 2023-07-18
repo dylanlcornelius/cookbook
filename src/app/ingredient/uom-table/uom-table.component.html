@@ -2,34 +2,43 @@
 <div class="center">
   <div>
     <mat-form-field class="search-bar">
-      <input matInput type="text" placeholder="Input an amount" id="uomValue" [value]="uomValue" [(ngModel)]="uomValue"/>
+      <input
+        matInput
+        type="text"
+        placeholder="Input an amount"
+        id="uomValue"
+        [value]="uomValue"
+        [(ngModel)]="uomValue"
+      />
     </mat-form-field>
     <mat-error>
-        <span *ngIf="!isValid(uomValue)">Invalid value</span>
+      <span *ngIf="!isValid(uomValue)">Invalid value</span>
     </mat-error>
   </div>
 </div>
-<br/>
+<br />
 
 <div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th></th>
-                <th *ngFor="let uomColumn of uoms; let columnIndex = index;">to {{uomColumn}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let uomRow of uoms; let rowIndex = index;">
-                <th>from {{uomRow}}</th>
-                <td *ngFor="let uomColumn of uoms; let columnIndex = index;">{{convert(uomRow, uomColumn, uomValue)}}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th *ngFor="let uomColumn of uoms; let columnIndex = index">to {{ uomColumn }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let uomRow of uoms; let rowIndex = index">
+        <th>from {{ uomRow }}</th>
+        <td *ngFor="let uomColumn of uoms; let columnIndex = index">
+          {{ convert(uomRow, uomColumn, uomValue) }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="button-row">
-    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
-        <mat-icon>help</mat-icon>
-    </button>
+  <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
+    <mat-icon>help</mat-icon>
+  </button>
 </div>

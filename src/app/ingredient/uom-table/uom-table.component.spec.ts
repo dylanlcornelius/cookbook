@@ -28,12 +28,9 @@ describe('UomTableComponent', () => {
         MatInputModule,
         BrowserAnimationsModule,
       ],
-      declarations: [ UomTableComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [UomTableComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

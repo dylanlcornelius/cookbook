@@ -2,19 +2,22 @@ import { Injectable } from '@angular/core';
 import { Recipe } from '@recipe';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipeFilterService {
-
   private filters = [];
 
-  get selectedFilters(): Array<Filter> { return this.filters; }
-  set selectedFilters(filters: Array<Filter>) { this.filters = filters; }
+  get selectedFilters(): Array<Filter> {
+    return this.filters;
+  }
+  set selectedFilters(filters: Array<Filter>) {
+    this.filters = filters;
+  }
 
   pageIndex: number;
   recipeId: Recipe['id'];
 
-  constructor() { }
+  constructor() {}
 
   recipeFilterPredicate(data: Recipe, filters: Array<Filter>): boolean {
     if (!filters.length) {
@@ -27,9 +30,16 @@ export class RecipeFilterService {
 
       if (filtersByType.length) {
         if (filterType === FILTER_TYPE.RATING) {
-          valid = valid && filtersByType.reduce((hasSome, filter) => hasSome || filter.filterPredicate(data), false);
+          valid =
+            valid &&
+            filtersByType.reduce(
+              (hasSome, filter) => hasSome || filter.filterPredicate(data),
+              false
+            );
         } else {
-          valid = valid && filtersByType.reduce((hasAll, filter) => hasAll && filter.filterPredicate(data), true);
+          valid =
+            valid &&
+            filtersByType.reduce((hasAll, filter) => hasAll && filter.filterPredicate(data), true);
         }
       }
     }
@@ -84,12 +94,16 @@ export class RestrictionFilter extends Filter {
 
 export class CategoryFilter extends Filter {
   type = FILTER_TYPE.CATEGORY;
-  filterPredicate = (recipe: Recipe): boolean => !!recipe.categories.find(({ category }) => this.equals(category, this.value)) || (recipe.hasNewCategory && this.value === 'New!') || (recipe.hasNeedsImageCategory && this.value === 'Needs Image');
+  filterPredicate = (recipe: Recipe): boolean =>
+    !!recipe.categories.find(({ category }) => this.equals(category, this.value)) ||
+    (recipe.hasNewCategory && this.value === 'New!') ||
+    (recipe.hasNeedsImageCategory && this.value === 'Needs Image');
 }
 
 export class RatingFilter extends Filter {
   type = FILTER_TYPE.RATING;
-  filterPredicate = (recipe: Recipe): boolean => this.value - recipe.meanRating >= 0 && this.value - recipe.meanRating < (1 / 3 * 100);
+  filterPredicate = (recipe: Recipe): boolean =>
+    this.value - recipe.meanRating >= 0 && this.value - recipe.meanRating < (1 / 3) * 100;
 }
 
 export class StatusFilter extends Filter {
@@ -105,12 +119,14 @@ export class ImageFilter extends Filter {
 export class SearchFilter extends Filter {
   type = FILTER_TYPE.SEARCH;
   filterPredicate = (recipe: Recipe): boolean => {
-    return this.contains(recipe.name, this.value)
-      || this.contains(recipe.description, this.value)
-      || this.contains(recipe.type, this.value)
-      || !!recipe.categories.find(({ category }) => this.contains(category, this.value))
-      || !!recipe.steps.find(({ step }) => this.contains(step, this.value))
-      || !!recipe.ingredients.find(({ name }) => this.contains(name, this.value))
-      || this.contains(recipe.author, this.value);
+    return (
+      this.contains(recipe.name, this.value) ||
+      this.contains(recipe.description, this.value) ||
+      this.contains(recipe.type, this.value) ||
+      !!recipe.categories.find(({ category }) => this.contains(category, this.value)) ||
+      !!recipe.steps.find(({ step }) => this.contains(step, this.value)) ||
+      !!recipe.ingredients.find(({ name }) => this.contains(name, this.value)) ||
+      this.contains(recipe.author, this.value)
+    );
   };
 }

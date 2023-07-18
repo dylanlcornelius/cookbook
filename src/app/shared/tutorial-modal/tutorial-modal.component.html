@@ -1,21 +1,21 @@
 <div *ngIf="params">
   <div class="overlay"></div>
-  <div class="modal" [ngStyle]="{'top': top, 'left': left}" [@fadeInAnimation]>
-    <div class="description">{{tutorial?.text}}</div>
-  
+  <div class="modal" [ngStyle]="{ top: top, left: left }" [@fadeInAnimation]>
+    <div class="description">{{ tutorial?.text }}</div>
+
     <div class="between">
       <button mat-button (click)="previous()" [disabled]="tutorialIndex === 0">
         <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <span class="steps">{{tutorialIndex + 1}}/{{tutorials.length}}</span>
-  
+      <span class="steps">{{ tutorialIndex + 1 }}/{{ tutorials.length }}</span>
+
       <button mat-button (click)="next()">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
   </div>
-  
+
   <button mat-mini-fab color="primary" class="close-button" (click)="close()">
     <mat-icon>close</mat-icon>
   </button>

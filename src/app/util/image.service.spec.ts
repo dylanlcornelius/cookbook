@@ -22,7 +22,7 @@ describe('ImageService', () => {
     it('should get a file url', () => {
       spyOn(firebase, 'ref');
       spyOn(firebase, 'getDownloadURL').and.returnValue(Promise.resolve('url'));
-    
+
       service.get('path');
 
       expect(firebase.ref).toHaveBeenCalled();
@@ -32,7 +32,7 @@ describe('ImageService', () => {
     it('should catch an non-existant file url', () => {
       spyOn(firebase, 'ref');
       spyOn(firebase, 'getDownloadURL').and.returnValue(Promise.reject());
-    
+
       service.get('path');
 
       expect(firebase.ref).toHaveBeenCalled();
@@ -46,13 +46,13 @@ describe('ImageService', () => {
         on: (_task: string, callback: Function, _error: Function, final: Function) => {
           callback({ bytesTransferred: 50, totalBytes: 100 });
           final();
-        }
+        },
       };
-      
+
       spyOn(firebase, 'ref');
       spyOn(firebase, 'uploadBytesResumable').and.returnValue(uploadTask);
       spyOn(service, 'get').and.returnValue(Promise.resolve('url'));
-    
+
       service.upload('path', null).subscribe(url => {
         expect(url).toBeDefined();
       });
@@ -67,13 +67,13 @@ describe('ImageService', () => {
         on: (_task: string, callback: Function, error: Function) => {
           callback({ bytesTransferred: 50, totalBytes: 100 });
           error();
-        }
+        },
       };
-      
+
       spyOn(firebase, 'ref');
       spyOn(firebase, 'uploadBytesResumable').and.returnValue(uploadTask);
       spyOn(service, 'get').and.returnValue(Promise.resolve('url'));
-    
+
       service.upload('path', null).subscribe(() => {});
 
       expect(firebase.ref).toHaveBeenCalled();
@@ -86,7 +86,10 @@ describe('ImageService', () => {
     it('should handle a recipe without an image', () => {
       spyOn(service, 'get');
 
-      service.download(new Recipe({})).then(() => {}, () => {});
+      service.download(new Recipe({})).then(
+        () => {},
+        () => {}
+      );
 
       expect(service.get).not.toHaveBeenCalled();
     });
@@ -94,7 +97,7 @@ describe('ImageService', () => {
     it('should handle a recipe with an image', () => {
       spyOn(service, 'get');
 
-      service.download(new Recipe({hasImage: true}));
+      service.download(new Recipe({ hasImage: true }));
 
       expect(service.get).toHaveBeenCalled();
     });
@@ -104,7 +107,7 @@ describe('ImageService', () => {
     it('should delete a file', () => {
       spyOn(firebase, 'ref');
       spyOn(firebase, 'deleteObject');
-    
+
       service.deleteFile('path');
 
       expect(firebase.ref).toHaveBeenCalled();

@@ -13,15 +13,9 @@ describe('RecipeRatingModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        RecipeRatingModalComponent,
-        ModalComponent
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [RecipeRatingModalComponent, ModalComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -42,7 +36,7 @@ describe('RecipeRatingModalComponent', () => {
         recipe: new Recipe({}),
         uid: 'uid',
         timesCooked: 0,
-        text: ''
+        text: '',
       };
       fixture.detectChanges();
 
@@ -65,7 +59,7 @@ describe('RecipeRatingModalComponent', () => {
         recipe: new Recipe({}),
         uid: 'uid',
         timesCooked: 0,
-        text: ''
+        text: '',
       };
       fixture.detectChanges();
 
@@ -86,7 +80,7 @@ describe('RecipeRatingModalComponent', () => {
         recipe: new Recipe({}),
         uid: 'uid',
         timesCooked: 0,
-        text: ''
+        text: '',
       };
       fixture.detectChanges();
 

@@ -1,50 +1,50 @@
 .container {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    column-gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  column-gap: 50px;
 }
 .mat-form-field {
-    width: 60%;
+  width: 60%;
 }
 .row-button {
-    margin: 10px;
+  margin: 10px;
 }
 .user-card {
-    width: 200px;
-    margin: 10px;
-    text-align: center;
+  width: 200px;
+  margin: 10px;
+  text-align: center;
 }
 .mat-card-header {
-    flex-grow: 1;
-    overflow: auto;
+  flex-grow: 1;
+  overflow: auto;
 }
 .mat-card-header .mat-card-subtitle {
-    width: min-content;
-    margin: -8px auto 0 !important;
+  width: min-content;
+  margin: -8px auto 0 !important;
 }
 .mat-card-image {
-    margin: 0 -16px 16px !important;
-    object-fit: cover;
-    aspect-ratio: 1/1;
+  margin: 0 -16px 16px !important;
+  object-fit: cover;
+  aspect-ratio: 1/1;
 }
 .mat-card-actions {
-    display: flex !important;
-    justify-content: center;
-    width: min-content;
-    margin: 0 auto !important;
-    padding: 0 !important;
+  display: flex !important;
+  justify-content: center;
+  width: min-content;
+  margin: 0 auto !important;
+  padding: 0 !important;
 }
 .mat-card-actions .mat-button {
-    margin: 0 0 0 20px !important;
-    padding: 0;
+  margin: 0 0 0 20px !important;
+  padding: 0;
 }
 .mat-card-actions .mat-button:first-child {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 .mat-paginator {
-    background: inherit;
+  background: inherit;
 }
 .full-width {
-    width: 100%;
+  width: 100%;
 }
 .profile-link {
   color: inherit;
@@ -55,7 +55,7 @@
   text-decoration: none;
 }
 @media screen and (max-width: 767px) {
-    .user-card {
-        margin: 5px;
-    }
+  .user-card {
+    margin: 5px;
+  }
 }

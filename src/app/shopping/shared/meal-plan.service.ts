@@ -8,13 +8,13 @@ import { MealPlan } from './meal-plan.model';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MealPlanService extends FirestoreService {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
-    actionService: ActionService,
+    actionService: ActionService
   ) {
     super('meal-plans', firebase, currentUserService, actionService);
   }
@@ -25,15 +25,17 @@ export class MealPlanService extends FirestoreService {
   get(uid?: string): Observable<MealPlan | MealPlan[]> {
     return new Observable(observer => {
       if (uid) {
-        super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
-          if (docs.length > 0) {
-            observer.next(new MealPlan(docs[0]));
-          } else {
-            const mealPlan = new MealPlan({uid: uid});
-            mealPlan.id = this.create(mealPlan);
-            observer.next(mealPlan);
-          }
-        });
+        super
+          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+          .subscribe(docs => {
+            if (docs.length > 0) {
+              observer.next(new MealPlan(docs[0]));
+            } else {
+              const mealPlan = new MealPlan({ uid: uid });
+              mealPlan.id = this.create(mealPlan);
+              observer.next(mealPlan);
+            }
+          });
       } else {
         super.get().subscribe(docs => {
           observer.next(docs.map(doc => new MealPlan(doc)));
@@ -45,10 +47,9 @@ export class MealPlanService extends FirestoreService {
   create = (data: MealPlan): string => super.create(data.getObject());
   update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
 
-  formattedUpdate(data: MealPlan["recipes"], uid: string, id: string): void {
+  formattedUpdate(data: MealPlan['recipes'], uid: string, id: string): void {
     const recipes = data.map(({ id }) => ({ id }));
     const mealPlan = new MealPlan({ uid, recipes, id });
     this.update(mealPlan.getObject(), mealPlan.getId());
   }
 }
-

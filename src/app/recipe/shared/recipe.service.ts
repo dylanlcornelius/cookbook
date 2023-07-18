@@ -11,7 +11,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipeService extends FirestoreService {
   editorForm = new BehaviorSubject<any>(null);
@@ -51,34 +51,37 @@ export class RecipeService extends FirestoreService {
   }
 
   create = (data: RecipeObject): string => super.create(data, Action.CREATE_RECIPE);
-  update = (data: RecipeObject | Recipe[], id?: string): void => super.update(data, id, Action.UPDATE_RECIPE);
+  update = (data: RecipeObject | Recipe[], id?: string): void =>
+    super.update(data, id, Action.UPDATE_RECIPE);
   delete = (id: string): void => super.delete(id, Action.DELETE_RECIPE);
 
-  calculateMeanRating(ratings: { rating: number }[] ): number {
+  calculateMeanRating(ratings: { rating: number }[]): number {
     if (!ratings || ratings.length === 0) {
       return 0;
     }
-    
-    return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length / 3 * 100;
+
+    return (ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length / 3) * 100;
   }
 
   rateRecipe(rating: number, uid: string, recipe: Recipe): void {
     recipe.ratings = recipe.ratings.filter(value => value.uid !== uid);
     if (rating !== 0) {
-      recipe.ratings.push({uid: uid, rating: rating});
+      recipe.ratings.push({ uid: uid, rating: rating });
     }
     recipe.meanRating = this.calculateMeanRating(recipe.ratings);
-    
+
     this.update(recipe.getObject(), recipe.getId());
     this.notificationService.setModal(new SuccessNotification('Recipe rating updated!'));
   }
 
   changeStatus(recipe: Recipe): void {
-    this.validationService.setModal(new Validation(
-      `Are you sure you want to change the visibility of this recipe?`,
-      this.changeStatusEvent,
-      [recipe]
-    ));
+    this.validationService.setModal(
+      new Validation(
+        `Are you sure you want to change the visibility of this recipe?`,
+        this.changeStatusEvent,
+        [recipe]
+      )
+    );
   }
 
   changeStatusEvent = (recipe: Recipe): void => {

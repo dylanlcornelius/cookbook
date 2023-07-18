@@ -5,7 +5,7 @@ import { IngredientEditComponent } from '../ingredient-edit/ingredient-edit.comp
 @Component({
   selector: 'app-ingredient-quick-create',
   templateUrl: './ingredient-quick-create.component.html',
-  styleUrls: ['./ingredient-quick-create.component.scss']
+  styleUrls: ['./ingredient-quick-create.component.scss'],
 })
 export class IngredientQuickCreateComponent {
   @Input()
@@ -17,7 +17,7 @@ export class IngredientQuickCreateComponent {
   @ViewChild(IngredientEditComponent)
   edit: IngredientEditComponent;
 
-  constructor() { }
+  constructor() {}
 
   open(): void {
     this.edit.load();

@@ -21,9 +21,12 @@ describe('ModalService', () => {
     it('should return a subject of Modal', () => {
       service.modal = new BehaviorSubject<Modal>(new SuccessNotification('text'));
 
-      service.getModal().pipe(take(1)).subscribe(notification => {
-        expect(notification).toBeDefined();
-      });
+      service
+        .getModal()
+        .pipe(take(1))
+        .subscribe(notification => {
+          expect(notification).toBeDefined();
+        });
     });
   });
 

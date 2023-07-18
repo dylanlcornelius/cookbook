@@ -28,16 +28,10 @@ describe('HeaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-        RouterTestingModule
-      ],
-      declarations: [ HeaderComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([]), RouterTestingModule],
+      declarations: [HeaderComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -58,7 +52,7 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
+
   describe('constructor', () => {
     it('should listen to navigation events', () => {
       const event = new NavigationEnd(1, '/', '/');
@@ -81,7 +75,9 @@ describe('HeaderComponent', () => {
     it('should load navs and household invites', () => {
       spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid', role: 'admin' })));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ uid: 'uid', role: 'admin' }))
+      );
       spyOn(feedbackService, 'get').and.returnValue(of([new Feedback({})]));
       spyOn(householdService, 'getInvites').and.returnValue(of([new Household({})]));
 
@@ -111,9 +107,13 @@ describe('HeaderComponent', () => {
     });
 
     it('should load the continue nav and feature flag navs', () => {
-      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({ link: '/shopping/plan' })]));
-      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({id: 'test'}));
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ uid: 'uid', hasPlanner: true })));
+      spyOn(navigationService, 'get').and.returnValue(
+        of([new Navigation({ link: '/shopping/plan' })])
+      );
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({ id: 'test' }));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ uid: 'uid', hasPlanner: true }))
+      );
       spyOn(feedbackService, 'get').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
@@ -126,7 +126,7 @@ describe('HeaderComponent', () => {
       expect(householdService.getInvites).toHaveBeenCalled();
     });
   });
-  
+
   describe('toggleNav', () => {
     it('should invert the nav boolean', () => {
       component.toggleNav();

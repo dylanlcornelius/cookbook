@@ -21,22 +21,26 @@ import { ModalComponent } from '@modalComponent';
 @Component({
   selector: 'app-recipe-rating-modal',
   templateUrl: './recipe-rating-modal.component.html',
-  styleUrls: ['./recipe-rating-modal.component.scss']
+  styleUrls: ['./recipe-rating-modal.component.scss'],
 })
 export class RecipeRatingModalComponent {
   params;
 
   @Input()
-  set Params(params: { function: Function, recipe: Recipe, uid: string, timesCooked: number, text: string }) {
+  set Params(params: {
+    function: Function;
+    recipe: Recipe;
+    uid: string;
+    timesCooked: number;
+    text: string;
+  }) {
     this.params = params;
   }
 
   @ViewChild(ModalComponent)
   modal: ModalComponent;
 
-  constructor(
-    private recipeService: RecipeService
-  ) { }
+  constructor(private recipeService: RecipeService) {}
 
   onRate(rating: number, recipe: Recipe): void {
     this.recipeService.rateRecipe(rating, this.params.uid, recipe);

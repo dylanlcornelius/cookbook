@@ -1,33 +1,58 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 
-<h2>{{this.title}}</h2>
+<h2>{{ this.title }}</h2>
 
 <div *ngIf="!loading">
-  <form [formGroup]="ingredientsForm" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)" appFormValidation>
+  <form
+    [formGroup]="ingredientsForm"
+    #formDirective="ngForm"
+    (ngSubmit)="onSubmit(formDirective)"
+    appFormValidation
+  >
     <mat-form-field class="form-field">
-      <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required>
+      <input
+        matInput
+        placeholder="Name"
+        formControlName="name"
+        [errorStateMatcher]="matcher"
+        required
+      />
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('name').valid && ingredientsForm.get('name').touched">Please enter Ingredient Name</span>
+        <span *ngIf="!ingredientsForm.get('name').valid && ingredientsForm.get('name').touched">
+          Please enter Ingredient Name
+        </span>
       </mat-error>
     </mat-form-field>
 
     <div class="container">
       <mat-form-field>
-        <input matInput placeholder="Amount" formControlName="amount" [errorStateMatcher]="matcher" required>
+        <input
+          matInput
+          placeholder="Amount"
+          formControlName="amount"
+          [errorStateMatcher]="matcher"
+          required
+        />
         <mat-error>
-          <span *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched">Please enter a valid number for Ingredient Amount</span>
+          <span
+            *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched"
+          >
+            Please enter a valid number for Ingredient Amount
+          </span>
         </mat-error>
       </mat-form-field>
-    
+
       <mat-form-field>
         <mat-label>Unit of Measurement</mat-label>
         <mat-select formControlName="uom" required>
           <mat-option *ngFor="let uom of uoms" [value]="uom">
-            {{uom}}
+            {{ uom }}
           </mat-option>
         </mat-select>
         <mat-error>
-          <span *ngIf="!ingredientsForm.get('uom').valid && ingredientsForm.get('uom').touched">Please enter a valid Unit of Measurement</span>
+          <span *ngIf="!ingredientsForm.get('uom').valid && ingredientsForm.get('uom').touched">
+            Please enter a valid Unit of Measurement
+          </span>
         </mat-error>
       </mat-form-field>
     </div>
@@ -36,30 +61,60 @@
       <mat-label>Category</mat-label>
       <mat-select formControlName="category" required>
         <mat-option *ngFor="let category of categories" [value]="category.value">
-          {{category.displayValue}}
+          {{ category.displayValue }}
         </mat-option>
       </mat-select>
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('category').valid && ingredientsForm.get('category').touched">Please enter a valid number for Ingredient Category</span>
+        <span
+          *ngIf="!ingredientsForm.get('category').valid && ingredientsForm.get('category').touched"
+        >
+          Please enter a valid number for Ingredient Category
+        </span>
       </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-field">
-      <input matInput placeholder="Calories" formControlName="calories" [errorStateMatcher]="matcher">
+      <input
+        matInput
+        placeholder="Calories"
+        formControlName="calories"
+        [errorStateMatcher]="matcher"
+      />
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('calories').valid">Please enter a valid number for Ingredient Calories</span>
+        <span *ngIf="!ingredientsForm.get('calories').valid">
+          Please enter a valid number for Ingredient Calories
+        </span>
       </mat-error>
     </mat-form-field>
 
     <div class="button-row between">
       <div *ngIf="!isQuickView">
-        <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/ingredient/detail/', id]" *ngIf="id">
+        <a
+          mat-mini-fab
+          matTooltip="Back"
+          color="primary"
+          [routerLink]="['/ingredient/detail/', id]"
+          *ngIf="id"
+        >
           <mat-icon>arrow_back</mat-icon>
         </a>
-        <a mat-mini-fab matTooltip="Grocery Items List" color="primary" routerLink="/ingredient/list" *ngIf="!id">
+        <a
+          mat-mini-fab
+          matTooltip="Grocery Items List"
+          color="primary"
+          routerLink="/ingredient/list"
+          *ngIf="!id"
+        >
           <mat-icon>list</mat-icon>
         </a>
-        <button mat-mini-fab matTooltip="Tutorial" type="button" color="primary" (click)="openTutorial()" style="margin-left: 10px">
+        <button
+          mat-mini-fab
+          matTooltip="Tutorial"
+          type="button"
+          color="primary"
+          (click)="openTutorial()"
+          style="margin-left: 10px"
+        >
           <mat-icon>help</mat-icon>
         </button>
       </div>

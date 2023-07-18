@@ -2,5 +2,5 @@
 
 <button mat-button color="warn" (click)="remove()" id="cook-recipe-button">
   <span>Cook</span>
-  <span *ngIf="recipe.count && recipe.count > 0">({{recipe.count | number: '1.0-2'}})</span>
+  <span *ngIf="recipe.count && recipe.count > 0">({{ recipe.count | number: '1.0-2' }})</span>
 </button>

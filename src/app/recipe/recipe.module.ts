@@ -40,6 +40,6 @@ import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-
     DragDropModule,
     SharedModule,
     IngredientModule,
-  ]
+  ],
 })
-export class RecipeModule { }
+export class RecipeModule {}

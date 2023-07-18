@@ -12,16 +12,14 @@ this.householdInviteModalParams = {
 */
 
 import { Component, Input, ViewChild } from '@angular/core';
-import {
-  FormControl,
-} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { User } from '@user';
 import { ModalComponent } from '@modalComponent';
 
 @Component({
   selector: 'app-household-invite-modal',
   templateUrl: './household-invite-modal.component.html',
-  styleUrls: ['./household-invite-modal.component.scss']
+  styleUrls: ['./household-invite-modal.component.scss'],
 })
 export class HouseholdInviteModalComponent {
   inviteSearchControl = new FormControl();
@@ -29,7 +27,7 @@ export class HouseholdInviteModalComponent {
   params;
 
   @Input()
-  set Params(params: { function: Function, users: User[] }) {
+  set Params(params: { function: Function; users: User[] }) {
     this.inviteSearchControl = new FormControl();
     this.params = params;
   }

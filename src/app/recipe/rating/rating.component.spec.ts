@@ -9,9 +9,8 @@ describe('RatingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RatingComponent ]
-    })
-    .compileComponents();
+      declarations: [RatingComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe('RatingComponent', () => {
   });
 
   it('should update user rating', () => {
-    const rating = {uid: 'uid', rating: 1};
+    const rating = { uid: 'uid', rating: 1 };
 
     spyOn(component, 'findUserRating').and.returnValue({ rating: 1 });
 
@@ -39,8 +38,8 @@ describe('RatingComponent', () => {
 
   describe('findUserRating', () => {
     it('should return a user rating', () => {
-      const rating = {uid: 'uid', rating: 1};
-      component.recipe = new Recipe({ratings: [rating]});
+      const rating = { uid: 'uid', rating: 1 };
+      component.recipe = new Recipe({ ratings: [rating] });
       component.uid = 'uid';
 
       const result = component.findUserRating();
@@ -49,8 +48,8 @@ describe('RatingComponent', () => {
     });
 
     it('should return a default rating', () => {
-      component.recipe = new Recipe({ratings: []});
-      
+      component.recipe = new Recipe({ ratings: [] });
+
       const result = component.findUserRating();
 
       expect(result.rating).toEqual(0);
@@ -59,12 +58,16 @@ describe('RatingComponent', () => {
 
   describe('handleRate', () => {
     it('should do nothing if the rating is unselected', () => {
-      component.userRating = {rating: 1, uid: 'uid'};
+      component.userRating = { rating: 1, uid: 'uid' };
       component.uid = 'uid';
-      component.recipe = new Recipe({rating: [{
-        rating: 1,
-        uid: 'uid'
-      }]});
+      component.recipe = new Recipe({
+        rating: [
+          {
+            rating: 1,
+            uid: 'uid',
+          },
+        ],
+      });
 
       spyOn(component.rate, 'emit');
 
@@ -75,10 +78,14 @@ describe('RatingComponent', () => {
 
     it('should emit a new rating value', () => {
       component.uid = 'uid';
-      component.recipe = new Recipe({rating: [{
-        rating: 2,
-        uid: 'uid'
-      }]});
+      component.recipe = new Recipe({
+        rating: [
+          {
+            rating: 2,
+            uid: 'uid',
+          },
+        ],
+      });
 
       spyOn(component.rate, 'emit');
 

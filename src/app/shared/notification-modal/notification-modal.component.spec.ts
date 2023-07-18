@@ -14,15 +14,10 @@ describe('NotificationModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ],
-      declarations: [ NotificationModalComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [NotificationModalComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,7 +33,9 @@ describe('NotificationModalComponent', () => {
 
   describe('load', () => {
     it('should listen to the notification service and handle a value', fakeAsync(() => {
-      spyOn(notificationService, 'getModal').and.returnValue(new BehaviorSubject(new SuccessNotification('text')));
+      spyOn(notificationService, 'getModal').and.returnValue(
+        new BehaviorSubject(new SuccessNotification('text'))
+      );
       spyOn(notificationService, 'setModal');
 
       component.load();

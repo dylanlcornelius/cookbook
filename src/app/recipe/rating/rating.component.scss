@@ -1,36 +1,36 @@
 .star-ratings {
-    position: relative;
-    width: fit-content;
-    font-size: 24px;
-    margin: 0 auto;
-    padding: 0;
-    word-break: normal;
+  position: relative;
+  width: fit-content;
+  font-size: 24px;
+  margin: 0 auto;
+  padding: 0;
+  word-break: normal;
 }
 .user {
-    color: #eb9719;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    padding: 0;
+  color: #eb9719;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 0;
 }
 .top {
-    color: #eec71b;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    padding: 0;
-    height: 20px;
+  color: #eec71b;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  padding: 0;
+  height: 20px;
 }
 .bottom {
-    color: #737373;
-    z-index: 0;
-    padding: 0;
+  color: #737373;
+  z-index: 0;
+  padding: 0;
 }
 .top span,
 .bottom span {
-    cursor: pointer;
+  cursor: pointer;
 }

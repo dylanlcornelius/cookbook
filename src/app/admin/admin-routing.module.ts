@@ -4,11 +4,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 const routes: Routes = [
-  {path: 'dashboard', title: 'Admin Dashboard', component: AdminDashboardComponent},
+  { path: 'dashboard', title: 'Admin Dashboard', component: AdminDashboardComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

@@ -11,7 +11,13 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { AuthorFilter, CategoryFilter, RecipeFilterService, RestrictionFilter, TypeFilter } from '@recipeFilterService';
+import {
+  AuthorFilter,
+  CategoryFilter,
+  RecipeFilterService,
+  RestrictionFilter,
+  TypeFilter,
+} from '@recipeFilterService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
@@ -30,7 +36,7 @@ import { TitleService } from '@TitleService';
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
-  styleUrls: ['./recipe-detail.component.scss']
+  styleUrls: ['./recipe-detail.component.scss'],
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -74,7 +80,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
     private configService: ConfigService,
-    private firebase: FirebaseService,
+    private firebase: FirebaseService
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -95,56 +101,108 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.user = user;
+    this.currentUserService
+      .getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        this.user = user;
 
-      const household$ = this.householdService.get(this.user.uid);
-      const params$ = this.route.params;
+        const household$ = this.householdService.get(this.user.uid);
+        const params$ = this.route.params;
 
-      combineLatest([household$, params$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([household, params]) => {
-        this.loading = this.loadingService.set(true);
-        this.householdId = household.id;
+        combineLatest([household$, params$])
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(([household, params]) => {
+            this.loading = this.loadingService.set(true);
+            this.householdId = household.id;
 
-        const recipe$ = this.recipeService.get(params['id']);
-        const ingredients$ = this.ingredientService.get();
-        const recipes$ = this.recipeService.get();
-        const userIngredient$ = this.userIngredientService.get(this.householdId);
-        const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
-        const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
+            const recipe$ = this.recipeService.get(params['id']);
+            const ingredients$ = this.ingredientService.get();
+            const recipes$ = this.recipeService.get();
+            const userIngredient$ = this.userIngredientService.get(this.householdId);
+            const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
+            const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
 
-        combineLatest([recipe$, ingredients$, recipes$, userIngredient$, recipeHistory$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipe, ingredients, recipes, userIngredients, recipeHistory, configs]) => {
-          this.titleService.set(recipe.name);
-          this.recipe = recipe;
-          this.hasAuthorPermission = this.householdService.hasAuthorPermission(household, this.user, this.recipe);
-          this.recipeImage = undefined;
-          this.imageService.download(this.recipe).then(url => {
-            if (url) {
-              this.recipeImage = url;
-            }
-          }, () => { });
+            combineLatest([
+              recipe$,
+              ingredients$,
+              recipes$,
+              userIngredient$,
+              recipeHistory$,
+              configs$,
+            ])
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe(
+                ([recipe, ingredients, recipes, userIngredients, recipeHistory, configs]) => {
+                  this.titleService.set(recipe.name);
+                  this.recipe = recipe;
+                  this.hasAuthorPermission = this.householdService.hasAuthorPermission(
+                    household,
+                    this.user,
+                    this.recipe
+                  );
+                  this.recipeImage = undefined;
+                  this.imageService.download(this.recipe).then(
+                    url => {
+                      if (url) {
+                        this.recipeImage = url;
+                      }
+                    },
+                    () => {}
+                  );
 
-          this.timesCooked = recipeHistory.timesCooked;
-          const date = recipeHistory.lastDateCooked.split('/');
-          if (date.length === 3) {
-            this.lastDateCooked = new Date(Number.parseInt(date[2]), Number.parseInt(date[1]) - 1, Number.parseInt(date[0])).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
-          }
-          this.creationDate = this.recipe.creationDate?.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+                  this.timesCooked = recipeHistory.timesCooked;
+                  const date = recipeHistory.lastDateCooked.split('/');
+                  if (date.length === 3) {
+                    this.lastDateCooked = new Date(
+                      Number.parseInt(date[2]),
+                      Number.parseInt(date[1]) - 1,
+                      Number.parseInt(date[0])
+                    ).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    });
+                  }
+                  this.creationDate = this.recipe.creationDate?.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  });
 
-          this.recipes = recipes.map(recipe => {
-            recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
-            return recipe;
+                  this.recipes = recipes.map(recipe => {
+                    recipe.ingredients = this.ingredientService.buildRecipeIngredients(
+                      recipe.ingredients,
+                      [...ingredients, ...recipes]
+                    );
+                    return recipe;
+                  });
+                  this.userIngredients = this.userIngredientService.buildUserIngredients(
+                    userIngredients,
+                    ingredients
+                  );
+                  this.ingredients = ingredients;
+                  this.recipe.ingredients = this.ingredientService.buildRecipeIngredients(
+                    recipe.ingredients,
+                    [...ingredients, ...recipes]
+                  );
+                  this.recipe.count = this.recipeIngredientService.getRecipeCount(
+                    recipe,
+                    recipes,
+                    this.ingredients,
+                    this.userIngredients
+                  );
+                  this.recipe.displayType =
+                    configs.find(({ value }) => value === this.recipe.type)?.displayValue || '';
+                  this.hasNewCategory =
+                    !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
+                  this.hasNeedsImageCategory =
+                    this.hasAuthorPermission && this.timesCooked && !this.recipe.hasImage;
+                  this.loading = this.loadingService.set(false);
+                }
+              );
           });
-          this.userIngredients = this.userIngredientService.buildUserIngredients(userIngredients, ingredients);
-          this.ingredients = ingredients;
-          this.recipe.ingredients = this.ingredientService.buildRecipeIngredients(recipe.ingredients, [...ingredients, ...recipes]);
-          this.recipe.count = this.recipeIngredientService.getRecipeCount(recipe, recipes, this.ingredients, this.userIngredients);
-          this.recipe.displayType = configs.find(({ value }) => value === this.recipe.type)?.displayValue || '';
-          this.hasNewCategory = !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
-          this.hasNeedsImageCategory = this.hasAuthorPermission && this.timesCooked && !this.recipe.hasImage;
-          this.loading = this.loadingService.set(false);
-        });
       });
-    });
   }
 
   updateImage = (hasImage: boolean): void => {
@@ -153,11 +211,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   };
 
   deleteRecipe(id: string): void {
-    this.validationService.setModal(new Validation(
-      `Are you sure you want to delete recipe ${this.recipe.name}?`,
-      this.deleteRecipeEvent,
-      [id]
-    ));
+    this.validationService.setModal(
+      new Validation(
+        `Are you sure you want to delete recipe ${this.recipe.name}?`,
+        this.deleteRecipeEvent,
+        [id]
+      )
+    );
   }
 
   deleteRecipeEvent = (id: string): void => {
@@ -170,36 +230,61 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   };
 
   shouldDisplayCategories(): boolean {
-    return !!(this.recipe.categories && this.recipe.categories.length)
-      || this.hasNewCategory
-      || this.hasNeedsImageCategory
-      || this.recipe.isVegetarian
-      || this.recipe.isVegan
-      || this.recipe.isGlutenFree
-      || this.recipe.isDairyFree
-      || !!this.recipe.type;
+    return (
+      !!(this.recipe.categories && this.recipe.categories.length) ||
+      this.hasNewCategory ||
+      this.hasNeedsImageCategory ||
+      this.recipe.isVegetarian ||
+      this.recipe.isVegan ||
+      this.recipe.isGlutenFree ||
+      this.recipe.isDairyFree ||
+      !!this.recipe.type
+    );
   }
 
-  setCategoryFilter = (filter: string): void => this.utilService.setListFilter(new CategoryFilter(filter));
-  setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
-  setRestrictionFilter = (filter: string): void => this.utilService.setListFilter(new RestrictionFilter(filter));
+  setCategoryFilter = (filter: string): void =>
+    this.utilService.setListFilter(new CategoryFilter(filter));
+  setAuthorFilter = (filter: string): void =>
+    this.utilService.setListFilter(new AuthorFilter(filter));
+  setRestrictionFilter = (filter: string): void =>
+    this.utilService.setListFilter(new RestrictionFilter(filter));
   setTypeFilter = (filter: string): void => this.utilService.setListFilter(new TypeFilter(filter));
 
   changeStatus = (): void => this.recipeService.changeStatus(this.recipe);
 
   addRecipe(): void {
-    this.mealPlanService.get(this.householdId).pipe(first()).subscribe(mealPlan => {
-      this.mealPlanService.formattedUpdate([...mealPlan.recipes, this.recipe], this.householdId, mealPlan.id);
-      this.notificationService.setModal(new SuccessNotification('Recipe added!'));
-    });
+    this.mealPlanService
+      .get(this.householdId)
+      .pipe(first())
+      .subscribe(mealPlan => {
+        this.mealPlanService.formattedUpdate(
+          [...mealPlan.recipes, this.recipe],
+          this.householdId,
+          mealPlan.id
+        );
+        this.notificationService.setModal(new SuccessNotification('Recipe added!'));
+      });
   }
 
   addIngredients(): void {
-    this.recipeIngredientService.addIngredients(this.recipe, this.recipes, this.ingredients, this.userIngredients, this.householdId);
+    this.recipeIngredientService.addIngredients(
+      this.recipe,
+      this.recipes,
+      this.ingredients,
+      this.userIngredients,
+      this.householdId
+    );
   }
 
   removeIngredients(): void {
-    this.recipeIngredientService.removeIngredients(this.recipe, this.recipes, this.ingredients, this.userIngredients, this.user.uid, this.householdId);
+    this.recipeIngredientService.removeIngredients(
+      this.recipe,
+      this.recipes,
+      this.ingredients,
+      this.userIngredients,
+      this.user.uid,
+      this.householdId
+    );
   }
 
   onRate(rating: number, recipe: Recipe): void {
@@ -209,7 +294,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   copyShareableLink(): void {
     navigator.clipboard.writeText(window.location.href).then(() => {
       this.notificationService.setModal(new SuccessNotification('Link copied!'));
-      this.firebase.logEvent('share', { method: 'link', content_type: 'recipe', item_id: this.recipe.id, item_name: this.recipe.name });
+      this.firebase.logEvent('share', {
+        method: 'link',
+        content_type: 'recipe',
+        item_id: this.recipe.id,
+        item_name: this.recipe.name,
+      });
     });
   }
 
@@ -220,27 +310,37 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       uid: this.user.uid,
       householdId: this.householdId,
       timesCooked: this.timesCooked,
-      text: `Edit times cooked for ${recipe.name}`
+      text: `Edit times cooked for ${recipe.name}`,
     };
   }
 
-  updateRecipeHistoryEvent = (recipeId: string, uid: string, householdId: string, timesCooked: number): void => {
+  updateRecipeHistoryEvent = (
+    recipeId: string,
+    uid: string,
+    householdId: string,
+    timesCooked: number
+  ): void => {
     this.recipeHistoryService.set(uid, recipeId, timesCooked);
     this.recipeHistoryService.set(householdId, recipeId, timesCooked);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   };
 
   openRecipeEditor(): void {
-    this.recipeService.getForm().pipe(first()).subscribe(form => {
-      if (form) {
-        this.validationService.setModal(new Validation(
-          `Are you sure you want to undo your current changes in the recipe wizard?`,
-          this.openRecipeEditorEvent
-        ));
-      } else {
-        this.openRecipeEditorEvent();
-      }
-    });
+    this.recipeService
+      .getForm()
+      .pipe(first())
+      .subscribe(form => {
+        if (form) {
+          this.validationService.setModal(
+            new Validation(
+              `Are you sure you want to undo your current changes in the recipe wizard?`,
+              this.openRecipeEditorEvent
+            )
+          );
+        } else {
+          this.openRecipeEditorEvent();
+        }
+      });
   }
 
   openRecipeEditorEvent = (): void => {
@@ -258,7 +358,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       author: this.user.name,
       meanRating: 0,
       ratings: [],
-      status: RECIPE_STATUS.PRIVATE
+      status: RECIPE_STATUS.PRIVATE,
     });
     this.router.navigate(['/recipe/detail/', recipeId]);
     this.notificationService.setModal(new SuccessNotification('Recipe cloned!'));

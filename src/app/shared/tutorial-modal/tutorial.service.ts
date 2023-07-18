@@ -11,7 +11,7 @@ import { Action } from '@actions';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TutorialService extends FirestoreService {
   constructor(
@@ -19,7 +19,7 @@ export class TutorialService extends FirestoreService {
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
-    private tutorialModalService: TutorialModalService,
+    private tutorialModalService: TutorialModalService
   ) {
     super('tutorials', firebase, currentUserService, actionService);
   }
@@ -40,10 +40,12 @@ export class TutorialService extends FirestoreService {
   openTutorial(startingUrl: boolean): void {
     this.commitAction(Action.OPEN_TUTORIAL);
     this.firebase.logEvent('tutorial_begin');
-    
-    this.tutorialModalService.setModal(new TutorialModal(
-      startingUrl ? this.router.url : '/home',
-      startingUrl ? this.router.url : null
-    ));
+
+    this.tutorialModalService.setModal(
+      new TutorialModal(
+        startingUrl ? this.router.url : '/home',
+        startingUrl ? this.router.url : null
+      )
+    );
   }
 }

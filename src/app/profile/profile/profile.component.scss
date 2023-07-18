@@ -3,39 +3,39 @@
   margin: 0 auto;
 }
 .box {
-    transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
 }
 .tab-body {
-    margin: 15px;
-    box-shadow: none !important;
-    background: inherit;
-    color: inherit;
-    padding: 0;
+  margin: 15px;
+  box-shadow: none !important;
+  background: inherit;
+  color: inherit;
+  padding: 0;
 }
 .profile {
   column-gap: 35px;
 }
 .theme-icon {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 .theme-icon .mat-icon {
-    vertical-align: bottom;
+  vertical-align: bottom;
 }
 .image-progress {
-    width: calc(100% + 32px);
-    margin: 0 -16px;
-    top: -16px;
+  width: calc(100% + 32px);
+  margin: 0 -16px;
+  top: -16px;
 }
 .mat-card-image {
-    max-width: 750px;
-    object-fit: cover;
-    aspect-ratio: 1/1;
+  max-width: 750px;
+  object-fit: cover;
+  aspect-ratio: 1/1;
 }
 .button-container {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    padding-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  padding-bottom: 20px;
 }
 .chart-container {
-    height: 55vh;
-    display: grid;
+  height: 55vh;
+  display: grid;
 }

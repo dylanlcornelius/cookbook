@@ -46,15 +46,10 @@ describe('ProfileComponent', () => {
         MatInputModule,
         NgxChartsModule,
       ],
-      providers: [
-        UserService
-      ],
-      declarations: [ ProfileComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      providers: [UserService],
+      declarations: [ProfileComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -117,7 +112,7 @@ describe('ProfileComponent', () => {
     it('should load data and catch an image error', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
-      
+
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'admin' })));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(userService, 'get').and.returnValue(of([new User({ id: 'id' })]));
@@ -137,14 +132,14 @@ describe('ProfileComponent', () => {
 
   describe('loadActions', () => {
     it('should load actions', fakeAsync(() => {
-      component.user = new User({uid: 'uid'});
+      component.user = new User({ uid: 'uid' });
       component.actionPaginator = {};
-      
+
       const actions = [
-        { day: 0, month: 1, year: 0, data: {[Action.BUY_INGREDIENT]: 2} },
-        { day: 0, month: 1, year: 0, data: {'2': 2} },
-        { day: 0, month: 2, year: 0, data: {'2': 2} },
-        { day: 0, month: 3, year: 0, data: {'2': 2} }
+        { day: 0, month: 1, year: 0, data: { [Action.BUY_INGREDIENT]: 2 } },
+        { day: 0, month: 1, year: 0, data: { '2': 2 } },
+        { day: 0, month: 2, year: 0, data: { '2': 2 } },
+        { day: 0, month: 3, year: 0, data: { '2': 2 } },
       ];
 
       const action = { uid: '', actions: {} };
@@ -160,14 +155,14 @@ describe('ProfileComponent', () => {
     }));
 
     it('should load actions without paginators', fakeAsync(() => {
-      component.user = new User({uid: 'uid'});
+      component.user = new User({ uid: 'uid' });
       component.actionPaginator = null;
-      
+
       const actions = [
-        { day: 0, month: 1, year: 0, data: {'1': 2} },
-        { day: 0, month: 1, year: 0, data: {'2': 2} },
-        { day: 0, month: 2, year: 0, data: {'2': 2} },
-        { day: 0, month: 3, year: 0, data: {'2': 2} }
+        { day: 0, month: 1, year: 0, data: { '1': 2 } },
+        { day: 0, month: 1, year: 0, data: { '2': 2 } },
+        { day: 0, month: 2, year: 0, data: { '2': 2 } },
+        { day: 0, month: 3, year: 0, data: { '2': 2 } },
       ];
 
       const action = { uid: '', actions: {} };
@@ -183,7 +178,7 @@ describe('ProfileComponent', () => {
     }));
 
     it('should handle no actions', fakeAsync(() => {
-      component.user = new User({uid: 'uid'});
+      component.user = new User({ uid: 'uid' });
 
       spyOn(actionService, 'get').and.returnValue(undefined);
       spyOn(component, 'sortActions');
@@ -201,7 +196,7 @@ describe('ProfileComponent', () => {
       const result = component.sortActions({
         '2/2/2': {},
         '1/1/1': { [Action.BUY_INGREDIENT]: 1 },
-        '1/2/1': {}
+        '1/2/1': {},
       });
 
       expect(result[0].year).toBe(1);
@@ -212,7 +207,7 @@ describe('ProfileComponent', () => {
       const result = component.sortActions({
         '2/2/2': {},
         '1/1/1': {},
-        '1/2/1': { [Action.BUY_INGREDIENT]: 1 }
+        '1/2/1': { [Action.BUY_INGREDIENT]: 1 },
       });
 
       expect(result[0].year).toBe(1);
@@ -224,8 +219,15 @@ describe('ProfileComponent', () => {
     it('should load histories', () => {
       component.user = new User({});
 
-      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' }), new Recipe({ id: 'id2', name: 'recipe' })]));
-      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id', timesCooked: 2 }), new RecipeHistory({ recipeId: 'id2', timesCooked: 1 })]));
+      spyOn(recipeService, 'get').and.returnValue(
+        of([new Recipe({ id: 'id', name: 'recipe' }), new Recipe({ id: 'id2', name: 'recipe' })])
+      );
+      spyOn(recipeHistoryService, 'get').and.returnValue(
+        of([
+          new RecipeHistory({ recipeId: 'id', timesCooked: 2 }),
+          new RecipeHistory({ recipeId: 'id2', timesCooked: 1 }),
+        ])
+      );
 
       component.loadHistory();
 
@@ -241,7 +243,9 @@ describe('ProfileComponent', () => {
       component.user = new User({});
 
       spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
-      spyOn(recipeHistoryService, 'get').and.returnValue(of([new RecipeHistory({ recipeId: 'id2', timesCooked: 2 })]));
+      spyOn(recipeHistoryService, 'get').and.returnValue(
+        of([new RecipeHistory({ recipeId: 'id2', timesCooked: 2 })])
+      );
 
       component.loadHistory();
 

@@ -1,6 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, FormGroupDirective, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormGroupDirective,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,20 +32,17 @@ describe('IngredientEditComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([
-          { path: 'ingredient/detail/:id', component: IngredientDetailComponent }
+          { path: 'ingredient/detail/:id', component: IngredientDetailComponent },
         ]),
         FormsModule,
         ReactiveFormsModule,
         MatInputModule,
         MatSelectModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
       ],
-      declarations: [ IngredientEditComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [IngredientEditComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -65,10 +68,10 @@ describe('IngredientEditComponent', () => {
 
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
       spyOn(configService, 'get').and.returnValue(of([new Config({})]));
-  
+
       fixture = TestBed.createComponent(IngredientEditComponent);
       fixture.detectChanges();
-  
+
       expect(ingredientService.get).toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
     });
@@ -79,10 +82,10 @@ describe('IngredientEditComponent', () => {
 
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
       spyOn(configService, 'get').and.returnValue(of([new Config({})]));
-  
+
       fixture = TestBed.createComponent(IngredientEditComponent);
       fixture.detectChanges();
-  
+
       expect(ingredientService.get).not.toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
     });

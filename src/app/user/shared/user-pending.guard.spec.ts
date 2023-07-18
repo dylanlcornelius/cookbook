@@ -12,30 +12,36 @@ describe('UserPendingGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([
-          { path: 'user-pending', component: UserPendingComponent }
-        ])
-      ],
-      providers: [UserPendingGuard]
+      imports: [RouterModule.forRoot([{ path: 'user-pending', component: UserPendingComponent }])],
+      providers: [UserPendingGuard],
     });
 
     currentUserService = TestBed.inject(CurrentUserService);
   });
 
-  it('should not activate for non-pending users', inject([UserPendingGuard], (guard: UserPendingGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.ADMIN })));
+  it('should not activate for non-pending users', inject(
+    [UserPendingGuard],
+    (guard: UserPendingGuard) => {
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ role: ROLE.ADMIN }))
+      );
 
-    guard.canActivateChild().subscribe(result => {
-      expect(result).toBeTrue();
-    });
-  }));
+      guard.canActivateChild().subscribe(result => {
+        expect(result).toBeTrue();
+      });
+    }
+  ));
 
-  it('should active when the user is pending', inject([UserPendingGuard], (guard: UserPendingGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.PENDING })));
+  it('should active when the user is pending', inject(
+    [UserPendingGuard],
+    (guard: UserPendingGuard) => {
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ role: ROLE.PENDING }))
+      );
 
-    guard.canActivateChild().subscribe(result => {
-      expect(result).toBeFalse();
-    });
-  }));
+      guard.canActivateChild().subscribe(result => {
+        expect(result).toBeFalse();
+      });
+    }
+  ));
 });

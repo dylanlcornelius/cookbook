@@ -12,7 +12,7 @@ import { Ingredient } from '@ingredient';
 import { NumberService } from '@numberService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipeIngredientService {
   constructor(
@@ -21,8 +21,8 @@ export class RecipeIngredientService {
     private notificationService: NotificationService,
     private recipeHistoryService: RecipeHistoryService,
     private userIngredientService: UserIngredientService,
-    private numberService: NumberService,
-  ) { }
+    private numberService: NumberService
+  ) {}
 
   /**
    * Iterative version of finding recipe ingredients
@@ -31,12 +31,17 @@ export class RecipeIngredientService {
    * @param recipes all recipes
    * @returns ingredients
    */
-  findRecipeIngredients(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[]): Ingredient[] {
+  findRecipeIngredients(
+    recipe: Recipe,
+    recipes: Recipe[],
+    ingredients: Ingredient[]
+  ): Ingredient[] {
     const addedIngredients: Ingredient[] = [];
 
     // sort required ingredients before optional ingredients
-    let startingIngredients: any = [...recipe.ingredients]
-      .sort(({isOptional: a}, {isOptional: b}) => Number(b) - Number(a));
+    let startingIngredients: any = [...recipe.ingredients].sort(
+      ({ isOptional: a }, { isOptional: b }) => Number(b) - Number(a)
+    );
     while (startingIngredients.length) {
       const recipeIngredient = startingIngredients.pop();
 
@@ -49,7 +54,11 @@ export class RecipeIngredientService {
           const recipeIngredients = ingredientRecipe.ingredients.map(current => {
             const ingredient = ingredients.find(({ id }) => id === current.id);
             // recipe ingredient should allow optional
-            return {...current, isOptional: current.isOptional || recipeIngredient.isOptional, amount: ingredient?.amount || current.amount };
+            return {
+              ...current,
+              isOptional: current.isOptional || recipeIngredient.isOptional,
+              amount: ingredient?.amount || current.amount,
+            };
           });
           startingIngredients = startingIngredients.concat(recipeIngredients);
         }
@@ -86,10 +95,18 @@ export class RecipeIngredientService {
       }
     }
 
-    return addedRecipes.filter(({ uom }) => uom === UOM.RECIPE).map(({ id }) => id).concat(recipe.id);
+    return addedRecipes
+      .filter(({ uom }) => uom === UOM.RECIPE)
+      .map(({ id }) => id)
+      .concat(recipe.id);
   }
 
-  getRecipeCount(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[], userIngredients: UserIngredient[]): number {
+  getRecipeCount(
+    recipe: Recipe,
+    recipes: Recipe[],
+    ingredients: Ingredient[],
+    userIngredients: UserIngredient[]
+  ): number {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
 
     let recipeCount;
@@ -107,10 +124,14 @@ export class RecipeIngredientService {
       userIngredients.forEach(userIngredient => {
         if (recipeIngredient.id === userIngredient.ingredientId) {
           ingredientCount++;
-          
+
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
           const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
-          if (value && (Number(userIngredient.pantryQuantity) / Number(value) < recipeCount || recipeCount === undefined)) {
+          if (
+            value &&
+            (Number(userIngredient.pantryQuantity) / Number(value) < recipeCount ||
+              recipeCount === undefined)
+          ) {
             recipeCount = Math.floor(Number(userIngredient.pantryQuantity) / Number(value));
           }
         }
@@ -124,25 +145,38 @@ export class RecipeIngredientService {
     return recipeCount;
   }
 
-  addIngredients(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[], userIngredients: UserIngredient[], householdId: string, callback?: Function): void {
+  addIngredients(
+    recipe: Recipe,
+    recipes: Recipe[],
+    ingredients: Ingredient[],
+    userIngredients: UserIngredient[],
+    householdId: string,
+    callback?: Function
+  ): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
 
     if (recipeIngredients.length > 0) {
-      this.recipeIngredientModalService.setModal(new RecipeIngredientModal(
-        this.addIngredientsEvent,
-        recipe.name,
-        recipeIngredients,
-        userIngredients,
-        householdId,
-        callback
-      ));
+      this.recipeIngredientModalService.setModal(
+        new RecipeIngredientModal(
+          this.addIngredientsEvent,
+          recipe.name,
+          recipeIngredients,
+          userIngredients,
+          householdId,
+          callback
+        )
+      );
     } else {
       this.notificationService.setModal(new InfoNotification('Recipe has no ingredients'));
       callback?.();
     }
   }
 
-  addIngredientsEvent = (recipeIngredients: Ingredient[], userIngredients: UserIngredient[], householdId: string): void => {
+  addIngredientsEvent = (
+    recipeIngredients: Ingredient[],
+    userIngredients: UserIngredient[],
+    householdId: string
+  ): void => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
       userIngredients.forEach(userIngredient => {
@@ -150,7 +184,8 @@ export class RecipeIngredientService {
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
           const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
           if (value) {
-            userIngredient.cartQuantity += Number(userIngredient.amount) * Math.ceil(value / Number(userIngredient.amount));
+            userIngredient.cartQuantity +=
+              Number(userIngredient.amount) * Math.ceil(value / Number(userIngredient.amount));
           } else {
             this.notificationService.setModal(new FailureNotification('Calculation error!'));
           }
@@ -158,12 +193,14 @@ export class RecipeIngredientService {
         }
       });
       if (!hasIngredient) {
-        userIngredients.push(new UserIngredient({
-          uid: householdId,
-          ingredientId: String(recipeIngredient.id),
-          pantryQuantity: 0,
-          cartQuantity: Number(recipeIngredient.amount)
-        }));
+        userIngredients.push(
+          new UserIngredient({
+            uid: householdId,
+            ingredientId: String(recipeIngredient.id),
+            pantryQuantity: 0,
+            cartQuantity: Number(recipeIngredient.amount),
+          })
+        );
       }
     });
 
@@ -171,7 +208,14 @@ export class RecipeIngredientService {
     this.notificationService.setModal(new SuccessNotification('Added to list!'));
   };
 
-  removeIngredients(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[], userIngredients: UserIngredient[], uid: string, householdId: string): void {
+  removeIngredients(
+    recipe: Recipe,
+    recipes: Recipe[],
+    ingredients: Ingredient[],
+    userIngredients: UserIngredient[],
+    uid: string,
+    householdId: string
+  ): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
 
     if (recipeIngredients.length) {
@@ -179,9 +223,16 @@ export class RecipeIngredientService {
         userIngredients.forEach(userIngredient => {
           if (recipeIngredient.id === userIngredient.ingredientId) {
             const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-            const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
+            const value = this.uomService.convert(
+              recipeIngredient.uom,
+              userIngredient.uom,
+              quantity
+            );
             if (value !== false) {
-              userIngredient.pantryQuantity = Math.max(Number(userIngredient.pantryQuantity) - Number(value), 0);
+              userIngredient.pantryQuantity = Math.max(
+                Number(userIngredient.pantryQuantity) - Number(value),
+                0
+              );
             } else {
               this.notificationService.setModal(new FailureNotification('Calculation error!'));
             }

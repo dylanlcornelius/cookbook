@@ -16,13 +16,8 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
     "paths": {
       "@sharedModule": ["src/app/shared/shared.module"],
       "@model": ["src/app/shared/model"],
@@ -52,7 +47,9 @@
       "@navigationService": ["src/app/header/navigation.service"],
       "@recipe": ["src/app/recipe/shared/recipe.model"],
       "@recipeService": ["src/app/recipe/shared/recipe.service"],
-      "@recipeIngredientModal": ["src/app/shared/recipe-ingredient-modal/recipe-ingredient-modal.model"],
+      "@recipeIngredientModal": [
+        "src/app/shared/recipe-ingredient-modal/recipe-ingredient-modal.model"
+      ],
       "@recipeIngredientService": ["src/app/recipe/shared/recipe-ingredient.service"],
       "@recipeFilterService": ["src/app/recipe/shared/recipe-filter.service"],
       "@recipeHistory": ["src/app/recipe/shared/recipe-history.model"],
@@ -72,7 +69,7 @@
       "@household": ["src/app/profile/shared/household.model"],
       "@householdService": ["src/app/profile/shared/household.service"],
       "@comment": ["src/app/recipe/shared/comment.model"],
-      "@commentService": ["src/app/recipe/shared/comment.service"],
+      "@commentService": ["src/app/recipe/shared/comment.service"]
     },
     "useDefineForClassFields": false
   }

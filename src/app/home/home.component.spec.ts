@@ -17,15 +17,10 @@ describe('HomeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ],
-      declarations: [ HomeComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [HomeComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -60,8 +55,12 @@ describe('HomeComponent', () => {
     });
 
     it('should load navs with a feature flag', () => {
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ hasPlanner: true })));
-      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({ link: '/shopping/plan' })]));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ hasPlanner: true }))
+      );
+      spyOn(navigationService, 'get').and.returnValue(
+        of([new Navigation({ link: '/shopping/plan' })])
+      );
 
       component.load();
 

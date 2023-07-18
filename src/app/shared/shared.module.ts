@@ -82,6 +82,6 @@ import { FormValidationDirective } from './form-validation.directive';
     TutorialModalComponent,
     OptionalIngredientsPipe,
     FormValidationDirective,
-  ]
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

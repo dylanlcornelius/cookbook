@@ -8,7 +8,7 @@ import { ModelObject } from '@model';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NavigationService extends FirestoreService {
   constructor(

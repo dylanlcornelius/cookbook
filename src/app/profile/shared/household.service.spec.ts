@@ -128,7 +128,7 @@ describe('HouseholdService', () => {
 
   describe('hasAuthorPermission', () => {
     it('should return true when the household has the current user', () => {
-      const household = new Household({ memberIds: 'uid'});
+      const household = new Household({ memberIds: 'uid' });
       const user = new User({ uid: 'uid' });
       const recipe = new Recipe({});
 
@@ -143,7 +143,7 @@ describe('HouseholdService', () => {
       const recipe = new Recipe({ uid: 'uid' });
 
       const result = service.hasAuthorPermission(household, user, recipe);
-    
+
       expect(result).toBeTrue();
     });
 
@@ -153,7 +153,7 @@ describe('HouseholdService', () => {
       const recipe = new Recipe({ status: RECIPE_STATUS.BLUEPRINT });
 
       const result = service.hasAuthorPermission(household, user, recipe);
-    
+
       expect(result).toBeTrue();
     });
 
@@ -163,7 +163,7 @@ describe('HouseholdService', () => {
       const recipe = new Recipe({});
 
       const result = service.hasAuthorPermission(household, user, recipe);
-    
+
       expect(result).toBeTrue();
     });
   });
@@ -188,9 +188,9 @@ describe('HouseholdService', () => {
       const recipe = new Recipe({ status: RECIPE_STATUS.PUBLISHED });
 
       spyOn(service, 'hasAuthorPermission').and.returnValue(false);
-      
+
       const result = service.hasUserPermission(household, user, recipe);
-    
+
       expect(service.hasAuthorPermission).toHaveBeenCalled();
       expect(result).toBeTrue();
     });
@@ -201,9 +201,9 @@ describe('HouseholdService', () => {
       const recipe = new Recipe({ status: RECIPE_STATUS.BLUEPRINT });
 
       spyOn(service, 'hasAuthorPermission').and.returnValue(true);
-      
+
       const result = service.hasUserPermission(household, user, recipe);
-    
+
       expect(service.hasAuthorPermission).toHaveBeenCalled();
       expect(result).toBeFalse();
     });

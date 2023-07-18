@@ -38,13 +38,13 @@ describe('UomService', () => {
   describe('relatedUOMs', () => {
     it('should find related uoms', () => {
       const result = service.relatedUOMs(UOM.RECIPE);
-      
+
       expect(result).toBeDefined();
     });
 
     it('should not find any related uoms', () => {
       const result = service.relatedUOMs(null);
-      
+
       expect(result).toBeUndefined();
     });
   });

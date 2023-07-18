@@ -15,9 +15,7 @@ describe('TutorialService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ]
+      imports: [RouterModule.forRoot([])],
     });
     service = TestBed.inject(TutorialService);
     tutorialModalService = TestBed.inject(TutorialModalService);

@@ -15,21 +15,10 @@ describe('IngredientModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-      ],
-      declarations: [
-        IngredientModalComponent,
-        ModalComponent
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [FormsModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
+      declarations: [IngredientModalComponent, ModalComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -62,13 +51,13 @@ describe('IngredientModalComponent', () => {
       component.Params = {
         function: () => {},
         data: {
-          ingredientId: 'id'
+          ingredientId: 'id',
         },
-        userIngredients: [{ingredientId: 'id'}],
+        userIngredients: [{ ingredientId: 'id' }],
         dataSource: {
-          data: [{id: 'id', pantryQuatity: 10}]
+          data: [{ id: 'id', pantryQuatity: 10 }],
         },
-        text: ''
+        text: '',
       };
       component.form = new FormBuilder().group({ name: [null, Validators.required] });
 
@@ -88,13 +77,13 @@ describe('IngredientModalComponent', () => {
       component.Params = {
         function: () => {},
         data: {
-          ingredientId: 'id'
+          ingredientId: 'id',
         },
-        userIngredients: [{ingredientId: 'id'}],
+        userIngredients: [{ ingredientId: 'id' }],
         dataSource: {
-          data: [{id: 'id', pantryQuatity: 10}]
+          data: [{ id: 'id', pantryQuatity: 10 }],
         },
-        text: ''
+        text: '',
       };
       component.form = new FormBuilder().group({ pantryQuantity: [null] });
 

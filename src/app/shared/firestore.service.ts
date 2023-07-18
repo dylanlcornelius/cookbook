@@ -8,7 +8,7 @@ import { first } from 'rxjs/operators';
 import { CollectionReference, FirebaseService, Query } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export abstract class FirestoreService {
   ref: CollectionReference;
@@ -17,7 +17,7 @@ export abstract class FirestoreService {
     private collectionPath: string,
     protected firebase: FirebaseService,
     protected currentUserService: CurrentUserService,
-    protected actionService: ActionService,
+    protected actionService: ActionService
   ) {
     this.load();
   }
@@ -33,9 +33,12 @@ export abstract class FirestoreService {
       return;
     }
 
-    this.currentUserService.getCurrentUser().pipe(first()).subscribe(user => {
-      this.actionService.commitAction(user.uid, action, 1);
-    });
+    this.currentUserService
+      .getCurrentUser()
+      .pipe(first())
+      .subscribe(user => {
+        this.actionService.commitAction(user.uid, action, 1);
+      });
   }
 
   getOne(id: string): Observable<any> {
@@ -44,7 +47,6 @@ export abstract class FirestoreService {
         observable.next({ ...snapshot.data(), id: snapshot.id });
       });
     });
-
   }
 
   getMany(ref?: Query): Observable<any> {
@@ -99,7 +101,7 @@ export abstract class FirestoreService {
 
   delete(id: string, action?: Action): void {
     this.commitAction(action);
-    
+
     const currentDoc = this.firebase.doc(this.ref, id);
     this.firebase.deleteDoc(currentDoc);
   }

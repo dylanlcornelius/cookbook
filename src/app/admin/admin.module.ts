@@ -8,14 +8,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { SharedModule } from '@sharedModule';
 
 @NgModule({
-  declarations: [
-    AdminDashboardComponent,
-  ],
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    SharedModule,
-    MatTabsModule,
-  ]
+  declarations: [AdminDashboardComponent],
+  imports: [CommonModule, AdminRoutingModule, SharedModule, MatTabsModule],
 })
-export class AdminModule { }
+export class AdminModule {}

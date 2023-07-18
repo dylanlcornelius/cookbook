@@ -20,7 +20,7 @@ import { ConfigService } from '@configService';
 @Component({
   selector: 'app-ingredient-list',
   templateUrl: './ingredient-list.component.html',
-  styleUrls: ['./ingredient-list.component.scss']
+  styleUrls: ['./ingredient-list.component.scss'],
 })
 export class IngredientListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -47,7 +47,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
     private tutorialService: TutorialService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
   ngOnInit() {
@@ -61,39 +61,51 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.loading = this.loadingService.set(true);
-    
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.user = user;
 
-      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
-        this.householdId = household.id;
+    this.currentUserService
+      .getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        this.user = user;
 
-        const userIngredients$ = this.userIngredientService.get(this.householdId);
-        const ingredients$ = this.ingredientService.get();
-        const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
-        combineLatest([userIngredients$, ingredients$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([userIngredients, ingredients, configs]) => {
-          this.ingredients = ingredients.map(ingredient => {
-            ingredient.displayCategory = configs.find(({ value }) => value === ingredient.category)?.displayValue || 'Other';
-            ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
+        this.householdService
+          .get(this.user.uid)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(household => {
+            this.householdId = household.id;
 
-            userIngredients.forEach(userIngredient => {
-              if (userIngredient.ingredientId === ingredient.id) {
-                ingredient.pantryQuantity = this.numberService.toFormattedFraction(userIngredient.pantryQuantity);
-                ingredient.cartQuantity = userIngredient.cartQuantity;
-              }
-            });
+            const userIngredients$ = this.userIngredientService.get(this.householdId);
+            const ingredients$ = this.ingredientService.get();
+            const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+            combineLatest([userIngredients$, ingredients$, configs$])
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe(([userIngredients, ingredients, configs]) => {
+                this.ingredients = ingredients.map(ingredient => {
+                  ingredient.displayCategory =
+                    configs.find(({ value }) => value === ingredient.category)?.displayValue ||
+                    'Other';
+                  ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
-            return ingredient;
+                  userIngredients.forEach(userIngredient => {
+                    if (userIngredient.ingredientId === ingredient.id) {
+                      ingredient.pantryQuantity = this.numberService.toFormattedFraction(
+                        userIngredient.pantryQuantity
+                      );
+                      ingredient.cartQuantity = userIngredient.cartQuantity;
+                    }
+                  });
+
+                  return ingredient;
+                });
+
+                this.dataSource = new MatTableDataSource(this.ingredients);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.userIngredients = userIngredients;
+                this.loading = this.loadingService.set(false);
+              });
           });
-
-          this.dataSource = new MatTableDataSource(this.ingredients);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.userIngredients = userIngredients;
-          this.loading = this.loadingService.set(false);
-        });
       });
-    });
   }
 
   applyFilter(filterValue: string): void {
@@ -109,15 +121,17 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   editIngredient(id: string): void {
-    let data = this.userIngredients.find(({ ingredientId })=> ingredientId === id);
+    let data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     if (!data) {
-      this.userIngredients.push(new UserIngredient({
-        ingredientId: id,
-        pantryQuantity: 0,
-        cartQuantity: 0,
-        uid: this.householdId,
-      }));
-      data = this.userIngredients.find(({ ingredientId })=> ingredientId === id);
+      this.userIngredients.push(
+        new UserIngredient({
+          ingredientId: id,
+          pantryQuantity: 0,
+          cartQuantity: 0,
+          uid: this.householdId,
+        })
+      );
+      data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     }
 
     this.ingredientModalParams = {
@@ -125,7 +139,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
       userIngredients: this.userIngredients,
       dataSource: this.dataSource,
       text: `Edit pantry quantity for ${this.findIngredient(id).name}`,
-      function: this.editIngredientEvent
+      function: this.editIngredientEvent,
     };
   }
 
@@ -151,12 +165,14 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
         ingredient.cartQuantity = Number(ingredient.cartQuantity) + Number(ingredient.amount);
       } else {
-        this.userIngredients.push(new UserIngredient({
-          ingredientId: id,
-          pantryQuantity: 0,
-          cartQuantity: Number(ingredient.amount),
-          uid: this.householdId,
-        }));
+        this.userIngredients.push(
+          new UserIngredient({
+            ingredientId: id,
+            pantryQuantity: 0,
+            cartQuantity: Number(ingredient.amount),
+            uid: this.householdId,
+          })
+        );
         ingredient.cartQuantity = Number(ingredient.amount);
       }
       this.userIngredientService.update(this.userIngredients);

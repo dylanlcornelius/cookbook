@@ -8,9 +8,8 @@ import { FirebaseService } from '@firebaseService';
 import { Feedback } from '@feedback';
 import { Action } from '@actions';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FeedbackService extends FirestoreService {
   constructor(

@@ -1,68 +1,136 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 
 <div *ngIf="!loading">
-  <mat-tab-group class="box mat-elevation-z8" dynamicHeight="true" animationDuration="1000ms" [selectedIndex]="selectedIndex">
+  <mat-tab-group
+    class="box mat-elevation-z8"
+    dynamicHeight="true"
+    animationDuration="1000ms"
+    [selectedIndex]="selectedIndex"
+  >
     <mat-tab label="Profile">
       <mat-card class="tab-body">
-        <mat-progress-bar class="image-progress" mode="determinate" [value]="userImageProgress" [hidden]="!userImageProgress"></mat-progress-bar>
+        <mat-progress-bar
+          class="image-progress"
+          mode="determinate"
+          [value]="userImageProgress"
+          [hidden]="!userImageProgress"
+        ></mat-progress-bar>
 
         <h2>Your Profile</h2>
 
-        <app-image-upload [id]="user.id" class="icon-buttons" [updateImage]="updateImage" [(progress)]="userImageProgress" [(image)]="userImage"></app-image-upload>
+        <app-image-upload
+          [id]="user.id"
+          class="icon-buttons"
+          [updateImage]="updateImage"
+          [(progress)]="userImageProgress"
+          [(image)]="userImage"
+        ></app-image-upload>
 
         <div class="profile container">
-          <img mat-card-image *ngIf="userImage" [src]="userImage" alt=""/>
-  
-          <form [formGroup]="userForm" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation>
+          <img mat-card-image *ngIf="userImage" [src]="userImage" alt="" />
+
+          <form
+            [formGroup]="userForm"
+            #formDirective="ngForm"
+            (ngSubmit)="onSubmit()"
+            appFormValidation
+          >
             <div class="container">
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
-                <input matInput placeholder="First Name" formControlName="firstName" [errorStateMatcher]="matcher" required/>
+                <input
+                  matInput
+                  placeholder="First Name"
+                  formControlName="firstName"
+                  [errorStateMatcher]="matcher"
+                  required
+                />
                 <mat-error>
-                  <span *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched">Please enter your first name</span>
-                </mat-error>
-              </mat-form-field>
-          
-              <mat-form-field appearance="outline">
-                <mat-label>Last Name</mat-label>
-                <input matInput placeholder="Last Name" formControlName="lastName" [errorStateMatcher]="matcher" required/>
-                <mat-error>
-                  <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">Please enter your last name</span>
+                  <span
+                    *ngIf="!userForm.get('firstName').valid && userForm.get('firstName').touched"
+                  >
+                    Please enter your first name
+                  </span>
                 </mat-error>
               </mat-form-field>
 
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input
+                  matInput
+                  placeholder="Last Name"
+                  formControlName="lastName"
+                  [errorStateMatcher]="matcher"
+                  required
+                />
+                <mat-error>
+                  <span *ngIf="!userForm.get('lastName').valid && userForm.get('lastName').touched">
+                    Please enter your last name
+                  </span>
+                </mat-error>
+              </mat-form-field>
             </div>
-            <br/>
+            <br />
 
             <div class="container button-container">
               <div>
-                <mat-slide-toggle matInput formControlName="theme" ngDefaultControl [checked]="userForm.get('theme').value">
-                </mat-slide-toggle>
-                <span *ngIf="!userForm.get('theme').value" class="theme-icon" matTooltip="Light Theme">
+                <mat-slide-toggle
+                  matInput
+                  formControlName="theme"
+                  ngDefaultControl
+                  [checked]="userForm.get('theme').value"
+                ></mat-slide-toggle>
+                <span
+                  *ngIf="!userForm.get('theme').value"
+                  class="theme-icon"
+                  matTooltip="Light Theme"
+                >
                   <mat-icon>brightness_5</mat-icon>
                 </span>
-                <span *ngIf="userForm.get('theme').value" class="theme-icon" matTooltip="Dark Theme">
+                <span
+                  *ngIf="userForm.get('theme').value"
+                  class="theme-icon"
+                  matTooltip="Dark Theme"
+                >
                   <mat-icon>brightness_3</mat-icon>
                 </span>
               </div>
 
               <div *ngIf="user.isAdmin">
-                <mat-slide-toggle matInput formControlName="hasAdminView" ngDefaultControl [checked]="userForm.get('hasAdminView').value">
-                </mat-slide-toggle>
-                <span *ngIf="!userForm.get('hasAdminView').value" class="theme-icon" matTooltip="Admin View Disabled">
+                <mat-slide-toggle
+                  matInput
+                  formControlName="hasAdminView"
+                  ngDefaultControl
+                  [checked]="userForm.get('hasAdminView').value"
+                ></mat-slide-toggle>
+                <span
+                  *ngIf="!userForm.get('hasAdminView').value"
+                  class="theme-icon"
+                  matTooltip="Admin View Disabled"
+                >
                   <mat-icon>visibility_off</mat-icon>
                 </span>
-                <span *ngIf="userForm.get('hasAdminView').value" class="theme-icon" matTooltip="Admin View Enabled">
+                <span
+                  *ngIf="userForm.get('hasAdminView').value"
+                  class="theme-icon"
+                  matTooltip="Admin View Enabled"
+                >
                   <mat-icon>visibility</mat-icon>
                 </span>
               </div>
             </div>
-            
+
             <div class="button-row">
               <button mat-mini-fab type="submit" matTooltip="Save Settings" color="primary">
                 <mat-icon>done</mat-icon>
               </button>
-              <button mat-mini-fab matTooltip="Tutorial" type="button" color="primary" (click)="openTutorial()">
+              <button
+                mat-mini-fab
+                matTooltip="Tutorial"
+                type="button"
+                color="primary"
+                (click)="openTutorial()"
+              >
                 <mat-icon>help</mat-icon>
               </button>
             </div>
@@ -79,18 +147,25 @@
       <div class="tab-body">
         <h2>Your Analytics</h2>
 
-        <mat-paginator [length]="actionsLength" [pageSize]="1" [hidePageSize]="true" (page)="actionPage = $event"></mat-paginator>
-        <h4>{{actions[actionPage.pageIndex]?.date || ''}}</h4>
+        <mat-paginator
+          [length]="actionsLength"
+          [pageSize]="1"
+          [hidePageSize]="true"
+          (page)="actionPage = $event"
+        ></mat-paginator>
+        <h4>{{ actions[actionPage.pageIndex]?.date || '' }}</h4>
 
         <div class="chart-container">
-          <ngx-charts-pie-chart class="desktop"
+          <ngx-charts-pie-chart
+            class="desktop"
             [results]="actions[actionPage.pageIndex]?.data"
             [legend]="true"
-            [doughnut]="true">
-          </ngx-charts-pie-chart>
-          <ngx-charts-pie-chart class="mobile"
-            [results]="actions[actionPage.pageIndex]?.data">
-          </ngx-charts-pie-chart>
+            [doughnut]="true"
+          ></ngx-charts-pie-chart>
+          <ngx-charts-pie-chart
+            class="mobile"
+            [results]="actions[actionPage.pageIndex]?.data"
+          ></ngx-charts-pie-chart>
         </div>
       </div>
     </mat-tab>
@@ -99,15 +174,15 @@
       <ng-template matTabContent>
         <div class="tab-body">
           <h2>Your Recipe History</h2>
-          <p *ngIf="totalRecipesCooked">Total Recipes Cooked: {{totalRecipesCooked}}</p>
-  
-          <div class="chart-container" [ngStyle]="{'height': history.length * 3 + 'vh'}">
-              <ngx-charts-bar-horizontal
+          <p *ngIf="totalRecipesCooked">Total Recipes Cooked: {{ totalRecipesCooked }}</p>
+
+          <div class="chart-container" [ngStyle]="{ height: history.length * 3 + 'vh' }">
+            <ngx-charts-bar-horizontal
               [results]="history"
               [gradient]="true"
               [yAxis]="true"
-              [showDataLabel]="true">
-            </ngx-charts-bar-horizontal>
+              [showDataLabel]="true"
+            ></ngx-charts-bar-horizontal>
           </div>
         </div>
       </ng-template>

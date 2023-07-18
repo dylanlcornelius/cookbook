@@ -16,7 +16,7 @@ import { User } from '@user';
 @Component({
   selector: 'app-profile-list',
   templateUrl: './profile-list.component.html',
-  styleUrls: ['./profile-list.component.scss']
+  styleUrls: ['./profile-list.component.scss'],
 })
 export class ProfileListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -35,11 +35,12 @@ export class ProfileListComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private userService: UserService,
     private utilService: UtilService,
-    private currentUserService: CurrentUserService,
-  ) { }
+    private currentUserService: CurrentUserService
+  ) {}
 
   identify = this.utilService.identify;
-  setAuthorFilter = (filter: string): void => this.utilService.setListFilter(new AuthorFilter(filter));
+  setAuthorFilter = (filter: string): void =>
+    this.utilService.setListFilter(new AuthorFilter(filter));
 
   ngOnInit() {
     this.load();
@@ -56,41 +57,46 @@ export class ProfileListComponent implements OnInit, OnDestroy {
     const users$ = this.userService.get();
     const recipes$ = this.recipeService.get();
 
-    combineLatest([user$, users$, recipes$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, users, recipes]) => {
-      this.currentUser = user;
-      const recipeCounts = {};
+    combineLatest([user$, users$, recipes$])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(([user, users, recipes]) => {
+        this.currentUser = user;
+        const recipeCounts = {};
 
-      recipes.forEach(recipe => {
-        if (!recipeCounts[recipe.uid]) {
-          recipeCounts[recipe.uid] = 0;
-        }
-        recipeCounts[recipe.uid]++;
-      });
-
-      users.forEach(user => {
-        user.recipeCount = recipeCounts[user.uid] || 0;
-
-        user.ratingCount = recipes.reduce<number>((sum, recipe) => {
-          if (recipe.ratings.find(rating => rating.uid === user.uid)) {
-            sum++;
+        recipes.forEach(recipe => {
+          if (!recipeCounts[recipe.uid]) {
+            recipeCounts[recipe.uid] = 0;
           }
-          return sum;
-        }, 0);
+          recipeCounts[recipe.uid]++;
+        });
 
-        this.imageService.download(user).then(url => {
-          if (url) {
-            user.image = url;
-          }
-        }, () => {});
+        users.forEach(user => {
+          user.recipeCount = recipeCounts[user.uid] || 0;
+
+          user.ratingCount = recipes.reduce<number>((sum, recipe) => {
+            if (recipe.ratings.find(rating => rating.uid === user.uid)) {
+              sum++;
+            }
+            return sum;
+          }, 0);
+
+          this.imageService.download(user).then(
+            url => {
+              if (url) {
+                user.image = url;
+              }
+            },
+            () => {}
+          );
+        });
+
+        users.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
+
+        this.dataSource = new MatTableDataSource(users);
+        this.dataSource.paginator = this.paginator;
+
+        this.loading = this.loadingService.set(false);
       });
-
-      users.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1);
-
-      this.dataSource = new MatTableDataSource(users);
-      this.dataSource.paginator = this.paginator;
-
-      this.loading = this.loadingService.set(false);
-    });
   }
 
   applyFilter(filterValue: string): void {

@@ -27,7 +27,7 @@ describe('RecipeHistoryService', () => {
       spyOn(service, 'get').and.returnValue(of(recipeHistory));
       spyOn(service, 'create');
       spyOn(service, 'update');
-      
+
       service.add('uid', 'recipeId');
 
       expect(service.get).toHaveBeenCalled();
@@ -36,12 +36,12 @@ describe('RecipeHistoryService', () => {
     });
 
     it('should update a recipe history', () => {
-      const recipeHistory = new RecipeHistory({id: 'id'});
+      const recipeHistory = new RecipeHistory({ id: 'id' });
 
       spyOn(service, 'get').and.returnValue(of(recipeHistory));
       spyOn(service, 'create');
       spyOn(service, 'update');
-      
+
       service.add('uid', 'recipeId');
 
       expect(service.get).toHaveBeenCalled();
@@ -57,7 +57,7 @@ describe('RecipeHistoryService', () => {
       spyOn(service, 'get').and.returnValue(of(recipeHistory));
       spyOn(service, 'create');
       spyOn(service, 'update');
-      
+
       service.set('uid', 'recipeId', 10);
 
       expect(service.get).toHaveBeenCalled();
@@ -66,12 +66,12 @@ describe('RecipeHistoryService', () => {
     });
 
     it('should update a recipe history with a value', () => {
-      const recipeHistory = new RecipeHistory({id: 'id'});
+      const recipeHistory = new RecipeHistory({ id: 'id' });
 
       spyOn(service, 'get').and.returnValue(of(recipeHistory));
       spyOn(service, 'create');
       spyOn(service, 'update');
-      
+
       service.set('uid', 'recipeId', 10);
 
       expect(service.get).toHaveBeenCalled();

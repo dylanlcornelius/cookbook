@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Ingredient } from '@ingredient';
 
 @Pipe({
-  name: 'filterOptional'
+  name: 'filterOptional',
 })
 export class OptionalIngredientsPipe implements PipeTransform {
   transform(items: Ingredient[], isOptional: boolean): Ingredient[] {

@@ -1,6 +1,16 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+  waitForAsync,
+  flush,
+} from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
-import { MatLegacyTableDataSource as MatTableDataSource, MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import {
+  MatLegacyTableDataSource as MatTableDataSource,
+  MatLegacyTableModule as MatTableModule,
+} from '@angular/material/legacy-table';
 import { of } from 'rxjs/internal/observable/of';
 import { RecipeService } from '@recipeService';
 import {
@@ -12,7 +22,7 @@ import {
   StatusFilter,
   ImageFilter,
   RestrictionFilter,
-  TypeFilter
+  TypeFilter,
 } from '@recipeFilterService';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
@@ -35,7 +45,10 @@ import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { NotificationService, ValidationService } from '@modalService';
 import { BehaviorSubject } from 'rxjs';
-import { MatLegacyPaginatorModule as MatPaginatorModule, LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import {
+  MatLegacyPaginatorModule as MatPaginatorModule,
+  LegacyPageEvent as PageEvent,
+} from '@angular/material/legacy-paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
@@ -74,7 +87,7 @@ describe('RecipeListComponent', () => {
         MatTableModule,
         MatPaginatorModule,
         FormsModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
       ],
       providers: [
         CurrentUserService,
@@ -82,16 +95,11 @@ describe('RecipeListComponent', () => {
         RecipeFilterService,
         UserIngredientService,
         IngredientService,
-        ImageService
+        ImageService,
       ],
-      declarations: [
-        RecipeListComponent,
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [RecipeListComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -129,40 +137,42 @@ describe('RecipeListComponent', () => {
       const recipes = [
         new Recipe({
           id: 'recipe',
-          ingredients: [{
-            id: 'ingredientId',
-          }],
+          ingredients: [
+            {
+              id: 'ingredientId',
+            },
+          ],
           status: RECIPE_STATUS.PUBLISHED,
-          categories: [
-            { category: 'Dessert' }
-          ]
+          categories: [{ category: 'Dessert' }],
         }),
-        new Recipe({})
+        new Recipe({}),
       ];
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId'
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
-          name: 'ingredient name'
+          name: 'ingredient name',
         }),
         new Ingredient({
-          id: 'ingredientId2'
-        })
+          id: 'ingredientId2',
+        }),
       ];
       const histories = [
         new RecipeHistory({
           recipeId: 'recipe',
-          timesCooked: 1
-        })
+          timesCooked: 1,
+        }),
       ];
       const configs = [new Config({})];
 
       const element = document.createElement('div');
       element.id = 'recipe';
       document.getElementsByClassName('search-bar')[0].appendChild(element);
-      
+
       recipeFilterService.recipeId = 'recipe';
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
@@ -196,31 +206,37 @@ describe('RecipeListComponent', () => {
     it('should handle falsey values', fakeAsync(() => {
       const recipes = [
         new Recipe({
-          ingredients: [{
-            id: 'ingredientId'
-          }]
+          ingredients: [
+            {
+              id: 'ingredientId',
+            },
+          ],
         }),
         new Recipe({
-          ingredients: [{
-            id: 'ingredientId'
-          }]
-        })
+          ingredients: [
+            {
+              id: 'ingredientId',
+            },
+          ],
+        }),
       ];
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId'
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
       const ingredients = [
         new Ingredient({
-          id: 'ingredientId'
+          id: 'ingredientId',
         }),
         new Ingredient({
-          id: 'ingredientId2'
-        })
+          id: 'ingredientId2',
+        }),
       ];
-      const histories  = [
+      const histories = [
         new RecipeHistory({
-          recipeId: 'recipe'
-        })
+          recipeId: 'recipe',
+        }),
       ];
       const configs = [];
 
@@ -259,28 +275,32 @@ describe('RecipeListComponent', () => {
 
       const recipes = [
         new Recipe({
-          ingredients: [{
-            id: 'ingredientId'
-          }],
+          ingredients: [
+            {
+              id: 'ingredientId',
+            },
+          ],
           categories: [],
-          author: ''
-        })
+          author: '',
+        }),
       ];
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId'
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
       const ingredients = [
         new Ingredient({
-          id: 'ingredientId'
+          id: 'ingredientId',
         }),
         new Ingredient({
-          id: 'ingredientId2'
-        })
+          id: 'ingredientId2',
+        }),
       ];
-      const histories  = [
+      const histories = [
         new RecipeHistory({
-          recipeId: 'recipe'
-        })
+          recipeId: 'recipe',
+        }),
       ];
       const configs = [];
 
@@ -319,53 +339,59 @@ describe('RecipeListComponent', () => {
       const recipes = [
         new Recipe({
           id: 'recipe1',
-          ingredients: [{
-            id: 'ingredientId',
-          }],
+          ingredients: [
+            {
+              id: 'ingredientId',
+            },
+          ],
           status: RECIPE_STATUS.PUBLISHED,
-          categories: [
-            { category: 'Dessert' }
-          ]
+          categories: [{ category: 'Dessert' }],
         }),
         new Recipe({
           id: 'recipe2',
-          ingredients: [{
-            id: 'recipe3',
-            isOptional: true,
-            uom: UOM.RECIPE
-          }],
+          ingredients: [
+            {
+              id: 'recipe3',
+              isOptional: true,
+              uom: UOM.RECIPE,
+            },
+          ],
         }),
         new Recipe({
           id: 'recipe3',
-          ingredients: [{
-            id: 'ingredientId',
-          }],
-        })
+          ingredients: [
+            {
+              id: 'ingredientId',
+            },
+          ],
+        }),
       ];
-      const userIngredients = [new UserIngredient({
-        ingredientId: 'ingredientId'
-      })];
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
-          name: 'ingredient name'
+          name: 'ingredient name',
         }),
         new Ingredient({
-          id: 'ingredientId2'
-        })
+          id: 'ingredientId2',
+        }),
       ];
       const histories = [
         new RecipeHistory({
           recipeId: 'recipe1',
-          timesCooked: 1
-        })
+          timesCooked: 1,
+        }),
       ];
       const configs = [];
 
       const element = document.createElement('div');
       element.id = 'recipe';
       document.getElementsByClassName('search-bar')[0].appendChild(element);
-      
+
       recipeFilterService.recipeId = 'recipe';
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
@@ -392,9 +418,15 @@ describe('RecipeListComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(component.initFilters).toHaveBeenCalled();
-      expect(component.recipes.find(({ id }) => id === 'recipe1').ingredients[0].isOptional).toBeFalse();
-      expect(component.recipes.find(({ id }) => id === 'recipe2').ingredients[0].isOptional).toBeTrue();
-      expect(component.recipes.find(({ id }) => id === 'recipe3').ingredients[0].isOptional).toBeFalse();
+      expect(
+        component.recipes.find(({ id }) => id === 'recipe1').ingredients[0].isOptional
+      ).toBeFalse();
+      expect(
+        component.recipes.find(({ id }) => id === 'recipe2').ingredients[0].isOptional
+      ).toBeTrue();
+      expect(
+        component.recipes.find(({ id }) => id === 'recipe3').ingredients[0].isOptional
+      ).toBeFalse();
     }));
   });
 
@@ -405,15 +437,15 @@ describe('RecipeListComponent', () => {
       component.recipes = [
         new Recipe({
           type: 'SALAD',
-          categories: [{ category: 'thing' }, { category: 'thingy'}],
+          categories: [{ category: 'thing' }, { category: 'thingy' }],
           author: 'author',
           hasNewCategory: true,
-          hasNeedsImageCategory: true
+          hasNeedsImageCategory: true,
         }),
         new Recipe({
           categories: [],
-          author: 'author2'
-        })
+          author: 'author2',
+        }),
       ];
       component.types = [new Config({})];
 
@@ -426,7 +458,7 @@ describe('RecipeListComponent', () => {
         new RestrictionFilter('isVegetarian'),
         new SearchFilter('search'),
         new StatusFilter(RECIPE_STATUS.PUBLISHED),
-        new ImageFilter(false)
+        new ImageFilter(false),
       ];
 
       spyOn(component, 'setFilters');
@@ -436,7 +468,7 @@ describe('RecipeListComponent', () => {
 
       component.initFilters();
       component.searchFilter$.next('value');
-      
+
       tick(1000);
       expect(breakpointObserver.observe).toHaveBeenCalled();
       expect(component.setSelectedFilterCount).toHaveBeenCalled();
@@ -446,20 +478,22 @@ describe('RecipeListComponent', () => {
     }));
 
     it('should only apply a search filter', fakeAsync(() => {
-      component.dataSource = {paginator: {firstPage: () => {}}};
+      component.dataSource = { paginator: { firstPage: () => {} } };
 
       component.recipes = [
         new Recipe({
-          categories: [{
-            category: 'category'
-          },
-          {
-            category: 'category'
-          }],
+          categories: [
+            {
+              category: 'category',
+            },
+            {
+              category: 'category',
+            },
+          ],
           status: RECIPE_STATUS.PUBLISHED,
-          author: 'author'
+          author: 'author',
         }),
-        new Recipe({})
+        new Recipe({}),
       ];
       component.types = [];
 
@@ -472,7 +506,7 @@ describe('RecipeListComponent', () => {
       component.initFilters();
       component.initFilters();
       component.searchFilter$.next('value');
-      
+
       tick(1000);
       expect(breakpointObserver.observe).toHaveBeenCalledTimes(2);
       expect(component.setSelectedFilterCount).toHaveBeenCalledTimes(2);
@@ -493,12 +527,12 @@ describe('RecipeListComponent', () => {
     });
 
     it('should count the number of checked filters and set the count', () => {
-      component.filtersList = [{
-        icon: 'icon',
-        values: [
-          { values: [{ checked: true }, { checked: false }] }
-        ]
-      }];
+      component.filtersList = [
+        {
+          icon: 'icon',
+          values: [{ values: [{ checked: true }, { checked: false }] }],
+        },
+      ];
 
       component.setSelectedFilterCount();
 
@@ -540,7 +574,7 @@ describe('RecipeListComponent', () => {
       const filter = new CategoryFilter('test');
       recipeFilterService.selectedFilters = [];
 
-      component.filterSelected({checked: true, name: 'test', filter});
+      component.filterSelected({ checked: true, name: 'test', filter });
 
       expect(recipeFilterService.selectedFilters).toContain(filter);
     });
@@ -551,7 +585,7 @@ describe('RecipeListComponent', () => {
       const filter3 = new AuthorFilter('author');
       recipeFilterService.selectedFilters = [filter1, filter2, filter3];
 
-      component.filterSelected({checked: false, name: 'test', filter: filter1});
+      component.filterSelected({ checked: false, name: 'test', filter: filter1 });
 
       expect(recipeFilterService.selectedFilters).not.toContain(filter1);
       expect(recipeFilterService.selectedFilters).toContain(filter2);
@@ -623,13 +657,19 @@ describe('RecipeListComponent', () => {
 
   describe('sortRecipesByName', () => {
     it('should sort recipe a less than recipe b', () => {
-      const result = component.sortRecipesByName(new Recipe({name: 'a'}), new Recipe({name: 'b'}));
+      const result = component.sortRecipesByName(
+        new Recipe({ name: 'a' }),
+        new Recipe({ name: 'b' })
+      );
 
       expect(result).toEqual(-1);
     });
 
     it('should sort recipe b greater than recipe a', () => {
-      const result = component.sortRecipesByName(new Recipe({name: 'b'}), new Recipe({name: 'a'}));
+      const result = component.sortRecipesByName(
+        new Recipe({ name: 'b' }),
+        new Recipe({ name: 'a' })
+      );
 
       expect(result).toEqual(1);
     });
@@ -637,19 +677,22 @@ describe('RecipeListComponent', () => {
 
   describe('sortRecipesByImages', () => {
     it('should sort two recipes with images', () => {
-      const result = component.sortRecipesByImages(new Recipe({hasImage: true}), new Recipe({hasImage: true}));
+      const result = component.sortRecipesByImages(
+        new Recipe({ hasImage: true }),
+        new Recipe({ hasImage: true })
+      );
 
       expect(result).toEqual(0);
     });
 
     it('should sort recipe a with an image', () => {
-      const result = component.sortRecipesByImages(new Recipe({hasImage: true}), new Recipe({}));
-     
+      const result = component.sortRecipesByImages(new Recipe({ hasImage: true }), new Recipe({}));
+
       expect(result).toEqual(-1);
     });
 
     it('should sort recipe b with an image', () => {
-      const result = component.sortRecipesByImages(new Recipe({}), new Recipe({hasImage: true}));
+      const result = component.sortRecipesByImages(new Recipe({}), new Recipe({ hasImage: true }));
 
       expect(result).toEqual(1);
     });
@@ -663,7 +706,7 @@ describe('RecipeListComponent', () => {
 
   describe('findRecipe', () => {
     it('should find a recipe', () => {
-      component.dataSource = new MatTableDataSource([new Recipe({id: 'id'})]);
+      component.dataSource = new MatTableDataSource([new Recipe({ id: 'id' })]);
 
       const result = component.findRecipe('id');
 
@@ -671,7 +714,7 @@ describe('RecipeListComponent', () => {
     });
 
     it('should not find a recipe', () => {
-      component.dataSource = new MatTableDataSource([new Recipe({id: 'id2'})]);
+      component.dataSource = new MatTableDataSource([new Recipe({ id: 'id2' })]);
 
       const result = component.findRecipe('id');
 
@@ -721,9 +764,9 @@ describe('RecipeListComponent', () => {
 
       spyOn(component, 'findRecipe').and.returnValue(new Recipe({}));
       spyOn(recipeIngredientService, 'removeIngredients');
-  
+
       component.removeIngredients('');
-  
+
       expect(component.findRecipe).toHaveBeenCalled();
       expect(recipeIngredientService.removeIngredients).toHaveBeenCalled();
     });
@@ -731,7 +774,7 @@ describe('RecipeListComponent', () => {
 
   describe('onRate', () => {
     it('should call the recipe service and rate a recipe', () => {
-      component.user = new User({uid: 'uid'});
+      component.user = new User({ uid: 'uid' });
 
       spyOn(recipeService, 'rateRecipe');
 

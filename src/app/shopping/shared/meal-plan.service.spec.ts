@@ -14,9 +14,7 @@ describe('MealPlanService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ]
+      imports: [RouterModule.forRoot([])],
     });
     service = TestBed.inject(MealPlanService);
     firebase = TestBed.inject(FirebaseService);
@@ -37,8 +35,7 @@ describe('MealPlanService', () => {
       service.get('uid').subscribe(doc => {
         expect(doc).toBeDefined();
       });
--
-      expect(firebase.where).toHaveBeenCalled();
+      -expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();

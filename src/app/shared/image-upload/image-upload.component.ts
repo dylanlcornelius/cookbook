@@ -11,7 +11,7 @@ import Compressor from 'compressorjs';
 @Component({
   selector: 'app-image-upload',
   templateUrl: './image-upload.component.html',
-  styleUrls: ['./image-upload.component.scss']
+  styleUrls: ['./image-upload.component.scss'],
 })
 export class ImageUploadComponent implements OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -37,7 +37,7 @@ export class ImageUploadComponent implements OnDestroy {
     private utilService: UtilService,
     private imageService: ImageService,
     private notificationService: NotificationService,
-    private validationService: ValidationService,
+    private validationService: ValidationService
   ) {
     this.online$ = this.utilService.online$;
   }
@@ -53,35 +53,36 @@ export class ImageUploadComponent implements OnDestroy {
         quality: 0.6,
         maxHeight: 750,
         maxWidth: 750,
-        success: this.readFileEvent
+        success: this.readFileEvent,
       });
     }
   }
 
   readFileEvent = (image: File | Blob): void => {
-    this.imageService.upload(this.id, image).pipe(takeUntil(this.unsubscribe$)).subscribe(progress => {
-      if (typeof progress === 'string') {
-        this.image = progress;
-        this.imageChange.emit(this.image);
+    this.imageService
+      .upload(this.id, image)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(progress => {
+        if (typeof progress === 'string') {
+          this.image = progress;
+          this.imageChange.emit(this.image);
 
-        this.progress = undefined;
-        this.progressChange.emit(this.progress);
+          this.progress = undefined;
+          this.progressChange.emit(this.progress);
 
-        this.updateImage(true);
-        this.notificationService.setModal(new SuccessNotification('Image uploaded!'));
-      } else {
-        this.progress = progress;
-        this.progressChange.emit(this.progress);
-      }
-    });
+          this.updateImage(true);
+          this.notificationService.setModal(new SuccessNotification('Image uploaded!'));
+        } else {
+          this.progress = progress;
+          this.progressChange.emit(this.progress);
+        }
+      });
   };
 
   deleteFile(path: string): void {
-    this.validationService.setModal(new Validation(
-      'Are you sure you want to remove this image?',
-      this.deleteFileEvent,
-      [path]
-    ));
+    this.validationService.setModal(
+      new Validation('Are you sure you want to remove this image?', this.deleteFileEvent, [path])
+    );
   }
 
   deleteFileEvent = (path: string): void => {

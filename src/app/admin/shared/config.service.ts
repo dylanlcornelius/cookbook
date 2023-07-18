@@ -8,13 +8,13 @@ import { ModelObject } from '@model';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService extends FirestoreService {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
-    actionService: ActionService,
+    actionService: ActionService
   ) {
     super('configs', firebase, currentUserService, actionService);
   }
@@ -24,16 +24,23 @@ export class ConfigService extends FirestoreService {
   get(name?: string): Observable<Config[]> {
     return new Observable(observer => {
       if (name) {
-        super.getMany(this.firebase.query(this.ref, this.firebase.where('name', '==', name))).subscribe(docs => {
-          observer.next(docs.map(doc => new Config(doc)).sort(this.sortByOrder));
-        });
+        super
+          .getMany(this.firebase.query(this.ref, this.firebase.where('name', '==', name)))
+          .subscribe(docs => {
+            observer.next(docs.map(doc => new Config(doc)).sort(this.sortByOrder));
+          });
       } else {
         super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new Config(doc)).sort(this.sortByOrder).sort(this.sortByName));
+          observer.next(
+            docs
+              .map(doc => new Config(doc))
+              .sort(this.sortByOrder)
+              .sort(this.sortByName)
+          );
         });
       }
     });
-}
+  }
 
   create = (data: ModelObject): string => super.create(data);
   update = (data: Config[]): void => super.updateAll(data);

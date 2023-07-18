@@ -13,21 +13,10 @@ describe('RecipeHistoryModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-      ],
-      declarations: [
-        RecipeHistoryModalComponent,
-        ModalComponent,
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [FormsModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
+      declarations: [RecipeHistoryModalComponent, ModalComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -60,7 +49,7 @@ describe('RecipeHistoryModalComponent', () => {
         uid: 'uid',
         householdId: 'householdId',
         timesCooked: 0,
-        text: ''
+        text: '',
       };
       component.form = new FormBuilder().group({ name: [null, Validators.required] });
 
@@ -80,7 +69,7 @@ describe('RecipeHistoryModalComponent', () => {
         uid: 'uid',
         householdId: 'householdId',
         timesCooked: 0,
-        text: ''
+        text: '',
       };
       component.form = new FormBuilder().group({ timesCooked: [null] });
 

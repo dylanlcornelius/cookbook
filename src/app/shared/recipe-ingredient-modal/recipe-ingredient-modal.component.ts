@@ -8,7 +8,7 @@ import { RecipeIngredientModalService } from '@modalService';
 @Component({
   selector: 'app-recipe-ingredient-modal',
   templateUrl: './recipe-ingredient-modal.component.html',
-  styleUrls: ['./recipe-ingredient-modal.component.scss']
+  styleUrls: ['./recipe-ingredient-modal.component.scss'],
 })
 export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -19,9 +19,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
 
   selectionCount = 0;
 
-  constructor(
-    private recipeIngredientModalService: RecipeIngredientModalService
-  ) { }
+  constructor(private recipeIngredientModalService: RecipeIngredientModalService) {}
 
   ngOnInit() {
     this.load();
@@ -33,9 +31,12 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.recipeIngredientModalService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((modal: RecipeIngredientModal) => {
-      this.params = modal;
-    });
+    this.recipeIngredientModalService
+      .getModal()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((modal: RecipeIngredientModal) => {
+        this.params = modal;
+      });
   }
 
   select(isSelected: boolean): void {
@@ -54,11 +55,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
       selectedIngredients = this.params.ingredients;
     }
 
-    this.params.function(
-      selectedIngredients,
-      this.params.userIngredients,
-      this.params.householdId
-    );
+    this.params.function(selectedIngredients, this.params.userIngredients, this.params.householdId);
 
     this.selectionCount = 0;
     this.modal.close(true);

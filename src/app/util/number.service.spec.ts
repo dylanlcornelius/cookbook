@@ -81,10 +81,10 @@ describe('NumberService', () => {
       expect(result).toEqual(false);
       expect(service.toDecimal).toHaveBeenCalled();
     });
-    
+
     it('should return a valid fraction', () => {
       spyOn(service, 'toDecimal').and.returnValue(0.55555);
-    
+
       const result = service.isValid('1/2');
 
       expect(result).toEqual(0.5555);
@@ -93,16 +93,16 @@ describe('NumberService', () => {
 
     it('should handle an invalid decimal', () => {
       spyOn(service, 'toDecimal');
-     
+
       const result = service.isValid('-1.5');
-   
+
       expect(result).toEqual(false);
       expect(service.toDecimal).not.toHaveBeenCalled();
     });
 
     it('should return a valid decimal', () => {
       spyOn(service, 'toDecimal');
-     
+
       const result = service.isValid('0.5555555');
 
       expect(result).toEqual(0.555555);

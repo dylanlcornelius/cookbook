@@ -1,17 +1,18 @@
 .footer {
-    bottom: 0;
-    position: relative;
-    height: 50px;
-    padding: 15px;
-    text-align: center;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
+  bottom: 0;
+  position: relative;
+  height: 50px;
+  padding: 15px;
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
 }
-.author-text, .author-text a {
-    color: darkgray;
-    text-decoration: none;
+.author-text,
+.author-text a {
+  color: darkgray;
+  text-decoration: none;
 }
 .author-text a:hover {
-    color: grey;
+  color: grey;
 }

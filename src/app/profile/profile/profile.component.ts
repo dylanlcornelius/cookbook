@@ -1,11 +1,7 @@
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { ActivatedRoute } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActionService } from '@actionService';
 import { User } from '@user';
 import { Action, ActionLabel } from '@actions';
@@ -70,7 +66,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private utilService: UtilService,
     private recipeService: RecipeService,
     private recipeHistoryService: RecipeHistoryService,
-    private tutorialService: TutorialService,
+    private tutorialService: TutorialService
   ) {
     this.selectedIndex = this.route.snapshot.data.selectedTabIndex;
 
@@ -92,43 +88,52 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const user$ = this.currentUserService.getCurrentUser();
     const users$ = this.userService.get();
 
-    combineLatest([params$, user$, users$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([params, user, users]) => {
-      this.currentUser = user;
-      this.users = users;
+    combineLatest([params$, user$, users$])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(([params, user, users]) => {
+        this.currentUser = user;
+        this.users = users;
 
-      const paramId = params['id'];
-      this.user = paramId && this.currentUser.isAdmin ? this.users.find(({ id }) => id === paramId) : user;
+        const paramId = params['id'];
+        this.user =
+          paramId && this.currentUser.isAdmin ? this.users.find(({ id }) => id === paramId) : user;
 
-      this.householdService.get(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(household => {
-        this.householdId = household.id;
+        this.householdService
+          .get(this.user.uid)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(household => {
+            this.householdId = household.id;
 
-        this.userForm = new FormBuilder().group({
-          uid: [this.user.uid],
-          firstName : [this.user.firstName, Validators.required],
-          lastName : [this.user.lastName, Validators.required],
-          role: [this.user.role],
-          theme: [this.user.theme],
-          hasImage: [this.user.hasImage],
-          hasAdminView: [this.user.hasAdminView],
-          id: [this.user.id],
-        });
-  
-        this.imageService.download(this.user).then(url => {
-          if (url) {
-            this.userImage = url;
-          }
-        }, () => {});
-  
-        this.loading = this.loadingService.set(false);
-  
-        this.loadActions();
-        this.loadHistory();
+            this.userForm = new FormBuilder().group({
+              uid: [this.user.uid],
+              firstName: [this.user.firstName, Validators.required],
+              lastName: [this.user.lastName, Validators.required],
+              role: [this.user.role],
+              theme: [this.user.theme],
+              hasImage: [this.user.hasImage],
+              hasAdminView: [this.user.hasAdminView],
+              id: [this.user.id],
+            });
+
+            this.imageService.download(this.user).then(
+              url => {
+                if (url) {
+                  this.userImage = url;
+                }
+              },
+              () => {}
+            );
+
+            this.loading = this.loadingService.set(false);
+
+            this.loadActions();
+            this.loadHistory();
+          });
       });
-    });
   }
 
   loadActions(): void {
-    this.actionService.get(this.user.uid)?.then((userAction) => {
+    this.actionService.get(this.user.uid)?.then(userAction => {
       const sortedActions = this.sortActions(userAction.actions);
 
       this.actions = sortedActions.map(action => {
@@ -151,58 +156,63 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  sortActions(userActions: any): { year: number, data: any }[] {
+  sortActions(userActions: any): { year: number; data: any }[] {
     const dateArray = Object.keys(userActions).map(key => {
       return key.split('/').map(Number);
     });
 
     dateArray.sort((a, b) => a[2] - b[2]);
 
-    return dateArray.map(date => {
-      return {
-        year: date[2],
-        data: userActions[date.join('/')]
-      };
-    }).reduce((yearList, dateActions) => {
-      const yearActions = yearList.find(({ year }) => year === dateActions.year);
-      if (yearActions) {
-        for (const action of Object.values(Action)) {
-          if (yearActions.data[action] || dateActions.data[action]) {
-            yearActions.data[action] = (yearActions.data[action] || 0) + (dateActions.data[action] || 0);
+    return dateArray
+      .map(date => {
+        return {
+          year: date[2],
+          data: userActions[date.join('/')],
+        };
+      })
+      .reduce((yearList, dateActions) => {
+        const yearActions = yearList.find(({ year }) => year === dateActions.year);
+        if (yearActions) {
+          for (const action of Object.values(Action)) {
+            if (yearActions.data[action] || dateActions.data[action]) {
+              yearActions.data[action] =
+                (yearActions.data[action] || 0) + (dateActions.data[action] || 0);
+            }
           }
+        } else {
+          yearList.push(dateActions);
         }
-      } else {
-        yearList.push(dateActions);
-      }
 
-      return yearList;
-    }, []);
+        return yearList;
+      }, []);
   }
 
   loadHistory(): void {
     const recipes$ = this.recipeService.get();
     const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
 
-    combineLatest([recipes$, recipeHistory$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([recipes, histories]) => {
-      let total = 0;
+    combineLatest([recipes$, recipeHistory$])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(([recipes, histories]) => {
+        let total = 0;
 
-      this.history = histories
-        .reduce((list, recipeHistory) => {
-          const recipe = recipes.find(recipe => recipe.id === recipeHistory.recipeId);
+        this.history = histories
+          .reduce((list, recipeHistory) => {
+            const recipe = recipes.find(recipe => recipe.id === recipeHistory.recipeId);
 
-          if (recipe) {
-            list.push({name: recipe.name, value: recipeHistory.timesCooked});
-            total += recipeHistory.timesCooked;
-          }
-          return list;
+            if (recipe) {
+              list.push({ name: recipe.name, value: recipeHistory.timesCooked });
+              total += recipeHistory.timesCooked;
+            }
+            return list;
           }, [])
-        .sort(({ name: a }, { name: b }) => a.localeCompare(b))
-        .sort(({ value: a }, { value: b }) => b - a);
-      
-      if (total > 0) {
-        this.totalRecipesCooked = total;
-      }
-    });
+          .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+          .sort(({ value: a }, { value: b }) => b - a);
+
+        if (total > 0) {
+          this.totalRecipesCooked = total;
+        }
+      });
   }
 
   updateImage = (hasImage: boolean): void => {

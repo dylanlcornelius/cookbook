@@ -25,19 +25,12 @@ describe('IngredientsDetailComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([
-          { path: 'ingredient/list', component: IngredientListComponent }
-        ])
+        RouterModule.forRoot([{ path: 'ingredient/list', component: IngredientListComponent }]),
       ],
-      providers: [
-        IngredientService
-      ],
-      declarations: [ IngredientDetailComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      providers: [IngredientService],
+      declarations: [IngredientDetailComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -58,13 +51,15 @@ describe('IngredientsDetailComponent', () => {
     it('should load an ingredient', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
-  
+
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({ category: 'BAKING' })));
-      spyOn(configService, 'get').and.returnValue(of([new Config({ value: 'BAKING', displayValue: 'Baking' })]));
+      spyOn(configService, 'get').and.returnValue(
+        of([new Config({ value: 'BAKING', displayValue: 'Baking' })])
+      );
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
-      
+
       component.load();
-  
+
       expect(ingredientService.get).toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
@@ -75,13 +70,13 @@ describe('IngredientsDetailComponent', () => {
     it('should load an ingredient without data', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
-  
+
       spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
       spyOn(configService, 'get').and.returnValue(of([]));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
-      
+
       component.load();
-  
+
       expect(ingredientService.get).toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
@@ -105,7 +100,7 @@ describe('IngredientsDetailComponent', () => {
     it('should delete an ingredient', () => {
       const router = TestBed.inject(Router);
       spyOn(router, 'navigate');
-      
+
       spyOn(ingredientService, 'delete');
 
       component.deleteIngredientEvent('id');

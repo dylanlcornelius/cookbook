@@ -44,12 +44,10 @@ import { FeedbackComponent } from './footer/feedback/feedback.component';
     SharedModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(
-    private firebase: FirebaseService,
-  ) {
+  constructor(private firebase: FirebaseService) {
     if (environment) {
       this.firebase.initializeApp(environment.firebase);
 
@@ -59,7 +57,7 @@ export class AppModule {
         firebase.auth = firebase.getAuth();
         firebase.storage = firebase.getStorage();
         firebase.analytics = firebase.getAnalytics();
-  
+
         firebase.enableMultiTabIndexedDbPersistence(firebase.firestore);
       }
     }

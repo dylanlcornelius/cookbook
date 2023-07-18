@@ -16,18 +16,14 @@ this.recipeHistoryModalParams = {
 */
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalComponent } from '@modalComponent';
 import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-recipe-history-modal',
   templateUrl: './recipe-history-modal.component.html',
-  styleUrls: ['./recipe-history-modal.component.scss']
+  styleUrls: ['./recipe-history-modal.component.scss'],
 })
 export class RecipeHistoryModalComponent implements OnInit {
   form: FormGroup;
@@ -38,11 +34,18 @@ export class RecipeHistoryModalComponent implements OnInit {
   params;
 
   @Input()
-  set Params(params: { function: Function, recipeId: string, uid: string, householdId: string, timesCooked: number, text: string }) {
+  set Params(params: {
+    function: Function;
+    recipeId: string;
+    uid: string;
+    householdId: string;
+    timesCooked: number;
+    text: string;
+  }) {
     this.params = params;
     if (this.params) {
       this.form.patchValue({
-        timesCooked: this.params.timesCooked
+        timesCooked: this.params.timesCooked,
       });
     }
   }
@@ -54,7 +57,7 @@ export class RecipeHistoryModalComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormBuilder().group({
-      'timesCooked': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+/)]]
+      timesCooked: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+/)]],
     });
   }
 
@@ -71,7 +74,7 @@ export class RecipeHistoryModalComponent implements OnInit {
       this.params.recipeId,
       this.params.uid,
       this.params.householdId,
-      this.form.get('timesCooked').value,
+      this.form.get('timesCooked').value
     );
     this.modal.close();
   }

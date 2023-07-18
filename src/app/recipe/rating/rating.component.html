@@ -1,17 +1,20 @@
 <div class="star-ratings">
-    <div class="user" [ngStyle]="{'width': (userRating.rating / 3 * 100) + '%'}">
-        <span (click)="handleRate(1)">★</span>
-        <span (click)="handleRate(2)">★</span>
-        <span (click)="handleRate(3)">★</span>
-    </div>
-    <div class="top" [ngStyle]="{'width': recipe.meanRating + '%', 'height': userRating.rating ? '20px' : '100%'}">
-        <span (click)="handleRate(1)">★</span>
-        <span (click)="handleRate(2)">★</span>
-        <span (click)="handleRate(3)">★</span>
-    </div>
-    <div class="bottom">
-        <span (click)="handleRate(1)">★</span>
-        <span (click)="handleRate(2)">★</span>
-        <span (click)="handleRate(3)">★</span>
-    </div>
+  <div class="user" [ngStyle]="{ width: (userRating.rating / 3) * 100 + '%' }">
+    <span (click)="handleRate(1)">★</span>
+    <span (click)="handleRate(2)">★</span>
+    <span (click)="handleRate(3)">★</span>
+  </div>
+  <div
+    class="top"
+    [ngStyle]="{ width: recipe.meanRating + '%', height: userRating.rating ? '20px' : '100%' }"
+  >
+    <span (click)="handleRate(1)">★</span>
+    <span (click)="handleRate(2)">★</span>
+    <span (click)="handleRate(3)">★</span>
+  </div>
+  <div class="bottom">
+    <span (click)="handleRate(1)">★</span>
+    <span (click)="handleRate(2)">★</span>
+    <span (click)="handleRate(3)">★</span>
+  </div>
 </div>

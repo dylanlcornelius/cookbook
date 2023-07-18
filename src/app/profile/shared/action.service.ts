@@ -3,14 +3,12 @@ import { Action } from '@actions';
 import { CollectionReference, FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActionService {
   ref: CollectionReference;
 
-  constructor(
-    private firebase: FirebaseService,
-  ) {
+  constructor(private firebase: FirebaseService) {
     this.load();
   }
 
@@ -28,14 +26,16 @@ export class ActionService {
     this.get(uid).then(userAction => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      const week = (`${weekStart.getDate()}/${weekStart.getMonth() + 1}/${weekStart.getFullYear()}`).toString();
+      const week = `${weekStart.getDate()}/${
+        weekStart.getMonth() + 1
+      }/${weekStart.getFullYear()}`.toString();
 
       if (!userAction) {
-        userAction = {'uid': uid, 'actions': {[week]: {[action]: number}}};
+        userAction = { uid: uid, actions: { [week]: { [action]: number } } };
         this.create(userAction);
         return;
       }
-        
+
       if (userAction.actions[week]) {
         let exists = false;
         Object.keys(userAction.actions[week]).forEach(id => {
@@ -48,21 +48,23 @@ export class ActionService {
           userAction.actions[week][action] = number;
         }
       } else {
-        userAction.actions[week] = {[action]: number};
+        userAction.actions[week] = { [action]: number };
       }
       this.update(userAction);
     });
   }
 
-  get(uid: string): Promise<{ id?: string, uid: string, actions: any }> {
-    return this.firebase.getDocs(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).then((querySnapshot) => {
-      const action = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        action.push({ id: doc.id, uid: data.uid || '', actions: data.actions || {} });
+  get(uid: string): Promise<{ id?: string; uid: string; actions: any }> {
+    return this.firebase
+      .getDocs(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+      .then(querySnapshot => {
+        const action = [];
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          action.push({ id: doc.id, uid: data.uid || '', actions: data.actions || {} });
+        });
+        return action[0];
       });
-      return action[0];
-    });
   }
 
   create = (data: any): void => {

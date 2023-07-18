@@ -6,9 +6,9 @@ import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  template: ''
+  template: '',
 })
-export class MockComponent { }
+export class MockComponent {}
 
 describe('TitleService', () => {
   let router: Router;
@@ -18,18 +18,16 @@ describe('TitleService', () => {
       providers: [
         {
           provide: TitleStrategy,
-          useClass: TitleService
-        }
-      ]
+          useClass: TitleService,
+        },
+      ],
     });
     router = TestBed.inject(Router);
   });
 
   describe('updateTitle', () => {
     it('should set a page title', fakeAsync(() => {
-      router.resetConfig([
-        { path: 'home', title: 'Home', component: MockComponent },
-      ]);
+      router.resetConfig([{ path: 'home', title: 'Home', component: MockComponent }]);
       router.navigateByUrl('/home');
       tick();
 
