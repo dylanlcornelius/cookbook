@@ -296,7 +296,7 @@ describe('RecipeDetailComponent', () => {
       expect(result).toBeTrue();
     });
 
-    it('should return true when the recipe has the new category', () => {
+    it('should return true when the recipe has the needs image category', () => {
       component.recipe = new Recipe({});
       component.hasNeedsImageCategory = true;
 
