@@ -74,6 +74,12 @@ describe('RecipeFilterService', () => {
       expect(result).toBeTrue();
     });
 
+    it('should filter by Needs Image', () => {
+      const result = service.recipeFilterPredicate(new Recipe({hasNeedsImageCategory: true}), [new CategoryFilter('Needs Image')]);
+
+      expect(result).toBeTrue();
+    });
+
     it('should filter by rating', () => {
       const result = service.recipeFilterPredicate(new Recipe({meanRating: 83.3333333}), [new RatingFilter(100)]);
 

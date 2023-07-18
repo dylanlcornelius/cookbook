@@ -74,6 +74,9 @@
                 <mat-chip (click)="setCategoryFilter('New!')" *ngIf="hasNewCategory">
                   New!
                 </mat-chip>
+                <mat-chip (click)="setCategoryFilter('Needs Image')" *ngIf="hasNeedsImageCategory">
+                  Needs Image
+                </mat-chip>
                 <mat-chip *ngIf="!!recipe.type" (click)="setTypeFilter(recipe.type)">{{recipe.displayType}}</mat-chip>
                 <mat-chip *ngIf="recipe.isVegetarian" (click)="setRestrictionFilter('isVegetarian')">Vegetarian</mat-chip>
                 <mat-chip *ngIf="recipe.isVegan" (click)="setRestrictionFilter('isVegan')">Vegan</mat-chip>
