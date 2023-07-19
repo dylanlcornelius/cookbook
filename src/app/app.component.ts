@@ -10,9 +10,8 @@ import { CurrentUserService } from '@currentUserService';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [fadeComponentAnimation]
+  animations: [fadeComponentAnimation],
 })
-
 export class AppComponent implements OnInit {
   user: Observable<User>;
   isLoggedIn: Observable<boolean>;
@@ -21,7 +20,7 @@ export class AppComponent implements OnInit {
   constructor(
     private overlayContainer: OverlayContainer,
     private currentUserService: CurrentUserService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.user = this.currentUserService.getCurrentUser();

@@ -17,7 +17,7 @@ import { TitleService } from '@TitleService';
 @Component({
   selector: 'app-ingredient-detail',
   templateUrl: './ingredient-detail.component.html',
-  styleUrls: ['./ingredient-detail.component.scss']
+  styleUrls: ['./ingredient-detail.component.scss'],
 })
 export class IngredientDetailComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -34,8 +34,8 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     private numberService: NumberService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
-    private configService: ConfigService,
-  ) { }
+    private configService: ConfigService
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -51,23 +51,29 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       this.loading = this.loadingService.set(true);
       const ingredient$ = this.ingredientService.get(params['id']);
       const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
-      
-      combineLatest([ingredient$, configs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([ingredient, configs]) => {
-        this.titleService.set(ingredient.name);
-        this.ingredient = ingredient;
-        this.ingredient.displayCategory = configs.find(({ value }) => value === this.ingredient.category)?.displayValue || 'Other';
-        this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
-        this.loading = this.loadingService.set(false);
-      });
+
+      combineLatest([ingredient$, configs$])
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(([ingredient, configs]) => {
+          this.titleService.set(ingredient.name);
+          this.ingredient = ingredient;
+          this.ingredient.displayCategory =
+            configs.find(({ value }) => value === this.ingredient.category)?.displayValue ||
+            'Other';
+          this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
+          this.loading = this.loadingService.set(false);
+        });
     });
   }
 
   deleteIngredient(id: string): void {
-    this.validationService.setModal(new Validation(
-      `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
-      this.deleteIngredientEvent,
-      [id]
-    ));
+    this.validationService.setModal(
+      new Validation(
+        `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
+        this.deleteIngredientEvent,
+        [id]
+      )
+    );
   }
 
   deleteIngredientEvent = (id: string): void => {

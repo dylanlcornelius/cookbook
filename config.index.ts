@@ -18,8 +18,8 @@ const envConfigFile = `export const environment = {
 };
 `;
 
-writeFile(targetPath, envConfigFile, 'utf8', (error) => {
-    if (error) {
-        return console.log(error);
-    }
+writeFile(targetPath, envConfigFile, 'utf8', error => {
+  if (error) {
+    return console.log(error);
+  }
 });

@@ -39,8 +39,7 @@ describe('UserItemService', () => {
       service.get('uid').subscribe(docs => {
         expect(docs).toBeDefined();
       });
--
-      expect(firebase.where).toHaveBeenCalled();
+      -expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
       expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
       expect(FirestoreService.prototype.get).not.toHaveBeenCalled();

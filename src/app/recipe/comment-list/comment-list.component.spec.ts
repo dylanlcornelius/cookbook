@@ -24,13 +24,10 @@ describe('CommentListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-      ],
-      declarations: [ CommentListComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
-    .compileComponents();
+      imports: [ReactiveFormsModule],
+      declarations: [CommentListComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -58,10 +55,36 @@ describe('CommentListComponent', () => {
       const comments = [
         new Comment({ id: 'id1', author: 'uid' }),
         new Comment({}),
-        new Comment({ parent: 'id1', creationDate: { toDate: () => { return new Date(); } } }),
-        new Comment({ parent: 'id1', creationDate: { toDate: () => { return new Date(); } } }),
-        new Comment({ creationDate: { toDate: () => { return new Date(); } } }),
-        new Comment({ creationDate: { toDate: () => { return new Date(new Date().getDate() + 1); } } }),
+        new Comment({
+          parent: 'id1',
+          creationDate: {
+            toDate: () => {
+              return new Date();
+            },
+          },
+        }),
+        new Comment({
+          parent: 'id1',
+          creationDate: {
+            toDate: () => {
+              return new Date();
+            },
+          },
+        }),
+        new Comment({
+          creationDate: {
+            toDate: () => {
+              return new Date();
+            },
+          },
+        }),
+        new Comment({
+          creationDate: {
+            toDate: () => {
+              return new Date(new Date().getDate() + 1);
+            },
+          },
+        }),
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
@@ -157,13 +180,8 @@ describe('CommentListComponent', () => {
   describe('deleteCommentEvent', () => {
     it('should delete a comment and all child comments', () => {
       component.childCommentsByParentId = {
-        'id1': [
-          new Comment({ id: 'id2', parent: 'id1' }),
-          new Comment({ id: 'id3', parent: 'id1' }),
-        ],
-        'id4': [
-          new Comment({ id: 'id5', parent: 'id4' }),
-        ]
+        id1: [new Comment({ id: 'id2', parent: 'id1' }), new Comment({ id: 'id3', parent: 'id1' })],
+        id4: [new Comment({ id: 'id5', parent: 'id4' })],
       };
 
       spyOn(commentService, 'delete');
@@ -177,9 +195,7 @@ describe('CommentListComponent', () => {
 
     it('should delete a comment with no children', () => {
       component.childCommentsByParentId = {
-        'id4': [
-          new Comment({ id: 'id5', parent: 'id4' }),
-        ]
+        id4: [new Comment({ id: 'id5', parent: 'id4' })],
       };
 
       spyOn(commentService, 'delete');
@@ -193,14 +209,8 @@ describe('CommentListComponent', () => {
 
     it('should delete a child comment', () => {
       component.childCommentsByParentId = {
-        'id1': [
-          new Comment({ id: 'id2', parent: 'id1' }),
-          new Comment({ id: 'id3', parent: 'id1' }),
-          
-        ],
-        'id4': [
-          new Comment({ id: 'id5', parent: 'id4' }),
-        ]
+        id1: [new Comment({ id: 'id2', parent: 'id1' }), new Comment({ id: 'id3', parent: 'id1' })],
+        id4: [new Comment({ id: 'id5', parent: 'id4' })],
       };
 
       spyOn(commentService, 'delete');

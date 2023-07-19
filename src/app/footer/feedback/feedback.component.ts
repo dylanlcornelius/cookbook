@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-feedback',
   templateUrl: './feedback.component.html',
-  styleUrls: ['./feedback.component.scss']
+  styleUrls: ['./feedback.component.scss'],
 })
 export class FeedbackComponent implements OnInit {
   private unsubscribe$ = new Subject();
@@ -30,8 +30,8 @@ export class FeedbackComponent implements OnInit {
     private loadingService: LoadingService,
     private currentUserService: CurrentUserService,
     private feedbackService: FeedbackService,
-    private notificationService: NotificationService,
-  ) { }
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -43,7 +43,7 @@ export class FeedbackComponent implements OnInit {
 
     user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.form = new FormBuilder().group({
-        'description': [null, Validators.required],
+        description: [null, Validators.required],
       });
 
       this.user = user;

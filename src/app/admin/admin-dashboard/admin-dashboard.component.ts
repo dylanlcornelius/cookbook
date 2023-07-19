@@ -23,7 +23,7 @@ import { FeedbackService } from '@feedbackService';
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.scss']
+  styleUrls: ['./admin-dashboard.component.scss'],
 })
 export class AdminDashboardComponent implements OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -44,7 +44,7 @@ export class AdminDashboardComponent implements OnDestroy {
     private userItemService: UserItemService,
     private validationService: ValidationService,
     private notificationService: NotificationService,
-    private feedbackService: FeedbackService,
+    private feedbackService: FeedbackService
   ) {}
 
   ngOnDestroy() {
@@ -61,9 +61,12 @@ export class AdminDashboardComponent implements OnDestroy {
         this.context$.unsubscribe();
       }
 
-      this.context$ = context?.service.get().pipe(takeUntil(this.unsubscribe$)).subscribe((data: Model[]) => {
-        context.dataSource = data;
-      });
+      this.context$ = context?.service
+        .get()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data: Model[]) => {
+          context.dataSource = data;
+        });
     });
   }
 
@@ -80,11 +83,12 @@ export class AdminDashboardComponent implements OnDestroy {
   };
 
   remove = (context: Context, id: string): void => {
-    this.validationService.setModal(new Validation(
-      `Are you sure you want to delete this document?`,
-      this.removeEvent,
-      [context, id]
-    ));
+    this.validationService.setModal(
+      new Validation(`Are you sure you want to delete this document?`, this.removeEvent, [
+        context,
+        id,
+      ])
+    );
   };
 
   removeEvent = (context: Context, id: string): void => {
@@ -92,11 +96,9 @@ export class AdminDashboardComponent implements OnDestroy {
   };
 
   revert = (): void => {
-    this.validationService.setModal(new Validation(
-      'Are you sure you want to revert your changes?',
-      this.revertEvent,
-      []
-    ));
+    this.validationService.setModal(
+      new Validation('Are you sure you want to revert your changes?', this.revertEvent, [])
+    );
   };
 
   revertEvent = (): void => {
@@ -105,11 +107,9 @@ export class AdminDashboardComponent implements OnDestroy {
   };
 
   save = (context: Context): void => {
-    this.validationService.setModal(new Validation(
-      'Are you sure you want to save your changes?',
-      this.saveEvent,
-      [context]
-    ));
+    this.validationService.setModal(
+      new Validation('Are you sure you want to save your changes?', this.saveEvent, [context])
+    );
   };
 
   saveEvent = (context: Context): void => {
@@ -125,7 +125,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.revert,
       this.save,
       this.remove,
-      this.add,
+      this.add
     ),
     new Context(
       'Navs',
@@ -134,7 +134,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.revert,
       this.save,
       this.remove,
-      this.add,
+      this.add
     ),
     new Context(
       'Tutorials',
@@ -143,7 +143,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.revert,
       this.save,
       this.remove,
-      this.add,
+      this.add
     ),
     new Context(
       'Feedbacks',
@@ -151,7 +151,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.feedbackService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'Users',
@@ -159,7 +159,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.userService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'Households',
@@ -167,15 +167,35 @@ export class AdminDashboardComponent implements OnDestroy {
       this.householdService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'Recipes',
-      ['name', 'link', 'description', 'time', 'calories', 'servings', 'categories', 'steps', 'meanRating', 'ratings', 'uid', 'author', 'status', 'hasImage', 'isVegetarian', 'isVegan', 'isGlutenFree', 'isDairyFree', 'type'],
+      [
+        'name',
+        'link',
+        'description',
+        'time',
+        'calories',
+        'servings',
+        'categories',
+        'steps',
+        'meanRating',
+        'ratings',
+        'uid',
+        'author',
+        'status',
+        'hasImage',
+        'isVegetarian',
+        'isVegan',
+        'isGlutenFree',
+        'isDairyFree',
+        'type',
+      ],
       this.recipeService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'Comments',
@@ -183,7 +203,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.commentService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'Recipe History',
@@ -191,7 +211,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.recipeHistoryService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'Ingredients',
@@ -199,7 +219,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.ingredientService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'User Ingredients',
@@ -207,7 +227,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.userIngredientService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
     new Context(
       'User Items',
@@ -215,7 +235,7 @@ export class AdminDashboardComponent implements OnDestroy {
       this.userItemService,
       this.revert,
       this.save,
-      this.remove,
+      this.remove
     ),
   ];
 }

@@ -12,7 +12,7 @@ import { FirebaseService } from '@firebaseService';
 import { Ingredient } from '@ingredient';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserIngredientService extends FirestoreService {
   constructor(
@@ -30,9 +30,11 @@ export class UserIngredientService extends FirestoreService {
   get(uid?: string): Observable<UserIngredient[]> {
     return new Observable(observer => {
       if (uid) {
-        super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
-          observer.next(docs.map(doc => new UserIngredient(doc)));
-        });
+        super
+          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+          .subscribe(docs => {
+            observer.next(docs.map(doc => new UserIngredient(doc)));
+          });
       } else {
         super.get().subscribe(docs => {
           observer.next(docs.map(doc => new UserIngredient(doc)));
@@ -44,15 +46,22 @@ export class UserIngredientService extends FirestoreService {
   create = (data: UserIngredient): string => super.create(data.getObject());
   update = (data: Model[]): void => super.update(data);
 
-  buildUserIngredients(userIngredients: UserIngredient[], ingredients: Ingredient[]): UserIngredient[] {
+  buildUserIngredients(
+    userIngredients: UserIngredient[],
+    ingredients: Ingredient[]
+  ): UserIngredient[] {
     return userIngredients.reduce((result, userIngredient) => {
-      const currentIngredient = ingredients.find(ingredient => ingredient.id === userIngredient.ingredientId);
+      const currentIngredient = ingredients.find(
+        ingredient => ingredient.id === userIngredient.ingredientId
+      );
       if (currentIngredient) {
-        result.push(new UserIngredient({
-          ...userIngredient,
-          amount: currentIngredient.amount,
-          uom: currentIngredient.uom || '',
-        }));
+        result.push(
+          new UserIngredient({
+            ...userIngredient,
+            amount: currentIngredient.amount,
+            uom: currentIngredient.uom || '',
+          })
+        );
       }
       return result;
     }, []);

@@ -40,18 +40,10 @@ describe('ShoppingListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-        FormsModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-      ],
-      declarations: [ ShoppingListComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([]), FormsModule, ReactiveFormsModule, MatAutocompleteModule],
+      declarations: [ShoppingListComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -88,16 +80,16 @@ describe('ShoppingListComponent', () => {
       const ingredients = [
         new Ingredient({
           id: 'ingredientId',
-          category: 'BAKING'
+          category: 'BAKING',
         }),
         new Ingredient({
           id: 'ingredientId2',
-          category: 'FAKE_CATEGORY'
+          category: 'FAKE_CATEGORY',
         }),
         new Ingredient({
           id: 'ingredientId3',
-          category: 'CANNED'
-        })
+          category: 'CANNED',
+        }),
       ];
       const userItems = [new UserItem({ id: 'itemId' })];
       const configs = [
@@ -127,9 +119,11 @@ describe('ShoppingListComponent', () => {
 
     it('should not load unavailable ingredients and items', () => {
       const userIngredients = [new UserIngredient({ ingredientId: 'ingredientId2' })];
-      const ingredients = [new Ingredient({
-        id: 'ingredientId'
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+        }),
+      ];
       const userItems = [new UserItem({ id: 'itemId2' })];
       const configs = [];
 
@@ -153,9 +147,11 @@ describe('ShoppingListComponent', () => {
 
     it('should handle empty user ingredients and user items', () => {
       const userIngredients = [new UserIngredient({})];
-      const ingredients = [new Ingredient({
-        id: 'ingredientId'
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+        }),
+      ];
       const userItems = [];
       const configs = [];
 
@@ -198,9 +194,9 @@ describe('ShoppingListComponent', () => {
     it('should buy an ingredient', () => {
       component.userIngredients = [
         new UserIngredient({ ingredientId: 'id', cartQuantity: 10 }),
-        new UserIngredient({})
+        new UserIngredient({}),
       ];
-      component.userItems = [new UserItem({ name: 'name'})];
+      component.userItems = [new UserItem({ name: 'name' })];
 
       spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
@@ -216,10 +212,10 @@ describe('ShoppingListComponent', () => {
     it('should complete the shopping list', () => {
       component.userIngredients = [
         new UserIngredient({ ingredientId: 'id', cartQuantity: 0 }),
-        new UserIngredient({ cartQUantity: 0 })
+        new UserIngredient({ cartQUantity: 0 }),
       ];
-      component.userItems = [new UserItem({ name: 'name'})];
-      
+      component.userItems = [new UserItem({ name: 'name' })];
+
       spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
       spyOn(userIngredientService, 'buyUserIngredient');
@@ -234,9 +230,9 @@ describe('ShoppingListComponent', () => {
     it('should buy an ingredient with an invalid cart quantity', () => {
       component.userIngredients = [
         new UserIngredient({ ingredientId: 'id', cartQuantity: NaN }),
-        new UserIngredient({ cartQuantity: NaN })
+        new UserIngredient({ cartQuantity: NaN }),
       ];
-      component.userItems = [new UserItem({ name: 'name'})];
+      component.userItems = [new UserItem({ name: 'name' })];
 
       spyOn(userIngredientService, 'update');
       spyOn(notificationService, 'setModal');
@@ -252,7 +248,7 @@ describe('ShoppingListComponent', () => {
 
   describe('addItem', () => {
     it('should update user items', () => {
-      component.userItems = [new UserItem({ name: 'name'})];
+      component.userItems = [new UserItem({ name: 'name' })];
 
       spyOn(userItemService, 'create');
       spyOn(notificationService, 'setModal');
@@ -266,7 +262,7 @@ describe('ShoppingListComponent', () => {
     });
 
     it('should not update user items given an empty string', () => {
-      component.userItems = [new UserItem({ name: 'name'})];
+      component.userItems = [new UserItem({ name: 'name' })];
 
       spyOn(userItemService, 'create');
       spyOn(notificationService, 'setModal');
@@ -280,8 +276,8 @@ describe('ShoppingListComponent', () => {
     });
 
     it('should not update user items given a blank item', () => {
-      component.userItems = [new UserItem({ name: 'name'})];
-      
+      component.userItems = [new UserItem({ name: 'name' })];
+
       spyOn(userItemService, 'create');
       spyOn(notificationService, 'setModal');
       spyOn(component.ingredientControl, 'reset');
@@ -297,7 +293,10 @@ describe('ShoppingListComponent', () => {
   describe('removeItem', () => {
     it('should buy a user item', () => {
       component.userIngredients = [new UserIngredient({ cartQuantity: 0 })];
-      component.userItems = [new UserItem({ id: '1', name: 'item'}), new UserItem({ id: '2', name: 'item2' })];
+      component.userItems = [
+        new UserItem({ id: '1', name: 'item' }),
+        new UserItem({ id: '2', name: 'item2' }),
+      ];
 
       spyOn(userItemService, 'delete');
       spyOn(notificationService, 'setModal');
@@ -325,7 +324,7 @@ describe('ShoppingListComponent', () => {
     it('should add ingredients and items to pantry', () => {
       component.userIngredients = [
         new UserIngredient({ cartQuantity: 10 }),
-        new UserIngredient({ cartQuantity: 0 })
+        new UserIngredient({ cartQuantity: 0 }),
       ];
       component.userItems = [new UserItem({ name: 'name' }), new UserItem({ name: 'name2' })];
 

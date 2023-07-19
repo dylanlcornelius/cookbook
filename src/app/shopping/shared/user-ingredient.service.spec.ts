@@ -87,9 +87,12 @@ describe('UserIngredientService', () => {
 
   describe('buildRecipeIngredients', () => {
     it('should build ingredients', () => {
-      const userIngredients = [new UserIngredient({ ingredientId: 'id' }), new UserIngredient({ ingredientId: 'id2' })];
-      const ingredients = [new Ingredient({ id: 'id'})];
-      
+      const userIngredients = [
+        new UserIngredient({ ingredientId: 'id' }),
+        new UserIngredient({ ingredientId: 'id2' }),
+      ];
+      const ingredients = [new Ingredient({ id: 'id' })];
+
       const result = service.buildUserIngredients(userIngredients, ingredients);
 
       expect(result.length).toEqual(1);

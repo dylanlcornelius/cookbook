@@ -1,82 +1,82 @@
 h2 {
-    margin: 0;
+  margin: 0;
 }
 .container {
-    column-gap: 50px;
+  column-gap: 50px;
 }
 .mat-form-field {
-    width: 60%;
+  width: 60%;
 }
 .button-row {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 .row-button:first-of-type {
-    margin-left: auto;
+  margin-left: auto;
 }
 .row-button button {
-    padding: 0;
+  padding: 0;
 }
 .mat-menu-item {
-    display: block;
+  display: block;
 }
 .recipe-card {
-    width: 300px;
-    margin: 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  width: 300px;
+  margin: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .mat-card-header .mat-card-subtitle {
-    width: min-content;
-    margin: -8px auto 0 !important;
+  width: min-content;
+  margin: -8px auto 0 !important;
 }
 .mat-card-image {
-    margin: 0 -16px 5px !important;
-    object-fit: cover;
-    aspect-ratio: 1/1;
+  margin: 0 -16px 5px !important;
+  object-fit: cover;
+  aspect-ratio: 1/1;
 }
 .mat-card-actions {
-    display: flex !important;
-    justify-content: center;
-    width: min-content;
-    margin: 0 auto !important;
-    padding: 0 !important;
+  display: flex !important;
+  justify-content: center;
+  width: min-content;
+  margin: 0 auto !important;
+  padding: 0 !important;
 }
 .mat-card-actions .mat-button {
-    margin: 0 0 0 20px !important;
-    padding: 0;
+  margin: 0 0 0 20px !important;
+  padding: 0;
 }
 .mat-card-actions .mat-button:first-child {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 .categories {
-    display: none;
+  display: none;
 }
 .mat-card:hover .categories {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -10px;
-    padding: 0 10px;
-    max-height: 32px;
-    z-index: 2;
-    overflow: clip;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  padding: 0 10px;
+  max-height: 32px;
+  z-index: 2;
+  overflow: clip;
 }
 .categories .mat-chip {
-    font-size: 12px;
-    padding: 8px;
-    margin: 4px 2px;
+  font-size: 12px;
+  padding: 8px;
+  margin: 4px 2px;
 }
 .mat-paginator {
-    background: inherit;
+  background: inherit;
 }
 .full-width {
-    width: 100%;
+  width: 100%;
 }
 @media screen and (max-width: 767px) {
-    .recipe-card {
-        margin: 5px;
-    }
+  .recipe-card {
+    margin: 5px;
+  }
 }

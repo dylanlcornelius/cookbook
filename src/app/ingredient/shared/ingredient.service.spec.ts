@@ -83,7 +83,7 @@ describe('IngredientService', () => {
 
   describe('sort', () => {
     it('should delete a document', () => {
-      const result = service.sort(new Ingredient({name: 'a'}), new Ingredient({name: 'b'}));
+      const result = service.sort(new Ingredient({ name: 'a' }), new Ingredient({ name: 'b' }));
 
       expect(result).toEqual(-1);
     });
@@ -92,8 +92,8 @@ describe('IngredientService', () => {
   describe('buildRecipeIngredients', () => {
     it('should build ingredients', () => {
       const recipeIngredients = [new Ingredient({ id: 'id' }), new Ingredient({ id: 'id2' })];
-      const ingredients = [new Ingredient({ id: 'id'})];
-      
+      const ingredients = [new Ingredient({ id: 'id' })];
+
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       const result = service.buildRecipeIngredients(recipeIngredients, ingredients);

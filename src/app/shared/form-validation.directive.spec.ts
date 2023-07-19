@@ -5,11 +5,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 
 @Component({
   selector: 'app-mock-form-compoent',
-  template: '<form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation><button class="submit-button" type="submit"></button></form>'
+  template:
+    '<form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation><button class="submit-button" type="submit"></button></form>',
 })
 class MockFormComponent {
   form = new FormBuilder().group({
-    name: [null, Validators.required]
+    name: [null, Validators.required],
   });
 
   onSubmit() {}
@@ -17,11 +18,12 @@ class MockFormComponent {
 
 @Component({
   selector: 'app-mock-form-stepper-compoent',
-  template: '<form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation [stepperOnSubmit]="stepperOnSubmit"><button class="submit-button" type="submit"></button></form>'
+  template:
+    '<form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation [stepperOnSubmit]="stepperOnSubmit"><button class="submit-button" type="submit"></button></form>',
 })
 class MockFormStepperComponent {
   form = new FormBuilder().group({
-    name: [null, Validators.required]
+    name: [null, Validators.required],
   });
 
   stepperOnSubmit() {}
@@ -34,17 +36,9 @@ describe('FormValidationDirective', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-      ],
-      declarations: [
-        MockFormComponent,
-        MockFormStepperComponent,
-        FormValidationDirective,
-      ]
-    })
-    .compileComponents();
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [MockFormComponent, MockFormStepperComponent, FormValidationDirective],
+    }).compileComponents();
   });
 
   it('should move to the first invalid control', waitForAsync(() => {

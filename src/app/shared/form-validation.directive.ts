@@ -2,7 +2,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 
 @Directive({
-  selector: '[appFormValidation]'
+  selector: '[appFormValidation]',
 })
 export class FormValidationDirective {
   @Input()
@@ -10,8 +10,8 @@ export class FormValidationDirective {
 
   constructor(
     private el: ElementRef,
-    private formGroupDirective: FormGroupDirective,
-  ) { }
+    private formGroupDirective: FormGroupDirective
+  ) {}
 
   @HostListener('ngSubmit') onSubmit(): void {
     if (this.formGroupDirective.control.invalid) {
@@ -27,7 +27,9 @@ export class FormValidationDirective {
         key = this.stepperOnSubmit ? this.stepperOnSubmit(key) : key;
 
         setTimeout(() => {
-          const invalidControl = this.el.nativeElement.querySelector(`[formcontrolname="${key}"].ng-invalid`);
+          const invalidControl = this.el.nativeElement.querySelector(
+            `[formcontrolname="${key}"].ng-invalid`
+          );
           invalidControl?.focus({ preventScroll: true });
           invalidControl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 500);

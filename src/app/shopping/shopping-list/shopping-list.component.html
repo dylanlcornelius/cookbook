@@ -5,10 +5,19 @@
 <div *ngIf="!loading">
   <form class="short-container item-form" (ngSubmit)="addItem(ingredientControl.value)">
     <mat-form-field class="item-form-field">
-      <input matInput placeholder="Add an Ingredient" [formControl]="ingredientControl" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="addIngredient($event.option.value)">
+      <input
+        matInput
+        placeholder="Add an Ingredient"
+        [formControl]="ingredientControl"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        autoActiveFirstOption
+        (optionSelected)="addIngredient($event.option.value)"
+      >
         <mat-option *ngFor="let ingredient of filteredIngredients | async" [value]="ingredient">
-          {{ingredient.name}}
+          {{ ingredient.name }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -17,29 +26,51 @@
       <mat-icon>add</mat-icon>
     </button>
 
-    <button mat-mini-fab matTooltip="Tutorial" type="button" color="primary" (click)="openTutorial()" style="margin-left: 10px">
+    <button
+      mat-mini-fab
+      matTooltip="Tutorial"
+      type="button"
+      color="primary"
+      (click)="openTutorial()"
+      style="margin-left: 10px"
+    >
       <mat-icon>help</mat-icon>
     </button>
   </form>
 
   <div class="short-container" *ngIf="displayIngredients">
     <div *ngFor="let categoryIngredients of displayIngredients | keyvalue: categoryOrder">
-      <h6>{{categoryIngredients.key}}</h6>
+      <h6>{{ categoryIngredients.key }}</h6>
 
       <div class="table-container mat-elevation-z8 box">
         <div class="table-row" *ngFor="let ingredient of categoryIngredients.value">
-          <a class="table-cell plain-link" [routerLink]="['/ingredient/detail/', ingredient.id]" *ngIf="!ingredient.isItem">
-            {{ingredient.cartQuantity | number: '1.0-2'}} {{ingredient.uom === 'other'? '' : ingredient.uom}}
-            {{ingredient.name}}
+          <a
+            class="table-cell plain-link"
+            [routerLink]="['/ingredient/detail/', ingredient.id]"
+            *ngIf="!ingredient.isItem"
+          >
+            {{ ingredient.cartQuantity | number: '1.0-2' }}
+            {{ ingredient.uom === 'other' ? '' : ingredient.uom }}
+            {{ ingredient.name }}
           </a>
-          <button mat-raised-button color="primary" *ngIf="!ingredient.isItem" (click)="addIngredientToPantry(ingredient.id)">
+          <button
+            mat-raised-button
+            color="primary"
+            *ngIf="!ingredient.isItem"
+            (click)="addIngredientToPantry(ingredient.id)"
+          >
             <mat-icon>done</mat-icon>
           </button>
 
           <span class="table-cell" *ngIf="ingredient.isItem">
-            {{ingredient.name}}
+            {{ ingredient.name }}
           </span>
-          <button mat-raised-button color="primary" *ngIf="ingredient.isItem" (click)="removeItem(ingredient.id)">
+          <button
+            mat-raised-button
+            color="primary"
+            *ngIf="ingredient.isItem"
+            (click)="removeItem(ingredient.id)"
+          >
             <mat-icon>done</mat-icon>
           </button>
         </div>
@@ -48,12 +79,14 @@
   </div>
 
   <div class="short-container button-row" *ngIf="displayIngredients">
-    <button mat-raised-button color="primary" style="float: right;" (click)="addAllToPantry()">Add All</button>
+    <button mat-raised-button color="primary" style="float: right" (click)="addAllToPantry()">
+      Add All
+    </button>
   </div>
 </div>
 
 <div class="text-center" *ngIf="!loading && !displayIngredients">
-  <br/>
+  <br />
   <h4 [hidden]="isCompleted">Your shopping list is empty</h4>
   <h4 [hidden]="!isCompleted">Your shopping list is completed!</h4>
 </div>

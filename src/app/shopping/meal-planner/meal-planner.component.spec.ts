@@ -37,17 +37,10 @@ describe('MealPlannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-      ],
-      declarations: [ MealPlannerComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([]), ReactiveFormsModule, MatAutocompleteModule],
+      declarations: [MealPlannerComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -82,23 +75,17 @@ describe('MealPlannerComponent', () => {
         new Recipe({
           id: 'id',
           name: 'recipe',
-          ingredients: [
-            { id: 'ingredient' },
-            { id: 'ingredient3' }
-          ]
+          ingredients: [{ id: 'ingredient' }, { id: 'ingredient3' }],
         }),
         new Recipe({
           id: 'id2',
           name: 'recipe2',
-          ingredients: [
-            { id: 'ingredient' },
-            { id: 'ingredient3' }
-          ]
-        })
+          ingredients: [{ id: 'ingredient' }, { id: 'ingredient3' }],
+        }),
       ];
-      const ingredients = [new Ingredient({id: 'ingredient'})];
+      const ingredients = [new Ingredient({ id: 'ingredient' })];
       const mealPlan = new MealPlan({
-        recipes: [{ id: 'id' }, { id: 'recipe-id-deleted' }]
+        recipes: [{ id: 'id' }, { id: 'recipe-id-deleted' }],
       });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
@@ -130,7 +117,7 @@ describe('MealPlannerComponent', () => {
       spyOn(component.recipeControl, 'reset');
       spyOn(notificationService, 'setModal');
 
-      component.addRecipe(new Recipe({name: 'name'}));
+      component.addRecipe(new Recipe({ name: 'name' }));
 
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
       expect(component.recipeControl.reset).toHaveBeenCalled();
@@ -208,7 +195,7 @@ describe('MealPlannerComponent', () => {
     });
 
     it('should start adding ingredients', () => {
-      component.mealPlan = new MealPlan({ recipes: [ new Recipe({}) ] });
+      component.mealPlan = new MealPlan({ recipes: [new Recipe({})] });
 
       spyOn(mealPlanService, 'formattedUpdate');
       spyOn(recipeIngredientService, 'addIngredients');
@@ -220,7 +207,7 @@ describe('MealPlannerComponent', () => {
     });
 
     it('should start continue ingredients', () => {
-      component.mealPlan = new MealPlan({ recipes: [ new Recipe({}), new Recipe({}) ] });
+      component.mealPlan = new MealPlan({ recipes: [new Recipe({}), new Recipe({})] });
 
       spyOn(mealPlanService, 'formattedUpdate');
       spyOn(recipeIngredientService, 'addIngredients');

@@ -20,14 +20,7 @@ import { SharedModule } from '@sharedModule';
     IngredientQuickCreateComponent,
     UomTableComponent,
   ],
-  imports: [
-    CommonModule,
-    IngredientRoutingModule,
-    SharedModule,
-  ],
-  exports: [
-    IngredientQuickCreateComponent,
-    UomTableComponent,
-  ]
+  imports: [CommonModule, IngredientRoutingModule, SharedModule],
+  exports: [IngredientQuickCreateComponent, UomTableComponent],
 })
-export class IngredientModule { }
+export class IngredientModule {}

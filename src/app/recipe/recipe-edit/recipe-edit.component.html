@@ -1,47 +1,100 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 
-<h2>{{this.title}}</h2>
+<h2>{{ this.title }}</h2>
 
 <div *ngIf="!loading">
-  <form [formGroup]="recipesForm" #formDirective="ngForm" (ngSubmit)="onSubmit($event.submitter.name)" appFormValidation [stepperOnSubmit]="stepperOnSubmit">
+  <form
+    [formGroup]="recipesForm"
+    #formDirective="ngForm"
+    (ngSubmit)="onSubmit($event.submitter.name)"
+    appFormValidation
+    [stepperOnSubmit]="stepperOnSubmit"
+  >
     <ng-template #recipeStep>
       <mat-form-field class="form-field">
-        <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher" required/>
+        <input
+          matInput
+          placeholder="Name"
+          formControlName="name"
+          [errorStateMatcher]="matcher"
+          required
+        />
         <mat-error>
-          <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched && !recipesForm.get('name').errors?.wrongCase">Please enter Recipe Name</span>
-          <span *ngIf="!recipesForm.get('name').valid && recipesForm.get('name').touched && recipesForm.get('name').errors?.wrongCase">Recipe Name is not in title case: {{recipesForm.get('name').errors?.wrongCase}}</span>
+          <span
+            *ngIf="
+              !recipesForm.get('name').valid &&
+              recipesForm.get('name').touched &&
+              !recipesForm.get('name').errors?.wrongCase
+            "
+          >
+            Please enter Recipe Name
+          </span>
+          <span
+            *ngIf="
+              !recipesForm.get('name').valid &&
+              recipesForm.get('name').touched &&
+              recipesForm.get('name').errors?.wrongCase
+            "
+          >
+            Recipe Name is not in title case: {{ recipesForm.get('name').errors?.wrongCase }}
+          </span>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="form-field">
-        <input matInput placeholder="Link" formControlName="link"/>
+        <input matInput placeholder="Link" formControlName="link" />
       </mat-form-field>
-      
+
       <mat-form-field class="form-field">
         <textarea matInput placeholder="Description" formControlName="description"></textarea>
         <mat-error>
-          <span *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched">Please enter valid sentences</span>
+          <span
+            *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched"
+          >
+            Please enter valid sentences
+          </span>
         </mat-error>
       </mat-form-field>
-  
+
       <mat-form-field class="form-field">
-        <input matInput placeholder="Preparation Time" formControlName="time" [errorStateMatcher]="matcher"/>
+        <input
+          matInput
+          placeholder="Preparation Time"
+          formControlName="time"
+          [errorStateMatcher]="matcher"
+        />
         <mat-error>
-          <span *ngIf="!recipesForm.get('time').valid && recipesForm.get('time').touched">Please enter a Recipe Preparation Time</span>
+          <span *ngIf="!recipesForm.get('time').valid && recipesForm.get('time').touched">
+            Please enter a Recipe Preparation Time
+          </span>
         </mat-error>
       </mat-form-field>
-  
+
       <mat-form-field class="form-field">
-        <input matInput placeholder="Servings" formControlName="servings" [errorStateMatcher]="matcher"/>
+        <input
+          matInput
+          placeholder="Servings"
+          formControlName="servings"
+          [errorStateMatcher]="matcher"
+        />
         <mat-error>
-          <span *ngIf="!recipesForm.get('servings').valid">Please enter a valid number for Recipe Servings</span>
+          <span *ngIf="!recipesForm.get('servings').valid">
+            Please enter a valid number for Recipe Servings
+          </span>
         </mat-error>
       </mat-form-field>
-  
+
       <mat-form-field class="form-field">
-        <input matInput placeholder="Calories" formControlName="calories" [errorStateMatcher]="matcher"/>
+        <input
+          matInput
+          placeholder="Calories"
+          formControlName="calories"
+          [errorStateMatcher]="matcher"
+        />
         <mat-error>
-          <span *ngIf="!recipesForm.get('calories').valid">Please enter a valid number for Recipe Calories</span>
+          <span *ngIf="!recipesForm.get('calories').valid">
+            Please enter a valid number for Recipe Calories
+          </span>
         </mat-error>
       </mat-form-field>
 
@@ -49,7 +102,7 @@
         <mat-label>Type</mat-label>
         <mat-select formControlName="type">
           <mat-option *ngFor="let type of types" [value]="type.value">
-            {{type.displayValue}}
+            {{ type.displayValue }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -82,76 +135,145 @@
 
       <mat-form-field class="form-field">
         <mat-chip-list #categoryList>
-          <mat-chip *ngFor="let category of recipesForm.get('categories')['controls']; let i = index" [selectable]="selectable" (removed)="removeCategory(i)">
-            {{category.value.category}}
+          <mat-chip
+            *ngFor="let category of recipesForm.get('categories')['controls']; let i = index"
+            [selectable]="selectable"
+            (removed)="removeCategory(i)"
+          >
+            {{ category.value.category }}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip>
-          <input #categoryInput
-                placeholder="Categories"
-                [formControl]="categoryControl"
-                [matAutocomplete]="auto"
-                [matChipInputFor]="categoryList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="true"
-                (matChipInputTokenEnd)="addCategoryEvent($event.value)">
+          <input
+            #categoryInput
+            placeholder="Categories"
+            [formControl]="categoryControl"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="categoryList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addCategoryEvent($event.value)"
+          />
 
-          <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="addCategoryEvent($event.option.value)">
-            <mat-option *ngFor="let category of recipeCategories | async" [value]="category" (mousedown)="$event.preventDefault()">
-              {{category}}
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            autoActiveFirstOption
+            (optionSelected)="addCategoryEvent($event.option.value)"
+          >
+            <mat-option
+              *ngFor="let category of recipeCategories | async"
+              [value]="category"
+              (mousedown)="$event.preventDefault()"
+            >
+              {{ category }}
             </mat-option>
           </mat-autocomplete>
         </mat-chip-list>
       </mat-form-field>
     </ng-template>
-  
+
     <ng-template #stepsStep>
       <div formArrayName="steps" id="recipe-steps-div">
-        <button mat-mini-fab matTooltip="Add Step" color="secondary" type="button" (click)="addStep()">
+        <button
+          mat-mini-fab
+          matTooltip="Add Step"
+          color="secondary"
+          type="button"
+          (click)="addStep()"
+        >
           <mat-icon>add</mat-icon>
         </button>
-        <div class="mobile" style="margin-bottom: 20px;"></div>
+        <div class="mobile" style="margin-bottom: 20px"></div>
 
         <div *ngFor="let step of recipesForm.get('steps')['controls']; let i = index">
           <div class="center" [formGroupName]="i">
-            <mat-form-field style="width: 80%;">
-                <textarea matInput placeholder="Step: {{i + 1}}" formControlName="step"></textarea>
-                <mat-error>
-                  <span *ngIf="!step.valid && step.touched">Please enter valid sentences</span>
-                </mat-error>
+            <mat-form-field style="width: 80%">
+              <textarea matInput placeholder="Step: {{ i + 1 }}" formControlName="step"></textarea>
+              <mat-error>
+                <span *ngIf="!step.valid && step.touched">Please enter valid sentences</span>
+              </mat-error>
             </mat-form-field>
-            <button mat-mini-fab matTooltip="Remove Step" style="margin-left: 20px;" color="secondary" type="button" (click)="removeStep(i)">
+            <button
+              mat-mini-fab
+              matTooltip="Remove Step"
+              style="margin-left: 20px"
+              color="secondary"
+              type="button"
+              (click)="removeStep(i)"
+            >
               <mat-icon>close</mat-icon>
             </button>
-            <div style="margin-left: 20px; padding: 20px;" *ngIf="recipesForm.get('steps')['controls'].length === 1"></div>
+            <div
+              style="margin-left: 20px; padding: 20px"
+              *ngIf="recipesForm.get('steps')['controls'].length === 1"
+            ></div>
           </div>
         </div>
       </div>
     </ng-template>
-  
+
     <ng-template #ingredientsStep>
       <div class="ingredients center">
         <div class="list-container">
           <h3>Added Ingredients</h3>
-      
-          <div id="added-ingredients-div" formArrayName="ingredients" class="list" cdkDropList #addedList="cdkDropList" [cdkDropListData]="addedIngredients"
-          [cdkDropListConnectedTo]="[availableList]" (cdkDropListDropped)="dropAdded($event)" style="margin-bottom: 20px;">
-            <div class="container box" *ngFor="let ingredient of recipesForm.get('ingredients')['controls']; let i = index"
-                cdkDrag [cdkDragData]="ingredient.value" [formGroupName]="i">
+
+          <div
+            id="added-ingredients-div"
+            formArrayName="ingredients"
+            class="list"
+            cdkDropList
+            #addedList="cdkDropList"
+            [cdkDropListData]="addedIngredients"
+            [cdkDropListConnectedTo]="[availableList]"
+            (cdkDropListDropped)="dropAdded($event)"
+            style="margin-bottom: 20px"
+          >
+            <div
+              class="container box"
+              *ngFor="let ingredient of recipesForm.get('ingredients')['controls']; let i = index"
+              cdkDrag
+              [cdkDragData]="ingredient.value"
+              [formGroupName]="i"
+            >
               <mat-label class="ingredient-name">
-                {{ingredient.get('name')? ingredient.get('name').value : ''}}
-                <mat-icon class="indicator" matTooltip="This is a recipe" *ngIf="ingredient.get('uom').value === 'recipe'">r_mobiledata</mat-icon>
+                {{ ingredient.get('name') ? ingredient.get('name').value : '' }}
+                <mat-icon
+                  class="indicator"
+                  matTooltip="This is a recipe"
+                  *ngIf="ingredient.get('uom').value === 'recipe'"
+                >
+                  r_mobiledata
+                </mat-icon>
               </mat-label>
               <div class="between">
                 <div>
                   <mat-form-field>
-                    <input matInput placeholder="QTY" formControlName="quantity" [errorStateMatcher]="matcher"/>
+                    <input
+                      matInput
+                      placeholder="QTY"
+                      formControlName="quantity"
+                      [errorStateMatcher]="matcher"
+                    />
                     <mat-error *ngIf="!ingredient.get('quantity').valid">
                       <span>Invalid</span>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field *ngIf="ingredient.get('uom').value !== 'other' && ingredient.get('uom').value !== 'recipe'">
-                    <mat-select placeholder="UOM" formControlName="uom" [errorStateMatcher]="matcher">
-                      <mat-option *ngFor="let uom of getUOMs(ingredient.get('uom').value)" [value]="uom">{{uom}}</mat-option>
+                  <mat-form-field
+                    *ngIf="
+                      ingredient.get('uom').value !== 'other' &&
+                      ingredient.get('uom').value !== 'recipe'
+                    "
+                  >
+                    <mat-select
+                      placeholder="UOM"
+                      formControlName="uom"
+                      [errorStateMatcher]="matcher"
+                    >
+                      <mat-option
+                        *ngFor="let uom of getUOMs(ingredient.get('uom').value)"
+                        [value]="uom"
+                      >
+                        {{ uom }}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -163,17 +285,29 @@
               <mat-icon class="box-icon">drag_indicator</mat-icon>
             </div>
             <div class="container box box-bottom" *ngIf="addedIngredients.length === 0">
-              <mat-label class="ingredient-name">No Ingredients <br />(Try dragging from the Available Ingredients list)</mat-label>
+              <mat-label class="ingredient-name">
+                No Ingredients
+                <br />
+                (Try dragging from the Available Ingredients list)
+              </mat-label>
             </div>
           </div>
         </div>
 
         <div class="swap-icon desktop">
-          <mat-icon matTooltip="Drag and drop ingredients between the Available Ingredients list and the Added Ingredients list">swap_horiz</mat-icon>
+          <mat-icon
+            matTooltip="Drag and drop ingredients between the Available Ingredients list and the Added Ingredients list"
+          >
+            swap_horiz
+          </mat-icon>
         </div>
 
         <div class="center swap-icon-mobile mobile">
-          <mat-icon matTooltip="Drag and drop ingredients between the Available Ingredients list and the Added Ingredients list">swap_vert</mat-icon>
+          <mat-icon
+            matTooltip="Drag and drop ingredients between the Available Ingredients list and the Added Ingredients list"
+          >
+            swap_vert
+          </mat-icon>
         </div>
 
         <div class="list-container">
@@ -182,19 +316,37 @@
             <app-ingredient-quick-create></app-ingredient-quick-create>
           </div>
 
-          <mat-form-field style="width: 100%;">
-            <input matInput (keyup)="applyIngredientFilter($event.target.value)"/>
+          <mat-form-field style="width: 100%">
+            <input matInput (keyup)="applyIngredientFilter($event.target.value)" />
             <mat-placeholder>
               <mat-icon>search</mat-icon>
             </mat-placeholder>
           </mat-form-field>
 
-          <div id="available-ingredients-div" class="list" cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableIngredients"
-              [cdkDropListConnectedTo]="addedList" (cdkDropListDropped)="dropAvailable($event)">
-            <div class="box box-bottom" *ngFor="let ingredient of availableIngredients" cdkDrag [cdkDragData]="ingredient">
+          <div
+            id="available-ingredients-div"
+            class="list"
+            cdkDropList
+            #availableList="cdkDropList"
+            [cdkDropListData]="availableIngredients"
+            [cdkDropListConnectedTo]="addedList"
+            (cdkDropListDropped)="dropAvailable($event)"
+          >
+            <div
+              class="box box-bottom"
+              *ngFor="let ingredient of availableIngredients"
+              cdkDrag
+              [cdkDragData]="ingredient"
+            >
               <mat-label class="ingredient-name col-12">
-                {{ingredient.name}}
-                <mat-icon class="indicator" matTooltip="This is a recipe" *ngIf="ingredient.uom === 'recipe'">r_mobiledata</mat-icon>
+                {{ ingredient.name }}
+                <mat-icon
+                  class="indicator"
+                  matTooltip="This is a recipe"
+                  *ngIf="ingredient.uom === 'recipe'"
+                >
+                  r_mobiledata
+                </mat-icon>
               </mat-label>
               <mat-icon class="box-icon">drag_indicator</mat-icon>
             </div>
@@ -207,12 +359,16 @@
       <app-uom-table></app-uom-table>
     </ng-template>
 
-    <mat-stepper [orientation]="(stepperOrientation | async)!" #stepper [selectedIndex]="selectedIndex">
+    <mat-stepper
+      [orientation]="(stepperOrientation | async)!"
+      #stepper
+      [selectedIndex]="selectedIndex"
+    >
       <mat-step [editable]="true">
         <ng-template matStepLabel>Information</ng-template>
-  
+
         <ng-container *ngTemplateOutlet="recipeStep"></ng-container>
-  
+
         <div class="stepper-button-row">
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperNext type="button">Next</button>
@@ -220,12 +376,12 @@
           <button mat-button type="submit" name="Save">Save</button>
         </div>
       </mat-step>
-      
+
       <mat-step [editable]="true">
         <ng-template matStepLabel>Steps</ng-template>
-  
+
         <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
-  
+
         <div class="stepper-button-row">
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperPrevious type="button">Back</button>
@@ -234,12 +390,12 @@
           <button mat-button type="submit" name="Save">Save</button>
         </div>
       </mat-step>
-  
+
       <mat-step [editable]="true">
         <ng-template matStepLabel>Ingredients</ng-template>
-  
+
         <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
-  
+
         <div class="stepper-button-row">
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperPrevious type="button">Back</button>
@@ -251,7 +407,13 @@
   </form>
 
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Back" color="primary" [routerLink]="['/recipe/detail/', recipe.id]" *ngIf="id">
+    <a
+      mat-mini-fab
+      matTooltip="Back"
+      color="primary"
+      [routerLink]="['/recipe/detail/', recipe.id]"
+      *ngIf="id"
+    >
       <mat-icon>arrow_back</mat-icon>
     </a>
     <a mat-mini-fab matTooltip="Recipes List" color="primary" routerLink="/recipe/list" *ngIf="!id">

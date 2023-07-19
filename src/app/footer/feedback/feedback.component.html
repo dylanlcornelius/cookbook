@@ -1,16 +1,30 @@
-
-<button mat-button class="title-button" matTooltip="Give Feedback" (click)="open()">Feedback</button>
+<button mat-button class="title-button" matTooltip="Give Feedback" (click)="open()">
+  Feedback
+</button>
 
 <app-modal>
   <app-loading-modal *ngIf="loading"></app-loading-modal>
 
   <h2>Feedback Form</h2>
 
-  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)" appFormValidation>
+  <form
+    [formGroup]="form"
+    #formDirective="ngForm"
+    (ngSubmit)="onSubmit(formDirective)"
+    appFormValidation
+  >
     <mat-form-field class="form-field">
-      <textarea matInput placeholder="Please enter your feedback here" formControlName="description" cdkTextareaAutosize cdkAutosizeMinRows="10"></textarea>
+      <textarea
+        matInput
+        placeholder="Please enter your feedback here"
+        formControlName="description"
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="10"
+      ></textarea>
       <mat-error>
-        <span *ngIf="!form.get('description').valid && form.get('description').touched">Please enter a description</span>
+        <span *ngIf="!form.get('description').valid && form.get('description').touched">
+          Please enter a description
+        </span>
       </mat-error>
     </mat-form-field>
 

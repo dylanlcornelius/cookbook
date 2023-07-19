@@ -16,15 +16,10 @@ describe('ImageUploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ],
-      declarations: [ ImageUploadComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [ImageUploadComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -44,11 +39,18 @@ describe('ImageUploadComponent', () => {
 
   describe('readFile', () => {
     it('should compress a file', waitForAsync(() => {
-      const blob = Uint8Array.from(window.atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII='), c => c.charCodeAt(0));
+      const blob = Uint8Array.from(
+        window.atob(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII='
+        ),
+        c => c.charCodeAt(0)
+      );
 
       spyOn(component, 'readFileEvent');
 
-      component.readFile({ target: { files: [new File([blob], 'filename.png', { type: 'image/png' })] } });
+      component.readFile({
+        target: { files: [new File([blob], 'filename.png', { type: 'image/png' })] },
+      });
 
       // the compressor doesn't successfully complete
       expect(component.readFileEvent).not.toHaveBeenCalled();

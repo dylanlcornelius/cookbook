@@ -4,28 +4,37 @@
 
 <div [hidden]="loading">
   <mat-form-field class="search-bar">
-    <input matInput (keyup)="applyFilter($event.target.value)"/>
+    <input matInput (keyup)="applyFilter($event.target.value)" />
     <mat-placeholder>
       <mat-icon>search</mat-icon>
     </mat-placeholder>
   </mat-form-field>
 
   <div *ngIf="!loading" class="container center">
-    <mat-card *ngFor="let user of dataSource.connect().value; trackBy: identify" class="user-card mat-elevation-z8"
-        (click)="setAuthorFilter(user.name)">
+    <mat-card
+      *ngFor="let user of dataSource.connect().value; trackBy: identify"
+      class="user-card mat-elevation-z8"
+      (click)="setAuthorFilter(user.name)"
+    >
       <mat-card-header>
-        <mat-card-title>{{user.name}}</mat-card-title>
+        <mat-card-title>{{ user.name }}</mat-card-title>
       </mat-card-header>
 
-      <img mat-card-image *ngIf="user.image" [src]="user.image" alt=""/>
+      <img mat-card-image *ngIf="user.image" [src]="user.image" alt="" />
 
       <mat-card-content class="between">
-        <span>{{user.recipeCount}} recipes</span>
-        <span>{{user.ratingCount}} ratings</span>
+        <span>{{ user.recipeCount }} recipes</span>
+        <span>{{ user.ratingCount }} ratings</span>
       </mat-card-content>
 
       <mat-card-actions *ngIf="currentUser?.isAdmin">
-        <button mat-raised-button class="profile-link" [routerLink]="['/profile/settings/', user.id]">Profile Settings</button>
+        <button
+          mat-raised-button
+          class="profile-link"
+          [routerLink]="['/profile/settings/', user.id]"
+        >
+          Profile Settings
+        </button>
       </mat-card-actions>
     </mat-card>
   </div>

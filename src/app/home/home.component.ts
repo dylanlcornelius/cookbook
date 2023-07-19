@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -32,8 +32,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     const user$ = this.currentUserService.getCurrentUser();
     const navs$ = this.navigationService.get();
 
-    combineLatest([user$, navs$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, navs]) => {
-      this.navs = navs.filter(({ isNavOnly, link }) => !isNavOnly && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
-    });
+    combineLatest([user$, navs$])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(([user, navs]) => {
+        this.navs = navs.filter(
+          ({ isNavOnly, link }) =>
+            !isNavOnly &&
+            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner))
+        );
+      });
   }
 }

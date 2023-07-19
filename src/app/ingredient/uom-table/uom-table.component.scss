@@ -1,33 +1,34 @@
 h4 {
-    margin-top: 25px;
-    text-align: center;
+  margin-top: 25px;
+  text-align: center;
 }
 label {
-    margin: 0;
-    padding-right: 5px;
+  margin: 0;
+  padding-right: 5px;
 }
 input {
-    width: 50px;
+  width: 50px;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 .table-container {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 table {
-    margin: 0 auto;
-    min-width: 1000px;
+  margin: 0 auto;
+  min-width: 1000px;
 }
-th, td {
-    padding: 5px 10px;
+th,
+td {
+  padding: 5px 10px;
 }
 td {
-    border-left: 1px solid grey;
-    border-top: 1px solid grey;
+  border-left: 1px solid grey;
+  border-top: 1px solid grey;
 }

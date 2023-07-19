@@ -15,11 +15,7 @@ this.ingredientModalParams = {
 */
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NumberService } from '@numberService';
 import { ModalComponent } from '@modalComponent';
 import { ErrorMatcher } from '../../util/error-matcher';
@@ -27,7 +23,7 @@ import { ErrorMatcher } from '../../util/error-matcher';
 @Component({
   selector: 'app-ingredient-modal',
   templateUrl: './ingredient-modal.component.html',
-  styleUrls: ['./ingredient-modal.component.scss']
+  styleUrls: ['./ingredient-modal.component.scss'],
 })
 export class IngredientModalComponent implements OnInit {
   form: FormGroup;
@@ -38,11 +34,17 @@ export class IngredientModalComponent implements OnInit {
   params;
 
   @Input()
-  set Params(params: { function: Function, data: any, userIngredients: any, dataSource: any, text: string }) {
+  set Params(params: {
+    function: Function;
+    data: any;
+    userIngredients: any;
+    dataSource: any;
+    text: string;
+  }) {
     this.params = params;
     if (this.params) {
       this.form.patchValue({
-        pantryQuantity: this.numberService.toFormattedFraction(this.params.data.pantryQuantity)
+        pantryQuantity: this.numberService.toFormattedFraction(this.params.data.pantryQuantity),
       });
     }
   }
@@ -50,13 +52,14 @@ export class IngredientModalComponent implements OnInit {
   @ViewChild(ModalComponent)
   modal: ModalComponent;
 
-  constructor(
-    private numberService: NumberService,
-  ) {}
+  constructor(private numberService: NumberService) {}
 
   ngOnInit() {
     this.form = new FormBuilder().group({
-      'pantryQuantity': [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]]
+      pantryQuantity: [
+        null,
+        [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)],
+      ],
     });
   }
 
@@ -69,10 +72,12 @@ export class IngredientModalComponent implements OnInit {
       return;
     }
 
-    this.params.userIngredients.find(({ ingredientId }) => ingredientId === this.params.data.ingredientId)
-      .pantryQuantity = this.form.get('pantryQuantity').value;
-    this.params.dataSource.data.find(({ id }) => id === this.params.data.ingredientId)
-      .pantryQuantity = this.form.get('pantryQuantity').value;
+    this.params.userIngredients.find(
+      ({ ingredientId }) => ingredientId === this.params.data.ingredientId
+    ).pantryQuantity = this.form.get('pantryQuantity').value;
+    this.params.dataSource.data.find(
+      ({ id }) => id === this.params.data.ingredientId
+    ).pantryQuantity = this.form.get('pantryQuantity').value;
     this.params.function();
     this.modal.close();
   }

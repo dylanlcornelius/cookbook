@@ -1,10 +1,10 @@
 <div class="header">
   <div class="nav-bar">
     <div class="between">
-      <a routerLink="/home" class="title">{{title}}</a>
+      <a routerLink="/home" class="title">{{ title }}</a>
       <span *ngIf="(isLoggedIn | async) && !user?.isPending" [@fadeInAnimation]>
         <a mat-button class="title-button" [routerLink]="continueNav.link" *ngIf="continueNav">
-          <mat-icon>{{continueNav.icon}}</mat-icon>
+          <mat-icon>{{ continueNav.icon }}</mat-icon>
         </a>
 
         <button mat-button class="title-button" [matMenuTriggerFor]="profileMenu">
@@ -12,44 +12,77 @@
         </button>
         <mat-menu #profileMenu="matMenu">
           <a *ngFor="let nav of profileNavs" mat-menu-item [routerLink]="nav.link">
-            <mat-icon>{{nav.icon}}</mat-icon>
-            <span>{{nav.name}}</span>
+            <mat-icon>{{ nav.icon }}</mat-icon>
+            <span>{{ nav.name }}</span>
           </a>
         </mat-menu>
-        
+
         <a mat-button class="title-button" routerLink="/admin/dashboard" *ngIf="user?.isAdmin">
           <mat-icon [matBadge]="feedbackNotifications" matBadgeSize="small">apps</mat-icon>
         </a>
-  
-        <button mat-button class="mobile title-button float-right" (click)="toggleNav()" *ngIf="(isLoggedIn | async)">
+
+        <button
+          mat-button
+          class="mobile title-button float-right"
+          (click)="toggleNav()"
+          *ngIf="isLoggedIn | async"
+        >
           <mat-icon>menu</mat-icon>
         </button>
       </span>
     </div>
 
-    <div style="clear: both;"></div>
+    <div style="clear: both"></div>
 
     <div class="desktop" *ngIf="(isLoggedIn | async) && !user?.isPending" [@fadeInAnimation]>
-      <a *ngFor="let nav of desktopNavs" mat-raised-button color="primary" class="nav-button" [routerLink]="nav.link" [ngClass]="{'selected': route === nav.link}">{{nav.name}}</a>
-      
-      <button mat-raised-button color="primary" class="nav-button" [matMenuTriggerFor]="profileMenu">Tools</button>
+      <a
+        *ngFor="let nav of desktopNavs"
+        mat-raised-button
+        color="primary"
+        class="nav-button"
+        [routerLink]="nav.link"
+        [ngClass]="{ selected: route === nav.link }"
+      >
+        {{ nav.name }}
+      </a>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="nav-button"
+        [matMenuTriggerFor]="profileMenu"
+      >
+        Tools
+      </button>
       <mat-menu #profileMenu="matMenu">
         <a *ngFor="let nav of toolNavs" mat-menu-item [routerLink]="nav.link">
-          <mat-icon>{{nav.icon}}</mat-icon>
-          <span>{{nav.name}}</span>
+          <mat-icon>{{ nav.icon }}</mat-icon>
+          <span>{{ nav.name }}</span>
         </a>
       </mat-menu>
-      
-      <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">Sign-out</button>
+
+      <button mat-raised-button color="primary" class="nav-button" (click)="signOut()">
+        Sign-out
+      </button>
     </div>
 
-    <div class="mobile-nav-container mobile" *ngIf="(isLoggedIn | async) && !user?.isPending && showNav" (click)="toggleNav()" [@fadeInFastAnimation]>
+    <div
+      class="mobile-nav-container mobile"
+      *ngIf="(isLoggedIn | async) && !user?.isPending && showNav"
+      (click)="toggleNav()"
+      [@fadeInFastAnimation]
+    >
       <div class="mobile-nav" [@slideInOutAnimation]>
-        <a *ngFor="let nav of mobileNavs" mat-button class="mobile-nav-button" [routerLink]="nav.link">
-          <mat-icon>{{nav.icon}}</mat-icon>
-          <span class="mobile-nav-text">{{nav.name}}</span>
+        <a
+          *ngFor="let nav of mobileNavs"
+          mat-button
+          class="mobile-nav-button"
+          [routerLink]="nav.link"
+        >
+          <mat-icon>{{ nav.icon }}</mat-icon>
+          <span class="mobile-nav-text">{{ nav.name }}</span>
         </a>
-        
+
         <div class="mobile-nav-bottom">
           <button mat-button class="mobile-nav-button" style="border: none" (click)="signOut()">
             <mat-icon>exit_to_app</mat-icon>

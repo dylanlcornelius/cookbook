@@ -10,9 +10,9 @@ import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class UserItemService extends FirestoreService{
+export class UserItemService extends FirestoreService {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
@@ -26,11 +26,13 @@ export class UserItemService extends FirestoreService{
   get(): Observable<UserItem[]>;
   get(): Observable<UserItem[]>; // type for spyOn
   get(uid?: string): Observable<UserItem[]> {
-    return new Observable((observer) => {
+    return new Observable(observer => {
       if (uid) {
-        super.getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid))).subscribe(docs => {
-          observer.next(docs.map(doc => new UserItem(doc)));
-        });
+        super
+          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+          .subscribe(docs => {
+            observer.next(docs.map(doc => new UserItem(doc)));
+          });
       } else {
         super.get().subscribe(docs => {
           observer.next(docs.map(doc => new UserItem(doc)));

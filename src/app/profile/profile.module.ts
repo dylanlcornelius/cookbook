@@ -32,6 +32,6 @@ import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy
     MatTableModule,
     NgxChartsModule,
     SharedModule,
-  ]
+  ],
 })
-export class ProfileModule { }
+export class ProfileModule {}

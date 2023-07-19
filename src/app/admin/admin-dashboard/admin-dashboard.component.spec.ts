@@ -7,7 +7,10 @@ import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy
 import { ConfigService } from '@configService';
 import { of } from 'rxjs';
 import { NotificationService, ValidationService } from '@modalService';
-import { MatLegacyTab as MatTab, MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
+import {
+  MatLegacyTab as MatTab,
+  MatLegacyTabChangeEvent as MatTabChangeEvent,
+} from '@angular/material/legacy-tabs';
 import { RouterModule } from '@angular/router';
 
 describe('AdminDashboardComponent', () => {
@@ -19,18 +22,10 @@ describe('AdminDashboardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-        FormsModule,
-        ReactiveFormsModule,
-        MatTableModule
-      ],
-      declarations: [ AdminDashboardComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([]), FormsModule, ReactiveFormsModule, MatTableModule],
+      declarations: [AdminDashboardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -114,7 +109,7 @@ describe('AdminDashboardComponent', () => {
   describe('remove', () => {
     it('should remove a user with a first or last name', () => {
       spyOn(validationService, 'setModal');
-     
+
       component.contexts[0].remove('id');
 
       expect(validationService.setModal).toHaveBeenCalled();
@@ -134,7 +129,7 @@ describe('AdminDashboardComponent', () => {
   describe('revert', () => {
     it('should revert all collection changes', () => {
       spyOn(validationService, 'setModal');
-     
+
       component.contexts[0].revert();
 
       expect(validationService.setModal).toHaveBeenCalled();
@@ -154,7 +149,7 @@ describe('AdminDashboardComponent', () => {
   describe('save', () => {
     it('should save all collection changes', () => {
       spyOn(validationService, 'setModal');
-     
+
       component.contexts[0].save();
 
       expect(validationService.setModal).toHaveBeenCalled();

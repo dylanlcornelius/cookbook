@@ -114,13 +114,16 @@ describe('RecipeService', () => {
     });
 
     it('should return the average of ratings', () => {
-      const ratings = [{
-        rating: 1,
-        uid: 'uid1'
-      }, {
-        rating: 2,
-        uid: 'uid2'
-      }];
+      const ratings = [
+        {
+          rating: 1,
+          uid: 'uid1',
+        },
+        {
+          rating: 2,
+          uid: 'uid2',
+        },
+      ];
 
       const result = service.calculateMeanRating(ratings);
 
@@ -149,7 +152,7 @@ describe('RecipeService', () => {
       expect(service.update).toHaveBeenCalled();
     });
   });
-  
+
   describe('changeStatus', () => {
     it('should open a validation model', () => {
       spyOn(validationService, 'setModal');

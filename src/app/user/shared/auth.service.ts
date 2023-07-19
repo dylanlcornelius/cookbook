@@ -9,7 +9,7 @@ import { first } from 'rxjs/operators';
 import { FirebaseService, GoogleAuthProvider } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   redirectUrl: string;
@@ -19,7 +19,7 @@ export class AuthService {
     private firebase: FirebaseService,
     private currentUserService: CurrentUserService,
     private userService: UserService,
-    private actionService: ActionService,
+    private actionService: ActionService
   ) {
     this.load();
   }
@@ -36,37 +36,40 @@ export class AuthService {
       return;
     }
 
-    this.userService.get(user.uid).pipe(first()).subscribe(current => {
-      let isNewUser = false;
+    this.userService
+      .get(user.uid)
+      .pipe(first())
+      .subscribe(current => {
+        let isNewUser = false;
 
-      if (!current) {
-        current = new User({
-          uid: user.uid,
-          role: ROLE.USER
-        });
+        if (!current) {
+          current = new User({
+            uid: user.uid,
+            role: ROLE.USER,
+          });
 
-        current.id = this.userService.create(current);
-        isNewUser = true;
+          current.id = this.userService.create(current);
+          isNewUser = true;
 
-        this.firebase.logEvent('sign_up', { method: 'Google' });
-      }
-      
-      this.currentUserService.setCurrentUser(current);
-      this.currentUserService.setIsLoggedIn(true);
-      this.currentUserService.setIsGuest(false);
+          this.firebase.logEvent('sign_up', { method: 'Google' });
+        }
 
-      this.actionService.commitAction(user.uid, Action.LOGIN, 1);
-      this.firebase.logEvent('login', { method: 'Google' });
+        this.currentUserService.setCurrentUser(current);
+        this.currentUserService.setIsLoggedIn(true);
+        this.currentUserService.setIsGuest(false);
 
-      // use replace url to pop empty route from history
-      if (isNewUser) {
-        this.router.navigate(['/new-user'], { replaceUrl: true });
-      } else if (this.redirectUrl) {
-        this.router.navigate([this.redirectUrl], { replaceUrl: true });
-      } else {
-        this.router.navigate(['/home'], { replaceUrl: true });
-      }
-    });
+        this.actionService.commitAction(user.uid, Action.LOGIN, 1);
+        this.firebase.logEvent('login', { method: 'Google' });
+
+        // use replace url to pop empty route from history
+        if (isNewUser) {
+          this.router.navigate(['/new-user'], { replaceUrl: true });
+        } else if (this.redirectUrl) {
+          this.router.navigate([this.redirectUrl], { replaceUrl: true });
+        } else {
+          this.router.navigate(['/home'], { replaceUrl: true });
+        }
+      });
   };
 
   googleLogin(): void {
@@ -74,12 +77,15 @@ export class AuthService {
   }
 
   logout(): void {
-    this.firebase.signOut().then(() => {
-      this.currentUserService.setCurrentUser(new User({}));
-      this.currentUserService.setIsLoggedIn(false);
-      this.currentUserService.setIsGuest(true);
-      this.redirectUrl = null;
-      this.router.navigate(['/login']);
-    }).catch(() => {});
+    this.firebase
+      .signOut()
+      .then(() => {
+        this.currentUserService.setCurrentUser(new User({}));
+        this.currentUserService.setIsLoggedIn(false);
+        this.currentUserService.setIsGuest(true);
+        this.redirectUrl = null;
+        this.router.navigate(['/login']);
+      })
+      .catch(() => {});
   }
 }

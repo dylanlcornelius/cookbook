@@ -1,21 +1,31 @@
 <app-modal [params]="params">
   <div class="text-center">
-    <h4>{{params?.text}}</h4>
+    <h4>{{ params?.text }}</h4>
   </div>
-  <br/>
+  <br />
   <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation>
     <div class="center">
       <mat-form-field>
-        <input type="number" matInput placeholder="Times Cooked" formControlName="timesCooked" [errorStateMatcher]="matcher"/>
+        <input
+          type="number"
+          matInput
+          placeholder="Times Cooked"
+          formControlName="timesCooked"
+          [errorStateMatcher]="matcher"
+        />
         <mat-error>
-          <span *ngIf="!form.get('timesCooked').valid && form.get('timesCooked').touched">Please enter a valid amount for Times Cooked</span>
+          <span *ngIf="!form.get('timesCooked').valid && form.get('timesCooked').touched">
+            Please enter a valid amount for Times Cooked
+          </span>
         </mat-error>
       </mat-form-field>
     </div>
 
-    <br/>
+    <br />
     <div class="center">
-      <button mat-raised-button color="primary" type="submit" style="margin-right: 20px;">Confirm</button>
+      <button mat-raised-button color="primary" type="submit" style="margin-right: 20px">
+        Confirm
+      </button>
       <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
     </div>
   </form>

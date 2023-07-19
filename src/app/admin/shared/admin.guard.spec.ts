@@ -11,17 +11,17 @@ describe('AdminGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ],
-      providers: [AdminGuard]
+      imports: [RouterModule.forRoot([])],
+      providers: [AdminGuard],
     });
 
     currentUserService = TestBed.inject(CurrentUserService);
   });
 
   it('should not activate for non-admin users', inject([AdminGuard], (guard: AdminGuard) => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.PENDING })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+      of(new User({ role: ROLE.PENDING }))
+    );
 
     guard.canActivateChild().subscribe(result => {
       expect(result).toBeFalse();

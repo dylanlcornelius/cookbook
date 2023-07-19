@@ -8,13 +8,13 @@ import { Action } from '@actions';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentService extends FirestoreService {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
-    actionService: ActionService,
+    actionService: ActionService
   ) {
     super('comments', firebase, currentUserService, actionService);
   }
@@ -25,9 +25,11 @@ export class CommentService extends FirestoreService {
   get(id?: string): Observable<Comment[]> {
     return new Observable(observer => {
       if (id) {
-        super.getMany(this.firebase.query(this.ref, this.firebase.where('documentId', '==', id))).subscribe(docs => {
-          observer.next(docs.map(doc => new Comment(doc)));
-        });
+        super
+          .getMany(this.firebase.query(this.ref, this.firebase.where('documentId', '==', id)))
+          .subscribe(docs => {
+            observer.next(docs.map(doc => new Comment(doc)));
+          });
       } else {
         super.get().subscribe(docs => {
           observer.next(docs.map(doc => new Comment(doc)));

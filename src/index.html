@@ -1,67 +1,68 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Cookbook</title>
-  <meta name="Description" content="A virtual cookbook.">
-  <base href="/">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cookbook</title>
+    <meta name="Description" content="A virtual cookbook." />
+    <base href="/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <style type="text/css">
-    body, html {
-      height: 100%;
-      margin: 0;
-    }
-    .app-loading {
-      position: fixed;
-      height: 100%;
-      width: 100%;
-      background-color: #252525;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-    }
-    .spinner {
-      position: absolute;
-      display: inline-block;
-      width: 80px;
-      height: 80px;
-    }
-    .spinner:after {
-      content: " ";
-      display: block;
-      width: 64px;
-      height: 64px;
-      margin: 8px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      border-color: #fff transparent #fff transparent;
-      animation: spinner 1.2s linear infinite;
-    }
-    @keyframes spinner {
-      0% {
+    <style type="text/css">
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+      }
+      .app-loading {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background-color: #252525;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+      .spinner {
+        position: absolute;
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+      }
+      .spinner:after {
+        content: ' ';
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        border-color: #fff transparent #fff transparent;
+        animation: spinner 1.2s linear infinite;
+      }
+      @keyframes spinner {
+        0% {
           transform: rotate(0deg);
-      }
-      100% {
+        }
+        100% {
           transform: rotate(360deg);
+        }
       }
-    }
-  </style>
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#1976d2">
-</head>
-<body>
-  <app-root>
-    <div class="app-loading">
-      <div class="spinner"></div>
-    </div>
-  </app-root>
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
-</body>
+    </style>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#1976d2" />
+  </head>
+  <body>
+    <app-root>
+      <div class="app-loading">
+        <div class="spinner"></div>
+      </div>
+    </app-root>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+  </body>
 </html>

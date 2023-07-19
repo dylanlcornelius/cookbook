@@ -12,7 +12,7 @@ import { IngredientQuickCreateComponent } from './ingredient-quick-create.compon
 
 @Component({
   selector: 'app-ingredient-edit',
-  template: '<p>Mock Ingredient Edit Component</p>'
+  template: '<p>Mock Ingredient Edit Component</p>',
 })
 class MockIngredientEditComponent {}
 
@@ -23,25 +23,16 @@ describe('IngredientQuickCreateComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([
-          { path: 'ingredient/edit', component: IngredientEditComponent }
-        ]),
+        RouterModule.forRoot([{ path: 'ingredient/edit', component: IngredientEditComponent }]),
         FormsModule,
         ReactiveFormsModule,
         MatInputModule,
         MatSelectModule,
         BrowserAnimationsModule,
       ],
-      declarations: [
-        IngredientQuickCreateComponent,
-        ModalComponent,
-        MockIngredientEditComponent,
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [IngredientQuickCreateComponent, ModalComponent, MockIngredientEditComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

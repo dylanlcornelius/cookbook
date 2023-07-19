@@ -9,15 +9,7 @@ import { MealPlannerComponent } from './meal-planner/meal-planner.component';
 import { SharedModule } from '@sharedModule';
 
 @NgModule({
-  declarations: [
-    ShoppingListComponent,
-    MealPlannerComponent,
-  ],
-  imports: [
-    CommonModule,
-    MatAutocompleteModule,
-    ShoppingRoutingModule,
-    SharedModule,
-  ]
+  declarations: [ShoppingListComponent, MealPlannerComponent],
+  imports: [CommonModule, MatAutocompleteModule, ShoppingRoutingModule, SharedModule],
 })
-export class ShoppingModule { }
+export class ShoppingModule {}

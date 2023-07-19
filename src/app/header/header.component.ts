@@ -18,7 +18,7 @@ import { FeedbackService } from '@feedbackService';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  animations: [fadeInAnimation, fadeInFastAnimation, slideInOutAnimation]
+  animations: [fadeInAnimation, fadeInFastAnimation, slideInOutAnimation],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private navigationService: NavigationService,
     private recipeService: RecipeService,
-    private feedbackService: FeedbackService,
+    private feedbackService: FeedbackService
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -74,29 +74,49 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const recipeForm$ = this.recipeService.getForm();
     const feedbacks$ = this.feedbackService.get();
 
-    combineLatest([user$, navs$, recipeForm$, feedbacks$]).pipe(takeUntil(this.unsubscribe$)).subscribe(([user, navs, form, feedbacks]) => {
-      this.user = user;
+    combineLatest([user$, navs$, recipeForm$, feedbacks$])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(([user, navs, form, feedbacks]) => {
+        this.user = user;
 
-      if (this.user.uid) {
-        this.householdService.getInvites(this.user.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(households => {
-          this.householdNotifications = households.length ? households.length : undefined;
-        });
+        if (this.user.uid) {
+          this.householdService
+            .getInvites(this.user.uid)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(households => {
+              this.householdNotifications = households.length ? households.length : undefined;
+            });
 
-        this.feedbackNotifications = this.user.isAdmin && feedbacks.length ? feedbacks.length : undefined;
-      }
+          this.feedbackNotifications =
+            this.user.isAdmin && feedbacks.length ? feedbacks.length : undefined;
+        }
 
-      this.desktopNavs = navs.filter(({ subMenu, link }) => !subMenu && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
-      this.mobileNavs = navs.filter(({ subMenu, link }) => subMenu !== NavigationMenu.PROFILE && (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)));
-      this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
-      this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+        this.desktopNavs = navs.filter(
+          ({ subMenu, link }) =>
+            !subMenu &&
+            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner))
+        );
+        this.mobileNavs = navs.filter(
+          ({ subMenu, link }) =>
+            subMenu !== NavigationMenu.PROFILE &&
+            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner))
+        );
+        this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
+        this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
 
-      if (form) {
-        const link = form.id ? `/recipe/edit/${form.id}` : '/recipe/edit';
-        this.continueNav = new Navigation({ id: 'continue', name: 'Continue!', link, order: 0, icon: 'edit' });
-      } else {
-        this.continueNav = null;
-      }
-    });
+        if (form) {
+          const link = form.id ? `/recipe/edit/${form.id}` : '/recipe/edit';
+          this.continueNav = new Navigation({
+            id: 'continue',
+            name: 'Continue!',
+            link,
+            order: 0,
+            icon: 'edit',
+          });
+        } else {
+          this.continueNav = null;
+        }
+      });
   }
 
   toggleNav(): void {

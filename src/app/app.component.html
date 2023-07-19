@@ -1,25 +1,29 @@
 <div class="app-loading" *ngIf="(isLoggedIn | async) === false && (isGuest | async) === false">
-	<div class="spinner"></div>
-	<div class="loading-message">Loading user settings</div>
+  <div class="spinner"></div>
+  <div class="loading-message">Loading user settings</div>
 </div>
 
-<div class="app" [ngClass]="{'dark': (user | async)?.theme}" [hidden]="(isLoggedIn | async) === false && (isGuest | async) === false"> 
-	<div class="page">
-		<app-header></app-header>
+<div
+  class="app"
+  [ngClass]="{ dark: (user | async)?.theme }"
+  [hidden]="(isLoggedIn | async) === false && (isGuest | async) === false"
+>
+  <div class="page">
+    <app-header></app-header>
 
-		<div class="center">
-			<section [@fadeComponentAnimation]="outlet.isActivated && outlet.activatedRoute">
-				<router-outlet #outlet="outlet"></router-outlet>
-			</section>
-		</div>
+    <div class="center">
+      <section [@fadeComponentAnimation]="outlet.isActivated && outlet.activatedRoute">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </section>
+    </div>
 
-		<div class="clear-footer"></div>
+    <div class="clear-footer"></div>
 
-		<app-notification-modal></app-notification-modal>
-		<app-validation-modal></app-validation-modal>
-		<app-recipe-ingredient-modal></app-recipe-ingredient-modal>
-		<app-tutorial-modal></app-tutorial-modal>
-	</div>
-	
-	<app-footer></app-footer>
+    <app-notification-modal></app-notification-modal>
+    <app-validation-modal></app-validation-modal>
+    <app-recipe-ingredient-modal></app-recipe-ingredient-modal>
+    <app-tutorial-modal></app-tutorial-modal>
+  </div>
+
+  <app-footer></app-footer>
 </div>

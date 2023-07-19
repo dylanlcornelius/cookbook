@@ -19,12 +19,9 @@ describe('TutorialModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ],
-      declarations: [ TutorialModalComponent ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [TutorialModalComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -48,8 +45,8 @@ describe('TutorialModalComponent', () => {
     it('should load all tutorials and do nothing', () => {
       const tutorials = [
         new Tutorial({
-          baseUrl: '/recipe/detail'
-        })
+          baseUrl: '/recipe/detail',
+        }),
       ];
 
       spyOn(tutorialModalService, 'getModal').and.returnValue(new BehaviorSubject(undefined));
@@ -63,15 +60,16 @@ describe('TutorialModalComponent', () => {
       expect(component.changeTutorial).not.toHaveBeenCalled();
     });
 
-
     it('should load all tutorials with a starting url', () => {
       const tutorials = [
         new Tutorial({
-          baseUrl: '/recipe/detail'
-        })
+          baseUrl: '/recipe/detail',
+        }),
       ];
 
-      spyOn(tutorialModalService, 'getModal').and.returnValue(new BehaviorSubject(new TutorialModal('/recipe/detail/test', '/recipe/detail/test')));
+      spyOn(tutorialModalService, 'getModal').and.returnValue(
+        new BehaviorSubject(new TutorialModal('/recipe/detail/test', '/recipe/detail/test'))
+      );
       spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
@@ -85,11 +83,13 @@ describe('TutorialModalComponent', () => {
     it('should load all tutorials with an unfound starting url', () => {
       const tutorials = [
         new Tutorial({
-          baseUrl: '/recipe/list'
-        })
+          baseUrl: '/recipe/list',
+        }),
       ];
 
-      spyOn(tutorialModalService, 'getModal').and.returnValue(new BehaviorSubject(new TutorialModal('/recipe/detail/test', '/recipe/detail/test')));
+      spyOn(tutorialModalService, 'getModal').and.returnValue(
+        new BehaviorSubject(new TutorialModal('/recipe/detail/test', '/recipe/detail/test'))
+      );
       spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
@@ -103,11 +103,13 @@ describe('TutorialModalComponent', () => {
     it('should load all tutorials without a starting url', () => {
       const tutorials = [
         new Tutorial({
-          baseUrl: '/recipe/detail'
-        })
+          baseUrl: '/recipe/detail',
+        }),
       ];
 
-      spyOn(tutorialModalService, 'getModal').and.returnValue(new BehaviorSubject(new TutorialModal('/home', null)));
+      spyOn(tutorialModalService, 'getModal').and.returnValue(
+        new BehaviorSubject(new TutorialModal('/home', null))
+      );
       spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
@@ -152,9 +154,7 @@ describe('TutorialModalComponent', () => {
     it('should handle changing to new routes', fakeAsync(() => {
       component.tutorial = new Tutorial({});
       component.tutorialIndex = 0;
-      component.tutorials = [
-        component.tutorial
-      ];
+      component.tutorials = [component.tutorial];
 
       const router = TestBed.inject(Router);
       spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
@@ -172,9 +172,7 @@ describe('TutorialModalComponent', () => {
     it('should handle changing to new routes while another component is loading', fakeAsync(() => {
       component.tutorial = new Tutorial({ element: 'body' });
       component.tutorialIndex = 0;
-      component.tutorials = [
-        component.tutorial
-      ];
+      component.tutorials = [component.tutorial];
 
       const router = TestBed.inject(Router);
       spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
@@ -192,9 +190,7 @@ describe('TutorialModalComponent', () => {
     it('should handle changing to the same route', () => {
       component.tutorial = new Tutorial({ url: '/' });
       component.tutorialIndex = 0;
-      component.tutorials = [
-        component.tutorial
-      ];
+      component.tutorials = [component.tutorial];
 
       const router = TestBed.inject(Router);
       spyOn(router, 'navigateByUrl');
@@ -211,9 +207,7 @@ describe('TutorialModalComponent', () => {
     it('should handle changing to the same route with an unfindable element', () => {
       component.tutorial = new Tutorial({ url: '/', element: 'thing' });
       component.tutorialIndex = 0;
-      component.tutorials = [
-        component.tutorial
-      ];
+      component.tutorials = [component.tutorial];
 
       const router = TestBed.inject(Router);
       spyOn(router, 'navigateByUrl');
@@ -253,10 +247,7 @@ describe('TutorialModalComponent', () => {
   describe('next', () => {
     it('should change to the next tutorial', () => {
       component.tutorialIndex = 0;
-      component.tutorials = [
-        new Tutorial({}),
-        new Tutorial({})
-      ];
+      component.tutorials = [new Tutorial({}), new Tutorial({})];
 
       spyOn(firebase, 'logEvent');
       spyOn(component, 'close');
@@ -271,10 +262,7 @@ describe('TutorialModalComponent', () => {
 
     it('should handle ending the tutorial', () => {
       component.tutorialIndex = 1;
-      component.tutorials = [
-        new Tutorial({}),
-        new Tutorial({})
-      ];
+      component.tutorials = [new Tutorial({}), new Tutorial({})];
 
       spyOn(firebase, 'logEvent');
       spyOn(component, 'close');

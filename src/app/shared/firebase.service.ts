@@ -1,13 +1,35 @@
 import { Injectable } from '@angular/core';
-import { collection, getFirestore, doc, setDoc, deleteDoc, onSnapshot, addDoc, where, query, getDocs, CollectionReference, Query, enableMultiTabIndexedDbPersistence, Firestore } from 'firebase/firestore';
+import {
+  collection,
+  getFirestore,
+  doc,
+  setDoc,
+  deleteDoc,
+  onSnapshot,
+  addDoc,
+  where,
+  query,
+  getDocs,
+  CollectionReference,
+  Query,
+  enableMultiTabIndexedDbPersistence,
+  Firestore,
+} from 'firebase/firestore';
 import { getApps, initializeApp } from 'firebase/app';
 import { getAuth, signInWithRedirect, GoogleAuthProvider, Auth } from 'firebase/auth';
-import { deleteObject, FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import {
+  deleteObject,
+  FirebaseStorage,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
 import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FirebaseService {
   appLoaded = false;
@@ -24,9 +46,10 @@ export class FirebaseService {
   getFirestore = getFirestore;
   enableMultiTabIndexedDbPersistence = enableMultiTabIndexedDbPersistence;
   collection = collection;
-  doc = (reference: any, path?: any): any => path ? doc(reference, path) : doc(reference);
+  doc = (reference: any, path?: any): any => (path ? doc(reference, path) : doc(reference));
   getDocs = (query: any): any => getDocs(query);
-  onSnapshot = (reference: any): any => new Observable(observable => onSnapshot(reference, (snapshot) => observable.next(snapshot)));
+  onSnapshot = (reference: any): any =>
+    new Observable(observable => onSnapshot(reference, snapshot => observable.next(snapshot)));
   query = query;
   where = where;
   addDoc = addDoc;
@@ -43,7 +66,8 @@ export class FirebaseService {
   getStorage = getStorage;
   ref = ref;
   getDownloadURL = getDownloadURL;
-  uploadBytesResumable = (ref: any, file: any, options: any): any => uploadBytesResumable(ref, file, options);
+  uploadBytesResumable = (ref: any, file: any, options: any): any =>
+    uploadBytesResumable(ref, file, options);
   deleteObject = deleteObject;
 
   // ANALYTICS
@@ -57,5 +81,5 @@ export {
   Query,
 
   // AUTH
-  GoogleAuthProvider
-}; 
+  GoogleAuthProvider,
+};

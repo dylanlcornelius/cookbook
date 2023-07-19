@@ -2,10 +2,14 @@
 
 <div *ngIf="!(redirect && (isLoggedIn | async))">
   <h2>Welcome to the Cookbook</h2>
-  
+
   <div class="login-options">
     <div (click)="signIn()" class="google-button">
-      <img draggable="false" src="../../../assets/btn_google_signin_light_normal_web.png" alt="Google Login"/>
+      <img
+        draggable="false"
+        src="../../../assets/btn_google_signin_light_normal_web.png"
+        alt="Google Login"
+      />
     </div>
   </div>
 </div>

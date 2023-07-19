@@ -1,4 +1,4 @@
-import { FirestoreService } from "@firestoreService";
+import { FirestoreService } from '@firestoreService';
 
 export class Context {
   title: string;

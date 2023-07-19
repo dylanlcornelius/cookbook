@@ -5,15 +5,31 @@
 <div *ngIf="!loading">
   <form class="short-container item-form">
     <mat-form-field class="item-form-field">
-      <input matInput placeholder="Add a Recipe" [formControl]="recipeControl" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="addRecipe($event.option.value)">
+      <input
+        matInput
+        placeholder="Add a Recipe"
+        [formControl]="recipeControl"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        autoActiveFirstOption
+        (optionSelected)="addRecipe($event.option.value)"
+      >
         <mat-option *ngFor="let recipe of filteredRecipes | async" [value]="recipe">
-          {{recipe.name}}
+          {{ recipe.name }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <button mat-mini-fab matTooltip="Tutorial" type="button" color="primary" (click)="openTutorial()" style="margin-left: 10px">
+    <button
+      mat-mini-fab
+      matTooltip="Tutorial"
+      type="button"
+      color="primary"
+      (click)="openTutorial()"
+      style="margin-left: 10px"
+    >
       <mat-icon>help</mat-icon>
     </button>
   </form>
@@ -23,40 +39,51 @@
       <mat-table #table [dataSource]="mealPlan.recipes">
         <ng-container matColumnDef="name">
           <mat-cell *matCellDef="let element">
-            {{element.name}}
+            {{ element.name }}
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <mat-cell *matCellDef="let element; let i = index;">
+          <mat-cell *matCellDef="let element; let i = index">
             <button mat-button (click)="removeRecipe(i)">
               <mat-icon>close</mat-icon>
             </button>
 
-            <button mat-raised-button matTooltip="Add Ingredients" color="primary" (click)="addIngredients(i)">
+            <button
+              mat-raised-button
+              matTooltip="Add Ingredients"
+              color="primary"
+              (click)="addIngredients(i)"
+            >
               <mat-icon>add</mat-icon>
             </button>
           </mat-cell>
         </ng-container>
 
-        <mat-row *matRowDef="let row; columns: ['name', 'actions'];"></mat-row>
+        <mat-row *matRowDef="let row; columns: ['name', 'actions']"></mat-row>
       </mat-table>
     </div>
   </div>
 
   <div class="short-container button-row" *ngIf="mealPlan?.recipes.length > 0">
-    <button mat-raised-button matTooltip="Add Ingredients to Shopping List" color="primary" style="float: right;" (click)="addAllIngredients(false, true)">
+    <button
+      mat-raised-button
+      matTooltip="Add Ingredients to Shopping List"
+      color="primary"
+      style="float: right"
+      (click)="addAllIngredients(false, true)"
+    >
       <mat-icon>playlist_add</mat-icon>
     </button>
   </div>
 </div>
 
 <div class="text-center" *ngIf="!loading && mealPlan?.recipes.length === 0">
-  <br/>
+  <br />
   <h4>Your meal plan doesn't have any recipes</h4>
 </div>
 
 <div class="text-center" *ngIf="!loading && !mealPlan">
-  <br/>
+  <br />
   <h4>You have no meal plans</h4>
 </div>

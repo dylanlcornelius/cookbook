@@ -13,7 +13,7 @@ import { FirebaseService } from '@firebaseService';
   selector: 'app-tutorial-modal',
   templateUrl: './tutorial-modal.component.html',
   styleUrls: ['./tutorial-modal.component.scss'],
-  animations: [fadeInAnimation]
+  animations: [fadeInAnimation],
 })
 export class TutorialModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -31,8 +31,8 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private tutorialModalService: TutorialModalService,
     private tutorialService: TutorialService,
-    private firebase: FirebaseService,
-  ) { }
+    private firebase: FirebaseService
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -44,26 +44,34 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.tutorialModalService.getModal().pipe(takeUntil(this.unsubscribe$)).subscribe((params: TutorialModal) => {
-      this.params = params;
+    this.tutorialModalService
+      .getModal()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params: TutorialModal) => {
+        this.params = params;
 
-      this.tutorialService.get().pipe(takeUntil(this.unsubscribe$)).subscribe((tutorials: Tutorial[]) => {
-        this.tutorials = tutorials;
+        this.tutorialService
+          .get()
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe((tutorials: Tutorial[]) => {
+            this.tutorials = tutorials;
 
-        if (this.params) {
-          if (this.params.startingUrl) {
-            this.tutorialIndex = this.tutorials.findIndex(tutorial => this.params.startingUrl.includes(tutorial.baseUrl));
-          }
-          if (!this.params.startingUrl || this.tutorialIndex === -1) {
-            this.tutorialIndex = 0;
-          }
-          
-          this.top = undefined;
-          this.left = undefined;
-          this.changeTutorial();          
-        }
+            if (this.params) {
+              if (this.params.startingUrl) {
+                this.tutorialIndex = this.tutorials.findIndex(tutorial =>
+                  this.params.startingUrl.includes(tutorial.baseUrl)
+                );
+              }
+              if (!this.params.startingUrl || this.tutorialIndex === -1) {
+                this.tutorialIndex = 0;
+              }
+
+              this.top = undefined;
+              this.left = undefined;
+              this.changeTutorial();
+            }
+          });
       });
-    });
   }
 
   initModal = (): void => {
@@ -76,7 +84,7 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('highlighted-element');
-    
+
         if (this.tutorial.position === POSITION.LEFT) {
           this.left = `${element.getBoundingClientRect().right - window.scrollX - 220}px`;
         } else {
@@ -95,11 +103,12 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
       const element = document.querySelector(this.tutorial.element);
       element?.classList.remove('highlighted-element');
     }
-    
+
     this.tutorial = this.tutorials[this.tutorialIndex];
     if (this.router.url != this.tutorial.url) {
       this.router.navigateByUrl(this.tutorial.url, { skipLocationChange: true }).then(() => {
-        this.loadingService.get()
+        this.loadingService
+          .get()
           .pipe(takeWhile((loading: boolean) => loading, true))
           .subscribe((loading: boolean) => {
             if (!loading) {

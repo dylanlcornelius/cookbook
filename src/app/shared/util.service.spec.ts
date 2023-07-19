@@ -12,11 +12,7 @@ describe('UtilService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([
-          { path: 'recipe/list', component: RecipeListComponent }
-        ])
-      ],
+      imports: [RouterModule.forRoot([{ path: 'recipe/list', component: RecipeListComponent }])],
     });
     service = TestBed.inject(UtilService);
     recipeFilterService = TestBed.inject(RecipeFilterService);
@@ -38,7 +34,7 @@ describe('UtilService', () => {
     it('should set a filter and redirect to the recipes list page', () => {
       const filter = new AuthorFilter('test');
       const router = TestBed.inject(Router);
-      
+
       spyOn(router, 'navigate');
 
       service.setListFilter(filter);

@@ -14,19 +14,19 @@
   </div>
 
   <mat-form-field class="search-bar">
-    <input matInput (keyup)="applyFilter($event.target.value)"/>
+    <input matInput (keyup)="applyFilter($event.target.value)" />
     <mat-placeholder>
       <mat-icon>search</mat-icon>
     </mat-placeholder>
   </mat-form-field>
 
-  <div class="table-container mat-elevation-z8"> 
+  <div class="table-container mat-elevation-z8">
     <mat-table #table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span class="mobile-label">Name:</span>
-          <span class="mobile-value">{{element.name}}</span>
+          <span class="mobile-value">{{ element.name }}</span>
         </mat-cell>
       </ng-container>
 
@@ -34,7 +34,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span class="mobile-label">Category:</span>
-          <span class="mobile-value">{{element.displayCategory}}</span>
+          <span class="mobile-value">{{ element.displayCategory }}</span>
         </mat-cell>
       </ng-container>
 
@@ -42,7 +42,9 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span class="mobile-label">Amount:</span>
-          <span class="mobile-value">{{element.amount}} {{element.uom === 'other'? '' : element.uom}}</span>
+          <span class="mobile-value">
+            {{ element.amount }} {{ element.uom === 'other' ? '' : element.uom }}
+          </span>
         </mat-cell>
       </ng-container>
 
@@ -50,18 +52,22 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Calories</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span class="mobile-label">Calories:</span>
-          <span class="mobile-value">{{element.calories}}</span>
+          <span class="mobile-value">{{ element.calories }}</span>
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="pantryQuantity">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Pantry Quantity</mat-header-cell>
-        <mat-cell *matCellDef="let element" (click)="$event.stopPropagation()" style="min-width: 150px">
+        <mat-cell
+          *matCellDef="let element"
+          (click)="$event.stopPropagation()"
+          style="min-width: 150px"
+        >
           <span class="mobile-label">Pantry Quantity:</span>
           <span class="mobile-value">
-            <span style="margin: 0 10px;">
+            <span style="margin: 0 10px">
               <label class="table-col">
-                {{element.pantryQuantity || 0}} {{element.uom === 'other'? '' : element.uom}}
+                {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
               </label>
             </span>
             <button mat-button color="primary" (click)="editIngredient(element.id)">Edit</button>
@@ -71,15 +77,21 @@
 
       <ng-container matColumnDef="cartQuantity">
         <mat-header-cell *matHeaderCellDef mat-sort-header>List Quantity</mat-header-cell>
-        <mat-cell *matCellDef="let element" (click)="$event.stopPropagation()" style="min-width: 140px;">
+        <mat-cell
+          *matCellDef="let element"
+          (click)="$event.stopPropagation()"
+          style="min-width: 140px"
+        >
           <span class="mobile-label">List Quantity:</span>
-          
+
           <span class="mobile-value">
             <button mat-button (click)="removeIngredient(element.id)">
               <mat-icon class="buy-icon">arrow_left</mat-icon>
             </button>
-            <span style="margin: 0 10px;">
-              <label class="table-col">{{element.cartQuantity || 0}} {{element.uom === 'other'? '' : element.uom}}</label>
+            <span style="margin: 0 10px">
+              <label class="table-col">
+                {{ element.cartQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
+              </label>
             </span>
             <button mat-button (click)="addIngredient(element.id)">
               <mat-icon class="buy-icon">arrow_right</mat-icon>
@@ -87,12 +99,14 @@
           </span>
         </mat-cell>
       </ng-container>
-      
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/ingredient/detail/', row.id]"></mat-row>
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [routerLink]="['/ingredient/detail/', row.id]"
+      ></mat-row>
     </mat-table>
   </div>
 
   <mat-paginator [pageSizeOptions]="[100, 200, 500]"></mat-paginator>
 </div>
-  

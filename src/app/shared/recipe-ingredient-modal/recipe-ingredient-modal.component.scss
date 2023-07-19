@@ -1,19 +1,19 @@
 .ingredient-list {
-    max-height: 70vh;
-    overflow: auto;
-    margin-bottom: 10px;
+  max-height: 70vh;
+  overflow: auto;
+  margin-bottom: 10px;
 }
 .ingredient-list::-webkit-scrollbar {
-    -webkit-appearance: none;
+  -webkit-appearance: none;
 }
 .ingredient-list::-webkit-scrollbar:vertical {
-    width: 20px;
+  width: 20px;
 }
 .ingredient-list::-webkit-scrollbar:horizontal {
-    height: 20px;
+  height: 20px;
 }
 .ingredient-list::-webkit-scrollbar-thumb {
-    border-radius: 15px;
-    border: 2px solid inherit;
-    background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  border: 2px solid inherit;
+  background-color: rgba(0, 0, 0, 0.3);
 }

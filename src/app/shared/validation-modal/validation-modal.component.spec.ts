@@ -11,15 +11,9 @@ describe('ValidationModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ValidationModalComponent,
-        ModalComponent
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [ValidationModalComponent, ModalComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -37,7 +31,7 @@ describe('ValidationModalComponent', () => {
       component.params = new Validation('text', () => {});
 
       spyOn(component.modal, 'close');
-      
+
       component.cancel();
 
       expect(component.modal.close).toHaveBeenCalled();

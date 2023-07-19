@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-user-pending',
   templateUrl: './user-pending.component.html',
-  styleUrls: ['./user-pending.component.scss']
+  styleUrls: ['./user-pending.component.scss'],
 })
 export class UserPendingComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -19,7 +19,7 @@ export class UserPendingComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private currentUserService: CurrentUserService,
+    private currentUserService: CurrentUserService
   ) {}
 
   ngOnInit() {

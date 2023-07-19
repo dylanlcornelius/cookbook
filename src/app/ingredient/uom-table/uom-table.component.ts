@@ -8,7 +8,7 @@ import { UomService } from '@uomService';
   selector: 'app-uom-table',
   templateUrl: './uom-table.component.html',
   styleUrls: ['./uom-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UomTableComponent {
   uoms: Array<UOM>;
@@ -17,7 +17,7 @@ export class UomTableComponent {
   constructor(
     private numberService: NumberService,
     private uomService: UomService,
-    private tutorialService: TutorialService,
+    private tutorialService: TutorialService
   ) {
     this.uoms = Object.values(UOM);
   }

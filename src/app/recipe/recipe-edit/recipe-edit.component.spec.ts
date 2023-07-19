@@ -1,7 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormArray, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormArray,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { RecipeEditComponent } from './recipe-edit.component';
@@ -43,9 +51,7 @@ describe('RecipeEditComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([
-          { path: 'recipe/detail/:id', component: RecipeDetailComponent }
-        ]),
+        RouterModule.forRoot([{ path: 'recipe/detail/:id', component: RecipeDetailComponent }]),
         FormsModule,
         ReactiveFormsModule,
         DragDropModule,
@@ -56,15 +62,9 @@ describe('RecipeEditComponent', () => {
         MatSelectModule,
         BrowserAnimationsModule,
       ],
-      declarations: [
-        RecipeEditComponent,
-        FormValidationDirective,
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [RecipeEditComponent, FormValidationDirective],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -93,7 +93,7 @@ describe('RecipeEditComponent', () => {
       calories: [],
       categories: new FormBuilder().array([]),
       steps: new FormBuilder().array([]),
-      ingredients: new FormBuilder().array([])
+      ingredients: new FormBuilder().array([]),
     });
   });
 
@@ -111,9 +111,11 @@ describe('RecipeEditComponent', () => {
         name: 'Title',
         categories: [{}],
         steps: [{}],
-        ingredients: [{
-          id: 'id'
-        }]
+        ingredients: [
+          {
+            id: 'id',
+          },
+        ],
       });
 
       const recipes = [
@@ -123,25 +125,27 @@ describe('RecipeEditComponent', () => {
 
       const ingredients = [
         new Ingredient({
-          id: 'id'
+          id: 'id',
         }),
         new Ingredient({
-          id: 'id2'
+          id: 'id2',
         }),
         new Ingredient({
-          id: 'id3'
-        })
+          id: 'id3',
+        }),
       ];
-      const configs = [
-        new Config({})
-      ];
+      const configs = [new Config({})];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: false, breakpoints: {} }));
-      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of(recipes));
+      spyOn(recipeService, 'get')
+        .withArgs('id')
+        .and.returnValue(of(recipe))
+        .withArgs()
+        .and.returnValue(of(recipes));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(configService, 'get').and.returnValue(of(configs));
-      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));  
+      spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
       spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(component, 'addIngredient');
@@ -167,18 +171,26 @@ describe('RecipeEditComponent', () => {
       route.queryParams = of({});
 
       const recipe = new Recipe({
-        ingredients: [{
-          id: 'id2'
-        }]
+        ingredients: [
+          {
+            id: 'id2',
+          },
+        ],
       });
 
-      const ingredients = [new Ingredient({
-        id: 'id'
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'id',
+        }),
+      ];
       const configs = [];
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
-      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get')
+        .withArgs('id')
+        .and.returnValue(of(recipe))
+        .withArgs()
+        .and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
       spyOn(configService, 'get').and.returnValue(of(configs));
@@ -206,14 +218,14 @@ describe('RecipeEditComponent', () => {
 
       const ingredients = [
         new Ingredient({
-          id: 'id'
+          id: 'id',
         }),
         new Ingredient({
-          id: 'id2'
+          id: 'id2',
         }),
         new Ingredient({
-          id: 'id3'
-        })
+          id: 'id3',
+        }),
       ];
       const configs = [];
 
@@ -246,14 +258,14 @@ describe('RecipeEditComponent', () => {
 
       const ingredients = [
         new Ingredient({
-          id: 'id'
+          id: 'id',
         }),
         new Ingredient({
-          id: 'id2'
+          id: 'id2',
         }),
         new Ingredient({
-          id: 'id3'
-        })
+          id: 'id3',
+        }),
       ];
       const configs = [];
 
@@ -287,20 +299,28 @@ describe('RecipeEditComponent', () => {
       route.queryParams = of({});
 
       const recipe = new Recipe({
-        ingredients: [{
-          id: 'id2'
-        }]
+        ingredients: [
+          {
+            id: 'id2',
+          },
+        ],
       });
 
-      const ingredients = [new Ingredient({
-        id: 'id'
-      })];
+      const ingredients = [
+        new Ingredient({
+          id: 'id',
+        }),
+      ];
       const configs = [];
 
       const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
-      spyOn(recipeService, 'get').withArgs('id').and.returnValue(of(recipe)).withArgs().and.returnValue(of([]));
+      spyOn(recipeService, 'get')
+        .withArgs('id')
+        .and.returnValue(of(recipe))
+        .withArgs()
+        .and.returnValue(of([]));
       spyOn(component, 'addCategory');
       spyOn(ingredientService, 'get').and.returnValue(ingredients$);
       spyOn(configService, 'get').and.returnValue(of(configs));
@@ -355,7 +375,7 @@ describe('RecipeEditComponent', () => {
       spyOn(component, 'addCategory');
 
       component.addCategoryEvent('value');
-    
+
       expect(component.addCategory).toHaveBeenCalled();
     });
 
@@ -366,7 +386,7 @@ describe('RecipeEditComponent', () => {
       spyOn(component, 'addCategory');
 
       component.addCategoryEvent('');
-    
+
       expect(component.addCategory).not.toHaveBeenCalled();
     });
   });
@@ -374,7 +394,7 @@ describe('RecipeEditComponent', () => {
   describe('removeCategory', () => {
     it('should remove a control', () => {
       component.recipesForm = new FormBuilder().group({
-        'categories': new FormBuilder().array([{}])
+        categories: new FormBuilder().array([{}]),
       });
 
       component.removeCategory(0);
@@ -407,7 +427,7 @@ describe('RecipeEditComponent', () => {
   describe('removeStep', () => {
     it('should remove a control', () => {
       component.recipesForm = new FormBuilder().group({
-        'steps': new FormBuilder().array([{}])
+        steps: new FormBuilder().array([{}]),
       });
 
       component.removeStep(0);
@@ -439,8 +459,8 @@ describe('RecipeEditComponent', () => {
 
   describe('dropAdded', () => {
     it('should reorder an item', () => {
-      const container = {data: ['id']};
-      const event = { previousContainer: container, container: container, item: {}};
+      const container = { data: ['id'] };
+      const event = { previousContainer: container, container: container, item: {} };
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'addIngredient');
@@ -454,8 +474,8 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should move an item', () => {
-      const container = {data: ['id']};
-      const event = { previousContainer: container, container: {data: ['id']}, item: {}};
+      const container = { data: ['id'] };
+      const event = { previousContainer: container, container: { data: ['id'] }, item: {} };
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'addIngredient');
@@ -471,8 +491,8 @@ describe('RecipeEditComponent', () => {
 
   describe('dropAvailable', () => {
     it('should reorder an item', () => {
-      const container = {data: ['id']};
-      const event = { previousContainer: container, container: container, item: {}};
+      const container = { data: ['id'] };
+      const event = { previousContainer: container, container: container, item: {} };
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'moveItem');
@@ -484,8 +504,8 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should move an item', () => {
-      const container = {data: ['id']};
-      const event = { previousContainer: container, container: {data: ['id']}, item: {}};
+      const container = { data: ['id'] };
+      const event = { previousContainer: container, container: { data: ['id'] }, item: {} };
 
       spyOn(component, 'removeIngredient');
       spyOn(component, 'transferItem');
@@ -510,9 +530,12 @@ describe('RecipeEditComponent', () => {
     it('should add a control', () => {
       spyOn(component, 'initIngredient').and.returnValue(new FormBuilder().group({}));
 
-      component.addIngredient(0, new Ingredient({
-        id: 'id'
-      }));
+      component.addIngredient(
+        0,
+        new Ingredient({
+          id: 'id',
+        })
+      );
 
       const control = <FormArray>component.recipesForm.controls['ingredients'];
       expect(control.length).toEqual(1);
@@ -534,7 +557,7 @@ describe('RecipeEditComponent', () => {
   describe('removeIngredient', () => {
     it('should remove a control', () => {
       component.recipesForm = new FormBuilder().group({
-        'ingredients': new FormBuilder().array([{}])
+        ingredients: new FormBuilder().array([{}]),
       });
 
       component.removeIngredient(0);
@@ -565,13 +588,17 @@ describe('RecipeEditComponent', () => {
 
   describe('applyIngredientFilter', () => {
     it('should filter ingredients', () => {
-      component.allAvailableIngredients = [{
-        name: 'filter1'
-      }];
+      component.allAvailableIngredients = [
+        {
+          name: 'filter1',
+        },
+      ];
 
-      component.addedIngredients = [{
-        id: 'id'
-      }];
+      component.addedIngredients = [
+        {
+          id: 'id',
+        },
+      ];
 
       component.applyIngredientFilter('filter');
 
@@ -594,7 +621,7 @@ describe('RecipeEditComponent', () => {
       component.recipesForm = new FormGroup({
         categories: new FormBuilder().array([]),
         steps: new FormBuilder().array([]),
-        ingredients: new FormBuilder().array([])
+        ingredients: new FormBuilder().array([]),
       });
 
       const formDirective = new FormGroupDirective([], []);
@@ -642,59 +669,82 @@ describe('RecipeEditComponent', () => {
 
   describe('onSubmit', () => {
     it('should do nothing for an invalid form', () => {
-      component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33, creationDate: 'test'});
+      component.originalRecipe = new Recipe({
+        id: 'id',
+        author: '3',
+        hasImage: true,
+        meanRating: 0.33,
+        creationDate: 'test',
+      });
       component.recipesForm = new FormBuilder().group({
-        'ingredients': new FormBuilder().array([new FormBuilder().group({'name': [null, Validators.required]})])
+        ingredients: new FormBuilder().array([
+          new FormBuilder().group({ name: [null, Validators.required] }),
+        ]),
       });
       component.id = 'id';
 
       const router = TestBed.inject(Router);
 
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ firstName: '1', lastName: '2' }))
+      );
       spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
-      
       component.onSubmit('Save');
 
       expect(currentUserService.getCurrentUser).not.toHaveBeenCalled();
-      expect(recipeService.update).not.toHaveBeenCalledWith(new Recipe({
-        ingredients: [{}],
-        uid: '',
-        author: '3',
-        hasImage: true,
-        meanRating: 0.33,
-        ratings: [],
-        creationDate: 'test'
-      }).getObject(), 'id');
+      expect(recipeService.update).not.toHaveBeenCalledWith(
+        new Recipe({
+          ingredients: [{}],
+          uid: '',
+          author: '3',
+          hasImage: true,
+          meanRating: 0.33,
+          ratings: [],
+          creationDate: 'test',
+        }).getObject(),
+        'id'
+      );
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should update a recipe', () => {
-      component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33, creationDate: 'test'});
+      component.originalRecipe = new Recipe({
+        id: 'id',
+        author: '3',
+        hasImage: true,
+        meanRating: 0.33,
+        creationDate: 'test',
+      });
       component.recipesForm = new FormBuilder().group({
-        'ingredients': new FormBuilder().array([new FormBuilder().group({'name': []})])
+        ingredients: new FormBuilder().array([new FormBuilder().group({ name: [] })]),
       });
       component.id = 'id';
 
       const router = TestBed.inject(Router);
 
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ firstName: '1', lastName: '2' }))
+      );
       spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
       component.onSubmit('Save');
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalledWith(new Recipe({
-        ingredients: [{}],
-        uid: '',
-        author: '3',
-        hasImage: true,
-        meanRating: 0.33,
-        ratings: [],
-        creationDate: 'test'
-      }).getObject(), 'id');
+      expect(recipeService.update).toHaveBeenCalledWith(
+        new Recipe({
+          ingredients: [{}],
+          uid: '',
+          author: '3',
+          hasImage: true,
+          meanRating: 0.33,
+          ratings: [],
+          creationDate: 'test',
+        }).getObject(),
+        'id'
+      );
       expect(router.navigate).toHaveBeenCalled();
     });
 
@@ -703,58 +753,72 @@ describe('RecipeEditComponent', () => {
 
       const router = TestBed.inject(Router);
 
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ firstName: '1', lastName: '2' }))
+      );
       spyOn(recipeService, 'create').and.returnValue('id');
       spyOn(router, 'navigate');
 
       component.onSubmit('Save');
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.create).toHaveBeenCalledWith(new Recipe({
-        name: '',
-        link: '',
-        description: '',
-        time: '',
-        calories: '',
-        servings: '',
-        quantity: '',
-        categories: [],
-        steps: [],
-        ingredients: [],
-        hasImage: false,
-        meanRating: 0,
-        ratings: [],
-        uid: '',
-        author: '1 2',
-        status: 'private'
-      }).getObject());
+      expect(recipeService.create).toHaveBeenCalledWith(
+        new Recipe({
+          name: '',
+          link: '',
+          description: '',
+          time: '',
+          calories: '',
+          servings: '',
+          quantity: '',
+          categories: [],
+          steps: [],
+          ingredients: [],
+          hasImage: false,
+          meanRating: 0,
+          ratings: [],
+          uid: '',
+          author: '1 2',
+          status: 'private',
+        }).getObject()
+      );
       expect(router.navigate).toHaveBeenCalled();
     });
 
     it('should update a recipe and redirect to creating a new recipe', () => {
-      component.originalRecipe = new Recipe({id: 'id', author: '3', hasImage: true, meanRating: 0.33});
+      component.originalRecipe = new Recipe({
+        id: 'id',
+        author: '3',
+        hasImage: true,
+        meanRating: 0.33,
+      });
       component.recipesForm = new FormBuilder().group({
-        'ingredients': new FormBuilder().array([new FormBuilder().group({'name': []})])
+        ingredients: new FormBuilder().array([new FormBuilder().group({ name: [] })]),
       });
       component.id = 'id';
 
       const router = TestBed.inject(Router);
 
-      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({firstName: '1', lastName: '2'})));
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+        of(new User({ firstName: '1', lastName: '2' }))
+      );
       spyOn(recipeService, 'update');
       spyOn(router, 'navigate');
 
       component.onSubmit('New');
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(recipeService.update).toHaveBeenCalledWith(new Recipe({
-        ingredients: [{}],
-        uid: '',
-        author: '3',
-        hasImage: true,
-        meanRating: 0.33,
-        ratings: []
-      }).getObject(), 'id');
+      expect(recipeService.update).toHaveBeenCalledWith(
+        new Recipe({
+          ingredients: [{}],
+          uid: '',
+          author: '3',
+          hasImage: true,
+          meanRating: 0.33,
+          ratings: [],
+        }).getObject(),
+        'id'
+      );
       expect(router.navigate).toHaveBeenCalledWith(['/recipe/edit']);
     });
   });

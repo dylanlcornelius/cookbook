@@ -2,7 +2,10 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IngredientListComponent } from './ingredient-list.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MatLegacyTableModule as MatTableModule, MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import {
+  MatLegacyTableModule as MatTableModule,
+  MatLegacyTableDataSource as MatTableDataSource,
+} from '@angular/material/legacy-table';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { User } from '@user';
@@ -31,16 +34,10 @@ describe('IngredientListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-        MatTableModule,
-      ],
-      declarations: [ IngredientListComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([]), MatTableModule],
+      declarations: [IngredientListComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -65,7 +62,7 @@ describe('IngredientListComponent', () => {
 
   describe('load', () => {
     it('should load ingredients', () => {
-      const userIngredients = [new UserIngredient({ ingredientId: 'id'}), new UserIngredient({})];
+      const userIngredients = [new UserIngredient({ ingredientId: 'id' }), new UserIngredient({})];
       const ingredients = [new Ingredient({ id: 'id', category: 'BAKING' })];
       const configs = [new Config({ value: 'BAKING', displayValue: 'Baking' })];
 
@@ -87,8 +84,8 @@ describe('IngredientListComponent', () => {
     });
 
     it('should load ingredients without data', () => {
-      const userIngredients = [new UserIngredient({ ingredientId: 'id'}), new UserIngredient({})];
-      const ingredients = [new Ingredient({ id: 'id'})];
+      const userIngredients = [new UserIngredient({ ingredientId: 'id' }), new UserIngredient({})];
+      const ingredients = [new Ingredient({ id: 'id' })];
       const configs = [new Config({ value: 'BAKING', displayValue: 'Baking' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
@@ -119,7 +116,7 @@ describe('IngredientListComponent', () => {
     });
 
     it('should apply a filter and go to the first page', () => {
-      component.dataSource = {paginator: {firstPage: () => {}}};
+      component.dataSource = { paginator: { firstPage: () => {} } };
 
       spyOn(component.dataSource.paginator, 'firstPage');
 
@@ -133,9 +130,9 @@ describe('IngredientListComponent', () => {
   describe('editIngredient', () => {
     it('should change a user ingredient', () => {
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id'}];
-      component.userIngredients = [{ingredientId: 'id', cartQuantity: 1}];
-      
+      component.dataSource.data = [{ id: 'id' }];
+      component.userIngredients = [{ ingredientId: 'id', cartQuantity: 1 }];
+
       component.editIngredient('id');
 
       expect(component.ingredientModalParams).toBeDefined();
@@ -144,9 +141,9 @@ describe('IngredientListComponent', () => {
 
     it('should not change a user ingredient if it does not exist', () => {
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id2'}];
-      component.userIngredients = [{ingredientId: 'id'}];
-      
+      component.dataSource.data = [{ id: 'id2' }];
+      component.userIngredients = [{ ingredientId: 'id' }];
+
       component.editIngredient('id2');
 
       expect(component.ingredientModalParams).toBeDefined();
@@ -168,7 +165,7 @@ describe('IngredientListComponent', () => {
     it('should remove a user ingredient', () => {
       component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id', amount: 1}];
+      component.dataSource.data = [{ id: 'id', amount: 1 }];
 
       spyOn(userIngredientService, 'update');
 
@@ -180,7 +177,7 @@ describe('IngredientListComponent', () => {
     it('should not remove a user ingredient if it is zero', () => {
       component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id', amount: 1}];
+      component.dataSource.data = [{ id: 'id', amount: 1 }];
 
       spyOn(userIngredientService, 'update');
 
@@ -194,7 +191,7 @@ describe('IngredientListComponent', () => {
     it('should add a user ingredient', () => {
       component.userIngredients = [new UserIngredient({ ingredientId: 'id' })];
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id', amount: 1}];
+      component.dataSource.data = [{ id: 'id', amount: 1 }];
 
       spyOn(userIngredientService, 'update');
 
@@ -205,7 +202,7 @@ describe('IngredientListComponent', () => {
 
     it('should not add a user ingredient if there is no user ingredient', () => {
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id', amount: 1}];
+      component.dataSource.data = [{ id: 'id', amount: 1 }];
 
       spyOn(userIngredientService, 'update');
 
@@ -216,7 +213,7 @@ describe('IngredientListComponent', () => {
 
     it('should handle an ingredient without an amount', () => {
       component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{id: 'id'}];
+      component.dataSource.data = [{ id: 'id' }];
 
       spyOn(userIngredientService, 'update');
 

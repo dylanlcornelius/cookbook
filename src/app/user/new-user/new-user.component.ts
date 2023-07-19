@@ -11,7 +11,7 @@ import { ErrorMatcher } from 'src/app/util/error-matcher';
 @Component({
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss']
+  styleUrls: ['./new-user.component.scss'],
 })
 export class NewUserComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -31,8 +31,8 @@ export class NewUserComponent implements OnInit, OnDestroy {
   constructor(
     private currentUserService: CurrentUserService,
     private userService: UserService,
-    private imageService: ImageService,
-  ) { }
+    private imageService: ImageService
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -44,18 +44,24 @@ export class NewUserComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      this.user = user;
-      this.firstNameControl.patchValue(user.firstName);
-      this.lastNameControl.patchValue(user.lastName);
-      this.themeControl.patchValue(user.theme);
+    this.currentUserService
+      .getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        this.user = user;
+        this.firstNameControl.patchValue(user.firstName);
+        this.lastNameControl.patchValue(user.lastName);
+        this.themeControl.patchValue(user.theme);
 
-      this.imageService.download(user).then(url => {
-        if (url) {
-          this.userImage = url;
-        }
-      }, () => {});
-    });
+        this.imageService.download(user).then(
+          url => {
+            if (url) {
+              this.userImage = url;
+            }
+          },
+          () => {}
+        );
+      });
   }
 
   updateImage = (hasImage: boolean): void => {

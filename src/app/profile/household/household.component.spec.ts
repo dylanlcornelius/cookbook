@@ -21,10 +21,9 @@ describe('HouseholdComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HouseholdComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
-    .compileComponents();
+      declarations: [HouseholdComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -89,11 +88,14 @@ describe('HouseholdComponent', () => {
     it('should add names to a household', () => {
       const household = new Household({
         members: [{ uid: 'uid' }, { uid: 'uid3' }],
-        invites: [{ uid: 'uid2', inviter: 'uid' }, { uid: 'uid4', inviter: 'uid3' }]
+        invites: [
+          { uid: 'uid2', inviter: 'uid' },
+          { uid: 'uid4', inviter: 'uid3' },
+        ],
       });
       const users = [
         new User({ uid: 'uid', firstName: 'name' }),
-        new User({ uid: 'uid2', firstName: 'name2' })
+        new User({ uid: 'uid2', firstName: 'name2' }),
       ];
 
       const result = component.initializeHouseholdNames(household, users);
@@ -104,7 +106,7 @@ describe('HouseholdComponent', () => {
 
   describe('cleanHousehold', () => {
     it('should update a household', () => {
-      const household = new Household({ members: [{ uid: 'uid2' }], memberIds: ['uid2']});
+      const household = new Household({ members: [{ uid: 'uid2' }], memberIds: ['uid2'] });
       const uid = 'uid';
 
       spyOn(householdService, 'update');
@@ -117,7 +119,7 @@ describe('HouseholdComponent', () => {
     });
 
     it('should delete a household', () => {
-      const household = new Household({ memberIds: ['uid']});
+      const household = new Household({ memberIds: ['uid'] });
       const uid = 'uid';
 
       spyOn(householdService, 'update');
@@ -221,7 +223,7 @@ describe('HouseholdComponent', () => {
 
   describe('removeMember', () => {
     it('should clean a household', () => {
-      const household = new Household({ members: [{ uid: '' }]});
+      const household = new Household({ members: [{ uid: '' }] });
 
       spyOn(validationService, 'setModal');
 
@@ -233,7 +235,7 @@ describe('HouseholdComponent', () => {
 
   describe('removeMemberEvent', () => {
     it('should clean a household', () => {
-      const household = new Household({ members: [{ uid: '' }]});
+      const household = new Household({ members: [{ uid: '' }] });
 
       spyOn(component, 'cleanHousehold');
       spyOn(notificationService, 'setModal');

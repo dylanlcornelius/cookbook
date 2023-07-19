@@ -15,17 +15,10 @@ describe('UserPendingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([
-          { path: 'home', component: HomeComponent }
-        ])
-      ],
-      declarations: [ UserPendingComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([{ path: 'home', component: HomeComponent }])],
+      declarations: [UserPendingComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   it('should create', () => {
@@ -38,7 +31,9 @@ describe('UserPendingComponent', () => {
   it('should redirect a pending user', () => {
     const currentUserService = TestBed.inject(CurrentUserService);
 
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: ROLE.PENDING})));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+      of(new User({ role: ROLE.PENDING }))
+    );
 
     fixture = TestBed.createComponent(UserPendingComponent);
     component = fixture.componentInstance;
@@ -50,7 +45,7 @@ describe('UserPendingComponent', () => {
   it('should not redirect a pending user', () => {
     const currentUserService = TestBed.inject(CurrentUserService);
 
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({role: ROLE.ADMIN})));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: ROLE.ADMIN })));
 
     fixture = TestBed.createComponent(UserPendingComponent);
     component = fixture.componentInstance;

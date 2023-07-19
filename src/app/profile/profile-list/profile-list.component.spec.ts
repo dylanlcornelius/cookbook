@@ -22,15 +22,10 @@ describe('ProfileListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ],
-      declarations: [ ProfileListComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [ProfileListComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -63,12 +58,12 @@ describe('ProfileListComponent', () => {
   describe('load', () => {
     it('should load all users with images', () => {
       const users = [
-        new User({uid: 'uid', firstName: 'a'}),
-        new User({uid: 'uid2', firstName: 'b'}),
+        new User({ uid: 'uid', firstName: 'a' }),
+        new User({ uid: 'uid2', firstName: 'b' }),
       ];
       const recipes = [
-        new Recipe({uid: 'uid', ratings: [{uid: 'uid'}]}),
-        new Recipe({uid: 'uid'}),
+        new Recipe({ uid: 'uid', ratings: [{ uid: 'uid' }] }),
+        new Recipe({ uid: 'uid' }),
       ];
 
       spyOn(userService, 'get').and.returnValue(of(users));
@@ -83,14 +78,8 @@ describe('ProfileListComponent', () => {
     });
 
     it('should load all users with images', () => {
-      const users = [
-        new User({firstName: 'b'}),
-        new User({firstName: 'a'}),
-      ];
-      const recipes = [
-        new Recipe({}),
-        new Recipe({}),
-      ];
+      const users = [new User({ firstName: 'b' }), new User({ firstName: 'a' })];
+      const recipes = [new Recipe({}), new Recipe({})];
 
       spyOn(userService, 'get').and.returnValue(of(users));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -104,14 +93,8 @@ describe('ProfileListComponent', () => {
     });
 
     it('should handle image error', () => {
-      const users = [
-        new User({firstName: 'b'}),
-        new User({firstName: 'a'}),
-      ];
-      const recipes = [
-        new Recipe({}),
-        new Recipe({}),
-      ];
+      const users = [new User({ firstName: 'b' }), new User({ firstName: 'a' })];
+      const recipes = [new Recipe({}), new Recipe({})];
 
       spyOn(userService, 'get').and.returnValue(of(users));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
@@ -135,7 +118,7 @@ describe('ProfileListComponent', () => {
     });
 
     it('should apply a filter and go to the first page', () => {
-      component.dataSource = {paginator: {firstPage: () => {}}};
+      component.dataSource = { paginator: { firstPage: () => {} } };
 
       spyOn(component.dataSource.paginator, 'firstPage');
 

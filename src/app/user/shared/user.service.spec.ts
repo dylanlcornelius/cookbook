@@ -13,9 +13,7 @@ describe('UserService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ]
+      imports: [RouterModule.forRoot([])],
     });
 
     service = TestBed.inject(UserService);

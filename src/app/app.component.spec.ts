@@ -13,16 +13,9 @@ describe('AppComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [
-        AppComponent
-      ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
+      imports: [RouterTestingModule, BrowserAnimationsModule],
+      declarations: [AppComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     currentUserService = TestBed.inject(CurrentUserService);
@@ -59,7 +52,9 @@ describe('AppComponent', () => {
   });
 
   it('should get user data with dark mode', () => {
-    spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ theme: true, uid: 'uid' })));
+    spyOn(currentUserService, 'getCurrentUser').and.returnValue(
+      of(new User({ theme: true, uid: 'uid' }))
+    );
     spyOn(currentUserService, 'getIsLoggedIn').and.returnValue(of(true));
     spyOn(currentUserService, 'getIsGuest').and.returnValue(of(false));
 

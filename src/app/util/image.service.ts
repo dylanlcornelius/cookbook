@@ -5,33 +5,39 @@ import { User } from '@user';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImageService {
-  constructor(
-    private firebase: FirebaseService,
-  ) {}
+  constructor(private firebase: FirebaseService) {}
 
   get(path: string): Promise<string | void> {
     const storageRef = this.firebase.ref(this.firebase.storage, path);
-    return this.firebase.getDownloadURL(storageRef).then(url => url, () => {});
+    return this.firebase.getDownloadURL(storageRef).then(
+      url => url,
+      () => {}
+    );
   }
 
   upload(path: string, file: File | Blob): Observable<number | string | void> {
     const storageRef = this.firebase.ref(this.firebase.storage, path);
-    const uploadTask = this.firebase.uploadBytesResumable(storageRef, file, { cacheControl: 'public,max-age=31557600' });
+    const uploadTask = this.firebase.uploadBytesResumable(storageRef, file, {
+      cacheControl: 'public,max-age=31557600',
+    });
 
     return new Observable(observer => {
-      uploadTask.on("state_changed", snapshot => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        observer.next(progress);
-      },
-      () => {},
-      () => {
-        this.get(path).then(url => {
-          observer.next(url);
-        });
-      });
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          observer.next(progress);
+        },
+        () => {},
+        () => {
+          this.get(path).then(url => {
+            observer.next(url);
+          });
+        }
+      );
     });
   }
 

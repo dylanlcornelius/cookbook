@@ -13,17 +13,10 @@ describe('HouseholdInviteModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        MatAutocompleteModule
-      ],
-      declarations: [
-        HouseholdInviteModalComponent,
-        ModalComponent
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
-    .compileComponents();
+      imports: [ReactiveFormsModule, MatAutocompleteModule],
+      declarations: [HouseholdInviteModalComponent, ModalComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -70,7 +63,7 @@ describe('HouseholdInviteModalComponent', () => {
     it('should change an ingredient pantry quantity', () => {
       component.Params = {
         function: () => {},
-        users: []
+        users: [],
       };
 
       spyOn(component.params, 'function');

@@ -27,12 +27,9 @@ describe('NewUserComponent', () => {
         BrowserAnimationsModule,
         MatInputModule,
       ],
-      declarations: [ NewUserComponent ],
-      schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-      ]
-    })
-    .compileComponents();
+      declarations: [NewUserComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {

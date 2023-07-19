@@ -11,12 +11,9 @@ describe('TutorialComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([]),
-      ],
-      declarations: [ TutorialComponent ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [TutorialComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -36,9 +33,9 @@ describe('TutorialComponent', () => {
   describe('load', () => {
     it('should open the tutorial', () => {
       spyOn(tutorialService, 'openTutorial');
-  
+
       component.load();
-  
+
       expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });

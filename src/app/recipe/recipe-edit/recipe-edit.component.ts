@@ -10,7 +10,7 @@ import {
   ValidatorFn,
   AbstractControl,
   FormGroupDirective,
-  FormControl
+  FormControl,
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService } from '@ingredientService';
@@ -35,7 +35,10 @@ import { ConfigType } from '@configType';
 import { TitleService } from '@TitleService';
 
 function TitleCaseValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => control.value && control.value === titleCase(control.value) ? null : { wrongCase: titleCase(control.value || '') };
+  return (control: AbstractControl): { [key: string]: any } | null =>
+    control.value && control.value === titleCase(control.value)
+      ? null
+      : { wrongCase: titleCase(control.value || '') };
 }
 
 const SentencePattern = /^([A-Z].*(\.|\?|!)\s)*[A-Z].*(\.|\?|!)$/s;
@@ -43,7 +46,7 @@ const SentencePattern = /^([A-Z].*(\.|\?|!)\s)*[A-Z].*(\.|\?|!)$/s;
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
-  styleUrls: ['./recipe-edit.component.scss']
+  styleUrls: ['./recipe-edit.component.scss'],
 })
 export class RecipeEditComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -73,7 +76,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   matcher = new ErrorMatcher();
   selectable;
   stepperOrientation: Observable<StepperOrientation>;
-  
+
   @ViewChild('stepper')
   stepper: MatStepper;
 
@@ -82,7 +85,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   readonly listFields = {
     categories: 'category',
     steps: 'step',
-    ingredients: 'id'
+    ingredients: 'id',
   };
 
   constructor(
@@ -97,7 +100,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private uomService: UomService,
     private validationService: ValidationService,
     private tutorialService: TutorialService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -121,7 +124,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       const listField = this.listFields[key];
 
       return listField
-        ? recipe[key].map((property) => property[listField]).join('|') !== form[key].map((property) => property[listField]).join('|')
+        ? recipe[key].map(property => property[listField]).join('|') !==
+            form[key].map(property => property[listField]).join('|')
         : recipe[key] !== form[key];
     });
 
@@ -131,7 +135,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.stepperOrientation = this.breakpointObserver.observe('(min-width: 768px)').pipe(map(({ matches }) => matches ? 'horizontal' : 'vertical'));
+    this.stepperOrientation = this.breakpointObserver
+      .observe('(min-width: 768px)')
+      .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
     const queryParams$ = this.route.queryParams;
     const ingredients$ = this.ingredientService.get();
@@ -155,7 +161,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         isDairyFree: [false],
         categories: new FormBuilder().array([]),
         steps: new FormBuilder().array([]),
-        ingredients: new FormBuilder().array([])
+        ingredients: new FormBuilder().array([]),
       });
 
       const observables$: [
@@ -163,7 +169,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         Observable<Ingredient[]>,
         Observable<Recipe[]>,
         Observable<Config[]>,
-        Observable<Recipe>?
+        Observable<Recipe>?,
       ] = [queryParams$, ingredients$, recipes$, configs$];
       if (this.id) {
         observables$.push(this.recipeService.get(this.id));
@@ -173,33 +179,46 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.title = 'Create a New Recipe';
       }
 
-      combineLatest(observables$).pipe(takeUntil(this.unsubscribe$)).subscribe(([queryParams, ingredients, recipes, configs, recipe]: [Params[], Ingredient[], Recipe[], Config[], Recipe?]) => {
-        this.selectedIndex = queryParams['step'] || 0;
-        this.ingredients = ingredients;
-        this.recipes = recipes;
-        this.types = configs;
-        this.originalRecipe = recipe;
+      combineLatest(observables$)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(
+          ([queryParams, ingredients, recipes, configs, recipe]: [
+            Params[],
+            Ingredient[],
+            Recipe[],
+            Config[],
+            Recipe?,
+          ]) => {
+            this.selectedIndex = queryParams['step'] || 0;
+            this.ingredients = ingredients;
+            this.recipes = recipes;
+            this.types = configs;
+            this.originalRecipe = recipe;
 
-        if (this.loading) {
-          this.recipeService.getForm().pipe(first()).subscribe(form => {
-            if (form) {
-              this.recipe = form;
-              this.recipeService.setForm(null);
+            if (this.loading) {
+              this.recipeService
+                .getForm()
+                .pipe(first())
+                .subscribe(form => {
+                  if (form) {
+                    this.recipe = form;
+                    this.recipeService.setForm(null);
+                  } else {
+                    this.recipe = recipe;
+                  }
+
+                  this.initForm();
+                  this.initIngredients();
+                  this.initCategories();
+
+                  this.loading = this.loadingService.set(false);
+                });
             } else {
-              this.recipe = recipe;
+              this.initIngredients();
+              this.initCategories();
             }
-
-            this.initForm();
-            this.initIngredients();
-            this.initCategories();
-
-            this.loading = this.loadingService.set(false);
-          });
-        } else {
-          this.initIngredients();
-          this.initCategories();
-        }
-      });
+          }
+        );
     });
   }
 
@@ -214,7 +233,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.addStep();
       });
 
-      this.addedIngredients = this.ingredientService.buildRecipeIngredients(this.recipe.ingredients, [...this.ingredients, ...this.recipes]);
+      this.addedIngredients = this.ingredientService.buildRecipeIngredients(
+        this.recipe.ingredients,
+        [...this.ingredients, ...this.recipes]
+      );
       for (let i = 0; i < this.addedIngredients.length; i++) {
         this.addIngredient(i);
       }
@@ -241,7 +263,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   initIngredients(): void {
     this.allAvailableIngredients = [...this.ingredients, ...this.recipes]
       .reduce((result, ingredient) => {
-        const currentIngredient = this.addedIngredients.find(addedIngredient => addedIngredient.id === ingredient.id);
+        const currentIngredient = this.addedIngredients.find(
+          addedIngredient => addedIngredient.id === ingredient.id
+        );
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
           result.push({ ...ingredient, isOptional: false });
         }
@@ -255,27 +279,31 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   initCategories(): void {
     this.recipeCategories = this.categoryControl.valueChanges.pipe(
       startWith(''),
-      map(value => this.recipes
-        .reduce((allCategories, { categories }) => {
-          categories
-            .filter(({ category }) => category !== 'New!' && category !== 'Needs Image')
-            .forEach(({ category }) => {
-              const isFound = allCategories.find(currentCategory => currentCategory === category);
+      map(value =>
+        this.recipes
+          .reduce((allCategories, { categories }) => {
+            categories
+              .filter(({ category }) => category !== 'New!' && category !== 'Needs Image')
+              .forEach(({ category }) => {
+                const isFound = allCategories.find(currentCategory => currentCategory === category);
 
-              if (!isFound) {
-                allCategories.push(category);
-              }
-            });
-          return allCategories;
-        }, [])
-        .filter(category => category.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : ''))
-        .sort((a, b) => a.localeCompare(b)))
+                if (!isFound) {
+                  allCategories.push(category);
+                }
+              });
+            return allCategories;
+          }, [])
+          .filter(category =>
+            category.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : '')
+          )
+          .sort((a, b) => a.localeCompare(b))
+      )
     );
   }
 
   initCategory(category: string): FormGroup {
     return new FormBuilder().group({
-      category: category
+      category: category,
     });
   }
 
@@ -299,7 +327,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   initStep(): FormGroup {
     return new FormBuilder().group({
-      step: ['', [Validators.pattern(SentencePattern)]]
+      step: ['', [Validators.pattern(SentencePattern)]],
     });
   }
 
@@ -328,7 +356,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.moveItem(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       this.addIngredient(event.currentIndex, event.item.data);
-      this.transferItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.transferItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     }
   }
 
@@ -336,7 +369,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     if (event.previousContainer === event.container) {
       this.moveItem(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      this.transferItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.transferItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
       this.removeIngredient(event.previousIndex);
     }
   }
@@ -344,7 +382,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   initIngredient(): FormGroup {
     return new FormBuilder().group({
       id: [null],
-      quantity: [null, [Validators.required, Validators.min(0.00001), Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/)]],
+      quantity: [
+        null,
+        [
+          Validators.required,
+          Validators.min(0.00001),
+          Validators.pattern(/^\d+(\.\d{1,4})?$|\d+\/\d+/),
+        ],
+      ],
       uom: [null, [Validators.required]],
       isOptional: [false],
       name: [null],
@@ -383,18 +428,23 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     }
 
     this.availableIngredients = this.allAvailableIngredients.filter(ingredient => {
-      return ingredient.name.toLowerCase().includes(this.ingredientFilter) && !this.addedIngredients.find(addedIngredient => {
-        return ingredient.id === addedIngredient.id;
-      });
+      return (
+        ingredient.name.toLowerCase().includes(this.ingredientFilter) &&
+        !this.addedIngredients.find(addedIngredient => {
+          return ingredient.id === addedIngredient.id;
+        })
+      );
     });
   }
 
   resetForm(formDirective: FormGroupDirective): void {
-    this.validationService.setModal(new Validation(
-      `Are you sure you want to undo your current changes to the recipe wizard?`,
-      this.resetFormEvent,
-      [formDirective]
-    ));
+    this.validationService.setModal(
+      new Validation(
+        `Are you sure you want to undo your current changes to the recipe wizard?`,
+        this.resetFormEvent,
+        [formDirective]
+      )
+    );
   }
 
   resetFormEvent = (formDirective: FormGroupDirective): void => {
@@ -429,38 +479,41 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.currentUserService.getCurrentUser().pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
-      const form = this.recipesForm.value;
+    this.currentUserService
+      .getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        const form = this.recipesForm.value;
 
-      form.ingredients.forEach(ingredient => {
-        delete ingredient.name;
+        form.ingredients.forEach(ingredient => {
+          delete ingredient.name;
+        });
+
+        let recipeId = this.originalRecipe?.id;
+        if (this.id) {
+          form.uid = this.originalRecipe.uid;
+          form.author = this.originalRecipe.author;
+          form.hasImage = this.originalRecipe.hasImage;
+          form.meanRating = this.originalRecipe.meanRating;
+          form.ratings = this.originalRecipe.ratings;
+          form.creationDate = this.originalRecipe.creationDate;
+
+          this.recipeService.update(new Recipe(form).getObject(), this.originalRecipe.id);
+        } else {
+          form.uid = user.uid;
+          form.author = user.name;
+
+          recipeId = this.recipeService.create(new Recipe(form).getObject());
+        }
+
+        this.originalRecipe = this.recipesForm.value;
+
+        if (buttonName === 'New') {
+          this.router.navigate(['/recipe/edit']);
+        } else {
+          this.router.navigate(['/recipe/detail/', recipeId]);
+        }
       });
-
-      let recipeId = this.originalRecipe?.id;
-      if (this.id) {
-        form.uid = this.originalRecipe.uid;
-        form.author = this.originalRecipe.author;
-        form.hasImage = this.originalRecipe.hasImage;
-        form.meanRating = this.originalRecipe.meanRating;
-        form.ratings = this.originalRecipe.ratings;
-        form.creationDate = this.originalRecipe.creationDate;
-
-        this.recipeService.update(new Recipe(form).getObject(), this.originalRecipe.id);
-      } else {
-        form.uid = user.uid;
-        form.author = user.name;
-
-        recipeId = this.recipeService.create(new Recipe(form).getObject());
-      }
-
-      this.originalRecipe = this.recipesForm.value;
-
-      if (buttonName === 'New') {
-        this.router.navigate(['/recipe/edit']);
-      } else {
-        this.router.navigate(['/recipe/detail/', recipeId]);
-      }
-    });
   }
 
   openTutorial = (): void => this.tutorialService.openTutorial(true);

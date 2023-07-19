@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NumberService {
   toDecimal(x: string | number): number {
@@ -23,9 +23,9 @@ export class NumberService {
     if (wholeIndex === -1) {
       return Number(f.slice(0, i)) / Number(f.slice(i + 1));
     }
-    return Number(x.slice(0, wholeIndex)) + (Number(f.slice(0, i)) / Number(f.slice(i + 1)));
+    return Number(x.slice(0, wholeIndex)) + Number(f.slice(0, i)) / Number(f.slice(i + 1));
   }
-  
+
   toFraction(x: number): string {
     if (x === 0) {
       return '0';
@@ -81,7 +81,7 @@ export class NumberService {
     if (decimal <= 0.0001) {
       decimal = 0;
     }
-    
+
     return this.toFraction(decimal);
   }
 }
