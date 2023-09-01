@@ -52,7 +52,6 @@ dd {
   font-weight: bold;
 }
 .list {
-  min-height: 40px;
   border-radius: 4px;
   overflow: hidden;
   display: block;
@@ -62,7 +61,7 @@ dd {
 }
 .box {
   padding: 10px 10px;
-  border-bottom: solid 1px #999;
+  border-bottom: solid 1px #5a5a5a;
   display: flex;
   flex-direction: row;
   text-align: center;
