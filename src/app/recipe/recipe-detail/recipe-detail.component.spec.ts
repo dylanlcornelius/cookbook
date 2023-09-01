@@ -229,6 +229,54 @@ describe('RecipeDetailComponent', () => {
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
+
+    it('should reload a recipe', fakeAsync(() => {
+      const user = new User({});
+      const recipe = new Recipe({});
+      const ingredients = [new Ingredient({})];
+      const userIngredients = [new UserIngredient({})];
+      const recipeHistories = new RecipeHistory({});
+      const configs = [];
+
+      const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
+
+      spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
+      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(recipeService, 'get')
+        .withArgs('id')
+        .and.returnValue(of(recipe))
+        .withArgs()
+        .and.returnValue(of([]));
+      spyOn(ingredientService, 'get').and.returnValue(ingredients$);
+      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
+      spyOn(recipeHistoryService, 'get').and.returnValue(of(recipeHistories));
+      spyOn(configService, 'get').and.returnValue(of(configs));
+      const imageSpy = spyOn(imageService, 'download');
+      imageSpy.and.returnValue(Promise.resolve('url'));
+      spyOn(ingredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
+
+      component.load();
+      tick();
+      expect(component.recipeImage).toEqual('url');
+
+      // mock image deletion
+      imageSpy.and.returnValue(Promise.reject());
+      ingredients$.next([]);
+      tick();
+
+      expect(component.recipeImage).toBeUndefined();
+      expect(currentUserService.getCurrentUser).toHaveBeenCalled();
+      expect(householdService.get).toHaveBeenCalled();
+      expect(recipeService.get).toHaveBeenCalledTimes(2);
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(userIngredientService.get).toHaveBeenCalled();
+      expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+      expect(imageService.download).toHaveBeenCalled();
+      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
+    }));
   });
 
   describe('updateImage', () => {
