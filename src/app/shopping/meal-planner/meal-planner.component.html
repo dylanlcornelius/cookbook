@@ -45,7 +45,7 @@
 
         <ng-container matColumnDef="actions">
           <mat-cell *matCellDef="let element; let i = index">
-            <button mat-button (click)="removeRecipe(i)">
+            <button mat-button matTooltip="Remove Recipe" (click)="removeRecipe(i)">
               <mat-icon>close</mat-icon>
             </button>
 

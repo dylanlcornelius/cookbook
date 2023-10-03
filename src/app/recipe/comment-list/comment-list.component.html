@@ -30,6 +30,7 @@
 
     <button
       mat-button
+      [matTooltip]="comment.showResolved ? 'Collapse Comment' : 'Expand Comment'"
       class="resolved"
       (click)="toggleResolved(comment)"
       *ngIf="comment.isResolved"

@@ -70,7 +70,14 @@
                 {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
               </label>
             </span>
-            <button mat-button color="primary" (click)="editIngredient(element.id)">Edit</button>
+            <button
+              mat-button
+              matTooltip="Edit Item"
+              color="primary"
+              (click)="editIngredient(element.id)"
+            >
+              Edit
+            </button>
           </span>
         </mat-cell>
       </ng-container>
@@ -85,7 +92,7 @@
           <span class="mobile-label">List Quantity:</span>
 
           <span class="mobile-value">
-            <button mat-button (click)="removeIngredient(element.id)">
+            <button mat-button matTooltip="Remove Quantity" (click)="removeIngredient(element.id)">
               <mat-icon class="buy-icon">arrow_left</mat-icon>
             </button>
             <span style="margin: 0 10px">
@@ -93,7 +100,7 @@
                 {{ element.cartQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
               </label>
             </span>
-            <button mat-button (click)="addIngredient(element.id)">
+            <button mat-button matTooltip="Add Quantity" (click)="addIngredient(element.id)">
               <mat-icon class="buy-icon">arrow_right</mat-icon>
             </button>
           </span>

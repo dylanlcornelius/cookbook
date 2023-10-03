@@ -16,7 +16,12 @@
       </div>
 
       <div class="icon-buttons">
-        <button mat-button class="share-button" (click)="copyShareableLink()">
+        <button
+          mat-button
+          matTooltip="Copy Recipe Link"
+          class="share-button"
+          (click)="copyShareableLink()"
+        >
           <mat-icon>share</mat-icon>
         </button>
 
@@ -130,7 +135,12 @@
 
           <dt>Times Cooked</dt>
           <dd>
-            <button mat-button color="primary" (click)="updateTimesCooked(recipe)">
+            <button
+              mat-button
+              matTooltip="Edit Times Cooked"
+              color="primary"
+              (click)="updateTimesCooked(recipe)"
+            >
               {{ timesCooked }}
             </button>
           </dd>
@@ -159,11 +169,11 @@
       </mat-card-content>
 
       <mat-card-content class="center-text" *ngIf="recipe.ingredients && recipe.ingredients.length">
-        <dl *ngIf="(recipe.ingredients | filterOptional: false)?.length !== 0">
+        <dl *ngIf="(recipe.ingredients | filterOptional : false)?.length !== 0">
           <dt>Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional: false">
+            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional : false">
               <a
                 class="author-link"
                 [routerLink]="['/recipe/detail/', ingredient.id]"
@@ -185,11 +195,11 @@
           </div>
         </dl>
 
-        <dl *ngIf="(recipe.ingredients | filterOptional: true)?.length !== 0">
+        <dl *ngIf="(recipe.ingredients | filterOptional : true)?.length !== 0">
           <dt>Optional Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional: true">
+            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional : true">
               <a
                 class="author-link"
                 [routerLink]="['/recipe/detail/', ingredient.id]"
@@ -217,6 +227,7 @@
       <div class="between">
         <button
           mat-raised-button
+          matTooltip="Filter Recipe List by This Author"
           (click)="setAuthorFilter(recipe.author)"
           class="author-link"
           *ngIf="recipe.author"

@@ -117,6 +117,14 @@ dt {
   overflow: visible;
 }
 
+.mat-mini-fab .mat-button-wrapper {
+  padding: 0 !important;
+  height: 100%;
+  width: 100%;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
 .mat-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
   transition: transform 100ms ease !important;

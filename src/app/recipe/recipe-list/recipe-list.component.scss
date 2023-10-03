@@ -14,7 +14,8 @@ h2 {
   margin-left: auto;
 }
 .row-button button {
-  padding: 0;
+  padding: 5px;
+  min-width: fit-content;
 }
 .mat-menu-item {
   display: block;
