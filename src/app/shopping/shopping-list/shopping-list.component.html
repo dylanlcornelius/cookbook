@@ -3,7 +3,7 @@
 <h2>Your Shopping List</h2>
 
 <div *ngIf="!loading">
-  <form class="short-container item-form" (ngSubmit)="addItem(ingredientControl.value)">
+  <form class="short-container item-form center" (ngSubmit)="addItem(ingredientControl.value)">
     <mat-form-field class="item-form-field">
       <input
         matInput
@@ -22,15 +22,14 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <button mat-mini-fab matTooltip="Add Item" type="submit" color="primary">
+    <button mat-button matTooltip="Add Item" type="submit" color="primary">
       <mat-icon>add</mat-icon>
     </button>
 
     <button
-      mat-mini-fab
+      mat-button
       matTooltip="Tutorial"
       type="button"
-      color="primary"
       (click)="openTutorial()"
       style="margin-left: 10px"
     >
@@ -82,7 +81,7 @@
 
   <div class="short-container button-row" *ngIf="displayIngredients">
     <button
-      mat-raised-button
+      mat-button
       matTooltip="Remove All Items"
       color="primary"
       style="float: right"

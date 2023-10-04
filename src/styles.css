@@ -59,6 +59,7 @@ dt {
   display: flex;
   justify-content: center;
   justify-items: center;
+  align-items: center;
 }
 .between {
   display: flex !important;
@@ -117,14 +118,6 @@ dt {
   overflow: visible;
 }
 
-.mat-mini-fab .mat-button-wrapper {
-  padding: 0 !important;
-  height: 100%;
-  width: 100%;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-}
 .mat-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
   transition: transform 100ms ease !important;

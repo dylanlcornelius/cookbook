@@ -7,6 +7,11 @@
 .table-container {
   display: flex;
   flex-direction: column;
+
+  .mat-button {
+    padding: 0;
+    min-width: 30px;
+  }
 }
 .mobile-label {
   display: none;
@@ -18,10 +23,6 @@
 .table-col {
   width: 60px;
   text-align: center;
-}
-.mat-button {
-  padding: 0;
-  min-width: 30px;
 }
 .mat-row:last-child {
   border: none;

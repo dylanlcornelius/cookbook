@@ -15,6 +15,10 @@
       <span *ngIf="!isValid(uomValue)">Invalid value</span>
     </mat-error>
   </div>
+
+  <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
+    <mat-icon>help</mat-icon>
+  </button>
 </div>
 <br />
 
@@ -35,10 +39,4 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<div class="button-row">
-  <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
-    <mat-icon>help</mat-icon>
-  </button>
 </div>

@@ -5,10 +5,10 @@
 
 <div [hidden]="loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
+    <a mat-button matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
       <mat-icon>add</mat-icon>
     </a>
-    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
+    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
   </div>
@@ -65,18 +65,13 @@
         >
           <span class="mobile-label">Pantry Quantity:</span>
           <span class="mobile-value">
-            <span style="margin: 0 10px">
-              <label class="table-col">
-                {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
-              </label>
-            </span>
             <button
               mat-button
               matTooltip="Edit Item"
               color="primary"
               (click)="editIngredient(element.id)"
             >
-              Edit
+              {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
             </button>
           </span>
         </mat-cell>

@@ -238,7 +238,7 @@
 
       <div class="between">
         <button
-          mat-mini-fab
+          mat-button
           matTooltip="Edit Recipe"
           color="primary"
           id="edit-recipe-button"
@@ -249,11 +249,11 @@
         </button>
 
         <div class="right-buttons">
-          <button mat-mini-fab matTooltip="Copy Recipe" color="primary" (click)="cloneRecipe()">
+          <button mat-button matTooltip="Copy Recipe" (click)="cloneRecipe()">
             <mat-icon>content_copy</mat-icon>
           </button>
           <a
-            mat-mini-fab
+            mat-button
             matTooltip="Delete Recipe"
             color="warn"
             (click)="deleteRecipe(recipe.id)"
@@ -267,10 +267,10 @@
   </mat-card>
 
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" routerLink="/recipe/list">
+    <a mat-button matTooltip="Recipes List" color="primary" routerLink="/recipe/list">
       <mat-icon>list</mat-icon>
     </a>
-    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
+    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
   </div>

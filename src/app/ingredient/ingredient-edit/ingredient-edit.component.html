@@ -90,7 +90,7 @@
     <div class="button-row between">
       <div *ngIf="!isQuickView">
         <a
-          mat-mini-fab
+          mat-button
           matTooltip="Back"
           color="primary"
           [routerLink]="['/ingredient/detail/', id]"
@@ -99,7 +99,7 @@
           <mat-icon>arrow_back</mat-icon>
         </a>
         <a
-          mat-mini-fab
+          mat-button
           matTooltip="Grocery Items List"
           color="primary"
           routerLink="/ingredient/list"
@@ -108,10 +108,9 @@
           <mat-icon>list</mat-icon>
         </a>
         <button
-          mat-mini-fab
+          mat-button
           matTooltip="Tutorial"
           type="button"
-          color="primary"
           (click)="openTutorial()"
           style="margin-left: 10px"
         >
@@ -119,7 +118,7 @@
         </button>
       </div>
 
-      <button mat-mini-fab matTooltip="Save Ingredient" type="submit" color="primary">
+      <button mat-button matTooltip="Save Ingredient" type="submit" color="primary">
         <mat-icon>done</mat-icon>
       </button>
     </div>

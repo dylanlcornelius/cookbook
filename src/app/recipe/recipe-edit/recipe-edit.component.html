@@ -173,13 +173,7 @@
 
     <ng-template #stepsStep>
       <div formArrayName="steps" id="recipe-steps-div">
-        <button
-          mat-mini-fab
-          matTooltip="Add Step"
-          color="secondary"
-          type="button"
-          (click)="addStep()"
-        >
+        <button mat-button matTooltip="Add Step" color="primary" type="button" (click)="addStep()">
           <mat-icon>add</mat-icon>
         </button>
         <div class="mobile" style="margin-bottom: 20px"></div>
@@ -193,10 +187,9 @@
               </mat-error>
             </mat-form-field>
             <button
-              mat-mini-fab
+              mat-button
               matTooltip="Remove Step"
               style="margin-left: 20px"
-              color="secondary"
               type="button"
               (click)="removeStep(i)"
             >
@@ -408,7 +401,7 @@
 
   <div class="button-row">
     <a
-      mat-mini-fab
+      mat-button
       matTooltip="Back"
       color="primary"
       [routerLink]="['/recipe/detail/', recipe.id]"
@@ -416,10 +409,10 @@
     >
       <mat-icon>arrow_back</mat-icon>
     </a>
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" routerLink="/recipe/list" *ngIf="!id">
+    <a mat-button matTooltip="Recipes List" color="primary" routerLink="/recipe/list" *ngIf="!id">
       <mat-icon>list</mat-icon>
     </a>
-    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
+    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
   </div>
