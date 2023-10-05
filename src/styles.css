@@ -138,6 +138,12 @@ dt {
   justify-content: center;
   padding: 0 !important;
 }
+.mat-card-actions .mat-button {
+  margin: 0 !important;
+}
+.mat-standard-chip {
+  border-radius: 4px !important;
+}
 app-comment-list .mat-form-field-wrapper {
   padding: 0 !important;
 }

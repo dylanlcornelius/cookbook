@@ -17,19 +17,7 @@
     <h3>{{ household.name }}</h3>
 
     <div class="table-container mat-elevation-z8">
-      <mat-table #table [dataSource]="householdInvitesDataSource">
-        <ng-container matColumnDef="name">
-          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-          <mat-cell *matCellDef="let element">Invitation Sent!</mat-cell>
-        </ng-container>
-
-        <mat-row *matRowDef="let row; columns: ['name', 'status']"></mat-row>
-      </mat-table>
-
-      <mat-table #table [dataSource]="householdMembersDataSource" class="bottom-container">
+      <mat-table #table [dataSource]="householdMembersDataSource">
         <ng-container matColumnDef="name">
           <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
         </ng-container>
@@ -45,6 +33,23 @@
               Remove
             </button>
           </mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'status']"></mat-row>
+      </mat-table>
+    </div>
+    <br />
+
+    <h3>Invitations</h3>
+
+    <div class="table-container mat-elevation-z8">
+      <mat-table #table [dataSource]="householdInvitesDataSource">
+        <ng-container matColumnDef="name">
+          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-cell *matCellDef="let element">Invitation Sent!</mat-cell>
         </ng-container>
 
         <mat-row *matRowDef="let row; columns: ['name', 'status']"></mat-row>

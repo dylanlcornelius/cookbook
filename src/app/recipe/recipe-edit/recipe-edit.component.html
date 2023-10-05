@@ -173,34 +173,30 @@
 
     <ng-template #stepsStep>
       <div formArrayName="steps" id="recipe-steps-div">
-        <button mat-button matTooltip="Add Step" color="primary" type="button" (click)="addStep()">
-          <mat-icon>add</mat-icon>
-        </button>
-        <div class="mobile" style="margin-bottom: 20px"></div>
-
         <div *ngFor="let step of recipesForm.get('steps')['controls']; let i = index">
-          <div class="center" [formGroupName]="i">
-            <mat-form-field style="width: 80%">
-              <textarea matInput placeholder="Step: {{ i + 1 }}" formControlName="step"></textarea>
+          <div class="center steps" [formGroupName]="i">
+            <mat-form-field>
+              <textarea
+                matInput
+                placeholder="Step: {{ i + 1 }}"
+                rows="3"
+                formControlName="step"
+              ></textarea>
               <mat-error>
                 <span *ngIf="!step.valid && step.touched">Please enter valid sentences</span>
               </mat-error>
             </mat-form-field>
-            <button
-              mat-button
-              matTooltip="Remove Step"
-              style="margin-left: 20px"
-              type="button"
-              (click)="removeStep(i)"
-            >
+            <button mat-button matTooltip="Remove Step" type="button" (click)="removeStep(i)">
               <mat-icon>close</mat-icon>
             </button>
-            <div
-              style="margin-left: 20px; padding: 20px"
-              *ngIf="recipesForm.get('steps')['controls'].length === 1"
-            ></div>
           </div>
         </div>
+      </div>
+
+      <div class="button-row steps-button-row">
+        <button mat-button matTooltip="Add Step" color="primary" type="button" (click)="addStep()">
+          Add Step
+        </button>
       </div>
     </ng-template>
 
@@ -281,7 +277,7 @@
               <mat-label class="ingredient-name">
                 No Ingredients
                 <br />
-                (Try dragging from the Available Ingredients list)
+                (Try dragging from Available Ingredients)
               </mat-label>
             </div>
           </div>

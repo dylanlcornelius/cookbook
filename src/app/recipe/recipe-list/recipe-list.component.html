@@ -127,6 +127,7 @@
           <span *ngIf="recipe.status !== 'private'">Published</span>
           <span *ngIf="recipe.status === 'private'">Private</span>
         </button>
+        <div *ngIf="!recipe.hasAuthorPermission"></div>
         <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe(recipe)">
           Add to Plan
         </button>
