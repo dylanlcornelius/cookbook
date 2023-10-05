@@ -6,11 +6,7 @@
   border-radius: 4px;
 
   .mat-table,
-  .mat-header-row,
-  .mat-footer-row,
-  .mat-cell,
-  .mat-header-cell,
-  .mat-footer-cell {
+  .mat-cell {
     border-radius: 4px;
   }
   .mat-row {
@@ -18,6 +14,7 @@
     flex-direction: unset;
     align-items: center;
     padding: 5px 10px;
+    border-color: var(--border);
 
     &:first-of-type {
       border-top-left-radius: 4px;

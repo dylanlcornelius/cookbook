@@ -20,7 +20,7 @@
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
-  border-bottom: 1px solid #5a5a5a;
+  border-bottom: 1px solid var(--border);
 }
 .table-row:last-child {
   border: none;

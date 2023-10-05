@@ -107,7 +107,7 @@ dt {
 }
 .highlighted-element {
   outline: 3px solid red !important;
-  border-radius: 5px !important;
+  border-radius: 4px !important;
 }
 .indicator.mat-icon {
   height: 15px;

@@ -9,6 +9,8 @@
   opacity: 0.4;
 }
 .modal {
+  background-image: var(--modal);
+  box-shadow: var(--shadow);
   z-index: 101;
   position: fixed;
   top: 50%;

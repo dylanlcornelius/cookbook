@@ -30,6 +30,6 @@ td {
   padding: 5px 10px;
 }
 td {
-  border-left: 1px solid grey;
-  border-top: 1px solid grey;
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
 }

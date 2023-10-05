@@ -2,40 +2,8 @@
 @include mat.all-legacy-component-typographies();
 @include mat.legacy-core();
 
-@mixin theme($theme) {
-  .header {
-    background-image: map-get($theme, 'header-background');
-    box-shadow: map-get($theme, 'shadow');
-  }
-  .modal {
-    background-image: map-get($theme, 'modal-background');
-    box-shadow: map-get($theme, 'shadow');
-  }
-  .nav-button.selected {
-    background-color: map-get($theme, 'selected-background');
-  }
-  .page {
-    background-color: map-get($theme, 'page-background');
-    color: map-get($theme, 'text-color');
-  }
-  .primary-text-color {
-    color: map-get($theme, 'text-color');
-  }
-  .box,
-  .mobile-nav,
-  .recipe-card {
-    background-color: map-get($theme, 'block-background');
-  }
-  .highlight-box {
-    background-color: map-get($theme, 'highlight-background');
-  }
-  .indicator {
-    color: map-get($theme, 'indicator-color');
-  }
-  .footer {
-    background-image: map-get($theme, 'footer-background');
-    box-shadow: map-get($theme, 'shadow');
-  }
+:root {
+  --shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.3);
 }
 
 //light theme
@@ -53,21 +21,19 @@ $light-mat-theme: mat.define-light-theme(
     density: 0,
   )
 );
-$light-theme: (
-  header-background: linear-gradient(-45deg, #373ba6, #212463),
-  modal-background: linear-gradient(180deg, #ffffff, #f5f5f5),
-  selected-background: #2f3c88,
-  page-background: #f5f5f5,
-  text-color: black,
-  indicator-color: #bdbdbd,
-  block-background: #ffffff,
-  highlight-background: #373ba6,
-  footer-background: linear-gradient(45deg, #373ba6, #212463),
-  shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.3),
-);
 
-@include mat.all-legacy-component-themes($light-mat-theme);
-@include theme($light-theme);
+.light {
+  @include mat.all-legacy-component-themes($light-mat-theme);
+
+  --header: linear-gradient(-45deg, #373ba6, #212463);
+  --footer: linear-gradient(45deg, #373ba6, #212463);
+  --modal: linear-gradient(180deg, #ffffff, #f5f5f5);
+  --highlight: #373ba6;
+  --page: #f5f5f5;
+  --block: #ffffff;
+  --text: #111111;
+  --border: #bdbdbd;
+}
 
 // dark theme
 $dark-primary: mat.define-palette(mat.$blue-palette);
@@ -84,20 +50,16 @@ $dark-mat-theme: mat.define-dark-theme(
     density: 0,
   )
 );
-$dark-theme: (
-  header-background: linear-gradient(60deg, #029ef5 -10%, #473873 90%),
-  modal-background: linear-gradient(180deg, #373ba6, #212463),
-  selected-background: #075da3,
-  page-background: #252525,
-  text-color: #dddddd,
-  indicator-color: #5e5e5e,
-  block-background: #3d3d3d,
-  highlight-background: #029ef5,
-  footer-background: linear-gradient(-60deg, #029ef5 -10%, #473873 90%),
-  shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.3),
-);
 
 .dark {
   @include mat.all-legacy-component-colors($dark-mat-theme);
-  @include theme($dark-theme);
+
+  --header: linear-gradient(60deg, #029ef5 -10%, #473873 90%);
+  --footer: linear-gradient(-60deg, #029ef5 -10%, #473873 90%);
+  --modal: linear-gradient(180deg, #373ba6, #212463);
+  --highlight: #029ef5;
+  --page: #252525;
+  --block: #3d3d3d;
+  --text: #dddddd;
+  --border: #5e5e5e;
 }

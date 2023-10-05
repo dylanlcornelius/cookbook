@@ -55,13 +55,11 @@ dd {
   border-radius: 4px;
   overflow: hidden;
   display: block;
-  box-shadow:
-    2px 3px 8px 2px rgba(0, 0, 0, 0.1),
-    2px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 3px 8px 2px rgba(0, 0, 0, 0.1), 2px 4px 5px 0px rgba(0, 0, 0, 0.1);
 }
 .box {
   padding: 10px 10px;
-  border-bottom: solid 1px #5a5a5a;
+  border-bottom: solid 1px var(--border);
   display: flex;
   flex-direction: row;
   text-align: center;

@@ -1,4 +1,6 @@
 .header {
+  background-image: var(--header);
+  box-shadow: var(--shadow);
   padding: calc(5px + 1vh) 10px;
   position: sticky;
   top: 0;
@@ -40,6 +42,7 @@ a:hover {
   border-bottom-right-radius: 4px;
 }
 .nav-button.selected {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3) 0 0);
   box-shadow: none !important;
 }
 .mobile-nav-container {
@@ -55,7 +58,7 @@ a:hover {
   position: relative;
   width: min-content;
   height: 100%;
-  border-left: 2px solid grey;
+  border-left: 1px solid var(--border);
   box-shadow: -10px 5px 30px 0px rgba(0, 0, 0, 0.6);
   padding: 10px 20px;
   float: right;
@@ -64,7 +67,7 @@ a:hover {
 .mobile-nav-button {
   width: 100%;
   font-size: 20px;
-  border-bottom: 1px solid #5a5a5a;
+  border-bottom: 1px solid var(--border);
   border-radius: 0;
   text-align: start;
 }
@@ -79,4 +82,5 @@ a:hover {
 }
 .mobile-nav-bottom .mobile-nav-button {
   text-align: start;
+  border: none;
 }
