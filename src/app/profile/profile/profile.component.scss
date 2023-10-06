@@ -34,12 +34,12 @@
   aspect-ratio: 1/1;
 }
 .button-container {
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   padding-bottom: 20px;
 
   .button-row {
-    padding-bottom: 30px;
+    padding-bottom: 10px;
     width: 100%;
+    justify-content: start;
   }
 }
 .profile-button-row {
