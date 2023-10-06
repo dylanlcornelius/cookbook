@@ -12,7 +12,6 @@ import { NotificationService } from '@modalService';
 import { Recipe } from '@recipe';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { RecipeService } from '@recipeService';
-import { TutorialService } from '@tutorialService';
 import { User } from '@user';
 import { UserIngredient } from '@userIngredient';
 import { UserIngredientService } from '@userIngredientService';
@@ -32,7 +31,6 @@ describe('MealPlannerComponent', () => {
   let recipeService: RecipeService;
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
-  let tutorialService: TutorialService;
   let recipeIngredientService: RecipeIngredientService;
 
   beforeEach(async () => {
@@ -57,7 +55,6 @@ describe('MealPlannerComponent', () => {
     recipeService = TestBed.inject(RecipeService);
     ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
-    tutorialService = TestBed.inject(TutorialService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
   });
 
@@ -216,16 +213,6 @@ describe('MealPlannerComponent', () => {
 
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
       expect(recipeIngredientService.addIngredients).toHaveBeenCalled();
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

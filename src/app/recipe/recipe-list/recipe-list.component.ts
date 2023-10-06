@@ -32,7 +32,6 @@ import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { NotificationService, ValidationService } from '@modalService';
 import { Validation } from '@validation';
@@ -88,7 +87,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private recipeIngredientService: RecipeIngredientService,
     private notificationService: NotificationService,
     private validationService: ValidationService,
-    private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
     private recipeHistoryService: RecipeHistoryService,
     private configService: ConfigService,
@@ -567,6 +565,4 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.paginator.page.emit(event);
     return event;
   }
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

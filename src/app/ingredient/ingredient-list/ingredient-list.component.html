@@ -5,9 +5,7 @@
 
 <div [hidden]="loading">
   <div class="button-row">
-    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
-      <mat-icon>help</mat-icon>
-    </button>
+    <app-tutorial-button />
     <a mat-button matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
       <mat-icon>add</mat-icon>
     </a>

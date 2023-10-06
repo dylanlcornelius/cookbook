@@ -11,7 +11,6 @@ import { User } from '@user';
 import { Ingredient } from '@ingredient';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
 import { UserIngredient } from '@userIngredient';
 import { ConfigType } from '@configType';
@@ -46,7 +45,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
     private numberService: NumberService,
-    private tutorialService: TutorialService,
     private configService: ConfigService
   ) {}
 
@@ -178,6 +176,4 @@ export class IngredientListComponent implements OnInit, OnDestroy {
       this.userIngredientService.update(this.userIngredients);
     }
   }
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

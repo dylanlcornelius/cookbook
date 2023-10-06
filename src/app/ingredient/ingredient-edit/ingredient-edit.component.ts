@@ -7,7 +7,6 @@ import { ErrorMatcher } from '../../util/error-matcher';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { Ingredient } from '@ingredient';
 import { Config } from '@config';
 import { ConfigService } from '@configService';
@@ -44,7 +43,6 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private loadingService: LoadingService,
     private ingredientService: IngredientService,
-    private tutorialService: TutorialService,
     private configService: ConfigService
   ) {
     this.uoms = Object.values(UOM);
@@ -137,6 +135,4 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     formDirective.resetForm();
     this.ingredientsForm.reset();
   }
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

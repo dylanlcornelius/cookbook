@@ -12,7 +12,6 @@ import { User } from '@user';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { Ingredient } from '@ingredient';
 import { UserIngredient } from '@userIngredient';
 import { UserItem } from '@userItem';
@@ -53,7 +52,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private userItemService: UserItemService,
     private notificationService: NotificationService,
     private validationService: ValidationService,
-    private tutorialService: TutorialService,
     private recipeIngredientService: RecipeIngredientService,
     private numberService: NumberService,
     private configService: ConfigService
@@ -236,6 +234,4 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       this.userItemService.delete(id);
     });
   };
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

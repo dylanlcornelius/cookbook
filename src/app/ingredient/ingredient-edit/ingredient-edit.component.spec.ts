@@ -17,7 +17,6 @@ import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
 import { of } from 'rxjs';
-import { TutorialService } from '@tutorialService';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
 
@@ -25,7 +24,6 @@ describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
   let fixture: ComponentFixture<IngredientEditComponent>;
   let ingredientService: IngredientService;
-  let tutorialService: TutorialService;
   let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
@@ -53,7 +51,6 @@ describe('IngredientEditComponent', () => {
     fixture.detectChanges();
     component.load = load;
     ingredientService = TestBed.inject(IngredientService);
-    tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
   });
 
@@ -165,16 +162,6 @@ describe('IngredientEditComponent', () => {
       expect(component.handleIngredientCreate.emit).toHaveBeenCalled();
       expect(router.navigate).not.toHaveBeenCalled();
       expect(formDirective.resetForm).toHaveBeenCalled();
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

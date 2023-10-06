@@ -8,7 +8,6 @@ import { SuccessNotification } from '@notification';
 import { Ingredient } from '@ingredient';
 import { Validation } from '@validation';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
@@ -33,7 +32,6 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private numberService: NumberService,
     private validationService: ValidationService,
-    private tutorialService: TutorialService,
     private configService: ConfigService
   ) {}
 
@@ -83,6 +81,4 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/ingredient/list']);
     }
   };
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

@@ -107,15 +107,7 @@
         >
           <mat-icon>list</mat-icon>
         </a>
-        <button
-          mat-button
-          matTooltip="Tutorial"
-          type="button"
-          (click)="openTutorial()"
-          style="margin-left: 10px"
-        >
-          <mat-icon>help</mat-icon>
-        </button>
+        <app-tutorial-button />
       </div>
       <span *ngIf="isQuickView"></span>
 

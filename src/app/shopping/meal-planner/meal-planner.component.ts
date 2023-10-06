@@ -9,7 +9,6 @@ import { User } from '@user';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { MealPlanService } from '../shared/meal-plan.service';
 import { MealPlan } from '../shared/meal-plan.model';
 import { RecipeService } from '@recipeService';
@@ -49,8 +48,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private userIngredientService: UserIngredientService,
     private notificationService: NotificationService,
-    private recipeIngredientService: RecipeIngredientService,
-    private tutorialService: TutorialService
+    private recipeIngredientService: RecipeIngredientService
   ) {}
 
   ngOnInit() {
@@ -186,6 +184,4 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
       );
     }
   };
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

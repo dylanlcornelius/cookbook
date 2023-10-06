@@ -24,7 +24,6 @@ import { UserIngredientService } from '@userIngredientService';
 import { UserIngredient } from '@userIngredient';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
-import { TutorialService } from '@tutorialService';
 import { LoadingService } from '@loadingService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { Ingredient } from '@ingredient';
@@ -77,7 +76,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private userIngredientService: UserIngredientService,
     private recipeFilterService: RecipeFilterService,
     private validationService: ValidationService,
-    private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
     private configService: ConfigService,
     private firebase: FirebaseService
@@ -348,8 +346,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeService.setForm(null);
     this.router.navigate(['/recipe/edit/', this.recipe.id]);
   };
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 
   cloneRecipe(): void {
     const recipeId = this.recipeService.create({

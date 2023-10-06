@@ -8,7 +8,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
 import { ValidationService } from '@modalService';
-import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
@@ -19,7 +18,6 @@ describe('IngredientsDetailComponent', () => {
   let ingredientService: IngredientService;
   let numberService: NumberService;
   let validationService: ValidationService;
-  let tutorialService: TutorialService;
   let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
@@ -43,7 +41,6 @@ describe('IngredientsDetailComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
     validationService = TestBed.inject(ValidationService);
-    tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
   });
 
@@ -115,16 +112,6 @@ describe('IngredientsDetailComponent', () => {
       component.deleteIngredientEvent(undefined);
 
       expect(ingredientService.delete).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

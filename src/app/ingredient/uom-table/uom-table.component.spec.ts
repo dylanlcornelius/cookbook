@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,7 +16,6 @@ describe('UomTableComponent', () => {
   let fixture: ComponentFixture<UomTableComponent>;
   let uomService: UomService;
   let numberService: NumberService;
-  let tutorialService: TutorialService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -39,7 +37,6 @@ describe('UomTableComponent', () => {
     fixture.detectChanges();
     uomService = TestBed.inject(UomService);
     numberService = TestBed.inject(NumberService);
-    tutorialService = TestBed.inject(TutorialService);
   });
 
   it('should create', () => {
@@ -97,16 +94,6 @@ describe('UomTableComponent', () => {
       expect(component.isValid).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
       expect(numberService.toFraction).toHaveBeenCalled();
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

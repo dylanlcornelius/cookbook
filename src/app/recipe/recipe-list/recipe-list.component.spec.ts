@@ -39,7 +39,6 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { UtilService } from '@utilService';
 import { Household } from '@household';
-import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
@@ -73,7 +72,6 @@ describe('RecipeListComponent', () => {
   let recipeIngredientService: RecipeIngredientService;
   let utilService: UtilService;
   let validationService: ValidationService;
-  let tutorialService: TutorialService;
   let mealPlanService: MealPlanService;
   let notificationService: NotificationService;
   let recipeHistoryService: RecipeHistoryService;
@@ -120,7 +118,6 @@ describe('RecipeListComponent', () => {
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     utilService = TestBed.inject(UtilService);
     validationService = TestBed.inject(ValidationService);
-    tutorialService = TestBed.inject(TutorialService);
     mealPlanService = TestBed.inject(MealPlanService);
     notificationService = TestBed.inject(NotificationService);
     recipeHistoryService = TestBed.inject(RecipeHistoryService);
@@ -855,16 +852,6 @@ describe('RecipeListComponent', () => {
       component.handlePageBottom(event);
 
       expect(component.paginator.pageIndex).toEqual(2);
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

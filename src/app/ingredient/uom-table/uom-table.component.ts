@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NumberService } from '@numberService';
-import { TutorialService } from '@tutorialService';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 
@@ -14,11 +13,7 @@ export class UomTableComponent {
   uoms: Array<UOM>;
   uomValue = 1;
 
-  constructor(
-    private numberService: NumberService,
-    private uomService: UomService,
-    private tutorialService: TutorialService
-  ) {
+  constructor(private numberService: NumberService, private uomService: UomService) {
     this.uoms = Object.values(UOM);
   }
 
@@ -42,6 +37,4 @@ export class UomTableComponent {
 
     return this.numberService.toFraction(result);
   }
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }
