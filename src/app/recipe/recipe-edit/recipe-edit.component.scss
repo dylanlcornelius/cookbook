@@ -25,14 +25,12 @@ td {
 .steps {
   gap: 10px;
 }
-.steps-button-row {
-  justify-content: end;
-}
 .ingredients {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   position: relative;
+  align-items: start;
 }
 .list-container {
   max-width: 500px;

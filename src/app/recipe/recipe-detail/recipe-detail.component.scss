@@ -40,6 +40,14 @@ dd {
 .recipe-description {
   white-space: pre-wrap;
 }
+.mat-card-actions.list-buttons {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 300px;
+  padding: 0 !important;
+}
 .mat-card-image {
   object-fit: cover;
   margin: 0 -16px;
@@ -87,7 +95,6 @@ dd {
   display: flex;
   gap: 15px;
 }
-
 @media screen and (max-width: 767px) {
   .detail-card {
     margin: 0;

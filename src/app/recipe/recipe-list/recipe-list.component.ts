@@ -169,8 +169,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                     recipe.displayType =
                       configs.find(({ value }) => value === recipe.type)?.displayValue || '';
 
-                    const timesCooked = histories.find(({ recipeId }) => recipeId === recipe.id)
-                      ?.timesCooked;
+                    const timesCooked = histories.find(
+                      ({ recipeId }) => recipeId === recipe.id
+                    )?.timesCooked;
                     recipe.hasNewCategory = !timesCooked || (timesCooked === 1 && !recipe.hasImage);
                     recipe.hasNeedsImageCategory =
                       recipe.hasAuthorPermission && timesCooked && !recipe.hasImage;
@@ -363,7 +364,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           ];
         } else {
           this.filtersList = [
-            { displayName: 'Categories', name: 'categories', values: categories },
             {
               icon: 'more_vert',
               values: [
@@ -375,6 +375,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 { displayName: 'Images', name: 'images', values: images },
               ],
             },
+            { displayName: 'Categories', name: 'categories', values: categories },
           ];
         }
         this.setSelectedFilterCount();

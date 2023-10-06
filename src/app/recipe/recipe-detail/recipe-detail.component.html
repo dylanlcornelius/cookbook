@@ -46,16 +46,10 @@
       </mat-card-title>
       <mat-card-subtitle>
         <span class="recipe-description">{{ recipe.description }}</span>
-        <mat-card-actions>
+        <mat-card-actions class="list-buttons">
           <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
             <span *ngIf="recipe.status !== 'private'">Published</span>
             <span *ngIf="recipe.status === 'private'">Private</span>
-          </button>
-          <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
-            Add to Plan
-          </button>
-          <button mat-button color="primary" *ngIf="!user.hasPlanner" (click)="addIngredients()">
-            Add to List
           </button>
           <app-recipe-cook-button
             [recipe]="recipe"
@@ -63,6 +57,12 @@
             [householdId]="householdId"
             (removeIngredients)="removeIngredients()"
           ></app-recipe-cook-button>
+          <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
+            Add to Plan
+          </button>
+          <button mat-button color="primary" *ngIf="!user.hasPlanner" (click)="addIngredients()">
+            Add to List
+          </button>
         </mat-card-actions>
       </mat-card-subtitle>
     </mat-card-header>
@@ -237,6 +237,21 @@
       </div>
 
       <div class="between">
+        <div class="right-buttons">
+          <a
+            mat-button
+            matTooltip="Delete Recipe"
+            color="warn"
+            (click)="deleteRecipe(recipe.id)"
+            *ngIf="hasAuthorPermission"
+          >
+            <mat-icon>delete</mat-icon>
+          </a>
+          <button mat-button matTooltip="Copy Recipe" (click)="cloneRecipe()">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+
         <button
           mat-button
           matTooltip="Edit Recipe"
@@ -247,32 +262,17 @@
         >
           <mat-icon>edit</mat-icon>
         </button>
-
-        <div class="right-buttons">
-          <button mat-button matTooltip="Copy Recipe" (click)="cloneRecipe()">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-          <a
-            mat-button
-            matTooltip="Delete Recipe"
-            color="warn"
-            (click)="deleteRecipe(recipe.id)"
-            *ngIf="hasAuthorPermission"
-          >
-            <mat-icon>delete</mat-icon>
-          </a>
-        </div>
       </div>
     </mat-card-actions>
   </mat-card>
 
   <div class="button-row">
-    <a mat-button matTooltip="Recipes List" color="primary" routerLink="/recipe/list">
-      <mat-icon>list</mat-icon>
-    </a>
     <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
+    <a mat-button matTooltip="Recipes List" color="primary" routerLink="/recipe/list">
+      <mat-icon>list</mat-icon>
+    </a>
   </div>
   <br />
   <br />

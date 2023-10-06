@@ -12,19 +12,6 @@
   ></mat-paginator>
 
   <div class="button-row center">
-    <button
-      mat-button
-      matTooltip="Add Recipe"
-      color="primary"
-      id="create-recipe-button"
-      (click)="openRecipeEditor()"
-    >
-      <mat-icon>add</mat-icon>
-    </button>
-    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
-      <mat-icon>help</mat-icon>
-    </button>
-
     <span *ngFor="let filters of filtersList" class="row-button">
       <span *ngIf="!filters.icon">
         <button
@@ -76,6 +63,20 @@
         </mat-menu>
       </span>
     </span>
+
+    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
+      <mat-icon>help</mat-icon>
+    </button>
+
+    <button
+      mat-button
+      matTooltip="Add Recipe"
+      color="primary"
+      id="create-recipe-button"
+      (click)="openRecipeEditor()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 
   <mat-form-field class="search-bar">
@@ -128,6 +129,12 @@
           <span *ngIf="recipe.status === 'private'">Private</span>
         </button>
         <div *ngIf="!recipe.hasAuthorPermission"></div>
+        <app-recipe-cook-button
+          [recipe]="recipe"
+          [uid]="user.uid"
+          [householdId]="householdId"
+          (removeIngredients)="removeIngredients(recipe.id)"
+        ></app-recipe-cook-button>
         <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe(recipe)">
           Add to Plan
         </button>
@@ -139,12 +146,6 @@
         >
           Add to List
         </button>
-        <app-recipe-cook-button
-          [recipe]="recipe"
-          [uid]="user.uid"
-          [householdId]="householdId"
-          (removeIngredients)="removeIngredients(recipe.id)"
-        ></app-recipe-cook-button>
       </mat-card-actions>
 
       <mat-chip-list class="categories">

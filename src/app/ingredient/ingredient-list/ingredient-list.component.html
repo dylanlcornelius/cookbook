@@ -5,12 +5,12 @@
 
 <div [hidden]="loading">
   <div class="button-row">
-    <a mat-button matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
-      <mat-icon>add</mat-icon>
-    </a>
     <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
+    <a mat-button matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
+      <mat-icon>add</mat-icon>
+    </a>
   </div>
 
   <mat-form-field class="search-bar">

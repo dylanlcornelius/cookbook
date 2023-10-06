@@ -25,16 +25,6 @@
     <button mat-button matTooltip="Add Item" type="submit" color="primary">
       <mat-icon>add</mat-icon>
     </button>
-
-    <button
-      mat-button
-      matTooltip="Tutorial"
-      type="button"
-      (click)="openTutorial()"
-      style="margin-left: 10px"
-    >
-      <mat-icon>help</mat-icon>
-    </button>
   </form>
 
   <div class="short-container" *ngIf="displayIngredients">
@@ -80,6 +70,10 @@
   </div>
 
   <div class="short-container button-row" *ngIf="displayIngredients">
+    <button mat-button matTooltip="Tutorial" type="button" (click)="openTutorial()">
+      <mat-icon>help</mat-icon>
+    </button>
+
     <button
       mat-button
       matTooltip="Remove All Items"

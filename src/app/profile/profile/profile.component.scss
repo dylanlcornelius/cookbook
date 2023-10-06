@@ -16,8 +16,9 @@
 .profile {
   column-gap: 35px;
 }
-.theme-icon {
-  margin-left: 20px;
+.profile-form {
+  display: flex;
+  flex-direction: column;
 }
 .theme-icon .mat-icon {
   vertical-align: bottom;
@@ -35,6 +36,17 @@
 .button-container {
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   padding-bottom: 20px;
+
+  .button-row {
+    padding-bottom: 30px;
+    width: 100%;
+  }
+}
+.profile-button-row {
+  align-items: end;
+  height: 100%;
+  margin-bottom: 16px;
+  margin-right: 0;
 }
 .chart-container {
   height: 55vh;

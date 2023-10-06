@@ -393,23 +393,35 @@
         </div>
       </mat-step>
     </mat-stepper>
-  </form>
 
-  <div class="button-row">
-    <a
-      mat-button
-      matTooltip="Back"
-      color="primary"
-      [routerLink]="['/recipe/detail/', recipe.id]"
-      *ngIf="id"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </a>
-    <a mat-button matTooltip="Recipes List" color="primary" routerLink="/recipe/list" *ngIf="!id">
-      <mat-icon>list</mat-icon>
-    </a>
-    <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
-      <mat-icon>help</mat-icon>
-    </button>
-  </div>
+    <div class="button-row between">
+      <div>
+        <a
+          mat-button
+          matTooltip="Back"
+          color="primary"
+          [routerLink]="['/recipe/detail/', recipe.id]"
+          *ngIf="id"
+        >
+          <mat-icon>arrow_back</mat-icon>
+        </a>
+        <a
+          mat-button
+          matTooltip="Recipes List"
+          color="primary"
+          routerLink="/recipe/list"
+          *ngIf="!id"
+        >
+          <mat-icon>list</mat-icon>
+        </a>
+        <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
+          <mat-icon>help</mat-icon>
+        </button>
+      </div>
+
+      <button mat-button matTooltip="Save Recipe" type="submit" name="Save" color="primary">
+        <mat-icon>done</mat-icon>
+      </button>
+    </div>
+  </form>
 </div>

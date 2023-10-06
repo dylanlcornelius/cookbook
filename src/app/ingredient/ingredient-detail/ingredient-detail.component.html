@@ -44,29 +44,29 @@
     <mat-card-actions class="between">
       <a
         mat-button
-        matTooltip="Edit Ingredient"
-        color="primary"
-        [routerLink]="['/ingredient/edit/', ingredient.id]"
-      >
-        <mat-icon>edit</mat-icon>
-      </a>
-      <a
-        mat-button
         matTooltip="Delete Ingredient"
         color="warn"
         (click)="deleteIngredient(ingredient.id)"
       >
         <mat-icon>delete</mat-icon>
       </a>
+      <a
+        mat-button
+        matTooltip="Edit Ingredient"
+        color="primary"
+        [routerLink]="['/ingredient/edit/', ingredient.id]"
+      >
+        <mat-icon>edit</mat-icon>
+      </a>
     </mat-card-actions>
   </mat-card>
 
   <div class="button-row">
-    <a mat-button matTooltip="Grocery Items List" color="primary" routerLink="/ingredient/list">
-      <mat-icon>list</mat-icon>
-    </a>
     <button mat-button matTooltip="Tutorial" (click)="openTutorial()">
       <mat-icon>help</mat-icon>
     </button>
+    <a mat-button matTooltip="Grocery Items List" color="primary" routerLink="/ingredient/list">
+      <mat-icon>list</mat-icon>
+    </a>
   </div>
 </div>

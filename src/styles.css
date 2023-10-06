@@ -89,11 +89,9 @@ dt {
 }
 .button-row {
   display: flex;
+  justify-content: end;
   gap: 15px;
   margin: 10px auto;
-}
-.button-row .row-button:first-child {
-  margin-left: 0;
 }
 .search-bar {
   display: contents !important;
@@ -141,7 +139,10 @@ dt {
 .mat-card-actions .mat-button {
   margin: 0 !important;
 }
-.mat-standard-chip {
+.mat-standard-chip,
+.mat-stepper-horizontal,
+.mat-stepper-vertical,
+.mat-tab-group {
   border-radius: 4px !important;
 }
 app-comment-list .mat-form-field-wrapper {

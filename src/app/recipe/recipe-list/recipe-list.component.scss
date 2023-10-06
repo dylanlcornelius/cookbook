@@ -10,8 +10,8 @@ h2 {
 .button-row {
   margin: 0 auto;
 }
-.row-button:first-of-type {
-  margin-left: auto;
+.row-button:last-of-type {
+  margin-right: auto;
 }
 .row-button button {
   padding: 5px;
