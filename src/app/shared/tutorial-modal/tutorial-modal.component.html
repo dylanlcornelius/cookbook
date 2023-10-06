@@ -4,19 +4,25 @@
     <div class="description">{{ tutorial?.text }}</div>
 
     <div class="between">
-      <button mat-button (click)="previous()" [disabled]="tutorialIndex === 0">
+      <button
+        mat-button
+        matTooltip="Previous Tutorial"
+        (click)="previous()"
+        *ngIf="tutorialIndex > 0"
+      >
         <mat-icon>arrow_back</mat-icon>
       </button>
+      <span class="previous-button-placeholder" *ngIf="tutorialIndex === 0"></span>
 
       <span class="steps">{{ tutorialIndex + 1 }}/{{ tutorials.length }}</span>
 
-      <button mat-button (click)="next()">
+      <button mat-button matTooltip="Next Tutorial" (click)="next()">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
   </div>
 
-  <button mat-mini-fab color="primary" class="close-button" (click)="close()">
+  <button mat-button matTooltip="Close Tutorial" class="close-button" (click)="close()">
     <mat-icon>close</mat-icon>
   </button>
 </div>

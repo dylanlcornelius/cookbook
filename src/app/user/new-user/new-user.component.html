@@ -95,14 +95,11 @@
     <ng-template matStepLabel>Complete Setup</ng-template>
 
     <div class="button-row">
-      <a mat-button color="primary" [routerLink]="['/home']" [replaceUrl]="true">Save</a>
-      <a mat-button color="accent" [routerLink]="['/tutorial']" [replaceUrl]="true">
+      <button mat-button matStepperPrevious type="button">Back</button>
+      <a mat-button color="accent" [routerLink]="['/home']" [replaceUrl]="true">Save</a>
+      <a mat-button color="primary" [routerLink]="['/tutorial']" [replaceUrl]="true">
         Save and Start Tutorial
       </a>
-    </div>
-
-    <div class="stepper-button-row">
-      <button mat-button matStepperPrevious type="button">Back</button>
     </div>
   </mat-step>
 </mat-vertical-stepper>

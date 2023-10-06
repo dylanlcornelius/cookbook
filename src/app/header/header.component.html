@@ -3,11 +3,22 @@
     <div class="between">
       <a routerLink="/home" class="title">{{ title }}</a>
       <span *ngIf="(isLoggedIn | async) && !user?.isPending" [@fadeInAnimation]>
-        <a mat-button class="title-button" [routerLink]="continueNav.link" *ngIf="continueNav">
+        <a
+          mat-button
+          matTooltip="Continue Editing Recipe"
+          class="title-button"
+          [routerLink]="continueNav.link"
+          *ngIf="continueNav"
+        >
           <mat-icon>{{ continueNav.icon }}</mat-icon>
         </a>
 
-        <button mat-button class="title-button" [matMenuTriggerFor]="profileMenu">
+        <button
+          mat-button
+          matTooltip="Profile"
+          class="title-button"
+          [matMenuTriggerFor]="profileMenu"
+        >
           <mat-icon [matBadge]="householdNotifications" matBadgeSize="small">person</mat-icon>
         </button>
         <mat-menu #profileMenu="matMenu">
@@ -17,12 +28,19 @@
           </a>
         </mat-menu>
 
-        <a mat-button class="title-button" routerLink="/admin/dashboard" *ngIf="user?.isAdmin">
+        <a
+          mat-button
+          matTooltip="Admin Dashboard"
+          class="title-button"
+          routerLink="/admin/dashboard"
+          *ngIf="user?.isAdmin"
+        >
           <mat-icon [matBadge]="feedbackNotifications" matBadgeSize="small">apps</mat-icon>
         </a>
 
         <button
           mat-button
+          matTooltip="Navigation Menu"
           class="mobile title-button float-right"
           (click)="toggleNav()"
           *ngIf="isLoggedIn | async"
@@ -84,7 +102,7 @@
         </a>
 
         <div class="mobile-nav-bottom">
-          <button mat-button class="mobile-nav-button" style="border: none" (click)="signOut()">
+          <button mat-button class="mobile-nav-button" (click)="signOut()">
             <mat-icon>exit_to_app</mat-icon>
             <span class="mobile-nav-text">Sign-out</span>
           </button>

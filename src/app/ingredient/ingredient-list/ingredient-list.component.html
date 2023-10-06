@@ -5,12 +5,10 @@
 
 <div [hidden]="loading">
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
+    <app-tutorial-button />
+    <a mat-button matTooltip="Add Ingredient" color="primary" routerLink="/ingredient/edit">
       <mat-icon>add</mat-icon>
     </a>
-    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
-      <mat-icon>help</mat-icon>
-    </button>
   </div>
 
   <mat-form-field class="search-bar">
@@ -65,12 +63,14 @@
         >
           <span class="mobile-label">Pantry Quantity:</span>
           <span class="mobile-value">
-            <span style="margin: 0 10px">
-              <label class="table-col">
-                {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
-              </label>
-            </span>
-            <button mat-button color="primary" (click)="editIngredient(element.id)">Edit</button>
+            <button
+              mat-button
+              matTooltip="Edit Item"
+              color="primary"
+              (click)="editIngredient(element.id)"
+            >
+              {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
+            </button>
           </span>
         </mat-cell>
       </ng-container>
@@ -85,7 +85,7 @@
           <span class="mobile-label">List Quantity:</span>
 
           <span class="mobile-value">
-            <button mat-button (click)="removeIngredient(element.id)">
+            <button mat-button matTooltip="Remove Quantity" (click)="removeIngredient(element.id)">
               <mat-icon class="buy-icon">arrow_left</mat-icon>
             </button>
             <span style="margin: 0 10px">
@@ -93,7 +93,7 @@
                 {{ element.cartQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
               </label>
             </span>
-            <button mat-button (click)="addIngredient(element.id)">
+            <button mat-button matTooltip="Add Quantity" (click)="addIngredient(element.id)">
               <mat-icon class="buy-icon">arrow_right</mat-icon>
             </button>
           </span>

@@ -59,6 +59,7 @@ dt {
   display: flex;
   justify-content: center;
   justify-items: center;
+  align-items: center;
 }
 .between {
   display: flex !important;
@@ -88,11 +89,9 @@ dt {
 }
 .button-row {
   display: flex;
+  justify-content: end;
   gap: 15px;
   margin: 10px auto;
-}
-.button-row .row-button:first-child {
-  margin-left: 0;
 }
 .search-bar {
   display: contents !important;
@@ -106,7 +105,7 @@ dt {
 }
 .highlighted-element {
   outline: 3px solid red !important;
-  border-radius: 5px !important;
+  border-radius: 4px !important;
 }
 .indicator.mat-icon {
   height: 15px;
@@ -136,6 +135,15 @@ dt {
   display: flex !important;
   justify-content: center;
   padding: 0 !important;
+}
+.mat-card-actions .mat-button {
+  margin: 0 !important;
+}
+.mat-standard-chip,
+.mat-stepper-horizontal,
+.mat-stepper-vertical,
+.mat-tab-group {
+  border-radius: 4px !important;
 }
 app-comment-list .mat-form-field-wrapper {
   padding: 0 !important;

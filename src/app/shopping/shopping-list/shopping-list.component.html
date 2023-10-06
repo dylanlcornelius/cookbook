@@ -3,7 +3,7 @@
 <h2>Your Shopping List</h2>
 
 <div *ngIf="!loading">
-  <form class="short-container item-form" (ngSubmit)="addItem(ingredientControl.value)">
+  <form class="short-container item-form center" (ngSubmit)="addItem(ingredientControl.value)">
     <mat-form-field class="item-form-field">
       <input
         matInput
@@ -22,24 +22,13 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <button mat-mini-fab matTooltip="Add Item" type="submit" color="primary">
+    <button mat-button matTooltip="Add Item" type="submit" color="primary">
       <mat-icon>add</mat-icon>
-    </button>
-
-    <button
-      mat-mini-fab
-      matTooltip="Tutorial"
-      type="button"
-      color="primary"
-      (click)="openTutorial()"
-      style="margin-left: 10px"
-    >
-      <mat-icon>help</mat-icon>
     </button>
   </form>
 
   <div class="short-container" *ngIf="displayIngredients">
-    <div *ngFor="let categoryIngredients of displayIngredients | keyvalue: categoryOrder">
+    <div *ngFor="let categoryIngredients of displayIngredients | keyvalue : categoryOrder">
       <h6>{{ categoryIngredients.key }}</h6>
 
       <div class="table-container mat-elevation-z8 box">
@@ -49,12 +38,13 @@
             [routerLink]="['/ingredient/detail/', ingredient.id]"
             *ngIf="!ingredient.isItem"
           >
-            {{ ingredient.cartQuantity | number: '1.0-2' }}
+            {{ ingredient.cartQuantity | number : '1.0-2' }}
             {{ ingredient.uom === 'other' ? '' : ingredient.uom }}
             {{ ingredient.name }}
           </a>
           <button
             mat-raised-button
+            matTooltip="Remove Item"
             color="primary"
             *ngIf="!ingredient.isItem"
             (click)="addIngredientToPantry(ingredient.id)"
@@ -67,6 +57,7 @@
           </span>
           <button
             mat-raised-button
+            matTooltip="Remove Item"
             color="primary"
             *ngIf="ingredient.isItem"
             (click)="removeItem(ingredient.id)"
@@ -79,8 +70,16 @@
   </div>
 
   <div class="short-container button-row" *ngIf="displayIngredients">
-    <button mat-raised-button color="primary" style="float: right" (click)="addAllToPantry()">
-      Add All
+    <app-tutorial-button />
+
+    <button
+      mat-button
+      matTooltip="Remove All Items"
+      color="primary"
+      style="float: right"
+      (click)="addAllToPantry()"
+    >
+      <mat-icon>playlist_add_check</mat-icon>
     </button>
   </div>
 </div>

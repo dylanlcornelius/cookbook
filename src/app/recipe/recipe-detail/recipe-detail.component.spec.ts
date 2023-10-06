@@ -21,7 +21,6 @@ import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
-import { TutorialService } from '@tutorialService';
 import { RecipeFilterService } from '@recipeFilterService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
@@ -44,7 +43,6 @@ describe('RecipeDetailComponent', () => {
   let recipeIngredientService: RecipeIngredientService;
   let recipeFilterService: RecipeFilterService;
   let validationService: ValidationService;
-  let tutorialService: TutorialService;
   let mealPlanService: MealPlanService;
   let configService: ConfigService;
   let firebase: FirebaseService;
@@ -76,7 +74,6 @@ describe('RecipeDetailComponent', () => {
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     recipeFilterService = TestBed.inject(RecipeFilterService);
     validationService = TestBed.inject(ValidationService);
-    tutorialService = TestBed.inject(TutorialService);
     mealPlanService = TestBed.inject(MealPlanService);
     configService = TestBed.inject(ConfigService);
     firebase = TestBed.inject(FirebaseService);
@@ -543,16 +540,6 @@ describe('RecipeDetailComponent', () => {
 
       expect(recipeService.setForm).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalled();
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 

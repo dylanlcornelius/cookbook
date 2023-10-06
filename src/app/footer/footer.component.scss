@@ -1,12 +1,15 @@
 .footer {
+  background-image: var(--footer);
+  box-shadow: var(--shadow);
   bottom: 0;
   position: relative;
   height: 50px;
-  padding: 15px;
+  padding: 0 16px;
   text-align: center;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .author-text,
 .author-text a {

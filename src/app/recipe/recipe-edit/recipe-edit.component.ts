@@ -24,7 +24,6 @@ import { first, map, startWith, takeUntil } from 'rxjs/operators';
 import { Ingredient } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ValidationService } from '@modalService';
@@ -99,7 +98,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private uomService: UomService,
     private validationService: ValidationService,
-    private tutorialService: TutorialService,
     private configService: ConfigService
   ) {
     this.uoms = Object.values(UOM);
@@ -169,7 +167,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         Observable<Ingredient[]>,
         Observable<Recipe[]>,
         Observable<Config[]>,
-        Observable<Recipe>?,
+        Observable<Recipe>?
       ] = [queryParams$, ingredients$, recipes$, configs$];
       if (this.id) {
         observables$.push(this.recipeService.get(this.id));
@@ -187,7 +185,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
             Ingredient[],
             Recipe[],
             Config[],
-            Recipe?,
+            Recipe?
           ]) => {
             this.selectedIndex = queryParams['step'] || 0;
             this.ingredients = ingredients;
@@ -515,6 +513,4 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }

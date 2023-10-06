@@ -22,16 +22,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <button
-      mat-mini-fab
-      matTooltip="Tutorial"
-      type="button"
-      color="primary"
-      (click)="openTutorial()"
-      style="margin-left: 10px"
-    >
-      <mat-icon>help</mat-icon>
-    </button>
+    <app-tutorial-button />
   </form>
 
   <div class="short-container">
@@ -45,7 +36,7 @@
 
         <ng-container matColumnDef="actions">
           <mat-cell *matCellDef="let element; let i = index">
-            <button mat-button (click)="removeRecipe(i)">
+            <button mat-button matTooltip="Remove Recipe" (click)="removeRecipe(i)">
               <mat-icon>close</mat-icon>
             </button>
 

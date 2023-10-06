@@ -16,7 +16,6 @@ import { NotificationService, ValidationService } from '@modalService';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { RouterModule } from '@angular/router';
-import { TutorialService } from '@tutorialService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { NumberService } from '@numberService';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
@@ -33,7 +32,6 @@ describe('ShoppingListComponent', () => {
   let ingredientService: IngredientService;
   let notificationService: NotificationService;
   let validationService: ValidationService;
-  let tutorialService: TutorialService;
   let recipeIngredientService: RecipeIngredientService;
   let numberService: NumberService;
   let configService: ConfigService;
@@ -60,7 +58,6 @@ describe('ShoppingListComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     notificationService = TestBed.inject(NotificationService);
     validationService = TestBed.inject(ValidationService);
-    tutorialService = TestBed.inject(TutorialService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
     numberService = TestBed.inject(NumberService);
     configService = TestBed.inject(ConfigService);
@@ -337,16 +334,6 @@ describe('ShoppingListComponent', () => {
       expect(userIngredientService.buyUserIngredient).toHaveBeenCalledWith(3, true);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(userItemService.delete).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

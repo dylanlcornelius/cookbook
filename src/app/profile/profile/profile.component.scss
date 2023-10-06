@@ -1,6 +1,7 @@
 .mat-tab-group {
   max-width: 1000px;
   margin: 0 auto;
+  border-radius: 4px;
 }
 .box {
   transition: all 1s ease-in-out;
@@ -15,8 +16,9 @@
 .profile {
   column-gap: 35px;
 }
-.theme-icon {
-  margin-left: 20px;
+.profile-form {
+  display: flex;
+  flex-direction: column;
 }
 .theme-icon .mat-icon {
   vertical-align: bottom;
@@ -32,8 +34,19 @@
   aspect-ratio: 1/1;
 }
 .button-container {
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   padding-bottom: 20px;
+
+  .button-row {
+    padding-bottom: 10px;
+    width: 100%;
+    justify-content: start;
+  }
+}
+.profile-button-row {
+  align-items: end;
+  height: 100%;
+  margin-bottom: 16px;
+  margin-right: 0;
 }
 .chart-container {
   height: 55vh;

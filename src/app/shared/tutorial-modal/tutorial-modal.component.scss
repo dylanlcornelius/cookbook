@@ -9,16 +9,21 @@
   opacity: 0.5;
 }
 .modal {
+  background-image: var(--modal);
+  box-shadow: var(--shadow);
   z-index: 301;
   position: fixed;
   width: 200px;
   padding: 10px;
-  border-radius: 2px;
+  border-radius: 4px;
   word-break: break-word;
   transition: all 0.3s ease-in-out;
 }
 .description {
   padding: 10px;
+}
+.previous-button-placeholder {
+  width: 64px;
 }
 .steps {
   align-self: center;

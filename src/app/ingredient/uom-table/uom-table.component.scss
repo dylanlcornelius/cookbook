@@ -23,12 +23,13 @@ input[type='number'] {
 table {
   margin: 0 auto;
   min-width: 1000px;
+  border-spacing: 0;
 }
 th,
 td {
   padding: 5px 10px;
 }
 td {
-  border-left: 1px solid grey;
-  border-top: 1px solid grey;
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
 }

@@ -21,7 +21,6 @@ import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
-import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
@@ -45,7 +44,6 @@ describe('RecipeEditComponent', () => {
   let uomService: UomService;
   let ingredientService: IngredientService;
   let validationService: ValidationService;
-  let tutorialService: TutorialService;
   let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
@@ -81,7 +79,6 @@ describe('RecipeEditComponent', () => {
     uomService = TestBed.inject(UomService);
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
-    tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
 
     component.recipesForm = new FormBuilder().group({
@@ -820,16 +817,6 @@ describe('RecipeEditComponent', () => {
         'id'
       );
       expect(router.navigate).toHaveBeenCalledWith(['/recipe/edit']);
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

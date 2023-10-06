@@ -2,7 +2,6 @@
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
-  display: block;
 }
 .item-form {
   display: flex;
@@ -14,12 +13,13 @@
 }
 .table-container {
   margin-bottom: 20px;
+  border-radius: 4px;
 }
 .table-row {
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
-  border-bottom: 1px solid #5a5a5a;
+  border-bottom: 1px solid var(--border);
 }
 .table-row:last-child {
   border: none;

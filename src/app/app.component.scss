@@ -47,6 +47,8 @@
   overflow-y: auto;
 }
 .page {
+  background-color: var(--page);
+  color: var(--text);
   min-height: 100%;
   margin-bottom: -50px;
   position: relative;
@@ -55,15 +57,25 @@ section {
   padding: 15px 0;
   width: 90%;
 }
+.box,
+.mobile-nav,
+.recipe-card {
+  background-color: var(--block);
+}
 .clear-footer {
   height: 50px;
   clear: both;
 }
+.indicator {
+  color: var(--border);
+}
 .mat-button,
-.mat-raised-button,
-.mat-mini-fab {
+.mat-raised-button {
   outline: none !important;
 }
 .mat-paginator {
   background: inherit !important;
+}
+.mat-card {
+  color: var(--text) !important;
 }

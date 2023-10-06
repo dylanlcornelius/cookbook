@@ -5,7 +5,7 @@
 
 <div
   class="app"
-  [ngClass]="{ dark: (user | async)?.theme }"
+  [ngClass]="{ dark: (user | async)?.theme, light: !(user | async)?.theme }"
   [hidden]="(isLoggedIn | async) === false && (isGuest | async) === false"
 >
   <div class="page">

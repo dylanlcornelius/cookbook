@@ -13,10 +13,8 @@
     [uid]="params.uid"
   ></app-rating>
   <br />
-  <div class="center">
-    <button mat-raised-button color="primary" (click)="confirm()" style="margin-right: 20px">
-      Cook without Rating
-    </button>
+  <div class="button-row">
     <button mat-raised-button color="warn" (click)="cancel()">Close</button>
+    <button mat-raised-button color="primary" (click)="confirm()">Cook without Rating</button>
   </div>
 </app-modal>

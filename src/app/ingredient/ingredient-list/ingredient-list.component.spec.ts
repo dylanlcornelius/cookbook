@@ -16,7 +16,6 @@ import { CurrentUserService } from '@currentUserService';
 import { RouterModule } from '@angular/router';
 import { HouseholdService } from '@householdService';
 import { Household } from '@household';
-import { TutorialService } from '@tutorialService';
 import { NumberService } from '@numberService';
 import { Config } from '@config';
 import { ConfigService } from '@configService';
@@ -29,7 +28,6 @@ describe('IngredientListComponent', () => {
   let userIngredientService: UserIngredientService;
   let ingredientService: IngredientService;
   let numberService: NumberService;
-  let tutorialService: TutorialService;
   let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
@@ -52,7 +50,6 @@ describe('IngredientListComponent', () => {
     userIngredientService = TestBed.inject(UserIngredientService);
     ingredientService = TestBed.inject(IngredientService);
     numberService = TestBed.inject(NumberService);
-    tutorialService = TestBed.inject(TutorialService);
     configService = TestBed.inject(ConfigService);
   });
 
@@ -220,16 +217,6 @@ describe('IngredientListComponent', () => {
       component.addIngredient('id');
 
       expect(userIngredientService.update).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('openTutorial', () => {
-    it('should open the tutorial', () => {
-      spyOn(tutorialService, 'openTutorial');
-
-      component.openTutorial();
-
-      expect(tutorialService.openTutorial).toHaveBeenCalled();
     });
   });
 });

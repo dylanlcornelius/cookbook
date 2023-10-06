@@ -23,6 +23,7 @@ import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TutorialModalComponent } from './tutorial-modal/tutorial-modal.component';
 import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component';
+import { TutorialButtonComponent } from './tutorial-button/tutorial-button.component';
 import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
 import { FormValidationDirective } from './form-validation.directive';
 
@@ -36,6 +37,7 @@ import { FormValidationDirective } from './form-validation.directive';
     ImageUploadComponent,
     TutorialModalComponent,
     TutorialComponent,
+    TutorialButtonComponent,
     OptionalIngredientsPipe,
     FormValidationDirective,
   ],
@@ -80,6 +82,7 @@ import { FormValidationDirective } from './form-validation.directive';
     ModalComponent,
     ImageUploadComponent,
     TutorialModalComponent,
+    TutorialButtonComponent,
     OptionalIngredientsPipe,
     FormValidationDirective,
   ],

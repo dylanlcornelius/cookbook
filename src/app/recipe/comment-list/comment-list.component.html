@@ -30,6 +30,7 @@
 
     <button
       mat-button
+      [matTooltip]="comment.showResolved ? 'Collapse Comment' : 'Expand Comment'"
       class="resolved"
       (click)="toggleResolved(comment)"
       *ngIf="comment.isResolved"
@@ -45,34 +46,31 @@
           <mat-label>Edit comment</mat-label>
           <textarea matInput [value]="comment.text" [formControl]="comment.control"></textarea>
         </mat-form-field>
-
-        <div class="button-row">
-          <button
-            mat-button
-            type="button"
-            color="primary"
-            (click)="editComment(comment, comment.control.value)"
-          >
-            Save
-          </button>
-        </div>
       </form>
-    </div>
 
-    <div
-      class="button-row"
-      *ngIf="!comment.isResolved || (comment.isResolved && comment.showResolved)"
-    >
-      <button
-        mat-button
-        color="primary"
-        (click)="resolveComment(comment)"
-        *ngIf="!comment.parent && !comment.isResolved"
-      >
-        Resolve
-      </button>
-      <button mat-button color="primary" (click)="toggleEdit(comment)">Edit</button>
-      <button mat-button color="warn" (click)="deleteComment(comment)">Delete</button>
+      <div class="button-row">
+        <button
+          mat-button
+          color="accent"
+          (click)="resolveComment(comment)"
+          *ngIf="!comment.parent && !comment.isResolved"
+        >
+          Resolve
+        </button>
+        <button mat-button color="warn" (click)="deleteComment(comment)">Delete</button>
+        <button mat-button color="primary" (click)="toggleEdit(comment)" *ngIf="!comment.isEditing">
+          Edit
+        </button>
+        <button
+          mat-button
+          type="button"
+          color="primary"
+          (click)="editComment(comment, comment.control.value); toggleEdit(comment)"
+          *ngIf="comment.isEditing"
+        >
+          Save
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>

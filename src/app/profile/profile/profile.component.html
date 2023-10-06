@@ -34,6 +34,7 @@
             #formDirective="ngForm"
             (ngSubmit)="onSubmit()"
             appFormValidation
+            class="profile-form"
           >
             <div class="container">
               <mat-form-field appearance="outline">
@@ -73,13 +74,7 @@
             <br />
 
             <div class="container button-container">
-              <div>
-                <mat-slide-toggle
-                  matInput
-                  formControlName="theme"
-                  ngDefaultControl
-                  [checked]="userForm.get('theme').value"
-                ></mat-slide-toggle>
+              <div class="button-row">
                 <span
                   *ngIf="!userForm.get('theme').value"
                   class="theme-icon"
@@ -94,15 +89,15 @@
                 >
                   <mat-icon>brightness_3</mat-icon>
                 </span>
-              </div>
-
-              <div *ngIf="user.isAdmin">
                 <mat-slide-toggle
                   matInput
-                  formControlName="hasAdminView"
+                  formControlName="theme"
                   ngDefaultControl
-                  [checked]="userForm.get('hasAdminView').value"
+                  [checked]="userForm.get('theme').value"
                 ></mat-slide-toggle>
+              </div>
+
+              <div *ngIf="user.isAdmin" class="button-row">
                 <span
                   *ngIf="!userForm.get('hasAdminView').value"
                   class="theme-icon"
@@ -117,21 +112,19 @@
                 >
                   <mat-icon>visibility</mat-icon>
                 </span>
+                <mat-slide-toggle
+                  matInput
+                  formControlName="hasAdminView"
+                  ngDefaultControl
+                  [checked]="userForm.get('hasAdminView').value"
+                ></mat-slide-toggle>
               </div>
             </div>
 
-            <div class="button-row">
-              <button mat-mini-fab type="submit" matTooltip="Save Settings" color="primary">
+            <div class="button-row profile-button-row">
+              <app-tutorial-button />
+              <button mat-button type="submit" matTooltip="Save Settings" color="primary">
                 <mat-icon>done</mat-icon>
-              </button>
-              <button
-                mat-mini-fab
-                matTooltip="Tutorial"
-                type="button"
-                color="primary"
-                (click)="openTutorial()"
-              >
-                <mat-icon>help</mat-icon>
               </button>
             </div>
           </form>

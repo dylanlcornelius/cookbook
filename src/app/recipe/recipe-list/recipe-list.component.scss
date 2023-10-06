@@ -10,11 +10,12 @@ h2 {
 .button-row {
   margin: 0 auto;
 }
-.row-button:first-of-type {
-  margin-left: auto;
+.row-button:last-of-type {
+  margin-right: auto;
 }
 .row-button button {
-  padding: 0;
+  padding: 5px;
+  min-width: fit-content;
 }
 .mat-menu-item {
   display: block;
@@ -37,18 +38,10 @@ h2 {
   aspect-ratio: 1/1;
 }
 .mat-card-actions {
-  display: flex !important;
-  justify-content: center;
-  width: min-content;
-  margin: 0 auto !important;
-  padding: 0 !important;
-}
-.mat-card-actions .mat-button {
-  margin: 0 0 0 20px !important;
-  padding: 0;
-}
-.mat-card-actions .mat-button:first-child {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
   margin: 0 !important;
+  padding: 0 !important;
 }
 .categories {
   display: none;
@@ -58,9 +51,9 @@ h2 {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -10px;
+  bottom: -12px;
   padding: 0 10px;
-  max-height: 32px;
+  max-height: 24px;
   z-index: 2;
   overflow: clip;
 }
@@ -68,6 +61,7 @@ h2 {
   font-size: 12px;
   padding: 8px;
   margin: 4px 2px;
+  min-height: 24px;
 }
 .mat-paginator {
   background: inherit;

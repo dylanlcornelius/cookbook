@@ -2,7 +2,7 @@
 <app-recipe-history-modal [Params]="recipeHistoryModalParams"></app-recipe-history-modal>
 
 <div *ngIf="!loading">
-  <mat-card class="primary-text-color mat-elevation-z8">
+  <mat-card class="mat-elevation-z8">
     <mat-progress-bar
       class="image-progress"
       mode="determinate"
@@ -16,7 +16,12 @@
       </div>
 
       <div class="icon-buttons">
-        <button mat-button class="share-button" (click)="copyShareableLink()">
+        <button
+          mat-button
+          matTooltip="Copy Recipe Link"
+          class="share-button"
+          (click)="copyShareableLink()"
+        >
           <mat-icon>share</mat-icon>
         </button>
 
@@ -41,16 +46,10 @@
       </mat-card-title>
       <mat-card-subtitle>
         <span class="recipe-description">{{ recipe.description }}</span>
-        <mat-card-actions>
+        <mat-card-actions class="list-buttons">
           <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
             <span *ngIf="recipe.status !== 'private'">Published</span>
             <span *ngIf="recipe.status === 'private'">Private</span>
-          </button>
-          <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
-            Add to Plan
-          </button>
-          <button mat-button color="primary" *ngIf="!user.hasPlanner" (click)="addIngredients()">
-            Add to List
           </button>
           <app-recipe-cook-button
             [recipe]="recipe"
@@ -58,6 +57,12 @@
             [householdId]="householdId"
             (removeIngredients)="removeIngredients()"
           ></app-recipe-cook-button>
+          <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
+            Add to Plan
+          </button>
+          <button mat-button color="primary" *ngIf="!user.hasPlanner" (click)="addIngredients()">
+            Add to List
+          </button>
         </mat-card-actions>
       </mat-card-subtitle>
     </mat-card-header>
@@ -130,7 +135,12 @@
 
           <dt>Times Cooked</dt>
           <dd>
-            <button mat-button color="primary" (click)="updateTimesCooked(recipe)">
+            <button
+              mat-button
+              matTooltip="Edit Times Cooked"
+              color="primary"
+              (click)="updateTimesCooked(recipe)"
+            >
               {{ timesCooked }}
             </button>
           </dd>
@@ -159,11 +169,11 @@
       </mat-card-content>
 
       <mat-card-content class="center-text" *ngIf="recipe.ingredients && recipe.ingredients.length">
-        <dl *ngIf="(recipe.ingredients | filterOptional: false)?.length !== 0">
+        <dl *ngIf="(recipe.ingredients | filterOptional : false)?.length !== 0">
           <dt>Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional: false">
+            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional : false">
               <a
                 class="author-link"
                 [routerLink]="['/recipe/detail/', ingredient.id]"
@@ -185,11 +195,11 @@
           </div>
         </dl>
 
-        <dl *ngIf="(recipe.ingredients | filterOptional: true)?.length !== 0">
+        <dl *ngIf="(recipe.ingredients | filterOptional : true)?.length !== 0">
           <dt>Optional Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional: true">
+            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional : true">
               <a
                 class="author-link"
                 [routerLink]="['/recipe/detail/', ingredient.id]"
@@ -217,6 +227,7 @@
       <div class="between">
         <button
           mat-raised-button
+          matTooltip="Filter Recipe List by This Author"
           (click)="setAuthorFilter(recipe.author)"
           class="author-link"
           *ngIf="recipe.author"
@@ -226,8 +237,23 @@
       </div>
 
       <div class="between">
+        <div class="right-buttons">
+          <a
+            mat-button
+            matTooltip="Delete Recipe"
+            color="warn"
+            (click)="deleteRecipe(recipe.id)"
+            *ngIf="hasAuthorPermission"
+          >
+            <mat-icon>delete</mat-icon>
+          </a>
+          <button mat-button matTooltip="Copy Recipe" (click)="cloneRecipe()">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+
         <button
-          mat-mini-fab
+          mat-button
           matTooltip="Edit Recipe"
           color="primary"
           id="edit-recipe-button"
@@ -236,32 +262,15 @@
         >
           <mat-icon>edit</mat-icon>
         </button>
-
-        <div class="right-buttons">
-          <button mat-mini-fab matTooltip="Copy Recipe" color="primary" (click)="cloneRecipe()">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-          <a
-            mat-mini-fab
-            matTooltip="Delete Recipe"
-            color="warn"
-            (click)="deleteRecipe(recipe.id)"
-            *ngIf="hasAuthorPermission"
-          >
-            <mat-icon>delete</mat-icon>
-          </a>
-        </div>
       </div>
     </mat-card-actions>
   </mat-card>
 
   <div class="button-row">
-    <a mat-mini-fab matTooltip="Recipes List" color="primary" routerLink="/recipe/list">
+    <app-tutorial-button />
+    <a mat-button matTooltip="Recipes List" color="primary" routerLink="/recipe/list">
       <mat-icon>list</mat-icon>
     </a>
-    <button mat-mini-fab matTooltip="Tutorial" color="primary" (click)="openTutorial()">
-      <mat-icon>help</mat-icon>
-    </button>
   </div>
   <br />
   <br />

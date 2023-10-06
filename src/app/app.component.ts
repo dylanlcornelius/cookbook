@@ -31,7 +31,9 @@ export class AppComponent implements OnInit {
       if (user.uid) {
         if (user.theme) {
           this.overlayContainer.getContainerElement().classList.add('dark');
+          this.overlayContainer.getContainerElement().classList.remove('light');
         } else {
+          this.overlayContainer.getContainerElement().classList.add('light');
           this.overlayContainer.getContainerElement().classList.remove('dark');
         }
       }

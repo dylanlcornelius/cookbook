@@ -32,7 +32,6 @@ import { UserIngredient } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
-import { TutorialService } from '@tutorialService';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { NotificationService, ValidationService } from '@modalService';
 import { Validation } from '@validation';
@@ -88,7 +87,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private recipeIngredientService: RecipeIngredientService,
     private notificationService: NotificationService,
     private validationService: ValidationService,
-    private tutorialService: TutorialService,
     private mealPlanService: MealPlanService,
     private recipeHistoryService: RecipeHistoryService,
     private configService: ConfigService,
@@ -169,8 +167,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                     recipe.displayType =
                       configs.find(({ value }) => value === recipe.type)?.displayValue || '';
 
-                    const timesCooked = histories.find(({ recipeId }) => recipeId === recipe.id)
-                      ?.timesCooked;
+                    const timesCooked = histories.find(
+                      ({ recipeId }) => recipeId === recipe.id
+                    )?.timesCooked;
                     recipe.hasNewCategory = !timesCooked || (timesCooked === 1 && !recipe.hasImage);
                     recipe.hasNeedsImageCategory =
                       recipe.hasAuthorPermission && timesCooked && !recipe.hasImage;
@@ -363,7 +362,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           ];
         } else {
           this.filtersList = [
-            { displayName: 'Categories', name: 'categories', values: categories },
             {
               icon: 'more_vert',
               values: [
@@ -375,6 +373,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 { displayName: 'Images', name: 'images', values: images },
               ],
             },
+            { displayName: 'Categories', name: 'categories', values: categories },
           ];
         }
         this.setSelectedFilterCount();
@@ -566,6 +565,4 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.paginator.page.emit(event);
     return event;
   }
-
-  openTutorial = (): void => this.tutorialService.openTutorial(true);
 }
