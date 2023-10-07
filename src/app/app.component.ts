@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
     this.isGuest = this.currentUserService.getIsGuest();
 
+    document.body.classList.add('light');
     this.user.subscribe(user => {
       if (user.uid) {
         if (user.theme) {
