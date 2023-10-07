@@ -21,8 +21,9 @@ export class UserIngredient extends Model {
   }
 
   public getObject(): UserIngredientObject {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { id, amount, uom, ...userIngredient } = this;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return userIngredient;
   }
 }

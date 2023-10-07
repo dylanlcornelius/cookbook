@@ -713,6 +713,7 @@ describe('RecipeEditComponent', () => {
         hasImage: true,
         meanRating: 0.33,
         creationDate: 'test',
+        status: 'published',
       });
       component.recipesForm = new FormBuilder().group({
         ingredients: new FormBuilder().array([new FormBuilder().group({ name: [] })]),
@@ -739,6 +740,7 @@ describe('RecipeEditComponent', () => {
           meanRating: 0.33,
           ratings: [],
           creationDate: 'test',
+          status: 'published',
         }).getObject(),
         'id'
       );

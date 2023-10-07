@@ -39,11 +39,11 @@
   .button-row {
     padding-bottom: 10px;
     width: 100%;
-    justify-content: start;
+    justify-content: flex-start;
   }
 }
 .profile-button-row {
-  align-items: end;
+  align-items: flex-end;
   height: 100%;
   margin-bottom: 16px;
   margin-right: 0;
