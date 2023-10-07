@@ -3,11 +3,7 @@
   <div class="loading-message">Loading user settings</div>
 </div>
 
-<div
-  class="app"
-  [ngClass]="{ dark: (user | async)?.theme, light: !(user | async)?.theme }"
-  [hidden]="(isLoggedIn | async) === false && (isGuest | async) === false"
->
+<div class="app" [hidden]="(isLoggedIn | async) === false && (isGuest | async) === false">
   <div class="page">
     <app-header></app-header>
 

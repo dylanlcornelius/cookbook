@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { fadeComponentAnimation } from 'src/app/theme/animations';
 import { User } from '@user';
 import { CurrentUserService } from '@currentUserService';
@@ -17,10 +16,7 @@ export class AppComponent implements OnInit {
   isLoggedIn: Observable<boolean>;
   isGuest: Observable<boolean>;
 
-  constructor(
-    private overlayContainer: OverlayContainer,
-    private currentUserService: CurrentUserService
-  ) {}
+  constructor(private currentUserService: CurrentUserService) {}
 
   ngOnInit() {
     this.user = this.currentUserService.getCurrentUser();
@@ -30,11 +26,11 @@ export class AppComponent implements OnInit {
     this.user.subscribe(user => {
       if (user.uid) {
         if (user.theme) {
-          this.overlayContainer.getContainerElement().classList.add('dark');
-          this.overlayContainer.getContainerElement().classList.remove('light');
+          document.body.classList.add('dark');
+          document.body.classList.remove('light');
         } else {
-          this.overlayContainer.getContainerElement().classList.add('light');
-          this.overlayContainer.getContainerElement().classList.remove('dark');
+          document.body.classList.add('light');
+          document.body.classList.remove('dark');
         }
       }
     });
