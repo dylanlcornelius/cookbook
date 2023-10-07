@@ -89,7 +89,7 @@ dt {
 }
 .button-row {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 15px;
   margin: 10px auto;
 }

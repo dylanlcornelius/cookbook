@@ -24,8 +24,9 @@ export class Comment extends Model {
   }
 
   public getObject(): CommentObject {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { id, authorName, date, showResolved, isEditing, control, ...comment } = this;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return comment;
   }
 }

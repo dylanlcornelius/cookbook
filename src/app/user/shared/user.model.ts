@@ -33,8 +33,9 @@ export class User extends Model {
   }
 
   public getObject(): UserObject {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { id, name, isAdmin, isPending, recipeCount, ratingCount, image, ...user } = this;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return user;
   }
 }

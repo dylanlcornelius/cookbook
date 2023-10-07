@@ -7,9 +7,13 @@ export class Recipe extends Model {
   link: string;
   description: string;
   time: string;
-  calories: string;
   servings: string;
-  quantity: string;
+  calories: string;
+  type: string;
+  isVegetarian: boolean;
+  isVegan: boolean;
+  isGlutenFree: boolean;
+  isDairyFree: boolean;
   categories: Array<{
     category: string;
   }>;
@@ -17,21 +21,19 @@ export class Recipe extends Model {
     step: string;
   }>;
   ingredients: Array<Ingredient>;
+
+  // uneditable fields
+  uid: string;
+  author: string;
+  status: RECIPE_STATUS;
   hasImage: boolean;
   meanRating: number;
   ratings: Array<{
     uid: string;
     rating: number;
   }>;
-  uid: string;
-  author: string;
-  status: RECIPE_STATUS;
-  isVegetarian: boolean;
-  isVegan: boolean;
-  isGlutenFree: boolean;
-  isDairyFree: boolean;
-  type: string;
 
+  // calculated fields
   count: number;
   image: string;
   amount = '1';
@@ -49,7 +51,6 @@ export class Recipe extends Model {
     this.time = data.time || '';
     this.calories = data.calories || '';
     this.servings = data.servings || '';
-    this.quantity = data.quantity || '';
     this.categories = data.categories || [];
     this.steps = data.steps || [];
     this.ingredients = data.ingredients || [];
@@ -69,7 +70,7 @@ export class Recipe extends Model {
   }
 
   public getObject(): RecipeObject {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const {
       id,
       count,
@@ -82,6 +83,7 @@ export class Recipe extends Model {
       displayType,
       ...recipe
     } = this;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return recipe;
   }
 }

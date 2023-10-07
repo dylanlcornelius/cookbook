@@ -30,7 +30,7 @@ export class Ingredient extends Model {
   }
 
   public getObject(): IngredientObject {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const {
       id,
       quantity,
@@ -41,6 +41,7 @@ export class Ingredient extends Model {
       displayCategory,
       ...ingredient
     } = this;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return ingredient;
   }
 }
