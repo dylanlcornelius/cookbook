@@ -452,12 +452,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.setFilters();
   }
 
-  setCategoryFilter = (filter: string): void =>
-    this.utilService.setListFilter(new CategoryFilter(filter));
-  setRestrictionFilter = (filter: string): void =>
-    this.utilService.setListFilter(new RestrictionFilter(filter));
-  setTypeFilter = (filter: string): void => this.utilService.setListFilter(new TypeFilter(filter));
-
   sortRecipesByName(a: Recipe, b: Recipe): number {
     return a.name.localeCompare(b.name);
   }

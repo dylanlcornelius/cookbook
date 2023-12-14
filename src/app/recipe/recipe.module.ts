@@ -18,6 +18,7 @@ import { CommentListComponent } from './comment-list/comment-list.component';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { RecipeCookButtonComponent } from './recipe-cook-button/recipe-cook-button.component';
 import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-modal.component';
+import { CategoryChipsComponent } from './category-chips/category-chips.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-
     CommentListComponent,
     RecipeCookButtonComponent,
     RecipeRatingModalComponent,
+    CategoryChipsComponent,
   ],
   imports: [
     CommonModule,

@@ -343,8 +343,7 @@ describe('RecipeDetailComponent', () => {
     });
 
     it('should return true when the recipe has the new category', () => {
-      component.recipe = new Recipe({});
-      component.hasNewCategory = true;
+      component.recipe = new Recipe({ hasNewCategory: true });
 
       const result = component.shouldDisplayCategories();
 
@@ -352,8 +351,7 @@ describe('RecipeDetailComponent', () => {
     });
 
     it('should return true when the recipe has the needs image category', () => {
-      component.recipe = new Recipe({});
-      component.hasNeedsImageCategory = true;
+      component.recipe = new Recipe({ hasNeedsImageCategory: true });
 
       const result = component.shouldDisplayCategories();
 
@@ -377,41 +375,11 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
-  describe('setCategoryFilter', () => {
-    it('should set a category filter', () => {
-      spyOn(utilService, 'setListFilter');
-
-      component.setCategoryFilter('filter');
-
-      expect(utilService.setListFilter).toHaveBeenCalled();
-    });
-  });
-
   describe('setAuthorFilter', () => {
     it('should set an author filter', () => {
       spyOn(utilService, 'setListFilter');
 
       component.setAuthorFilter('filter');
-
-      expect(utilService.setListFilter).toHaveBeenCalled();
-    });
-  });
-
-  describe('setRestrictionFilter', () => {
-    it('should set a restriction filter', () => {
-      spyOn(utilService, 'setListFilter');
-
-      component.setRestrictionFilter('isVegetarian');
-
-      expect(utilService.setListFilter).toHaveBeenCalled();
-    });
-  });
-
-  describe('setTypeFilter', () => {
-    it('should set a restriction filter', () => {
-      spyOn(utilService, 'setListFilter');
-
-      component.setTypeFilter('SALAD');
 
       expect(utilService.setListFilter).toHaveBeenCalled();
     });
