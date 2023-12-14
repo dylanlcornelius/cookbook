@@ -112,24 +112,22 @@ export class RecipeIngredientService {
     return (
       recipeIngredients
         .filter(({ isOptional }) => !isOptional)
-        .reduce((calories, ingredient) => {
-          const currentIngredient = ingredients.find(({ id }) => id === ingredient.id);
-          const recipeIngredient = recipe.ingredients.find(({ id }) => id === ingredient.id);
+        .reduce((calories, recipeIngredient) => {
+          const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
           const convertedQuantity = this.uomService.convert(
             recipeIngredient.uom,
-            currentIngredient.uom,
+            ingredient.uom,
             quantity
           );
 
-          if (!convertedQuantity || !currentIngredient.calories) {
+          if (!convertedQuantity || !ingredient.calories) {
             return calories;
           }
 
           return (
             calories +
-            (Number(currentIngredient.calories) / Number(currentIngredient.amount)) *
-              Number(convertedQuantity)
+            (Number(ingredient.calories) / Number(ingredient.amount)) * Number(convertedQuantity)
           );
         }, 0) / servings
     );
