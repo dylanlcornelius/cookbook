@@ -185,6 +185,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     recipe.ingredients,
                     [...ingredients, ...recipes]
                   );
+                  this.recipe.calories = this.recipeIngredientService.getRecipeCalories(
+                    recipe,
+                    recipes,
+                    this.ingredients
+                  );
                   this.recipe.count = this.recipeIngredientService.getRecipeCount(
                     recipe,
                     recipes,

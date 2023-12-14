@@ -101,6 +101,40 @@ export class RecipeIngredientService {
       .concat(recipe.id);
   }
 
+  getRecipeCalories(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[]): number {
+    const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
+
+    const servings = Number(recipe.servings);
+    if (!servings) {
+      return 0;
+    }
+
+    return (
+      recipeIngredients
+        .filter(({ isOptional }) => !isOptional)
+        .reduce((calories, ingredient) => {
+          const currentIngredient = ingredients.find(({ id }) => id === ingredient.id);
+          const recipeIngredient = recipe.ingredients.find(({ id }) => id === ingredient.id);
+          const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
+          const convertedQuantity = this.uomService.convert(
+            recipeIngredient.uom,
+            currentIngredient.uom,
+            quantity
+          );
+
+          if (!convertedQuantity || !currentIngredient.calories) {
+            return calories;
+          }
+
+          return (
+            calories +
+            (Number(currentIngredient.calories) / Number(currentIngredient.amount)) *
+              Number(convertedQuantity)
+          );
+        }, 0) / servings
+    );
+  }
+
   getRecipeCount(
     recipe: Recipe,
     recipes: Recipe[],

@@ -54,6 +54,12 @@ dd {
   max-width: 750px;
   aspect-ratio: 1/1;
 }
+.calories {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
 .step-header {
   font-size: 14px;
   margin-bottom: 5px;

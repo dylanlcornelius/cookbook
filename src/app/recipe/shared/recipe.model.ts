@@ -8,7 +8,6 @@ export class Recipe extends Model {
   description: string;
   time: string;
   servings: string;
-  calories: string;
   type: string;
   isVegetarian: boolean;
   isVegan: boolean;
@@ -34,6 +33,7 @@ export class Recipe extends Model {
   }>;
 
   // calculated fields
+  calories: number;
   count: number;
   image: string;
   amount = '1';
@@ -49,7 +49,6 @@ export class Recipe extends Model {
     this.link = data.link || '';
     this.description = data.description || '';
     this.time = data.time || '';
-    this.calories = data.calories || '';
     this.servings = data.servings || '';
     this.categories = data.categories || [];
     this.steps = data.steps || [];
@@ -73,6 +72,7 @@ export class Recipe extends Model {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const {
       id,
+      calories,
       count,
       image,
       amount,
@@ -93,6 +93,7 @@ export type RecipeObject = Omit<
   | 'id'
   | 'getId'
   | 'getObject'
+  | 'calories'
   | 'count'
   | 'image'
   | 'amount'

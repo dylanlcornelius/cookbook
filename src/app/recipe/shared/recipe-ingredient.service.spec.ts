@@ -177,6 +177,208 @@ describe('RecipeIngredientService', () => {
     });
   });
 
+  describe('getRecipeCalories', () => {
+    it('should calculate calories for a recipe', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        servings: 2,
+        ingredients: [
+          {
+            id: 'ingredient-1',
+            uom: UOM.OTHER,
+            quantity: 5,
+          },
+          {
+            id: 'ingredient-2',
+            uom: UOM.TABLESPOON,
+            quantity: 10,
+          },
+        ],
+      });
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredient-1',
+          uom: UOM.OTHER,
+          amount: 10,
+          calories: 100,
+        }),
+        new Ingredient({
+          id: 'ingredient-2',
+          uom: UOM.FLUID_OUNCE,
+          amount: 10,
+          calories: 100,
+        }),
+      ];
+
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(numberService, 'toDecimal').and.callThrough();
+      spyOn(uomService, 'convert').and.callThrough();
+
+      const result = service.getRecipeCalories(recipe, [], ingredients);
+
+      expect(result).toEqual(50);
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalled();
+    });
+
+    it('should handle recipe without servings', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        ingredients: [],
+      });
+
+      const ingredients = [];
+
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(numberService, 'toDecimal').and.callThrough();
+      spyOn(uomService, 'convert').and.callThrough();
+
+      const result = service.getRecipeCalories(recipe, [], ingredients);
+
+      expect(result).toEqual(0);
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(numberService.toDecimal).not.toHaveBeenCalled();
+      expect(uomService.convert).not.toHaveBeenCalled();
+    });
+
+    it('should handle an ingredient without calories', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        servings: 2,
+        ingredients: [
+          {
+            id: 'ingredient-1',
+            uom: UOM.OTHER,
+            quantity: 5,
+          },
+          {
+            id: 'ingredient-2',
+            uom: UOM.TABLESPOON,
+            quantity: 10,
+          },
+        ],
+      });
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredient-1',
+          uom: UOM.OTHER,
+          amount: 10,
+          calories: 100,
+        }),
+        new Ingredient({
+          id: 'ingredient-2',
+          uom: UOM.FLUID_OUNCE,
+          amount: 10,
+        }),
+      ];
+
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(numberService, 'toDecimal').and.callThrough();
+      spyOn(uomService, 'convert').and.callThrough();
+
+      const result = service.getRecipeCalories(recipe, [], ingredients);
+
+      expect(result).toEqual(25);
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalled();
+    });
+
+    it('should handle an invalid ingredient uom', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        servings: 2,
+        ingredients: [
+          {
+            id: 'ingredient-1',
+            uom: UOM.OTHER,
+            quantity: 5,
+          },
+          {
+            id: 'ingredient-2',
+            uom: UOM.TABLESPOON,
+            quantity: 10,
+          },
+        ],
+      });
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredient-1',
+          uom: UOM.OTHER,
+          amount: 10,
+          calories: 100,
+        }),
+        new Ingredient({
+          id: 'ingredient-2',
+          uom: UOM.OUNCE,
+          amount: 10,
+          calories: 100,
+        }),
+      ];
+
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(numberService, 'toDecimal').and.callThrough();
+      spyOn(uomService, 'convert').and.callThrough();
+
+      const result = service.getRecipeCalories(recipe, [], ingredients);
+
+      expect(result).toEqual(25);
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalled();
+    });
+
+    it('should handle an optional ingredient', () => {
+      const recipe = new Recipe({
+        id: 'id',
+        servings: 2,
+        ingredients: [
+          {
+            id: 'ingredient-1',
+            uom: UOM.OTHER,
+            quantity: 5,
+          },
+          {
+            id: 'ingredient-2',
+            uom: UOM.TABLESPOON,
+            quantity: 10,
+            isOptional: true,
+          },
+        ],
+      });
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredient-1',
+          uom: UOM.OTHER,
+          amount: 10,
+          calories: 100,
+        }),
+        new Ingredient({
+          id: 'ingredient-2',
+          uom: UOM.OUNCE,
+          amount: 10,
+          calories: 100,
+        }),
+      ];
+
+      spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(numberService, 'toDecimal').and.callThrough();
+      spyOn(uomService, 'convert').and.callThrough();
+
+      const result = service.getRecipeCalories(recipe, [], ingredients);
+
+      expect(result).toEqual(25);
+      expect(service.findRecipeIngredients).toHaveBeenCalled();
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalled();
+    });
+  });
+
   describe('getRecipeCount', () => {
     it('should count the available number of recipes', () => {
       const recipe = new Recipe({
