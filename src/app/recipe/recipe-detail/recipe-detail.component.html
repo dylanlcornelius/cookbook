@@ -84,10 +84,15 @@
             <dd>{{ recipe.servings }}</dd>
           </span>
 
-          <span *ngIf="recipe.calories">
-            <dt>Calories</dt>
-            <dd>{{ recipe.calories }}</dd>
-          </span>
+          <dt>Calories</dt>
+          <dd class="calories">
+            <span *ngIf="recipe.calories">{{ recipe.calories | number : '1.0-0' }}</span>
+            <mat-icon
+              matTooltip="Calories are per serving and based on non-optional ingredients. Requirements for calculation are: recipe servings and ingredients with calories"
+            >
+              info_i
+            </mat-icon>
+          </dd>
 
           <span *ngIf="shouldDisplayCategories()">
             <dt>Categories</dt>
