@@ -56,8 +56,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   timesCooked: number;
   lastDateCooked: string;
   creationDate: string;
-  hasNewCategory = false;
-  hasNeedsImageCategory = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -198,9 +196,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                   );
                   this.recipe.displayType =
                     configs.find(({ value }) => value === this.recipe.type)?.displayValue || '';
-                  this.hasNewCategory =
+                  this.recipe.hasNewCategory =
                     !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
-                  this.hasNeedsImageCategory =
+                  this.recipe.hasNeedsImageCategory =
                     this.hasAuthorPermission && this.timesCooked && !this.recipe.hasImage;
                   this.loading = this.loadingService.set(false);
                 }
@@ -236,8 +234,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   shouldDisplayCategories(): boolean {
     return (
       !!(this.recipe.categories && this.recipe.categories.length) ||
-      this.hasNewCategory ||
-      this.hasNeedsImageCategory ||
+      this.recipe.hasNewCategory ||
+      this.recipe.hasNeedsImageCategory ||
       this.recipe.isVegetarian ||
       this.recipe.isVegan ||
       this.recipe.isGlutenFree ||
@@ -246,13 +244,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  setCategoryFilter = (filter: string): void =>
-    this.utilService.setListFilter(new CategoryFilter(filter));
   setAuthorFilter = (filter: string): void =>
     this.utilService.setListFilter(new AuthorFilter(filter));
-  setRestrictionFilter = (filter: string): void =>
-    this.utilService.setListFilter(new RestrictionFilter(filter));
-  setTypeFilter = (filter: string): void => this.utilService.setListFilter(new TypeFilter(filter));
 
   changeStatus = (): void => this.recipeService.changeStatus(this.recipe);
 

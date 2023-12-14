@@ -37,7 +37,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
-import { UtilService } from '@utilService';
 import { Household } from '@household';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormsModule } from '@angular/forms';
@@ -70,7 +69,6 @@ describe('RecipeListComponent', () => {
   let ingredientService: IngredientService;
   let imageService: ImageService;
   let recipeIngredientService: RecipeIngredientService;
-  let utilService: UtilService;
   let validationService: ValidationService;
   let mealPlanService: MealPlanService;
   let notificationService: NotificationService;
@@ -116,7 +114,6 @@ describe('RecipeListComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     imageService = TestBed.inject(ImageService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
-    utilService = TestBed.inject(UtilService);
     validationService = TestBed.inject(ValidationService);
     mealPlanService = TestBed.inject(MealPlanService);
     notificationService = TestBed.inject(NotificationService);
@@ -619,36 +616,6 @@ describe('RecipeListComponent', () => {
       expect(recipeFilterService.selectedFilters).toHaveSize(0);
       expect(component.initFilters).toHaveBeenCalled();
       expect(component.setFilters).toHaveBeenCalled();
-    });
-  });
-
-  describe('setCategoryFilter', () => {
-    it('should call a filter function', () => {
-      spyOn(utilService, 'setListFilter');
-
-      component.setCategoryFilter('1');
-
-      expect(utilService.setListFilter).toHaveBeenCalled();
-    });
-  });
-
-  describe('setRestrictionFilter', () => {
-    it('should call a filter function', () => {
-      spyOn(utilService, 'setListFilter');
-
-      component.setRestrictionFilter('1');
-
-      expect(utilService.setListFilter).toHaveBeenCalled();
-    });
-  });
-
-  describe('setTypeFilter', () => {
-    it('should call a filter function', () => {
-      spyOn(utilService, 'setListFilter');
-
-      component.setTypeFilter('1');
-
-      expect(utilService.setListFilter).toHaveBeenCalled();
     });
   });
 

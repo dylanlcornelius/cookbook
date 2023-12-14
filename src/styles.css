@@ -139,6 +139,12 @@ dt {
 .mat-card-actions .mat-button {
   margin: 0 !important;
 }
+.categories .mat-chip {
+  font-size: 12px;
+  padding: 8px;
+  margin: 4px 2px;
+  min-height: 24px;
+}
 .mat-standard-chip,
 .mat-stepper-horizontal,
 .mat-stepper-vertical,

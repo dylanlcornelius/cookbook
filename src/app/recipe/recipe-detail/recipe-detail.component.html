@@ -97,39 +97,7 @@
           <span *ngIf="shouldDisplayCategories()">
             <dt>Categories</dt>
             <dd>
-              <mat-chip-list class="center">
-                <mat-chip (click)="setCategoryFilter('New!')" *ngIf="hasNewCategory">New!</mat-chip>
-                <mat-chip (click)="setCategoryFilter('Needs Image')" *ngIf="hasNeedsImageCategory">
-                  Needs Image
-                </mat-chip>
-                <mat-chip *ngIf="!!recipe.type" (click)="setTypeFilter(recipe.type)">
-                  {{ recipe.displayType }}
-                </mat-chip>
-                <mat-chip
-                  *ngIf="recipe.isVegetarian"
-                  (click)="setRestrictionFilter('isVegetarian')"
-                >
-                  Vegetarian
-                </mat-chip>
-                <mat-chip *ngIf="recipe.isVegan" (click)="setRestrictionFilter('isVegan')">
-                  Vegan
-                </mat-chip>
-                <mat-chip
-                  *ngIf="recipe.isGlutenFree"
-                  (click)="setRestrictionFilter('isGlutenFree')"
-                >
-                  Gluten Free
-                </mat-chip>
-                <mat-chip *ngIf="recipe.isDairyFree" (click)="setRestrictionFilter('isDairyFree')">
-                  Dairy Free
-                </mat-chip>
-                <mat-chip
-                  *ngFor="let category of recipe.categories"
-                  (click)="setCategoryFilter(category.category)"
-                >
-                  {{ category.category }}
-                </mat-chip>
-              </mat-chip-list>
+              <app-category-chips class="center" [recipe]="recipe" />
             </dd>
           </span>
 
@@ -178,6 +146,7 @@
                 class="author-link"
                 [routerLink]="['/recipe/detail/', ingredient.id]"
                 *ngIf="ingredient.uom === 'recipe'"
+                matTooltip="Navigate to This Recipe"
               >
                 <span>{{ ingredient.quantity }} - {{ ingredient.name }}</span>
                 <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
@@ -187,6 +156,7 @@
                 class="author-link"
                 [routerLink]="['/ingredient/detail/', ingredient.id]"
                 *ngIf="ingredient.uom !== 'recipe'"
+                matTooltip="Navigate to This Ingredient"
               >
                 {{ ingredient.quantity }} {{ ingredient.uom === 'other' ? '' : ingredient.uom }} -
                 {{ ingredient.name }}
