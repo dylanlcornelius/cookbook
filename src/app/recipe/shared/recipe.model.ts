@@ -34,7 +34,6 @@ export class Recipe extends Model {
 
   // calculated fields
   calories: number;
-  count: number;
   image: string;
   amount = '1';
   uom = UOM.RECIPE;
@@ -73,7 +72,6 @@ export class Recipe extends Model {
     const {
       id,
       calories,
-      count,
       image,
       amount,
       uom,
@@ -94,7 +92,6 @@ export type RecipeObject = Omit<
   | 'getId'
   | 'getObject'
   | 'calories'
-  | 'count'
   | 'image'
   | 'amount'
   | 'uom'

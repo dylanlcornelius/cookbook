@@ -1,5 +1,4 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
-<app-ingredient-modal [Params]="ingredientModalParams"></app-ingredient-modal>
 
 <h2>Grocery Items</h2>
 
@@ -54,35 +53,14 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="pantryQuantity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Pantry Quantity</mat-header-cell>
-        <mat-cell
-          *matCellDef="let element"
-          (click)="$event.stopPropagation()"
-          style="min-width: 150px"
-        >
-          <span class="mobile-label">Pantry Quantity:</span>
-          <span class="mobile-value">
-            <button
-              mat-button
-              matTooltip="Edit Item"
-              color="primary"
-              (click)="editIngredient(element.id)"
-            >
-              {{ element.pantryQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
-            </button>
-          </span>
-        </mat-cell>
-      </ng-container>
-
       <ng-container matColumnDef="cartQuantity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>List Quantity</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Shopping List Quantity</mat-header-cell>
         <mat-cell
           *matCellDef="let element"
           (click)="$event.stopPropagation()"
           style="min-width: 140px"
         >
-          <span class="mobile-label">List Quantity:</span>
+          <span class="mobile-label">Shopping List Quantity:</span>
 
           <span class="mobile-value">
             <button mat-button matTooltip="Remove Quantity" (click)="removeIngredient(element.id)">

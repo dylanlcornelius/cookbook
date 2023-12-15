@@ -4,7 +4,6 @@ import { UOM } from '@uoms';
 export class UserIngredient extends Model {
   uid: string;
   ingredientId: string;
-  pantryQuantity: number | string;
   cartQuantity: number;
 
   amount: string;
@@ -14,7 +13,6 @@ export class UserIngredient extends Model {
     super(data);
     this.uid = data.uid;
     this.ingredientId = data.ingredientId || '';
-    this.pantryQuantity = data.pantryQuantity || 0;
     this.cartQuantity = data.cartQuantity || 0;
     this.amount = data.amount;
     this.uom = data.uom;

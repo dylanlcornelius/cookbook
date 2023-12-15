@@ -173,6 +173,7 @@ describe('ShoppingListComponent', () => {
 
   describe('addIngredient', () => {
     it('should update user ingredients', () => {
+      component.user = new User({});
       const ingredient = new Ingredient({ id: 'id', amount: 5 });
 
       spyOn(numberService, 'toDecimal');

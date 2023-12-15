@@ -131,7 +131,6 @@ describe('RecipeDetailComponent', () => {
       spyOn(userIngredientService, 'buildUserIngredients');
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
-      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
 
@@ -148,7 +147,6 @@ describe('RecipeDetailComponent', () => {
       expect(userIngredientService.buildUserIngredients).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
-      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
 
     it('should load a recipe without an image', fakeAsync(() => {
@@ -173,7 +171,6 @@ describe('RecipeDetailComponent', () => {
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
-      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
 
@@ -189,7 +186,6 @@ describe('RecipeDetailComponent', () => {
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
-      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
 
     it('should handle image errors', fakeAsync(() => {
@@ -214,7 +210,6 @@ describe('RecipeDetailComponent', () => {
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
-      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
 
@@ -230,7 +225,6 @@ describe('RecipeDetailComponent', () => {
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
-      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
 
     it('should reload a recipe', fakeAsync(() => {
@@ -258,7 +252,6 @@ describe('RecipeDetailComponent', () => {
       imageSpy.and.returnValue(Promise.resolve('url'));
       spyOn(ingredientService, 'buildRecipeIngredients');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
-      spyOn(recipeIngredientService, 'getRecipeCount').and.returnValue(0);
 
       component.load();
       tick();
@@ -280,7 +273,6 @@ describe('RecipeDetailComponent', () => {
       expect(imageService.download).toHaveBeenCalled();
       expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
-      expect(recipeIngredientService.getRecipeCount).toHaveBeenCalled();
     }));
   });
 
@@ -411,23 +403,13 @@ describe('RecipeDetailComponent', () => {
 
   describe('addIngredients', () => {
     it('should add ingredients', () => {
+      component.user = new User({});
+
       spyOn(recipeIngredientService, 'addIngredients');
 
       component.addIngredients();
 
       expect(recipeIngredientService.addIngredients).toHaveBeenCalled();
-    });
-  });
-
-  describe('removeIngredients', () => {
-    it('should remove ingredients', () => {
-      component.user = new User({});
-
-      spyOn(recipeIngredientService, 'removeIngredients');
-
-      component.removeIngredients();
-
-      expect(recipeIngredientService.removeIngredients).toHaveBeenCalled();
     });
   });
 

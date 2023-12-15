@@ -60,7 +60,7 @@ describe('HouseholdInviteModalComponent', () => {
   });
 
   describe('confirm', () => {
-    it('should change an ingredient pantry quantity', () => {
+    it('should invoke the callback', () => {
       component.Params = {
         function: () => {},
         users: [],

@@ -16,7 +16,6 @@ import { IngredientModule } from '../ingredient/ingredient.module';
 import { RecipeHistoryModalComponent } from './recipe-history-modal/recipe-history-modal.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
-import { RecipeCookButtonComponent } from './recipe-cook-button/recipe-cook-button.component';
 import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-modal.component';
 import { CategoryChipsComponent } from './category-chips/category-chips.component';
 
@@ -28,7 +27,6 @@ import { CategoryChipsComponent } from './category-chips/category-chips.componen
     RatingComponent,
     RecipeHistoryModalComponent,
     CommentListComponent,
-    RecipeCookButtonComponent,
     RecipeRatingModalComponent,
     CategoryChipsComponent,
   ],

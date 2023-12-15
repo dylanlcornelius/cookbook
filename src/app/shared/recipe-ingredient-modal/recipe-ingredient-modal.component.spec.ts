@@ -7,6 +7,7 @@ import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.compon
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
 import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
+import { Recipe } from '@recipe';
 
 describe('RecipeIngredientModalComponent', () => {
   let component: RecipeIngredientModalComponent;
@@ -50,14 +51,17 @@ describe('RecipeIngredientModalComponent', () => {
 
   describe('add', () => {
     const userIngredients = [new UserIngredient({})];
+    const uid = 'uid';
     const householdId = 'default';
 
     beforeEach(() => {
       const recipeIngredientModal = new RecipeIngredientModal(
         () => {},
-        'recipe',
+        new Recipe({}),
+        [],
         [new Ingredient({})],
         userIngredients,
+        uid,
         householdId
       );
       recipeIngredientModalService.setModal(recipeIngredientModal);
@@ -76,7 +80,10 @@ describe('RecipeIngredientModalComponent', () => {
       expect(component.params.function).toHaveBeenCalledWith(
         component.params.ingredients,
         component.params.userIngredients,
-        component.params.householdId
+        component.params.uid,
+        component.params.householdId,
+        component.params.recipe,
+        component.params.recipes
       );
       expect(component.modal.close).toHaveBeenCalled();
     });
@@ -98,7 +105,10 @@ describe('RecipeIngredientModalComponent', () => {
       expect(component.params.function).toHaveBeenCalledWith(
         [ingredient1],
         component.params.userIngredients,
-        component.params.householdId
+        component.params.uid,
+        component.params.householdId,
+        component.params.recipe,
+        component.params.recipes
       );
       expect(component.modal.close).toHaveBeenCalled();
     });
