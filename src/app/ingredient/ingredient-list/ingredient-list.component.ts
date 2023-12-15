@@ -24,9 +24,8 @@ import { ConfigService } from '@configService';
 export class IngredientListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   loading = true;
-  ingredientModalParams;
 
-  displayedColumns = ['name', 'category', 'amount', 'calories', 'pantryQuantity', 'cartQuantity'];
+  displayedColumns = ['name', 'category', 'amount', 'calories', 'cartQuantity'];
   dataSource;
 
   ingredients: Ingredient[];
@@ -86,9 +85,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
 
                   userIngredients.forEach(userIngredient => {
                     if (userIngredient.ingredientId === ingredient.id) {
-                      ingredient.pantryQuantity = this.numberService.toFormattedFraction(
-                        userIngredient.pantryQuantity
-                      );
                       ingredient.cartQuantity = userIngredient.cartQuantity;
                     }
                   });
@@ -118,33 +114,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     return this.dataSource.data.find(x => x.id === id);
   }
 
-  editIngredient(id: string): void {
-    let data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
-    if (!data) {
-      this.userIngredients.push(
-        new UserIngredient({
-          ingredientId: id,
-          pantryQuantity: 0,
-          cartQuantity: 0,
-          uid: this.householdId,
-        })
-      );
-      data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
-    }
-
-    this.ingredientModalParams = {
-      data,
-      userIngredients: this.userIngredients,
-      dataSource: this.dataSource,
-      text: `Edit pantry quantity for ${this.findIngredient(id).name}`,
-      function: this.editIngredientEvent,
-    };
-  }
-
-  editIngredientEvent = (): void => {
-    this.userIngredientService.update(this.userIngredients);
-  };
-
   removeIngredient(id: string): void {
     const data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     const ingredient = this.findIngredient(id);
@@ -166,7 +135,6 @@ export class IngredientListComponent implements OnInit, OnDestroy {
         this.userIngredients.push(
           new UserIngredient({
             ingredientId: id,
-            pantryQuantity: 0,
             cartQuantity: Number(ingredient.amount),
             uid: this.householdId,
           })

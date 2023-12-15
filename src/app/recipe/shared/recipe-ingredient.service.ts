@@ -133,55 +133,12 @@ export class RecipeIngredientService {
     );
   }
 
-  getRecipeCount(
-    recipe: Recipe,
-    recipes: Recipe[],
-    ingredients: Ingredient[],
-    userIngredients: UserIngredient[]
-  ): number {
-    const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
-
-    let recipeCount;
-    let ingredientCount = 0;
-    if (recipeIngredients.length === 0 || userIngredients.length === 0) {
-      return 0;
-    }
-    recipeIngredients.forEach(recipeIngredient => {
-      // handle deleted ingredients
-      if (recipeIngredient.name === null) {
-        ingredientCount++;
-        return;
-      }
-
-      userIngredients.forEach(userIngredient => {
-        if (recipeIngredient.id === userIngredient.ingredientId) {
-          ingredientCount++;
-
-          const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-          const value = this.uomService.convert(recipeIngredient.uom, userIngredient.uom, quantity);
-          if (
-            value &&
-            (Number(userIngredient.pantryQuantity) / Number(value) < recipeCount ||
-              recipeCount === undefined)
-          ) {
-            recipeCount = Math.floor(Number(userIngredient.pantryQuantity) / Number(value));
-          }
-        }
-      });
-    });
-
-    // user doesn't have all recipe ingredients
-    if (ingredientCount !== recipeIngredients.length || recipeCount === undefined) {
-      return 0;
-    }
-    return recipeCount;
-  }
-
   addIngredients(
     recipe: Recipe,
     recipes: Recipe[],
     ingredients: Ingredient[],
     userIngredients: UserIngredient[],
+    uid: string,
     householdId: string,
     callback?: Function
   ): void {
@@ -191,9 +148,11 @@ export class RecipeIngredientService {
       this.recipeIngredientModalService.setModal(
         new RecipeIngredientModal(
           this.addIngredientsEvent,
-          recipe.name,
+          recipe,
+          recipes,
           recipeIngredients,
           userIngredients,
+          uid,
           householdId,
           callback
         )
@@ -207,7 +166,10 @@ export class RecipeIngredientService {
   addIngredientsEvent = (
     recipeIngredients: Ingredient[],
     userIngredients: UserIngredient[],
-    householdId: string
+    uid: string,
+    householdId: string,
+    recipe?: Recipe,
+    recipes?: Recipe[]
   ): void => {
     recipeIngredients.forEach(recipeIngredient => {
       let hasIngredient = false;
@@ -237,50 +199,17 @@ export class RecipeIngredientService {
     });
 
     this.userIngredientService.update(userIngredients);
-    this.notificationService.setModal(new SuccessNotification('Added to list!'));
-  };
 
-  removeIngredients(
-    recipe: Recipe,
-    recipes: Recipe[],
-    ingredients: Ingredient[],
-    userIngredients: UserIngredient[],
-    uid: string,
-    householdId: string
-  ): void {
-    const recipeIngredients = this.findRecipeIngredients(recipe, recipes, ingredients);
-
-    if (recipeIngredients.length) {
-      recipeIngredients.forEach(recipeIngredient => {
-        userIngredients.forEach(userIngredient => {
-          if (recipeIngredient.id === userIngredient.ingredientId) {
-            const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-            const value = this.uomService.convert(
-              recipeIngredient.uom,
-              userIngredient.uom,
-              quantity
-            );
-            if (value !== false) {
-              userIngredient.pantryQuantity = Math.max(
-                Number(userIngredient.pantryQuantity) - Number(value),
-                0
-              );
-            } else {
-              this.notificationService.setModal(new FailureNotification('Calculation error!'));
-            }
-          }
-        });
+    if (recipe && recipes) {
+      const cookedRecipeIds = this.findRecipeIds(recipe, recipes);
+      cookedRecipeIds.forEach(recipeId => {
+        this.recipeHistoryService.add(uid, recipeId);
+        if (householdId !== uid) {
+          this.recipeHistoryService.add(householdId, recipeId);
+        }
       });
-      this.userIngredientService.update(userIngredients);
     }
 
-    const cookedRecipeIds = this.findRecipeIds(recipe, recipes);
-    cookedRecipeIds.forEach(recipeId => {
-      this.recipeHistoryService.add(uid, recipeId);
-      if (householdId !== uid) {
-        this.recipeHistoryService.add(householdId, recipeId);
-      }
-    });
-    this.notificationService.setModal(new SuccessNotification('Recipe cooked!'));
-  }
+    this.notificationService.setModal(new SuccessNotification('Added to list!'));
+  };
 }

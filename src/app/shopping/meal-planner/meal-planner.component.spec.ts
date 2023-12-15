@@ -139,6 +139,7 @@ describe('MealPlannerComponent', () => {
 
   describe('addIngredients', () => {
     it('should add recipe ingredients', () => {
+      component.user = new User({});
       component.mealPlan = new MealPlan({ recipes: [new Recipe({}), new Recipe({})] });
 
       spyOn(mealPlanService, 'formattedUpdate');
@@ -146,13 +147,14 @@ describe('MealPlannerComponent', () => {
       recipeIngredientService.addIngredients = spy;
 
       component.addIngredients(1);
-      spy.calls.mostRecent().args[5](true);
+      spy.calls.mostRecent().args[6](true);
 
       expect(spy).toHaveBeenCalled();
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
     });
 
     it('should not add recipe ingredients', () => {
+      component.user = new User({});
       component.mealPlan = new MealPlan({ recipes: [new Recipe({}), new Recipe({})] });
 
       spyOn(mealPlanService, 'formattedUpdate');
@@ -161,7 +163,7 @@ describe('MealPlannerComponent', () => {
 
       component.addIngredients(1);
       // testing a local callback
-      spy.calls.mostRecent().args[5]();
+      spy.calls.mostRecent().args[6]();
 
       expect(spy).toHaveBeenCalled();
       expect(mealPlanService.formattedUpdate).not.toHaveBeenCalled();
@@ -169,6 +171,10 @@ describe('MealPlannerComponent', () => {
   });
 
   describe('addAllIngredients', () => {
+    beforeEach(() => {
+      component.user = new User({});
+    });
+
     it('should handle cancelling', () => {
       spyOn(mealPlanService, 'formattedUpdate');
       spyOn(recipeIngredientService, 'addIngredients');

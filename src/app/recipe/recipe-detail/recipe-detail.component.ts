@@ -11,13 +11,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import {
-  AuthorFilter,
-  CategoryFilter,
-  RecipeFilterService,
-  RestrictionFilter,
-  TypeFilter,
-} from '@recipeFilterService';
+import { AuthorFilter, RecipeFilterService } from '@recipeFilterService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
@@ -188,12 +182,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     recipes,
                     this.ingredients
                   );
-                  this.recipe.count = this.recipeIngredientService.getRecipeCount(
-                    recipe,
-                    recipes,
-                    this.ingredients,
-                    this.userIngredients
-                  );
                   this.recipe.displayType =
                     configs.find(({ value }) => value === this.recipe.type)?.displayValue || '';
                   this.recipe.hasNewCategory =
@@ -265,16 +253,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   addIngredients(): void {
     this.recipeIngredientService.addIngredients(
-      this.recipe,
-      this.recipes,
-      this.ingredients,
-      this.userIngredients,
-      this.householdId
-    );
-  }
-
-  removeIngredients(): void {
-    this.recipeIngredientService.removeIngredients(
       this.recipe,
       this.recipes,
       this.ingredients,

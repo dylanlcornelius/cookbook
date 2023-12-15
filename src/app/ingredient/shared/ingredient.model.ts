@@ -9,7 +9,6 @@ export class Ingredient extends Model {
   calories: string;
 
   quantity: number;
-  pantryQuantity: number | string;
   cartQuantity: number;
   selected: boolean;
   isOptional: boolean;
@@ -23,7 +22,6 @@ export class Ingredient extends Model {
     this.uom = data.uom || '';
     this.calories = data.calories || '';
     this.quantity = data.quantity;
-    this.pantryQuantity = data.pantryQuantity;
     this.cartQuantity = data.cartQuantity;
     this.selected = data.selected;
     this.isOptional = data.isOptional || false;
@@ -31,16 +29,8 @@ export class Ingredient extends Model {
 
   public getObject(): IngredientObject {
     /* eslint-disable @typescript-eslint/no-unused-vars */
-    const {
-      id,
-      quantity,
-      pantryQuantity,
-      cartQuantity,
-      selected,
-      isOptional,
-      displayCategory,
-      ...ingredient
-    } = this;
+    const { id, quantity, cartQuantity, selected, isOptional, displayCategory, ...ingredient } =
+      this;
     /* eslint-enable @typescript-eslint/no-unused-vars */
     return ingredient;
   }
@@ -52,7 +42,6 @@ export type IngredientObject = Omit<
   | 'getId'
   | 'getObject'
   | 'quantity'
-  | 'pantryQuantity'
   | 'cartQuantity'
   | 'selected'
   | 'isOptional'

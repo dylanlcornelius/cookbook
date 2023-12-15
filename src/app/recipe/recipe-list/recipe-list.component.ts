@@ -158,12 +158,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                       this.user,
                       recipe
                     );
-                    recipe.count = this.recipeIngredientService.getRecipeCount(
-                      recipe,
-                      recipes,
-                      this.ingredients,
-                      this.userIngredients
-                    );
                     recipe.displayType =
                       configs.find(({ value }) => value === recipe.type)?.displayValue || '';
 
@@ -494,16 +488,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   addIngredients(id: string): void {
     this.recipeIngredientService.addIngredients(
-      this.findRecipe(id),
-      this.recipes,
-      this.ingredients,
-      this.userIngredients,
-      this.householdId
-    );
-  }
-
-  removeIngredients(id: string): void {
-    this.recipeIngredientService.removeIngredients(
       this.findRecipe(id),
       this.recipes,
       this.ingredients,

@@ -153,6 +153,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
       this.recipes,
       this.ingredients,
       this.userIngredients,
+      this.user.uid,
       this.householdId,
       callback
     );
@@ -179,6 +180,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
         this.recipes,
         this.ingredients,
         this.userIngredients,
+        this.user.uid,
         this.householdId,
         this.addAllIngredients
       );

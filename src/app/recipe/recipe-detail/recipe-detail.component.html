@@ -51,12 +51,7 @@
             <span *ngIf="recipe.status !== 'private'">Published</span>
             <span *ngIf="recipe.status === 'private'">Private</span>
           </button>
-          <app-recipe-cook-button
-            [recipe]="recipe"
-            [uid]="user.uid"
-            [householdId]="householdId"
-            (removeIngredients)="removeIngredients()"
-          ></app-recipe-cook-button>
+          <div *ngIf="!hasAuthorPermission"></div>
           <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
             Add to Plan
           </button>

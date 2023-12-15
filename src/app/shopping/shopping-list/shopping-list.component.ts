@@ -117,7 +117,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
                         id: userIngredient.ingredientId,
                         name: ingredient.name,
                         uom: ingredient.uom,
-                        pantryQuantity: userIngredient.pantryQuantity,
                         cartQuantity: userIngredient.cartQuantity,
                       });
                     }
@@ -167,6 +166,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.recipeIngredientService.addIngredientsEvent(
       [ingredient],
       this.userIngredients,
+      this.user.uid,
       this.householdId
     );
     this.ingredientControl.reset();
@@ -174,10 +174,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   addIngredientToPantry(id: string): void {
     const ingredient = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
-    if (Number(ingredient.cartQuantity > 0)) {
-      ingredient.pantryQuantity =
-        Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
-    }
     ingredient.cartQuantity = 0;
     const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
     this.isCompleted = filteredData.length === 0 && this.userItems.length === 0;
@@ -220,8 +216,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
     this.userIngredients.forEach(ingredient => {
       if (Number(ingredient.cartQuantity) > 0) {
-        ingredient.pantryQuantity =
-          Number(ingredient.pantryQuantity) + Number(ingredient.cartQuantity);
         ingredient.cartQuantity = 0;
       }
     });

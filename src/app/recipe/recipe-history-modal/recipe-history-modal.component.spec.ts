@@ -62,7 +62,7 @@ describe('RecipeHistoryModalComponent', () => {
       expect(component.modal.close).not.toHaveBeenCalled();
     });
 
-    it('should change an ingredient pantry quantity', () => {
+    it('should invoke the callback', () => {
       component.Params = {
         function: () => {},
         recipeId: 'id',

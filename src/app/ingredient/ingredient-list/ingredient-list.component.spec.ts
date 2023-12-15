@@ -124,40 +124,6 @@ describe('IngredientListComponent', () => {
     });
   });
 
-  describe('editIngredient', () => {
-    it('should change a user ingredient', () => {
-      component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{ id: 'id' }];
-      component.userIngredients = [{ ingredientId: 'id', cartQuantity: 1 }];
-
-      component.editIngredient('id');
-
-      expect(component.ingredientModalParams).toBeDefined();
-      expect(component.ingredientModalParams.data.cartQuantity).toEqual(1);
-    });
-
-    it('should not change a user ingredient if it does not exist', () => {
-      component.dataSource = new MatTableDataSource([]);
-      component.dataSource.data = [{ id: 'id2' }];
-      component.userIngredients = [{ ingredientId: 'id' }];
-
-      component.editIngredient('id2');
-
-      expect(component.ingredientModalParams).toBeDefined();
-      expect(component.ingredientModalParams.data.cartQuantity).toEqual(0);
-    });
-  });
-
-  describe('editIngredientEvent', () => {
-    it('should update a user ingredient', () => {
-      spyOn(userIngredientService, 'update');
-
-      component.editIngredientEvent();
-
-      expect(userIngredientService.update).toHaveBeenCalled();
-    });
-  });
-
   describe('removeIngredient', () => {
     it('should remove a user ingredient', () => {
       component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
