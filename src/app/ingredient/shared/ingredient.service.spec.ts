@@ -4,16 +4,13 @@ import { FirestoreService } from '@firestoreService';
 
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
-import { NumberService } from '@numberService';
 
 describe('IngredientService', () => {
   let service: IngredientService;
-  let numberService: NumberService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(IngredientService);
-    numberService = TestBed.inject(NumberService);
   });
 
   it('should be created', () => {
@@ -86,20 +83,6 @@ describe('IngredientService', () => {
       const result = service.sort(new Ingredient({ name: 'a' }), new Ingredient({ name: 'b' }));
 
       expect(result).toEqual(-1);
-    });
-  });
-
-  describe('buildRecipeIngredients', () => {
-    it('should build ingredients', () => {
-      const recipeIngredients = [new Ingredient({ id: 'id' }), new Ingredient({ id: 'id2' })];
-      const ingredients = [new Ingredient({ id: 'id' })];
-
-      spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
-
-      const result = service.buildRecipeIngredients(recipeIngredients, ingredients);
-
-      expect(result.length).toEqual(1);
-      expect(numberService.toFormattedFraction).toHaveBeenCalled();
     });
   });
 });

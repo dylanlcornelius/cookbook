@@ -85,6 +85,16 @@ describe('UserIngredientService', () => {
     });
   });
 
+  describe('delete', () => {
+    it('should delete a document', () => {
+      spyOn(FirestoreService.prototype, 'delete');
+
+      service.delete('id');
+
+      expect(FirestoreService.prototype.delete).toHaveBeenCalled();
+    });
+  });
+
   describe('buildRecipeIngredients', () => {
     it('should build ingredients', () => {
       const userIngredients = [

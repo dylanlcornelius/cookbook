@@ -88,7 +88,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
                   ingredients
                 );
                 this.recipes = recipes.map(recipe => {
-                  recipe.ingredients = this.ingredientService.buildRecipeIngredients(
+                  recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                     recipe.ingredients,
                     [...ingredients, ...recipes]
                   );

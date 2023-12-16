@@ -1,6 +1,6 @@
 import { Model } from '@model';
-import { Ingredient } from '@ingredient';
 import { UOM } from '@uoms';
+import { RecipeIngredient } from '@recipeIngredient';
 
 export class Recipe extends Model {
   name: string;
@@ -19,7 +19,7 @@ export class Recipe extends Model {
   steps: Array<{
     step: string;
   }>;
-  ingredients: Array<Ingredient>;
+  ingredients: RecipeIngredient[];
 
   // uneditable fields
   uid: string;

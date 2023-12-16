@@ -68,7 +68,7 @@
             </button>
             <span style="margin: 0 10px">
               <label class="table-col">
-                {{ element.cartQuantity || 0 }} {{ element.uom === 'other' ? '' : element.uom }}
+                {{ element.cartQuantity || 0 }}
               </label>
             </span>
             <button mat-button matTooltip="Add Quantity" (click)="addIngredient(element.id)">

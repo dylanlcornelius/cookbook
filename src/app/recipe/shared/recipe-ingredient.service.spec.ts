@@ -10,6 +10,7 @@ import { UomService } from '@uomService';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { Ingredient } from '@ingredient';
 import { NumberService } from '@numberService';
+import { RecipeIngredient } from '@recipeIngredient';
 
 describe('RecipeIngredientService', () => {
   let service: RecipeIngredientService;
@@ -38,27 +39,47 @@ describe('RecipeIngredientService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('buildRecipeIngredients', () => {
+    it('should build ingredients', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({ id: 'id' }),
+        new RecipeIngredient({ id: 'id2' }),
+      ];
+      const ingredients = [new Ingredient({ id: 'id' })];
+
+      const result = service.buildRecipeIngredients(recipeIngredients, ingredients);
+
+      expect(result.length).toEqual(1);
+    });
+  });
+
   describe('findRecipeIngredients', () => {
     it('should find all ingredients for a recipe', () => {
       const recipes = [
         new Recipe({
           id: '1',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'a' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
+          ingredients: [
+            new RecipeIngredient({ id: 'a' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+          ],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'b' }), new Ingredient({ id: '3', uom: UOM.RECIPE })],
+          ingredients: [
+            new RecipeIngredient({ id: 'b' }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+          ],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'c' })],
+          ingredients: [new RecipeIngredient({ id: 'c' })],
         }),
       ];
 
-      const result = service.findRecipeIngredients(recipes[0], recipes, []);
+      const result = service.findRecipeIngredients(recipes[0], recipes);
 
       expect(result.length).toEqual(3);
     });
@@ -68,22 +89,30 @@ describe('RecipeIngredientService', () => {
         new Recipe({
           id: '1',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'a' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
+          ingredients: [
+            new RecipeIngredient({ id: 'a' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+          ],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'b' }), new Ingredient({ id: '3', uom: UOM.RECIPE })],
+          ingredients: [
+            new RecipeIngredient({ id: 'b' }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+          ],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'c' }), new Ingredient({ id: '2', uom: UOM.RECIPE })],
+          ingredients: [
+            new RecipeIngredient({ id: 'c' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+          ],
         }),
       ];
-      const ingredients = [new Ingredient({ id: 'b' })];
 
-      const result = service.findRecipeIngredients(recipes[0], recipes, ingredients);
+      const result = service.findRecipeIngredients(recipes[0], recipes);
 
       expect(result.length).toEqual(3);
     });
@@ -94,32 +123,32 @@ describe('RecipeIngredientService', () => {
           id: '1',
           uom: UOM.RECIPE,
           ingredients: [
-            new Ingredient({ id: 'a' }),
-            new Ingredient({ id: 'b' }),
-            new Ingredient({ id: 'c', isOptional: true }),
-            new Ingredient({ id: 'd', isOptional: true }),
-            new Ingredient({ id: '2', uom: UOM.RECIPE }),
-            new Ingredient({ id: '3', uom: UOM.RECIPE }),
+            new RecipeIngredient({ id: 'a' }),
+            new RecipeIngredient({ id: 'b' }),
+            new RecipeIngredient({ id: 'c', isOptional: true }),
+            new RecipeIngredient({ id: 'd', isOptional: true }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
           ],
         }),
         new Recipe({
           id: '2',
           uom: UOM.RECIPE,
           ingredients: [
-            new Ingredient({ id: 'a' }),
-            new Ingredient({ id: 'b', isOptional: true }),
-            new Ingredient({ id: 'c' }),
-            new Ingredient({ id: 'd', isOptional: true }),
+            new RecipeIngredient({ id: 'a' }),
+            new RecipeIngredient({ id: 'b', isOptional: true }),
+            new RecipeIngredient({ id: 'c' }),
+            new RecipeIngredient({ id: 'd', isOptional: true }),
           ],
         }),
         new Recipe({
           id: '3',
           uom: UOM.RECIPE,
-          ingredients: [new Ingredient({ id: 'd', isOptional: true })],
+          ingredients: [new RecipeIngredient({ id: 'd', isOptional: true })],
         }),
       ];
 
-      const result = service.findRecipeIngredients(recipes[0], recipes, []);
+      const result = service.findRecipeIngredients(recipes[0], recipes);
 
       expect(result.length).toEqual(4);
     });
@@ -436,12 +465,74 @@ describe('RecipeIngredientService', () => {
   });
 
   describe('addIngredientsEvent', () => {
-    it('should add an ingredient to the cart', () => {
-      const ingredients = [
-        new Ingredient({
+    it('should add a new ingredient to the cart', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
           id: 'ingredientId',
           uom: 'x',
           quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 2,
+        }),
+      ];
+
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId2',
+          uom: 'y',
+          amount: 2,
+        }),
+      ];
+
+      const recipe = new Recipe({
+        id: 'id',
+        count: 1,
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
+      });
+
+      spyOn(numberService, 'toDecimal').and.returnValue(10);
+      spyOn(uomService, 'convert').and.returnValue(5);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '', recipe, [
+        recipe,
+      ]);
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should add an existing ingredient to the cart', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 2,
         }),
       ];
 
@@ -471,7 +562,9 @@ describe('RecipeIngredientService', () => {
       spyOn(recipeHistoryService, 'add');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(ingredients, userIngredients, '', '', recipe, [recipe]);
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '', recipe, [
+        recipe,
+      ]);
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
@@ -481,11 +574,19 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should update recipe history', () => {
-      const ingredients = [
-        new Ingredient({
+      const recipeIngredients = [
+        new RecipeIngredient({
           id: 'ingredientId',
           uom: 'x',
           quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 2,
         }),
       ];
 
@@ -552,11 +653,15 @@ describe('RecipeIngredientService', () => {
       spyOn(recipeHistoryService, 'add');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(ingredients, userIngredients, '', 'uid', recipe, [
+      service.addIngredientsEvent(
+        recipeIngredients,
+        userIngredients,
+        ingredients,
+        '',
+        'uid',
         recipe,
-        recipe2,
-        recipe3,
-      ]);
+        [recipe, recipe2, recipe3]
+      );
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
@@ -566,11 +671,19 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should show an error if the uom conversion is invalid', () => {
-      const ingredients = [
-        new Ingredient({
+      const recipeIngredients = [
+        new RecipeIngredient({
           id: 'ingredientId',
           uom: 'x',
           quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 2,
         }),
       ];
 
@@ -586,7 +699,7 @@ describe('RecipeIngredientService', () => {
       spyOn(recipeHistoryService, 'add');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(ingredients, userIngredients, '', '');
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '');
 
       expect(numberService.toDecimal).toHaveBeenCalled();
       expect(uomService.convert).toHaveBeenCalled();
@@ -596,11 +709,19 @@ describe('RecipeIngredientService', () => {
     });
 
     it('should skip ingredients that are not available', () => {
-      const ingredients = [
-        new Ingredient({
+      const recipeIngredients = [
+        new RecipeIngredient({
           id: 'ingredientId',
           uom: 'x',
           quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId2',
+          uom: 'y',
+          amount: 2,
         }),
       ];
 
@@ -616,7 +737,7 @@ describe('RecipeIngredientService', () => {
       spyOn(recipeHistoryService, 'add');
       spyOn(notificationService, 'setModal');
 
-      service.addIngredientsEvent(ingredients, userIngredients, '', '');
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '');
 
       expect(numberService.toDecimal).not.toHaveBeenCalled();
       expect(uomService.convert).not.toHaveBeenCalled();

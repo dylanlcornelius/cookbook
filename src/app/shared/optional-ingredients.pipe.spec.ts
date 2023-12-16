@@ -1,12 +1,12 @@
-import { Ingredient } from '@ingredient';
 import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
+import { RecipeIngredient } from '@recipeIngredient';
 
 describe('OptionalIngredientsPipe', () => {
   const pipe = new OptionalIngredientsPipe();
 
   it('should return a filtered list of ingredients', () => {
-    const optional = new Ingredient({ isOptional: true });
-    const required = new Ingredient({});
+    const optional = new RecipeIngredient({ isOptional: true });
+    const required = new RecipeIngredient({});
     const ingredients = [optional, required];
 
     const result = pipe.transform(ingredients, true);

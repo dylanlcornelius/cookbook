@@ -32,6 +32,8 @@ import { ConfigService } from '@configService';
 import { Config } from '@config';
 import { ConfigType } from '@configType';
 import { TitleService } from '@TitleService';
+import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredientService } from '@recipeIngredientService';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null =>
@@ -98,7 +100,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private uomService: UomService,
     private validationService: ValidationService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private recipeIngredientService: RecipeIngredientService
   ) {
     this.uoms = Object.values(UOM);
   }
@@ -231,7 +234,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.addStep();
       });
 
-      this.addedIngredients = this.ingredientService.buildRecipeIngredients(
+      this.addedIngredients = this.recipeIngredientService.buildRecipeIngredients(
         this.recipe.ingredients,
         [...this.ingredients, ...this.recipes]
       );
@@ -394,7 +397,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  addIngredient(index: number, data?: Ingredient): void {
+  addIngredient(index: number, data?: RecipeIngredient): void {
     const control = <FormArray>this.recipesForm.controls['ingredients'];
     const ingredientControl = this.initIngredient();
     if (data) {

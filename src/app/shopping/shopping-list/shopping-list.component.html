@@ -34,20 +34,27 @@
       <div class="table-container mat-elevation-z8 box">
         <div class="table-row" *ngFor="let ingredient of categoryIngredients.value">
           <a
-            class="table-cell plain-link"
+            class="table-cell plain-link ingredient-text"
             [routerLink]="['/ingredient/detail/', ingredient.id]"
             *ngIf="!ingredient.isItem"
           >
-            {{ ingredient.cartQuantity | number : '1.0-2' }}
-            {{ ingredient.uom === 'other' ? '' : ingredient.uom }}
-            {{ ingredient.name }}
+            <span>
+              {{ ingredient.cartQuantity }}
+              {{ ingredient.name }}
+            </span>
+            <span *ngIf="ingredient.uom !== 'other'">
+              ({{ ingredient.amount | number : '1.0-2' }} {{ ingredient.uom }})
+            </span>
+            <span *ngIf="ingredient.uom === 'other' && ingredient.amount > 1">
+              ({{ ingredient.amount }} ct)
+            </span>
           </a>
           <button
             mat-raised-button
             matTooltip="Remove Item"
             color="primary"
             *ngIf="!ingredient.isItem"
-            (click)="addIngredientToPantry(ingredient.id)"
+            (click)="addIngredientToPantry(ingredient.userIngredientId)"
           >
             <mat-icon>done</mat-icon>
           </button>

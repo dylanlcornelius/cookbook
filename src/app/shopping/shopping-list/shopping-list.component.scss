@@ -35,6 +35,11 @@
 .plain-link:hover {
   text-decoration: none;
 }
+.ingredient-text {
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
 
 @media screen and (max-width: 767px) {
   .mat-cell {
