@@ -136,25 +136,29 @@
           <dt>Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional : false">
+            <div
+              class="box"
+              *ngFor="let recipeIngredient of recipe.ingredients | filterOptional : false"
+            >
               <a
                 class="author-link"
-                [routerLink]="['/recipe/detail/', ingredient.id]"
-                *ngIf="ingredient.uom === 'recipe'"
+                [routerLink]="['/recipe/detail/', recipeIngredient.id]"
+                *ngIf="recipeIngredient.uom === 'recipe'"
                 matTooltip="Navigate to This Recipe"
               >
-                <span>{{ ingredient.quantity }} - {{ ingredient.name }}</span>
+                <span>{{ recipeIngredient.quantity }} - {{ recipeIngredient.name }}</span>
                 <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
               </a>
 
               <a
                 class="author-link"
-                [routerLink]="['/ingredient/detail/', ingredient.id]"
-                *ngIf="ingredient.uom !== 'recipe'"
+                [routerLink]="['/ingredient/detail/', recipeIngredient.id]"
+                *ngIf="recipeIngredient.uom !== 'recipe'"
                 matTooltip="Navigate to This Ingredient"
               >
-                {{ ingredient.quantity }} {{ ingredient.uom === 'other' ? '' : ingredient.uom }} -
-                {{ ingredient.name }}
+                {{ recipeIngredient.quantity }}
+                {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
+                {{ recipeIngredient.name }}
               </a>
             </div>
           </div>
@@ -164,23 +168,27 @@
           <dt>Optional Ingredients</dt>
 
           <div class="list">
-            <div class="box" *ngFor="let ingredient of recipe.ingredients | filterOptional : true">
+            <div
+              class="box"
+              *ngFor="let recipeIngredient of recipe.ingredients | filterOptional : true"
+            >
               <a
                 class="author-link"
-                [routerLink]="['/recipe/detail/', ingredient.id]"
-                *ngIf="ingredient.uom === 'recipe'"
+                [routerLink]="['/recipe/detail/', recipeIngredient.id]"
+                *ngIf="recipeIngredient.uom === 'recipe'"
               >
-                <span>{{ ingredient.quantity }} - {{ ingredient.name }}</span>
+                <span>{{ recipeIngredient.quantity }} - {{ recipeIngredient.name }}</span>
                 <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
               </a>
 
               <a
                 class="author-link"
-                [routerLink]="['/ingredient/detail/', ingredient.id]"
-                *ngIf="ingredient.uom !== 'recipe'"
+                [routerLink]="['/ingredient/detail/', recipeIngredient.id]"
+                *ngIf="recipeIngredient.uom !== 'recipe'"
               >
-                {{ ingredient.quantity }} {{ ingredient.uom === 'other' ? '' : ingredient.uom }} -
-                {{ ingredient.name }}
+                {{ recipeIngredient.quantity }}
+                {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
+                {{ recipeIngredient.name }}
               </a>
             </div>
           </div>
