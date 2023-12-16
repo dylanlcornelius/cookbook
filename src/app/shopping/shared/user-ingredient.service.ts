@@ -45,6 +45,7 @@ export class UserIngredientService extends FirestoreService {
 
   create = (data: UserIngredient): string => super.create(data.getObject());
   update = (data: Model[]): void => super.update(data);
+  delete = (id: string): void => super.delete(id);
 
   buildUserIngredients(
     userIngredients: UserIngredient[],

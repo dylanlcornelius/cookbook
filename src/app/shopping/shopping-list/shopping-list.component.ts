@@ -16,11 +16,31 @@ import { Ingredient } from '@ingredient';
 import { UserIngredient } from '@userIngredient';
 import { UserItem } from '@userItem';
 import { RecipeIngredientService } from '@recipeIngredientService';
-import { NumberService } from '@numberService';
 import { KeyValue } from '@angular/common';
 import { Config } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { RecipeIngredient } from '@recipeIngredient';
+import { UOM } from '@uoms';
+
+type DisplayIngredients = {
+  [category: string]: Array<
+    | {
+        id: string;
+        userIngredientId: string;
+        name: string;
+        uom: UOM;
+        amount: string;
+        cartQuantity: number;
+      }
+    | {
+        uid: string;
+        name: string;
+        index: number;
+        isItem: boolean;
+      }
+  >;
+};
 
 @Component({
   selector: 'app-shopping-list',
@@ -41,7 +61,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   ingredientControl = new FormControl();
   filteredIngredients: Observable<Ingredient[]>;
-  displayIngredients: { [category: string]: Array<any> };
+  displayIngredients: DisplayIngredients;
 
   constructor(
     private loadingService: LoadingService,
@@ -53,7 +73,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private validationService: ValidationService,
     private recipeIngredientService: RecipeIngredientService,
-    private numberService: NumberService,
     private configService: ConfigService
   ) {}
 
@@ -114,16 +133,18 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
                       }
 
                       userIngredientsByCategory[category].push({
-                        id: userIngredient.ingredientId,
+                        id: ingredient.id,
+                        userIngredientId: userIngredient.id,
                         name: ingredient.name,
                         uom: ingredient.uom,
+                        amount: ingredient.amount,
                         cartQuantity: userIngredient.cartQuantity,
                       });
                     }
 
                     return userIngredientsByCategory;
                   },
-                  {}
+                  {} as DisplayIngredients
                 );
 
                 if (this.userItems.length) {
@@ -162,10 +183,16 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   addIngredient(ingredient: Ingredient): void {
     // add a single buyable amount to the shopping list
-    ingredient.quantity = this.numberService.toDecimal(ingredient.amount);
     this.recipeIngredientService.addIngredientsEvent(
-      [ingredient],
+      [
+        new RecipeIngredient({
+          id: ingredient.id,
+          quantity: ingredient.amount,
+          uom: ingredient.uom,
+        }),
+      ],
       this.userIngredients,
+      this.ingredients,
       this.user.uid,
       this.householdId
     );
@@ -173,12 +200,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addIngredientToPantry(id: string): void {
-    const ingredient = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
-    ingredient.cartQuantity = 0;
-    const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
+    const filteredData = this.userIngredients.filter(({ ingredientId }) => ingredientId !== id);
     this.isCompleted = filteredData.length === 0 && this.userItems.length === 0;
 
-    this.userIngredientService.update(this.userIngredients);
+    this.userIngredientService.delete(id);
     this.notificationService.setModal(new SuccessNotification('Ingredient removed!'));
     this.userIngredientService.buyUserIngredient(1, this.isCompleted);
   }
@@ -195,9 +220,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   removeItem(id: string): void {
-    const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
     const filteredItems = this.userItems.filter(({ id: itemId }) => itemId !== id);
-    this.isCompleted = filteredData.length === 0 && filteredItems.length === 0;
+    this.isCompleted = this.userIngredients.length === 0 && filteredItems.length === 0;
 
     this.userItemService.delete(id);
     this.notificationService.setModal(new SuccessNotification('Item removed!'));
@@ -211,19 +235,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addAllToPantryEvent = (): void => {
-    const filteredData = this.userIngredients.filter(({ cartQuantity }) => cartQuantity !== 0);
-    const totalItems = filteredData.length + this.userItems.length;
-
-    this.userIngredients.forEach(ingredient => {
-      if (Number(ingredient.cartQuantity) > 0) {
-        ingredient.cartQuantity = 0;
-      }
-    });
-
+    const totalItems = this.userIngredients.length + this.userItems.length;
     this.isCompleted = true;
     this.userIngredientService.buyUserIngredient(totalItems, this.isCompleted);
 
-    this.userIngredientService.update(this.userIngredients);
+    this.userIngredients.map(({ id }) => {
+      this.userIngredientService.delete(id);
+    });
     this.userItems.map(({ id }) => {
       this.userItemService.delete(id);
     });

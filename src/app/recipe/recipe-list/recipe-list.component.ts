@@ -142,16 +142,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                   .sort(this.sortRecipesByName)
                   .sort(this.sortRecipesByImages)
                   .map(recipe => {
-                    recipe.ingredients = this.ingredientService.buildRecipeIngredients(
+                    recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                       recipe.ingredients,
                       [...ingredients, ...recipes]
                     );
-                    // account for deleted ingredients
-                    recipe.ingredients.forEach(recipeIngredient => {
-                      if (!recipeIngredient.name) {
-                        recipeIngredient.name = null;
-                      }
-                    });
 
                     recipe.hasAuthorPermission = this.householdService.hasAuthorPermission(
                       household,

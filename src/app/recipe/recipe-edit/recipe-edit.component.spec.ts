@@ -34,6 +34,8 @@ import { ConfigService } from '@configService';
 import { Config } from '@config';
 import { FormValidationDirective } from 'src/app/shared/form-validation.directive';
 import { MatStepper } from '@angular/material/stepper';
+import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredientService } from '@recipeIngredientService';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -45,6 +47,7 @@ describe('RecipeEditComponent', () => {
   let ingredientService: IngredientService;
   let validationService: ValidationService;
   let configService: ConfigService;
+  let recipeIngredientService: RecipeIngredientService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -80,6 +83,7 @@ describe('RecipeEditComponent', () => {
     ingredientService = TestBed.inject(IngredientService);
     validationService = TestBed.inject(ValidationService);
     configService = TestBed.inject(ConfigService);
+    recipeIngredientService = TestBed.inject(RecipeIngredientService);
 
     component.recipesForm = new FormBuilder().group({
       name: [],
@@ -144,7 +148,7 @@ describe('RecipeEditComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
-      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
+      spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -158,7 +162,7 @@ describe('RecipeEditComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
     });
 
@@ -193,7 +197,7 @@ describe('RecipeEditComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
-      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
+      spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -206,7 +210,7 @@ describe('RecipeEditComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -233,7 +237,7 @@ describe('RecipeEditComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
-      spyOn(ingredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'buildRecipeIngredients');
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -246,7 +250,7 @@ describe('RecipeEditComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).not.toHaveBeenCalled();
+      expect(recipeIngredientService.buildRecipeIngredients).not.toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -273,7 +277,7 @@ describe('RecipeEditComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(new Recipe({})));
       spyOn(recipeService, 'setForm');
-      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
+      spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
 
       component.load();
@@ -286,7 +290,7 @@ describe('RecipeEditComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
     });
 
@@ -323,7 +327,7 @@ describe('RecipeEditComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(recipeService, 'setForm');
-      spyOn(ingredientService, 'buildRecipeIngredients').and.returnValue([]);
+      spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
       spyOn(component, 'applyIngredientFilter');
 
@@ -338,7 +342,7 @@ describe('RecipeEditComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(recipeService.setForm).not.toHaveBeenCalled();
-      expect(ingredientService.buildRecipeIngredients).toHaveBeenCalledTimes(1);
+      expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalledTimes(1);
       expect(component.addIngredient).not.toHaveBeenCalled();
       expect(component.applyIngredientFilter).toHaveBeenCalledTimes(2);
     });
@@ -529,7 +533,7 @@ describe('RecipeEditComponent', () => {
 
       component.addIngredient(
         0,
-        new Ingredient({
+        new RecipeIngredient({
           id: 'id',
         })
       );

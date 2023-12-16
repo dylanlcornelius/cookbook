@@ -8,6 +8,7 @@ import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
 import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
 import { Recipe } from '@recipe';
+import { RecipeIngredient } from '@recipeIngredient';
 
 describe('RecipeIngredientModalComponent', () => {
   let component: RecipeIngredientModalComponent;
@@ -59,6 +60,7 @@ describe('RecipeIngredientModalComponent', () => {
         () => {},
         new Recipe({}),
         [],
+        [],
         [new Ingredient({})],
         userIngredients,
         uid,
@@ -70,7 +72,7 @@ describe('RecipeIngredientModalComponent', () => {
     });
 
     it('should use all ingredients', () => {
-      component.params.ingredients = [new Ingredient({})];
+      component.params.recipeIngredients = [new RecipeIngredient({})];
 
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
@@ -78,8 +80,9 @@ describe('RecipeIngredientModalComponent', () => {
       component.add();
 
       expect(component.params.function).toHaveBeenCalledWith(
-        component.params.ingredients,
+        component.params.recipeIngredients,
         component.params.userIngredients,
+        component.params.ingredients,
         component.params.uid,
         component.params.householdId,
         component.params.recipe,
@@ -89,13 +92,10 @@ describe('RecipeIngredientModalComponent', () => {
     });
 
     it('should use only selected ingredients', () => {
-      const ingredient1 = new Ingredient({});
-      ingredient1.selected = true;
+      const recipeIngredient1 = new RecipeIngredient({ selected: true });
+      const recipeIngredient2 = new RecipeIngredient({});
 
-      const ingredient2 = new Ingredient({});
-      ingredient2.selected = false;
-
-      component.params.ingredients = [ingredient1, ingredient2];
+      component.params.recipeIngredients = [recipeIngredient1, recipeIngredient2];
 
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
@@ -103,8 +103,9 @@ describe('RecipeIngredientModalComponent', () => {
       component.add();
 
       expect(component.params.function).toHaveBeenCalledWith(
-        [ingredient1],
+        [recipeIngredient1],
         component.params.userIngredients,
+        component.params.ingredients,
         component.params.uid,
         component.params.householdId,
         component.params.recipe,

@@ -162,7 +162,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                   });
 
                   this.recipes = recipes.map(recipe => {
-                    recipe.ingredients = this.ingredientService.buildRecipeIngredients(
+                    recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                       recipe.ingredients,
                       [...ingredients, ...recipes]
                     );
@@ -173,7 +173,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     ingredients
                   );
                   this.ingredients = ingredients;
-                  this.recipe.ingredients = this.ingredientService.buildRecipeIngredients(
+                  this.recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                     recipe.ingredients,
                     [...ingredients, ...recipes]
                   );

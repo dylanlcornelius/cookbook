@@ -126,27 +126,31 @@ describe('IngredientListComponent', () => {
 
   describe('removeIngredient', () => {
     it('should remove a user ingredient', () => {
-      component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
+      component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 2 })];
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{ id: 'id', amount: 1 }];
 
       spyOn(userIngredientService, 'update');
+      spyOn(userIngredientService, 'delete');
 
       component.removeIngredient('id');
 
       expect(userIngredientService.update).toHaveBeenCalled();
+      expect(userIngredientService.delete).not.toHaveBeenCalled();
     });
 
-    it('should not remove a user ingredient if it is zero', () => {
+    it('should delete a user ingredient if it is zero', () => {
       component.userIngredients = [new UserIngredient({ ingredientId: 'id', cartQuantity: 1 })];
       component.dataSource = new MatTableDataSource([]);
       component.dataSource.data = [{ id: 'id', amount: 1 }];
 
       spyOn(userIngredientService, 'update');
+      spyOn(userIngredientService, 'delete');
 
-      component.removeIngredient('id2');
+      component.removeIngredient('id');
 
       expect(userIngredientService.update).not.toHaveBeenCalled();
+      expect(userIngredientService.delete).toHaveBeenCalled();
     });
   });
 

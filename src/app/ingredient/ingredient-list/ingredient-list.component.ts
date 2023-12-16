@@ -118,9 +118,14 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     const data = this.userIngredients.find(({ ingredientId }) => ingredientId === id);
     const ingredient = this.findIngredient(id);
     if (data && Number(data.cartQuantity) > 0 && ingredient.amount) {
-      data.cartQuantity = Number(data.cartQuantity) - Number(ingredient.amount);
-      ingredient.cartQuantity = Number(ingredient.cartQuantity) - Number(ingredient.amount);
-      this.userIngredientService.update(this.userIngredients);
+      data.cartQuantity = Number(data.cartQuantity) - 1;
+      ingredient.cartQuantity = Number(ingredient.cartQuantity) - 1;
+
+      if (data.cartQuantity > 0) {
+        this.userIngredientService.update(this.userIngredients);
+      } else {
+        this.userIngredientService.delete(data.id);
+      }
     }
   }
 
@@ -129,17 +134,17 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     const ingredient = this.findIngredient(id);
     if (ingredient.amount) {
       if (data) {
-        data.cartQuantity = Number(data.cartQuantity) + Number(ingredient.amount);
-        ingredient.cartQuantity = Number(ingredient.cartQuantity) + Number(ingredient.amount);
+        data.cartQuantity = Number(data.cartQuantity) + 1;
+        ingredient.cartQuantity = Number(ingredient.cartQuantity) + 1;
       } else {
         this.userIngredients.push(
           new UserIngredient({
             ingredientId: id,
-            cartQuantity: Number(ingredient.amount),
+            cartQuantity: 1,
             uid: this.householdId,
           })
         );
-        ingredient.cartQuantity = Number(ingredient.amount);
+        ingredient.cartQuantity = 1;
       }
       this.userIngredientService.update(this.userIngredients);
     }

@@ -46,6 +46,7 @@
       "@navigation": ["src/app/header/navigation.model"],
       "@navigationService": ["src/app/header/navigation.service"],
       "@recipe": ["src/app/recipe/shared/recipe.model"],
+      "@recipeIngredient": ["src/app/recipe/shared/recipe-ingredient.model"],
       "@recipeService": ["src/app/recipe/shared/recipe.service"],
       "@recipeIngredientModal": [
         "src/app/shared/recipe-ingredient-modal/recipe-ingredient-modal.model"

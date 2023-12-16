@@ -5,8 +5,6 @@ import { Ingredient, IngredientObject } from '@ingredient';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
-import { Recipe } from '@recipe';
-import { NumberService } from '@numberService';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
@@ -16,8 +14,7 @@ export class IngredientService extends FirestoreService {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
-    actionService: ActionService,
-    private numberService: NumberService
+    actionService: ActionService
   ) {
     super('ingredients', firebase, currentUserService, actionService);
   }
@@ -44,26 +41,4 @@ export class IngredientService extends FirestoreService {
     super.update(data, id, Action.UPDATE_INGREDIENT);
   delete = (id: string): void => super.delete(id, Action.DELETE_INGREDIENT);
   sort = (a: Ingredient, b: Ingredient): number => a.name.localeCompare(b.name);
-
-  buildRecipeIngredients(
-    recipeIngredients: Ingredient[],
-    allIngredients: (Ingredient | Recipe)[]
-  ): Ingredient[] {
-    return recipeIngredients.reduce((result, addedIngredient) => {
-      const currentIngredient = allIngredients.find(
-        ingredient => ingredient.id === addedIngredient.id
-      );
-      if (currentIngredient) {
-        result.push({
-          id: currentIngredient.id,
-          amount: currentIngredient.amount,
-          name: currentIngredient.name,
-          uom: addedIngredient.uom || '',
-          quantity: this.numberService.toFormattedFraction(addedIngredient.quantity),
-          isOptional: addedIngredient.isOptional || false,
-        });
-      }
-      return result;
-    }, []);
-  }
 }
