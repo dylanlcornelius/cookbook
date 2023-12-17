@@ -42,11 +42,22 @@
               {{ ingredient.cartQuantity }}
               {{ ingredient.name }}
             </span>
-            <span *ngIf="ingredient.uom !== 'other'">
-              ({{ ingredient.amount | number : '1.0-2' }} {{ ingredient.uom }})
+            <span *ngIf="!ingredient.altAmount">
+              <span *ngIf="ingredient.uom !== 'other'">
+                ({{ ingredient.amount | number : '1.0-2' }} {{ ingredient.uom }})
+              </span>
+              <span *ngIf="ingredient.uom === 'other' && ingredient.amount > 1">
+                ({{ ingredient.amount }} ct)
+              </span>
             </span>
-            <span *ngIf="ingredient.uom === 'other' && ingredient.amount > 1">
-              ({{ ingredient.amount }} ct)
+
+            <span *ngIf="!!ingredient.altAmount">
+              <span *ngIf="ingredient.altUOM !== 'other'">
+                ({{ ingredient.altAmount | number : '1.0-2' }} {{ ingredient.altUOM }})
+              </span>
+              <span *ngIf="ingredient.altUOM === 'other' && ingredient.altAmount > 1">
+                ({{ ingredient.altAmount }} ct)
+              </span>
             </span>
           </a>
           <button

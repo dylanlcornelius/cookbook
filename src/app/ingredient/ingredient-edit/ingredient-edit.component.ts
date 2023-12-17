@@ -28,6 +28,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   id: string;
   uoms: UOMs;
   categories: Configs;
+  hasAlternative = false;
 
   matcher = new ErrorMatcher();
 
@@ -74,6 +75,8 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
           ],
         ],
         uom: [null, Validators.required],
+        altAmount: [null, [Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
+        altUOM: [null],
         category: [null, Validators.required],
         calories: [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       });
@@ -98,17 +101,46 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
           if (ingredient) {
             this.titleService.set(`Edit ${ingredient.name}`);
 
+            this.hasAlternative = !!this.ingredient.altAmount;
+            this.setAltValidators();
+
             this.ingredientsForm.patchValue({
               name: this.ingredient.name,
               category: this.ingredient.category,
               amount: this.ingredient.amount || '',
               uom: this.ingredient.uom || '',
+              altAmount: this.ingredient.altAmount || '',
+              altUOM: this.ingredient.altUOM || '',
               calories: this.ingredient.calories,
             });
           }
           this.loading = this.loadingService.set(false);
         });
     });
+  }
+
+  setAltValidators(): void {
+    if (this.hasAlternative) {
+      this.ingredientsForm.controls['altAmount'].addValidators([Validators.required]);
+      this.ingredientsForm.controls['altUOM'].addValidators([Validators.required]);
+    } else {
+      this.ingredientsForm.controls['altAmount'].removeValidators([Validators.required]);
+      this.ingredientsForm.controls['altUOM'].removeValidators([Validators.required]);
+    }
+    this.ingredientsForm.controls['altAmount'].updateValueAndValidity();
+    this.ingredientsForm.controls['altUOM'].updateValueAndValidity();
+  }
+
+  select(): void {
+    this.hasAlternative = !this.hasAlternative;
+    this.setAltValidators();
+
+    if (!this.hasAlternative) {
+      this.ingredientsForm.patchValue({
+        altAmount: '',
+        altUOM: '',
+      });
+    }
   }
 
   onSubmit(formDirective: FormGroupDirective): void {

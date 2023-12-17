@@ -207,7 +207,7 @@ export class AdminDashboardComponent implements OnDestroy {
     ),
     new Context(
       'Ingredients',
-      ['name', 'category', 'amount', 'uom'],
+      ['name', 'category', 'amount', 'uom', 'altAmount', 'altUOM'],
       this.ingredientService,
       this.revert,
       this.save,

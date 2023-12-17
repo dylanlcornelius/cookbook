@@ -73,6 +73,20 @@ describe('IngredientEditComponent', () => {
       expect(configService.get).toHaveBeenCalled();
     });
 
+    it('should get an ingredient with an alt amount', () => {
+      const route = TestBed.inject(ActivatedRoute);
+      route.params = of({ 'ingredient-id': 'id' });
+
+      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({ altAmount: '1' })));
+      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
+
+      fixture = TestBed.createComponent(IngredientEditComponent);
+      fixture.detectChanges();
+
+      expect(ingredientService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
+    });
+
     it('should not get an ingredient', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({});
@@ -85,6 +99,29 @@ describe('IngredientEditComponent', () => {
 
       expect(ingredientService.get).not.toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
+    });
+  });
+
+  describe('select', () => {
+    it('should toggle alternative fields', () => {
+      spyOn(component, 'setAltValidators');
+
+      component.select();
+
+      expect(component.hasAlternative).toBeTrue();
+      expect(component.setAltValidators).toHaveBeenCalled();
+    });
+
+    it('should toggle alternative fields', () => {
+      component.ingredientsForm = new FormBuilder().group({ name: [null, Validators.required] });
+      component.hasAlternative = true;
+
+      spyOn(component, 'setAltValidators');
+
+      component.select();
+
+      expect(component.hasAlternative).toBeFalse();
+      expect(component.setAltValidators).toHaveBeenCalled();
     });
   });
 
