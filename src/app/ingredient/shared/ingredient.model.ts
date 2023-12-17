@@ -6,6 +6,8 @@ export class Ingredient extends Model {
   category: string;
   amount: string;
   uom: UOM;
+  altAmount: string;
+  altUOM: UOM;
   calories: string;
 
   cartQuantity: number;
@@ -17,6 +19,8 @@ export class Ingredient extends Model {
     this.category = data.category || 'Other';
     this.amount = data.amount || '';
     this.uom = data.uom || '';
+    this.altAmount = data.altAmount || '';
+    this.altUOM = data.altUOM || '';
     this.calories = data.calories || '';
     this.cartQuantity = data.cartQuantity;
   }

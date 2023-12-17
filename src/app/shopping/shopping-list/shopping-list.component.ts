@@ -29,8 +29,10 @@ type DisplayIngredients = {
         id: string;
         userIngredientId: string;
         name: string;
-        uom: UOM;
         amount: string;
+        uom: UOM;
+        altAmount: string;
+        altUOM: UOM;
         cartQuantity: number;
       }
     | {
@@ -136,8 +138,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
                         id: ingredient.id,
                         userIngredientId: userIngredient.id,
                         name: ingredient.name,
-                        uom: ingredient.uom,
                         amount: ingredient.amount,
+                        uom: ingredient.uom,
+                        altAmount: ingredient.altAmount,
+                        altUOM: ingredient.altUOM,
                         cartQuantity: userIngredient.cartQuantity,
                       });
                     }

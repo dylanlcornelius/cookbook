@@ -49,7 +49,9 @@ describe('IngredientsDetailComponent', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
 
-      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({ category: 'BAKING' })));
+      spyOn(ingredientService, 'get').and.returnValue(
+        of(new Ingredient({ category: 'BAKING', altAmount: '1' }))
+      );
       spyOn(configService, 'get').and.returnValue(
         of([new Config({ value: 'BAKING', displayValue: 'Baking' })])
       );
