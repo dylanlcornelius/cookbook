@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableViewComponent } from './table-view.component';
+import { Context } from '@context';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 
 describe('TableViewComponent', () => {
   let component: TableViewComponent;
@@ -8,11 +11,22 @@ describe('TableViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [MatTableModule],
       declarations: [TableViewComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TableViewComponent);
     component = fixture.componentInstance;
+    component.context = new Context(
+      'title',
+      [],
+      null,
+      () => {},
+      () => {},
+      () => {},
+      () => {}
+    );
     fixture.detectChanges();
   });
 
