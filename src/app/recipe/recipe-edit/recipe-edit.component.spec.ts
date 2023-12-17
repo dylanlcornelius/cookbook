@@ -18,7 +18,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { User } from '@user';
 import { Recipe } from '@recipe';
 import { IngredientService } from '@ingredientService';
-import { Ingredient } from '@ingredient';
+import { Ingredient, Ingredients } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -215,7 +215,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load ingredients for a new recipe', () => {
-      component.addedIngredients = [new Ingredient({ id: 'id2' })];
+      component.addedIngredients = [new RecipeIngredient({ id: 'id2' })];
 
       const ingredients = [
         new Ingredient({
@@ -255,7 +255,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load a continued recipe', () => {
-      component.addedIngredients = [new Ingredient({ id: 'id2' })];
+      component.addedIngredients = [new RecipeIngredient({ id: 'id2' })];
 
       const ingredients = [
         new Ingredient({
@@ -314,7 +314,7 @@ describe('RecipeEditComponent', () => {
       ];
       const configs = [];
 
-      const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
+      const ingredients$ = new BehaviorSubject<Ingredients>(ingredients);
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get')
@@ -589,17 +589,8 @@ describe('RecipeEditComponent', () => {
 
   describe('applyIngredientFilter', () => {
     it('should filter ingredients', () => {
-      component.allAvailableIngredients = [
-        {
-          name: 'filter1',
-        },
-      ];
-
-      component.addedIngredients = [
-        {
-          id: 'id',
-        },
-      ];
+      component.allAvailableIngredients = [new RecipeIngredient({ name: 'filter1' })];
+      component.addedIngredients = [new RecipeIngredient({ id: 'id' })];
 
       component.applyIngredientFilter('filter');
 

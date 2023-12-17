@@ -5,12 +5,12 @@ import { Recipe } from '@recipe';
   providedIn: 'root',
 })
 export class RecipeFilterService {
-  private filters = [];
+  private filters: Filters = [];
 
-  get selectedFilters(): Array<Filter> {
+  get selectedFilters(): Filters {
     return this.filters;
   }
-  set selectedFilters(filters: Array<Filter>) {
+  set selectedFilters(filters: Filters) {
     this.filters = filters;
   }
 
@@ -19,7 +19,7 @@ export class RecipeFilterService {
 
   constructor() {}
 
-  recipeFilterPredicate(data: Recipe, filters: Array<Filter>): boolean {
+  recipeFilterPredicate(data: Recipe, filters: Filters): boolean {
     if (!filters.length) {
       return true;
     }
@@ -76,6 +76,8 @@ export abstract class Filter {
   abstract type: string;
   abstract filterPredicate: (recipe: Recipe) => boolean;
 }
+
+export type Filters = Filter[];
 
 export class AuthorFilter extends Filter {
   type = FILTER_TYPE.AUTHOR;

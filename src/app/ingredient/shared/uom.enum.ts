@@ -11,3 +11,5 @@ export enum UOM {
   OTHER = 'other',
   RECIPE = 'recipe',
 }
+
+export type UOMs = UOM[];

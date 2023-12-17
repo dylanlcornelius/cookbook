@@ -1,14 +1,12 @@
-import { Modal } from '@modalService';
-
-export class Notification extends Modal {
-  type: string;
-  icon: string;
+export abstract class Notification {
   text: string;
 
   constructor(text: string) {
-    super();
     this.text = text;
   }
+
+  abstract type: string;
+  abstract icon: string;
 }
 
 export class SuccessNotification extends Notification {

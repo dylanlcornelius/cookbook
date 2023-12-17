@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User, UserObject } from '@user';
+import { User, UserObject, Users } from '@user';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
@@ -19,9 +19,9 @@ export class UserService extends FirestoreService {
   }
 
   get(uid: string): Observable<User>;
-  get(): Observable<User[]>;
-  get(uid?: string): Observable<User | User[]>; // type of spyOn
-  get(uid?: string): Observable<User | User[]> {
+  get(): Observable<Users>;
+  get(uid?: string): Observable<User | Users>; // type of spyOn
+  get(uid?: string): Observable<User | Users> {
     return new Observable(observer => {
       if (uid) {
         super
@@ -38,6 +38,6 @@ export class UserService extends FirestoreService {
   }
 
   create = (data: User): string => super.create(data.getObject());
-  update = (data: UserObject | User[], id?: string): void => super.update(data, id);
+  update = (data: UserObject | Users, id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
 }

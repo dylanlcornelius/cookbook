@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angu
 import { Router, ActivatedRoute } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { FormGroupDirective, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UOM } from '@uoms';
+import { UOM, UOMs } from '@uoms';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '@loadingService';
 import { Ingredient } from '@ingredient';
-import { Config } from '@config';
+import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
 import { TitleService } from '@TitleService';
@@ -26,8 +26,8 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   ingredientsForm: FormGroup;
   ingredient: Ingredient;
   id: string;
-  uoms: Array<UOM>;
-  categories: Config[];
+  uoms: UOMs;
+  categories: Configs;
 
   matcher = new ErrorMatcher();
 
@@ -78,7 +78,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
         calories: [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       });
 
-      const observables$: [Observable<Config[]>, Observable<Ingredient>?] = [configs$];
+      const observables$: [Observable<Configs>, Observable<Ingredient>?] = [configs$];
       if (this.id) {
         observables$.push(this.ingredientService.get(this.id));
         this.title = 'Edit an Ingredient';
@@ -91,7 +91,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
       combineLatest(observables$)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(([configs, ingredient]: [Config[], Ingredient?]) => {
+        .subscribe(([configs, ingredient]) => {
           this.categories = configs;
           this.ingredient = ingredient;
 

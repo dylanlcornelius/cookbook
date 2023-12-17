@@ -30,3 +30,4 @@ export type UserIngredientObject = Omit<
   UserIngredient,
   'id' | 'getId' | 'getObject' | 'amount' | 'uom'
 >;
+export type UserIngredients = UserIngredient[];

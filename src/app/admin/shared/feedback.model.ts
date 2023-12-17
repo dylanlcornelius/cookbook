@@ -12,3 +12,5 @@ export class Feedback extends Model {
     this.uid = data.uid || '';
   }
 }
+
+export type Feedbacks = Feedback[];

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
-import { Comment, CommentObject } from '@comment';
+import { Comment, CommentObject, Comments } from '@comment';
 import { Action } from '@actions';
 import { FirebaseService } from '@firebaseService';
 
@@ -19,10 +19,10 @@ export class CommentService extends FirestoreService {
     super('comments', firebase, currentUserService, actionService);
   }
 
-  get(id: string): Observable<Comment[]>;
-  get(): Observable<Comment[]>;
-  get(id?: string): Observable<Comment[]>; // type for spyOn
-  get(id?: string): Observable<Comment[]> {
+  get(id: string): Observable<Comments>;
+  get(): Observable<Comments>;
+  get(id?: string): Observable<Comments>; // type for spyOn
+  get(id?: string): Observable<Comments> {
     return new Observable(observer => {
       if (id) {
         super
@@ -39,6 +39,6 @@ export class CommentService extends FirestoreService {
   }
 
   create = (data: Comment): string => super.create(data.getObject(), Action.CREATE_COMMENT);
-  update = (data: CommentObject | Comment[], id?: string): void => super.update(data, id);
+  update = (data: CommentObject | Comments, id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id, Action.DELETE_COMMENT);
 }

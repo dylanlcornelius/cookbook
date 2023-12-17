@@ -3,7 +3,7 @@ import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-pag
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActionService } from '@actionService';
-import { User } from '@user';
+import { User, Users } from '@user';
 import { Action, ActionLabel } from '@actions';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { CurrentUserService } from '@currentUserService';
@@ -40,9 +40,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userImage: string;
   userImageProgress;
 
-  users: User[];
+  users: Users;
 
-  actions = [];
+  actions: Array<{
+    data: Array<{
+      name: any;
+      value: any;
+    }>;
+    date: number;
+  }> = [];
   actionsLength = 0;
   actionPage = { pageIndex: 0 };
 

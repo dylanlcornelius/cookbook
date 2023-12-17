@@ -5,36 +5,26 @@ import { Validation } from '@validation';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { TutorialModal } from '@tutorial';
 
-export abstract class Modal {}
-
 @Injectable({ providedIn: 'root' })
-export abstract class ModalService {
-  modal: BehaviorSubject<Modal>;
+export abstract class ModalService<T> {
+  modal = new BehaviorSubject<T>(undefined);
 
-  getModal(): BehaviorSubject<Modal> {
+  getModal(): BehaviorSubject<T> {
     return this.modal;
   }
-  setModal(options: Modal): void {
+  setModal(options: T): void {
     this.modal.next(options);
   }
 }
 
 @Injectable({ providedIn: 'root' })
-export class NotificationService extends ModalService {
-  modal = new BehaviorSubject<Notification>(undefined);
-}
+export class NotificationService extends ModalService<Notification> {}
 
 @Injectable({ providedIn: 'root' })
-export class ValidationService extends ModalService {
-  modal = new BehaviorSubject<Validation>(undefined);
-}
+export class ValidationService extends ModalService<Validation> {}
 
 @Injectable({ providedIn: 'root' })
-export class RecipeIngredientModalService extends ModalService {
-  modal = new BehaviorSubject<RecipeIngredientModal>(undefined);
-}
+export class RecipeIngredientModalService extends ModalService<RecipeIngredientModal> {}
 
 @Injectable({ providedIn: 'root' })
-export class TutorialModalService extends ModalService {
-  modal = new BehaviorSubject<TutorialModal>(undefined);
-}
+export class TutorialModalService extends ModalService<TutorialModal> {}

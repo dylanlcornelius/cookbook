@@ -4,7 +4,7 @@ import { FirestoreService } from '@firestoreService';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CurrentUserService } from '@currentUserService';
-import { RecipeHistory } from '@recipeHistory';
+import { RecipeHistories, RecipeHistory } from '@recipeHistory';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
@@ -61,10 +61,10 @@ export class RecipeHistoryService extends FirestoreService {
   }
 
   get(uid: string, recipeId: string): Observable<RecipeHistory>;
-  get(uid: string): Observable<RecipeHistory[]>;
-  get(): Observable<RecipeHistory[]>;
-  get(uid?: string): Observable<RecipeHistory | RecipeHistory[]>; // type for spyOn
-  get(uid?: string, recipeId?: string): Observable<RecipeHistory | RecipeHistory[]> {
+  get(uid: string): Observable<RecipeHistories>;
+  get(): Observable<RecipeHistories>;
+  get(uid?: string): Observable<RecipeHistory | RecipeHistories>; // type for spyOn
+  get(uid?: string, recipeId?: string): Observable<RecipeHistory | RecipeHistories> {
     return new Observable(observable => {
       if (uid && recipeId) {
         super

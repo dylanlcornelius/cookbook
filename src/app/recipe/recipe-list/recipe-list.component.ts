@@ -12,7 +12,7 @@ import { ImageService } from '@imageService';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
-import { Recipe } from '@recipe';
+import { Recipe, Recipes } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
 import {
@@ -28,7 +28,7 @@ import {
   RestrictionFilter,
   TypeFilter,
 } from '@recipeFilterService';
-import { UserIngredient } from '@userIngredient';
+import { UserIngredients } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
@@ -38,11 +38,29 @@ import { Validation } from '@validation';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { SuccessNotification } from '@notification';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { Ingredient } from '@ingredient';
-import { Config } from '@config';
+import { Ingredients } from '@ingredient';
+import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
 import { FirebaseService } from '@firebaseService';
+
+type FilterValues = Array<{
+  displayName: string;
+  name: string;
+  checked: boolean;
+  filter: Filter;
+}>;
+
+type DisplayFilter = {
+  displayName: string;
+  name: string;
+  values: FilterValues;
+  numberOfSelected?: number;
+};
+
+type NestedDisplayFilter = { icon: string; values: DisplayFilter[]; numberOfSelected?: number };
+
+type DisplayFilters = Array<DisplayFilter | NestedDisplayFilter>;
 
 @Component({
   selector: 'app-recipe-list',
@@ -56,16 +74,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   user: User;
   householdId: string;
 
-  filtersList = [];
+  filtersList: DisplayFilters = [];
   searchFilter$ = new Subject<string>();
   searchFilter = '';
   pageIndex: number;
 
   dataSource;
-  recipes: Recipe[] = [];
-  userIngredients: UserIngredient[];
-  ingredients: Ingredient[];
-  types: Config[];
+  recipes: Recipes = [];
+  userIngredients: UserIngredients;
+  ingredients: Ingredients;
+  types: Configs;
 
   breakpointSubscription: Subscription;
   searchSubscription: Subscription;
@@ -245,10 +263,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       });
     });
 
-    const categories = [];
-    const authors = [];
-    const statuses = [];
-    const images = [];
+    const categories: FilterValues = [];
+    const authors: FilterValues = [];
+    const statuses: FilterValues = [];
+    const images: FilterValues = [];
     this.recipes.forEach(recipe => {
       recipe.categories.forEach(({ category }) => {
         if (categories.find(c => c.name === category) === undefined) {
@@ -314,13 +332,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         });
       }
 
-      if (images.find(i => i.name === recipe.hasImage) === undefined) {
+      if (images.find(i => i.name === `${recipe.hasImage}`) === undefined) {
         const checked =
           filters.find(f => f.type === FILTER_TYPE.IMAGE && f.value === recipe.hasImage) !==
           undefined;
         images.push({
           displayName: recipe.hasImage.toString().replace(/\b\w/g, l => l.toUpperCase()),
-          name: recipe.hasImage,
+          name: `${recipe.hasImage}`,
           checked: checked,
           filter: new ImageFilter(recipe.hasImage),
         });
@@ -386,7 +404,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   setSelectedFilterCount(): void {
     this.filtersList.forEach(filterList => {
       let i = 0;
-      if (!filterList.icon) {
+      if (this.isDisplayFilter(filterList)) {
         filterList.values.forEach(filter => {
           if (filter.checked) {
             i++;
@@ -438,6 +456,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipeFilterService.selectedFilters = [];
     this.initFilters();
     this.setFilters();
+  }
+
+  isDisplayFilter(filters: DisplayFilter | NestedDisplayFilter): filters is DisplayFilter {
+    return !('icon' in filters);
   }
 
   sortRecipesByName(a: Recipe, b: Recipe): number {

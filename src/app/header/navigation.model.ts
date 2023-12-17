@@ -19,6 +19,8 @@ export class Navigation extends Model {
   }
 }
 
+export type Navigations = Navigation[];
+
 export enum NavigationMenu {
   PROFILE = 'profile',
   TOOLS = 'tools',

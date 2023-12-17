@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { ModelObject } from '@model';
 import { FirebaseService } from '@firebaseService';
-import { Feedback } from '@feedback';
+import { Feedback, Feedbacks } from '@feedback';
 import { Action } from '@actions';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class FeedbackService extends FirestoreService {
     super('feedbacks', firebase, currentUserService, actionService);
   }
 
-  get(): Observable<Feedback[]> {
+  get(): Observable<Feedbacks> {
     return new Observable(observer => {
       super.get().subscribe(docs => {
         observer.next(docs.map(doc => new Feedback(doc)));
@@ -29,6 +29,6 @@ export class FeedbackService extends FirestoreService {
   }
 
   create = (data: ModelObject): string => super.create(data, Action.SUBMIT_FEEDBACK);
-  update = (data: Feedback[]): void => super.updateAll(data);
+  update = (data: Feedbacks): void => super.updateAll(data);
   delete = (id: string): void => super.delete(id);
 }

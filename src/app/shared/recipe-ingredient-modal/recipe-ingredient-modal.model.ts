@@ -1,33 +1,32 @@
-import { Modal } from '@modalService';
-import { Ingredient } from '@ingredient';
-import { UserIngredient } from '@userIngredient';
-import { Recipe } from '@recipe';
-import { RecipeIngredient } from '@recipeIngredient';
+import { Ingredients } from '@ingredient';
+import { UserIngredients } from '@userIngredient';
+import { Recipe, Recipes } from '@recipe';
+import { RecipeIngredients } from '@recipeIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
+import { MealPlannerComponent } from 'src/app/shopping/meal-planner/meal-planner.component';
 
-export class RecipeIngredientModal extends Modal {
+export class RecipeIngredientModal {
   function: RecipeIngredientService['addIngredientsEvent'];
   recipe: Recipe;
-  recipes: Recipe[];
-  recipeIngredients: RecipeIngredient[];
-  ingredients: Ingredient[];
-  userIngredients: UserIngredient[];
+  recipes: Recipes;
+  recipeIngredients: RecipeIngredients;
+  ingredients: Ingredients;
+  userIngredients: UserIngredients;
   uid: string;
   householdId: string;
-  callback: Function;
+  callback: MealPlannerComponent['addAllIngredients'];
 
   constructor(
     eventFunction: RecipeIngredientService['addIngredientsEvent'],
     recipe: Recipe,
-    recipes: Recipe[],
-    recipeIngredients: RecipeIngredient[],
-    ingredients: Ingredient[],
-    userIngredients: UserIngredient[],
+    recipes: Recipes,
+    recipeIngredients: RecipeIngredients,
+    ingredients: Ingredients,
+    userIngredients: UserIngredients,
     uid: string,
     householdId: string,
-    callback?: Function
+    callback?: MealPlannerComponent['addAllIngredients']
   ) {
-    super();
     this.function = eventFunction;
     this.recipe = recipe;
     this.recipes = recipes;

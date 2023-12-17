@@ -3,7 +3,7 @@ import { Model } from '@model';
 export class RecipeHistory extends Model {
   uid: string;
   recipeId: string;
-  history: Array<string>;
+  history: string[];
   timesCooked: number;
   lastDateCooked: string;
 
@@ -16,3 +16,5 @@ export class RecipeHistory extends Model {
     this.lastDateCooked = data.lastDateCooked || '';
   }
 }
+
+export type RecipeHistories = RecipeHistory[];

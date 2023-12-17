@@ -12,7 +12,7 @@ import { NotificationService, ValidationService } from '@modalService';
 import { NavigationService } from '@navigationService';
 import { Validation } from '@validation';
 import { Context } from '@context';
-import { Model } from '@model';
+import { Model, Models } from '@model';
 import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
 import { CommentService } from '@commentService';
 import { HouseholdService } from '@householdService';
@@ -64,18 +64,10 @@ export class AdminDashboardComponent implements OnDestroy {
       this.context$ = context?.service
         .get()
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: Model[]) => {
+        .subscribe((data: Models) => {
           context.dataSource = data;
         });
     });
-  }
-
-  isBoolean(obj: any): boolean {
-    return typeof obj === 'boolean';
-  }
-
-  isArray(obj: any): boolean {
-    return Array.isArray(obj);
   }
 
   add = (context: Context): void => {

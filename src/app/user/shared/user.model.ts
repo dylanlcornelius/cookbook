@@ -52,6 +52,7 @@ export type UserObject = Omit<
   | 'ratingCount'
   | 'image'
 >;
+export type Users = User[];
 
 export enum ROLE {
   ADMIN = 'admin',

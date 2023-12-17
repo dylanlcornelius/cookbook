@@ -35,3 +35,4 @@ export type CommentObject = Omit<
   Comment,
   'id' | 'getId' | 'getObject' | 'authorName' | 'date' | 'showResolved' | 'isEditing' | 'control'
 >;
+export type Comments = Comment[];

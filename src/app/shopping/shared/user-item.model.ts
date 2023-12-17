@@ -10,3 +10,5 @@ export class UserItem extends Model {
     this.name = data.name || '';
   }
 }
+
+export type UserItems = UserItem[];

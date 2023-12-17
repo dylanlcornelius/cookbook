@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NumberService } from '@numberService';
-import { UOM } from '@uoms';
+import { UOM, UOMs } from '@uoms';
 import { UomService } from '@uomService';
 
 @Component({
@@ -10,7 +10,7 @@ import { UomService } from '@uomService';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UomTableComponent {
-  uoms: Array<UOM>;
+  uoms: UOMs;
   uomValue = 1;
 
   constructor(private numberService: NumberService, private uomService: UomService) {

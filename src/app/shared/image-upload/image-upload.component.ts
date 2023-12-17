@@ -21,7 +21,7 @@ export class ImageUploadComponent implements OnDestroy {
   id: string;
 
   @Input()
-  updateImage: Function;
+  updateImage: (hasImage: boolean) => void;
 
   @Input()
   progress;

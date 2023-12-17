@@ -2,7 +2,7 @@ import { Action } from '@actions';
 import { ActionService } from '@actionService';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Comment } from '@comment';
+import { Comment, Comments } from '@comment';
 import { CommentService } from '@commentService';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
@@ -25,11 +25,11 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   @Input() id: string;
 
-  parentComments;
-  childCommentsByParentId;
-  comments;
+  parentComments: Comments;
+  childCommentsByParentId: { [key: string]: Comments };
+  comments: Comments;
 
-  newCommentControls = [];
+  newCommentControls: FormControl[] = [];
 
   constructor(
     private currentUserService: CurrentUserService,

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
-import { UserIngredient } from '@userIngredient';
+import { UserIngredient, UserIngredients } from '@userIngredient';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
-import { Model } from '@model';
+import { Models } from '@model';
 import { SuccessNotification } from '@notification';
 import { NotificationService } from '@modalService';
 import { FirebaseService } from '@firebaseService';
-import { Ingredient } from '@ingredient';
+import { Ingredients } from '@ingredient';
 
 @Injectable({
   providedIn: 'root',
@@ -24,10 +24,10 @@ export class UserIngredientService extends FirestoreService {
     super('user-ingredients', firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<UserIngredient[]>;
-  get(): Observable<UserIngredient[]>;
-  get(): Observable<UserIngredient[]>; // type for spyOn
-  get(uid?: string): Observable<UserIngredient[]> {
+  get(uid: string): Observable<UserIngredients>;
+  get(): Observable<UserIngredients>;
+  get(): Observable<UserIngredients>; // type for spyOn
+  get(uid?: string): Observable<UserIngredients> {
     return new Observable(observer => {
       if (uid) {
         super
@@ -44,13 +44,13 @@ export class UserIngredientService extends FirestoreService {
   }
 
   create = (data: UserIngredient): string => super.create(data.getObject());
-  update = (data: Model[]): void => super.update(data);
+  update = (data: Models): void => super.update(data);
   delete = (id: string): void => super.delete(id);
 
   buildUserIngredients(
-    userIngredients: UserIngredient[],
-    ingredients: Ingredient[]
-  ): UserIngredient[] {
+    userIngredients: UserIngredients,
+    ingredients: Ingredients
+  ): UserIngredients {
     return userIngredients.reduce((result, userIngredient) => {
       const currentIngredient = ingredients.find(
         ingredient => ingredient.id === userIngredient.ingredientId
@@ -65,7 +65,7 @@ export class UserIngredientService extends FirestoreService {
         );
       }
       return result;
-    }, []);
+    }, [] as UserIngredients);
   }
 
   buyUserIngredient(actions: number, isCompleted: boolean): void {

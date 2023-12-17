@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Action } from '@actions';
-import { Recipe, RecipeObject, RECIPE_STATUS } from '@recipe';
+import { Recipe, RecipeObject, RECIPE_STATUS, Recipes } from '@recipe';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
@@ -34,9 +34,9 @@ export class RecipeService extends FirestoreService {
   }
 
   get(id: string): Observable<Recipe>;
-  get(): Observable<Recipe[]>;
-  get(id?: string): Observable<Recipe | Recipe[]>; // type for spyOn
-  get(id?: string): Observable<Recipe | Recipe[]> {
+  get(): Observable<Recipes>;
+  get(id?: string): Observable<Recipe | Recipes>; // type for spyOn
+  get(id?: string): Observable<Recipe | Recipes> {
     return new Observable(observer => {
       if (id) {
         super.get(id).subscribe(doc => {
@@ -51,7 +51,7 @@ export class RecipeService extends FirestoreService {
   }
 
   create = (data: RecipeObject): string => super.create(data, Action.CREATE_RECIPE);
-  update = (data: RecipeObject | Recipe[], id?: string): void =>
+  update = (data: RecipeObject | Recipes, id?: string): void =>
     super.update(data, id, Action.UPDATE_RECIPE);
   delete = (id: string): void => super.delete(id, Action.DELETE_RECIPE);
 

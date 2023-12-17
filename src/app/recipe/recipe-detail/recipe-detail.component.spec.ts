@@ -10,7 +10,7 @@ import { ImageService } from '@imageService';
 import { BehaviorSubject, of } from 'rxjs';
 import { IngredientService } from '@ingredientService';
 import { User } from '@user';
-import { Ingredient } from '@ingredient';
+import { Ingredient, Ingredients } from '@ingredient';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
@@ -235,7 +235,7 @@ describe('RecipeDetailComponent', () => {
       const recipeHistories = new RecipeHistory({});
       const configs = [];
 
-      const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
+      const ingredients$ = new BehaviorSubject<Ingredients>(ingredients);
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));

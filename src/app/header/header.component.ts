@@ -8,7 +8,7 @@ import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../th
 import { User } from '@user';
 import { CurrentUserService } from '@currentUserService';
 import { NavigationService } from '@navigationService';
-import { Navigation, NavigationMenu } from '@navigation';
+import { Navigation, NavigationMenu, Navigations } from '@navigation';
 import { takeUntil } from 'rxjs/operators';
 import { HouseholdService } from '@householdService';
 import { RecipeService } from '@recipeService';
@@ -27,10 +27,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn: Observable<boolean>;
   route: string;
   showNav = false;
-  desktopNavs: Navigation[] = [];
-  mobileNavs: Navigation[] = [];
-  profileNavs: Navigation[] = [];
-  toolNavs: Navigation[] = [];
+  desktopNavs: Navigations = [];
+  mobileNavs: Navigations = [];
+  profileNavs: Navigations = [];
+  toolNavs: Navigations = [];
   householdNotifications: number;
   feedbackNotifications: number;
   continueNav: Navigation;

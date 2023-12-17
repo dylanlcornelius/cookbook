@@ -12,11 +12,11 @@ import { LoadingService } from '@loadingService';
 import { MealPlanService } from '../shared/meal-plan.service';
 import { MealPlan } from '../shared/meal-plan.model';
 import { RecipeService } from '@recipeService';
-import { UserIngredient } from '@userIngredient';
-import { Recipe } from '@recipe';
+import { UserIngredients } from '@userIngredient';
+import { Recipe, Recipes } from '@recipe';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
-import { Ingredient } from '@ingredient';
+import { Ingredients } from '@ingredient';
 
 @Component({
   selector: 'app-meal-planner',
@@ -30,12 +30,12 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
-  userIngredients: UserIngredient[];
-  recipes: Recipe[];
-  ingredients: Ingredient[];
+  userIngredients: UserIngredients;
+  recipes: Recipes;
+  ingredients: Ingredients;
 
   recipeControl = new FormControl();
-  filteredRecipes: Observable<Recipe[]>;
+  filteredRecipes: Observable<Recipes>;
 
   mealPlan: MealPlan;
 

@@ -8,11 +8,11 @@ import { combineLatest, Subject } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '@user';
-import { Ingredient } from '@ingredient';
+import { Ingredient, Ingredients } from '@ingredient';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { NumberService } from '@numberService';
-import { UserIngredient } from '@userIngredient';
+import { UserIngredient, UserIngredients } from '@userIngredient';
 import { ConfigType } from '@configType';
 import { ConfigService } from '@configService';
 
@@ -28,8 +28,8 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   displayedColumns = ['name', 'category', 'amount', 'calories', 'cartQuantity'];
   dataSource;
 
-  ingredients: Ingredient[];
-  userIngredients = [];
+  ingredients: Ingredients;
+  userIngredients: UserIngredients = [];
 
   user: User;
   householdId: string;
