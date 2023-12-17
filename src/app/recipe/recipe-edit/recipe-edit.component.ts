@@ -18,10 +18,10 @@ import { UOM } from '@uoms';
 import { UomService } from '@uomService';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { Recipe } from '@recipe';
+import { Recipe, Recipes } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
 import { first, map, startWith, takeUntil } from 'rxjs/operators';
-import { Ingredient } from '@ingredient';
+import { Ingredients } from '@ingredient';
 import { titleCase } from 'title-case';
 import { LoadingService } from '@loadingService';
 import { MatStepper, StepperOrientation } from '@angular/material/stepper';
@@ -29,7 +29,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ValidationService } from '@modalService';
 import { Validation } from '@validation';
 import { ConfigService } from '@configService';
-import { Config } from '@config';
+import { Configs } from '@config';
 import { ConfigType } from '@configType';
 import { TitleService } from '@TitleService';
 import { RecipeIngredient } from '@recipeIngredient';
@@ -67,10 +67,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   allAvailableIngredients = [];
   availableIngredients = [];
   ingredientFilter = '';
-  recipes: Recipe[];
+  recipes: Recipes;
   ingredients;
   recipeCategories;
-  types: Config[];
+  types: Configs;
 
   uoms: Array<UOM>;
 
@@ -167,9 +167,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
       const observables$: [
         Observable<Params>,
-        Observable<Ingredient[]>,
-        Observable<Recipe[]>,
-        Observable<Config[]>,
+        Observable<Ingredients>,
+        Observable<Recipes>,
+        Observable<Configs>,
         Observable<Recipe>?
       ] = [queryParams$, ingredients$, recipes$, configs$];
       if (this.id) {
@@ -185,9 +185,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         .subscribe(
           ([queryParams, ingredients, recipes, configs, recipe]: [
             Params[],
-            Ingredient[],
-            Recipe[],
-            Config[],
+            Ingredients,
+            Recipes,
+            Configs,
             Recipe?
           ]) => {
             this.selectedIndex = queryParams['step'] || 0;

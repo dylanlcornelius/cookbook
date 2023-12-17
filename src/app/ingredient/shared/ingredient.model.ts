@@ -33,3 +33,5 @@ export type IngredientObject = Omit<
   Ingredient,
   'id' | 'getId' | 'getObject' | 'cartQuantity' | 'displayCategory'
 >;
+
+export type Ingredients = Ingredient[];

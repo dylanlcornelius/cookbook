@@ -1,6 +1,6 @@
 import { Model } from '@model';
 import { UOM } from '@uoms';
-import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredients } from '@recipeIngredient';
 
 export class Recipe extends Model {
   name: string;
@@ -19,7 +19,7 @@ export class Recipe extends Model {
   steps: Array<{
     step: string;
   }>;
-  ingredients: RecipeIngredient[];
+  ingredients: RecipeIngredients;
 
   // uneditable fields
   uid: string;
@@ -100,6 +100,7 @@ export type RecipeObject = Omit<
   | 'hasNeedsImageCategory'
   | 'displayType'
 >;
+export type Recipes = Recipe[];
 
 export enum RECIPE_STATUS {
   PUBLISHED = 'published',

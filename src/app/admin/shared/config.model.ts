@@ -14,3 +14,5 @@ export class Config extends Model {
     this.order = data.order || 0;
   }
 }
+
+export type Configs = Config[];

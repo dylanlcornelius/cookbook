@@ -6,11 +6,11 @@ import { NotificationService, RecipeIngredientModalService } from '@modalService
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { UserIngredientService } from '@userIngredientService';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
-import { Recipe } from '@recipe';
-import { UserIngredient } from '@userIngredient';
-import { Ingredient } from '@ingredient';
+import { Recipe, Recipes } from '@recipe';
+import { UserIngredient, UserIngredients } from '@userIngredient';
+import { Ingredient, Ingredients } from '@ingredient';
 import { NumberService } from '@numberService';
-import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +26,9 @@ export class RecipeIngredientService {
   ) {}
 
   buildRecipeIngredients(
-    recipeIngredients: RecipeIngredient[],
+    recipeIngredients: RecipeIngredients,
     allIngredients: (Ingredient | Recipe)[]
-  ): RecipeIngredient[] {
+  ): RecipeIngredients {
     return recipeIngredients.reduce((result, recipeIngredient) => {
       const ingredient = allIngredients.find(({ id }) => id === recipeIngredient.id);
       if (ingredient) {
@@ -50,8 +50,8 @@ export class RecipeIngredientService {
    * @param recipes all recipes
    * @returns ingredients
    */
-  findRecipeIngredients(recipe: Recipe, recipes: Recipe[]): RecipeIngredient[] {
-    const addedIngredients: RecipeIngredient[] = [];
+  findRecipeIngredients(recipe: Recipe, recipes: Recipes): RecipeIngredients {
+    const addedIngredients: RecipeIngredients = [];
 
     // sort required ingredients before optional ingredients
     let startingIngredients: any = [...recipe.ingredients].sort(
@@ -90,8 +90,8 @@ export class RecipeIngredientService {
    * @param recipes all recipes
    * @returns recipe ids
    */
-  findRecipeIds(recipe: Recipe, recipes: Recipe[]): string[] {
-    const addedRecipes: RecipeIngredient[] = [];
+  findRecipeIds(recipe: Recipe, recipes: Recipes): string[] {
+    const addedRecipes: RecipeIngredients = [];
 
     let startingIngredients = [...recipe.ingredients];
     while (startingIngredients.length) {
@@ -114,7 +114,7 @@ export class RecipeIngredientService {
       .concat(recipe.id);
   }
 
-  getRecipeCalories(recipe: Recipe, recipes: Recipe[], ingredients: Ingredient[]): number {
+  getRecipeCalories(recipe: Recipe, recipes: Recipes, ingredients: Ingredients): number {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     const servings = Number(recipe.servings);
@@ -148,9 +148,9 @@ export class RecipeIngredientService {
 
   addIngredients(
     recipe: Recipe,
-    recipes: Recipe[],
-    ingredients: Ingredient[],
-    userIngredients: UserIngredient[],
+    recipes: Recipes,
+    ingredients: Ingredients,
+    userIngredients: UserIngredients,
     uid: string,
     householdId: string,
     callback?: Function
@@ -178,13 +178,13 @@ export class RecipeIngredientService {
   }
 
   addIngredientsEvent = (
-    recipeIngredients: RecipeIngredient[],
-    userIngredients: UserIngredient[],
-    ingredients: Ingredient[],
+    recipeIngredients: RecipeIngredients,
+    userIngredients: UserIngredients,
+    ingredients: Ingredients,
     uid: string,
     householdId: string,
     recipe?: Recipe,
-    recipes?: Recipe[]
+    recipes?: Recipes
   ): void => {
     recipeIngredients.forEach(recipeIngredient => {
       const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);

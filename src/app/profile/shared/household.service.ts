@@ -2,8 +2,8 @@ import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
-import { Household } from '@household';
-import { Model, ModelObject } from '@model';
+import { Household, Households } from '@household';
+import { Models, ModelObject } from '@model';
 import { Recipe, RECIPE_STATUS } from '@recipe';
 import { User } from '@user';
 import { Observable } from 'rxjs';
@@ -22,9 +22,9 @@ export class HouseholdService extends FirestoreService {
   }
 
   get(uid: string): Observable<Household>;
-  get(): Observable<Household[]>;
-  get(uid?: string): Observable<Household | Household[]>; // type for spyOn
-  get(uid?: string): Observable<Household | Household[]> {
+  get(): Observable<Households>;
+  get(uid?: string): Observable<Household | Households>; // type for spyOn
+  get(uid?: string): Observable<Household | Households> {
     return new Observable(observer => {
       if (uid) {
         super
@@ -42,7 +42,7 @@ export class HouseholdService extends FirestoreService {
     });
   }
 
-  getInvites(uid: string): Observable<Household[]> {
+  getInvites(uid: string): Observable<Households> {
     return new Observable(observer => {
       super
         .getMany(
@@ -55,7 +55,7 @@ export class HouseholdService extends FirestoreService {
   }
 
   create = (data: Household): string => super.create(data.getObject());
-  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
+  update = (data: ModelObject | Models, id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
 
   hasAuthorPermission(household: Household, user: User, recipe: Recipe): boolean {

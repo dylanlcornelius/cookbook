@@ -12,7 +12,7 @@ import { ImageService } from '@imageService';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
-import { Recipe } from '@recipe';
+import { Recipe, Recipes } from '@recipe';
 import { UtilService } from '@utilService';
 import { User } from '@user';
 import {
@@ -28,7 +28,7 @@ import {
   RestrictionFilter,
   TypeFilter,
 } from '@recipeFilterService';
-import { UserIngredient } from '@userIngredient';
+import { UserIngredients } from '@userIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
@@ -38,8 +38,8 @@ import { Validation } from '@validation';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { SuccessNotification } from '@notification';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { Ingredient } from '@ingredient';
-import { Config } from '@config';
+import { Ingredients } from '@ingredient';
+import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
 import { FirebaseService } from '@firebaseService';
@@ -62,10 +62,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   pageIndex: number;
 
   dataSource;
-  recipes: Recipe[] = [];
-  userIngredients: UserIngredient[];
-  ingredients: Ingredient[];
-  types: Config[];
+  recipes: Recipes = [];
+  userIngredients: UserIngredients;
+  ingredients: Ingredients;
+  types: Configs;
 
   breakpointSubscription: Subscription;
   searchSubscription: Subscription;

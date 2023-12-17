@@ -1,17 +1,17 @@
 import { Modal } from '@modalService';
-import { Ingredient } from '@ingredient';
-import { UserIngredient } from '@userIngredient';
-import { Recipe } from '@recipe';
-import { RecipeIngredient } from '@recipeIngredient';
+import { Ingredients } from '@ingredient';
+import { UserIngredients } from '@userIngredient';
+import { Recipe, Recipes } from '@recipe';
+import { RecipeIngredients } from '@recipeIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 
 export class RecipeIngredientModal extends Modal {
   function: RecipeIngredientService['addIngredientsEvent'];
   recipe: Recipe;
-  recipes: Recipe[];
-  recipeIngredients: RecipeIngredient[];
-  ingredients: Ingredient[];
-  userIngredients: UserIngredient[];
+  recipes: Recipes;
+  recipeIngredients: RecipeIngredients;
+  ingredients: Ingredients;
+  userIngredients: UserIngredients;
   uid: string;
   householdId: string;
   callback: Function;
@@ -19,10 +19,10 @@ export class RecipeIngredientModal extends Modal {
   constructor(
     eventFunction: RecipeIngredientService['addIngredientsEvent'],
     recipe: Recipe,
-    recipes: Recipe[],
-    recipeIngredients: RecipeIngredient[],
-    ingredients: Ingredient[],
-    userIngredients: UserIngredient[],
+    recipes: Recipes,
+    recipeIngredients: RecipeIngredients,
+    ingredients: Ingredients,
+    userIngredients: UserIngredients,
     uid: string,
     householdId: string,
     callback?: Function

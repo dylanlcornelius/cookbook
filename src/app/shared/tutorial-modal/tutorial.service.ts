@@ -2,9 +2,9 @@ import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { FirestoreService } from '@firestoreService';
-import { Model, ModelObject } from '@model';
+import { Models, ModelObject } from '@model';
 import { Observable } from 'rxjs';
-import { Tutorial, TutorialModal } from '@tutorial';
+import { Tutorial, TutorialModal, Tutorials } from '@tutorial';
 import { TutorialModalService } from '@modalService';
 import { Router } from '@angular/router';
 import { Action } from '@actions';
@@ -24,7 +24,7 @@ export class TutorialService extends FirestoreService {
     super('tutorials', firebase, currentUserService, actionService);
   }
 
-  get(): Observable<Tutorial[]> {
+  get(): Observable<Tutorials> {
     return new Observable(observer => {
       super.get().subscribe(docs => {
         observer.next(docs.map(doc => new Tutorial(doc)).sort(this.sort));
@@ -33,7 +33,7 @@ export class TutorialService extends FirestoreService {
   }
 
   create = (data: ModelObject): string => super.create(data);
-  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
+  update = (data: ModelObject | Models, id?: string): void => super.update(data, id);
   delete = (id: string): void => super.delete(id);
   sort = (a: Tutorial, b: Tutorial): number => a.order - b.order;
 

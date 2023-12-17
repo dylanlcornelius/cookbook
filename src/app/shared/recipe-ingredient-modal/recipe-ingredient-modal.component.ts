@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ModalComponent } from '@modalComponent';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
-import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredients } from '@recipeIngredient';
 
 @Component({
   selector: 'app-recipe-ingredient-modal',
@@ -45,7 +45,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
   }
 
   add(): void {
-    let selectedIngredients: RecipeIngredient[] = [];
+    let selectedIngredients: RecipeIngredients = [];
     this.params.recipeIngredients.forEach(ingredient => {
       if (ingredient.selected) {
         selectedIngredients.push(ingredient);

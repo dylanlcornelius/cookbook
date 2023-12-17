@@ -20,6 +20,8 @@ export class Tutorial extends Model {
   }
 }
 
+export type Tutorials = Tutorial[];
+
 export enum POSITION {
   RIGHT = 'right',
   LEFT = 'left',

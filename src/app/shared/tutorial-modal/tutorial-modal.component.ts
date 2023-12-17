@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TutorialModalService } from '@modalService';
 import { Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
-import { POSITION, Tutorial, TutorialModal } from '@tutorial';
+import { POSITION, Tutorial, TutorialModal, Tutorials } from '@tutorial';
 import { TutorialService } from '@tutorialService';
 import { Router } from '@angular/router';
 import { LoadingService } from '@loadingService';
@@ -19,7 +19,7 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   params: TutorialModal;
 
-  tutorials: Tutorial[];
+  tutorials: Tutorials;
   tutorial: Tutorial;
   tutorialIndex: number;
 
@@ -53,7 +53,7 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
         this.tutorialService
           .get()
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((tutorials: Tutorial[]) => {
+          .subscribe((tutorials: Tutorials) => {
             this.tutorials = tutorials;
 
             if (this.params) {

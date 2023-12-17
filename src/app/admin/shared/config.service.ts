@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Config } from '@config';
+import { Config, Configs } from '@config';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
@@ -19,9 +19,9 @@ export class ConfigService extends FirestoreService {
     super('configs', firebase, currentUserService, actionService);
   }
 
-  get(name: string): Observable<Config[]>;
-  get(): Observable<Config[]>;
-  get(name?: string): Observable<Config[]> {
+  get(name: string): Observable<Configs>;
+  get(): Observable<Configs>;
+  get(name?: string): Observable<Configs> {
     return new Observable(observer => {
       if (name) {
         super
@@ -43,7 +43,7 @@ export class ConfigService extends FirestoreService {
   }
 
   create = (data: ModelObject): string => super.create(data);
-  update = (data: Config[]): void => super.updateAll(data);
+  update = (data: Configs): void => super.updateAll(data);
   delete = (id: string): void => super.delete(id);
   sortByOrder = (a: Config, b: Config): number => a.order - b.order;
   sortByName = (a: Config, b: Config): number => a.name.localeCompare(b.name);

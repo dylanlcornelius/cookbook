@@ -3,8 +3,8 @@ import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
-import { Model, ModelObject } from '@model';
-import { MealPlan } from './meal-plan.model';
+import { Models, ModelObject } from '@model';
+import { MealPlan, MealPlans } from './meal-plan.model';
 import { FirebaseService } from '@firebaseService';
 
 @Injectable({
@@ -20,9 +20,9 @@ export class MealPlanService extends FirestoreService {
   }
 
   get(uid: string): Observable<MealPlan>;
-  get(): Observable<MealPlan[]>;
-  get(): Observable<MealPlan | MealPlan[]>; // type for spyOn
-  get(uid?: string): Observable<MealPlan | MealPlan[]> {
+  get(): Observable<MealPlans>;
+  get(): Observable<MealPlan | MealPlans>; // type for spyOn
+  get(uid?: string): Observable<MealPlan | MealPlans> {
     return new Observable(observer => {
       if (uid) {
         super
@@ -45,7 +45,7 @@ export class MealPlanService extends FirestoreService {
   }
 
   create = (data: MealPlan): string => super.create(data.getObject());
-  update = (data: ModelObject | Model[], id?: string): void => super.update(data, id);
+  update = (data: ModelObject | Models, id?: string): void => super.update(data, id);
 
   formattedUpdate(data: MealPlan['recipes'], uid: string, id: string): void {
     const recipes = data.map(({ id }) => ({ id }));

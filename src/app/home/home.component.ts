@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
-import { Navigation } from '@navigation';
+import { Navigations } from '@navigation';
 import { NavigationService } from '@navigationService';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  navs: Navigation[] = [];
+  navs: Navigations = [];
 
   constructor(
     private currentUserService: CurrentUserService,

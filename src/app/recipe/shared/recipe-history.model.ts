@@ -16,3 +16,5 @@ export class RecipeHistory extends Model {
     this.lastDateCooked = data.lastDateCooked || '';
   }
 }
+
+export type RecipeHistories = RecipeHistory[];

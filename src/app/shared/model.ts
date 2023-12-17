@@ -23,3 +23,4 @@ export class Model {
 }
 
 export type ModelObject = Omit<Model, 'id' | 'getId' | 'getObject'>;
+export type Models = Model[];

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FirestoreService } from '@firestoreService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
-import { Navigation } from '@navigation';
+import { Navigation, Navigations } from '@navigation';
 import { ModelObject } from '@model';
 import { FirebaseService } from '@firebaseService';
 
@@ -19,7 +19,7 @@ export class NavigationService extends FirestoreService {
     super('navs', firebase, currentUserService, actionService);
   }
 
-  get(): Observable<Navigation[]> {
+  get(): Observable<Navigations> {
     return new Observable(observer => {
       super.get().subscribe(docs => {
         observer.next(docs.map(doc => new Navigation(doc)).sort(this.sort));
@@ -28,7 +28,7 @@ export class NavigationService extends FirestoreService {
   }
 
   create = (data: ModelObject): string => super.create(data);
-  update = (data: Navigation[]): void => super.updateAll(data);
+  update = (data: Navigations): void => super.updateAll(data);
   delete = (id: string): void => super.delete(id);
   sort = (a: Navigation, b: Navigation): number => a.order - b.order;
 }

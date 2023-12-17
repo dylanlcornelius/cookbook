@@ -3,7 +3,7 @@ import { ActionService } from '@actionService';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
-import { Model, ModelObject } from '@model';
+import { Models, ModelObject } from '@model';
 import { first } from 'rxjs/operators';
 import { CollectionReference, FirebaseService, Query } from '@firebaseService';
 
@@ -84,14 +84,14 @@ export abstract class FirestoreService {
     this.firebase.setDoc(currentDoc, data);
   }
 
-  updateAll(data: Model[]): void {
+  updateAll(data: Models): void {
     data.forEach(d => {
       const currentDoc = this.firebase.doc(this.ref, d.getId());
       this.firebase.setDoc(currentDoc, d.getObject());
     });
   }
 
-  update(data: ModelObject | Model[], id?: string, action?: Action): void {
+  update(data: ModelObject | Models, id?: string, action?: Action): void {
     if (id && !Array.isArray(data)) {
       this.updateOne(data, id, action);
     } else if (Array.isArray(data)) {

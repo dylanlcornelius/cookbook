@@ -12,12 +12,12 @@ import { User } from '@user';
 import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
-import { Ingredient } from '@ingredient';
-import { UserIngredient } from '@userIngredient';
-import { UserItem } from '@userItem';
+import { Ingredient, Ingredients } from '@ingredient';
+import { UserIngredients } from '@userIngredient';
+import { UserItem, UserItems } from '@userItem';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { KeyValue } from '@angular/common';
-import { Config } from '@config';
+import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
 import { RecipeIngredient } from '@recipeIngredient';
@@ -54,13 +54,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   user: User;
   householdId: string;
-  userIngredients: UserIngredient[];
-  userItems: UserItem[];
-  ingredients: Ingredient[];
-  categories: Config[];
+  userIngredients: UserIngredients;
+  userItems: UserItems;
+  ingredients: Ingredients;
+  categories: Configs;
 
   ingredientControl = new FormControl();
-  filteredIngredients: Observable<Ingredient[]>;
+  filteredIngredients: Observable<Ingredients>;
   displayIngredients: DisplayIngredients;
 
   constructor(

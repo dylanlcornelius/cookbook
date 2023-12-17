@@ -18,7 +18,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { User } from '@user';
 import { Recipe } from '@recipe';
 import { IngredientService } from '@ingredientService';
-import { Ingredient } from '@ingredient';
+import { Ingredient, Ingredients } from '@ingredient';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -314,7 +314,7 @@ describe('RecipeEditComponent', () => {
       ];
       const configs = [];
 
-      const ingredients$ = new BehaviorSubject<Ingredient[]>(ingredients);
+      const ingredients$ = new BehaviorSubject<Ingredients>(ingredients);
 
       spyOn(breakpointObserver, 'observe').and.returnValue(of({ matches: true, breakpoints: {} }));
       spyOn(recipeService, 'get')

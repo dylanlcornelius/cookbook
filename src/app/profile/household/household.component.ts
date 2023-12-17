@@ -6,7 +6,7 @@ import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
-import { User } from '@user';
+import { User, Users } from '@user';
 import { UserService } from '@userService';
 import { Validation } from '@validation';
 import { combineLatest, Subject } from 'rxjs';
@@ -27,7 +27,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
   householdInvitesDataSource;
   householdMembersDataSource;
   myInvitesDataSource;
-  filteredUsers: User[];
+  filteredUsers: Users;
 
   householdInviteModalParams;
 
@@ -91,7 +91,7 @@ export class HouseholdComponent implements OnInit, OnDestroy {
       });
   }
 
-  initializeHouseholdNames(household: Household, users: User[]): Household {
+  initializeHouseholdNames(household: Household, users: Users): Household {
     household.members.forEach(member => {
       const user = users.find(({ uid }) => uid === member.uid);
       member.name = user?.name || '';

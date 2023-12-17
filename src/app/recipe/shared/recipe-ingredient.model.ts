@@ -25,3 +25,4 @@ export type RecipeIngredientObject = Omit<
   RecipeIngredient,
   'id' | 'getId' | 'getObject' | 'name' | 'selected'
 >;
+export type RecipeIngredients = RecipeIngredient[];

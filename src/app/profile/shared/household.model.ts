@@ -2,9 +2,9 @@ import { Model } from '@model';
 
 export class Household extends Model {
   name: string;
-  members: Array<Member>;
+  members: Members;
   memberIds: Array<string>;
-  invites: Array<Member>;
+  invites: Members;
   inviteIds: Array<string>;
 
   constructor(data: any) {
@@ -17,9 +17,13 @@ export class Household extends Model {
   }
 }
 
+export type Households = Household[];
+
 export class Member {
   uid: string;
   name?: string;
   inviter?: string;
   inviterName?: string;
 }
+
+export type Members = Member[];

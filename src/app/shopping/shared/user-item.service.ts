@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActionService } from '@actionService';
 import { Action } from '@actions';
-import { UserItem } from '@userItem';
+import { UserItem, UserItems } from '@userItem';
 import { FirestoreService } from '@firestoreService';
 import { CurrentUserService } from '@currentUserService';
 import { SuccessNotification } from '@notification';
@@ -22,10 +22,10 @@ export class UserItemService extends FirestoreService {
     super('user-items', firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<UserItem[]>;
-  get(): Observable<UserItem[]>;
-  get(): Observable<UserItem[]>; // type for spyOn
-  get(uid?: string): Observable<UserItem[]> {
+  get(uid: string): Observable<UserItems>;
+  get(): Observable<UserItems>;
+  get(): Observable<UserItems>; // type for spyOn
+  get(uid?: string): Observable<UserItems> {
     return new Observable(observer => {
       if (uid) {
         super

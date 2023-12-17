@@ -11,3 +11,5 @@ export class MealPlan extends Model {
     this.recipes = data.recipes || [];
   }
 }
+
+export type MealPlans = MealPlan[];
