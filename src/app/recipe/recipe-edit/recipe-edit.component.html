@@ -137,7 +137,6 @@
         <mat-chip-list #categoryList>
           <mat-chip
             *ngFor="let category of recipesForm.get('categories')['controls']; let i = index"
-            [selectable]="selectable"
             (removed)="removeCategory(i)"
           >
             {{ category.value.category }}

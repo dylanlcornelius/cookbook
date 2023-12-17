@@ -40,7 +40,7 @@ export class RecipeIngredientService {
         );
       }
       return result;
-    }, []);
+    }, [] as RecipeIngredients);
   }
 
   /**

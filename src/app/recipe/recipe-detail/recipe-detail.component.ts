@@ -5,7 +5,7 @@ import { IngredientService } from '@ingredientService';
 import { ImageService } from '@imageService';
 import { Observable, combineLatest, Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { Recipe, RECIPE_STATUS } from '@recipe';
+import { Recipe, RECIPE_STATUS, Recipes } from '@recipe';
 import { CurrentUserService } from '@currentUserService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
@@ -44,7 +44,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipe: Recipe;
   userIngredients: UserIngredients;
   ingredients: Ingredients;
-  recipes = [];
+  recipes: Recipes = [];
   recipeImage: string;
   recipeImageProgress;
   timesCooked: number;

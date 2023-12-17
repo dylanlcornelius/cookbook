@@ -507,7 +507,16 @@ describe('RecipeListComponent', () => {
 
   describe('setSelectedFilterCount', () => {
     it('should count the number of checked filters and set the count', () => {
-      component.filtersList = [{ values: [{ checked: true }, { checked: false }] }];
+      component.filtersList = [
+        {
+          displayName: '',
+          name: '',
+          values: [
+            { displayName: '', name: '', checked: true, filter: new CategoryFilter('') },
+            { displayName: '', name: '', checked: false, filter: new CategoryFilter('') },
+          ],
+        },
+      ];
 
       component.setSelectedFilterCount();
 
@@ -518,7 +527,16 @@ describe('RecipeListComponent', () => {
       component.filtersList = [
         {
           icon: 'icon',
-          values: [{ values: [{ checked: true }, { checked: false }] }],
+          values: [
+            {
+              displayName: '',
+              name: '',
+              values: [
+                { displayName: '', name: '', checked: true, filter: new CategoryFilter('') },
+                { displayName: '', name: '', checked: false, filter: new CategoryFilter('') },
+              ],
+            },
+          ],
         },
       ];
 
@@ -610,6 +628,37 @@ describe('RecipeListComponent', () => {
       expect(recipeFilterService.selectedFilters).toHaveSize(0);
       expect(component.initFilters).toHaveBeenCalled();
       expect(component.setFilters).toHaveBeenCalled();
+    });
+  });
+
+  describe('isDisplayFilter', () => {
+    it('should narrow filter types to a regular filter', () => {
+      const filters = {
+        displayName: '',
+        name: '',
+        values: [],
+      };
+
+      const result = component.isDisplayFilter(filters);
+
+      expect(result).toBeTrue();
+    });
+
+    it('should narrow filter types to a nested filter', () => {
+      const filters = {
+        icon: '',
+        values: [
+          {
+            displayName: '',
+            name: '',
+            values: [],
+          },
+        ],
+      };
+
+      const result = component.isDisplayFilter(filters);
+
+      expect(result).toBeFalse();
     });
   });
 

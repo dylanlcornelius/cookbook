@@ -1,9 +1,9 @@
 import { Model } from '@model';
-import { Recipe } from '@recipe';
+import { Recipes } from '@recipe';
 
 export class MealPlan extends Model {
   uid: string;
-  recipes: Array<Recipe>;
+  recipes: Recipes;
 
   constructor(data: any) {
     super(data);

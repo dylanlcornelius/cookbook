@@ -42,7 +42,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   users: Users;
 
-  actions = [];
+  actions: Array<{
+    data: Array<{
+      name: any;
+      value: any;
+    }>;
+    date: number;
+  }> = [];
   actionsLength = 0;
   actionPage = { pageIndex: 0 };
 

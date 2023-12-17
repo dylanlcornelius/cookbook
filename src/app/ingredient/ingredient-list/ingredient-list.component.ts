@@ -12,7 +12,7 @@ import { Ingredient, Ingredients } from '@ingredient';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { NumberService } from '@numberService';
-import { UserIngredient } from '@userIngredient';
+import { UserIngredient, UserIngredients } from '@userIngredient';
 import { ConfigType } from '@configType';
 import { ConfigService } from '@configService';
 
@@ -29,7 +29,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   dataSource;
 
   ingredients: Ingredients;
-  userIngredients = [];
+  userIngredients: UserIngredients = [];
 
   user: User;
   householdId: string;

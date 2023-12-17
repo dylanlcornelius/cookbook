@@ -3,9 +3,9 @@ import { Model } from '@model';
 export class Household extends Model {
   name: string;
   members: Members;
-  memberIds: Array<string>;
+  memberIds: string[];
   invites: Members;
-  inviteIds: Array<string>;
+  inviteIds: string[];
 
   constructor(data: any) {
     super(data);

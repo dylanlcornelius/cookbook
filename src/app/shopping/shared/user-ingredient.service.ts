@@ -65,7 +65,7 @@ export class UserIngredientService extends FirestoreService {
         );
       }
       return result;
-    }, []);
+    }, [] as UserIngredients);
   }
 
   buyUserIngredient(actions: number, isCompleted: boolean): void {

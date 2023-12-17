@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angu
 import { Router, ActivatedRoute } from '@angular/router';
 import { IngredientService } from '@ingredientService';
 import { FormGroupDirective, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UOM } from '@uoms';
+import { UOM, UOMs } from '@uoms';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   ingredientsForm: FormGroup;
   ingredient: Ingredient;
   id: string;
-  uoms: Array<UOM>;
+  uoms: UOMs;
   categories: Configs;
 
   matcher = new ErrorMatcher();
@@ -91,7 +91,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
       combineLatest(observables$)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(([configs, ingredient]: [Configs, Ingredient?]) => {
+        .subscribe(([configs, ingredient]) => {
           this.categories = configs;
           this.ingredient = ingredient;
 

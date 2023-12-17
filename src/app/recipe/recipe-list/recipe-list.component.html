@@ -13,7 +13,7 @@
 
   <div class="button-row center">
     <span *ngFor="let filters of filtersList" class="row-button">
-      <span *ngIf="!filters.icon">
+      <span *ngIf="isDisplayFilter(filters)">
         <button
           mat-button
           [matMenuTriggerFor]="menu"
@@ -34,7 +34,7 @@
         </mat-menu>
       </span>
 
-      <span *ngIf="filters.icon">
+      <span *ngIf="!isDisplayFilter(filters)">
         <button
           mat-button
           [matMenuTriggerFor]="menu"

@@ -14,7 +14,7 @@ import {
 } from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IngredientService } from '@ingredientService';
-import { UOM } from '@uoms';
+import { UOM, UOMs } from '@uoms';
 import { UomService } from '@uomService';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -32,7 +32,7 @@ import { ConfigService } from '@configService';
 import { Configs } from '@config';
 import { ConfigType } from '@configType';
 import { TitleService } from '@TitleService';
-import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
 
 function TitleCaseValidator(): ValidatorFn {
@@ -63,19 +63,18 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [SPACE, COMMA, TAB];
 
-  addedIngredients = [];
-  allAvailableIngredients = [];
-  availableIngredients = [];
+  addedIngredients: RecipeIngredients = [];
+  allAvailableIngredients: RecipeIngredients = [];
+  availableIngredients: RecipeIngredients = [];
   ingredientFilter = '';
   recipes: Recipes;
-  ingredients;
+  ingredients: Ingredients;
   recipeCategories;
   types: Configs;
 
-  uoms: Array<UOM>;
+  uoms: UOMs;
 
   matcher = new ErrorMatcher();
-  selectable;
   stepperOrientation: Observable<StepperOrientation>;
 
   @ViewChild('stepper')
@@ -182,44 +181,36 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
       combineLatest(observables$)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(
-          ([queryParams, ingredients, recipes, configs, recipe]: [
-            Params[],
-            Ingredients,
-            Recipes,
-            Configs,
-            Recipe?
-          ]) => {
-            this.selectedIndex = queryParams['step'] || 0;
-            this.ingredients = ingredients;
-            this.recipes = recipes;
-            this.types = configs;
-            this.originalRecipe = recipe;
+        .subscribe(([queryParams, ingredients, recipes, configs, recipe]) => {
+          this.selectedIndex = queryParams['step'] || 0;
+          this.ingredients = ingredients;
+          this.recipes = recipes;
+          this.types = configs;
+          this.originalRecipe = recipe;
 
-            if (this.loading) {
-              this.recipeService
-                .getForm()
-                .pipe(first())
-                .subscribe(form => {
-                  if (form) {
-                    this.recipe = form;
-                    this.recipeService.setForm(null);
-                  } else {
-                    this.recipe = recipe;
-                  }
+          if (this.loading) {
+            this.recipeService
+              .getForm()
+              .pipe(first())
+              .subscribe(form => {
+                if (form) {
+                  this.recipe = form;
+                  this.recipeService.setForm(null);
+                } else {
+                  this.recipe = recipe;
+                }
 
-                  this.initForm();
-                  this.initIngredients();
-                  this.initCategories();
+                this.initForm();
+                this.initIngredients();
+                this.initCategories();
 
-                  this.loading = this.loadingService.set(false);
-                });
-            } else {
-              this.initIngredients();
-              this.initCategories();
-            }
+                this.loading = this.loadingService.set(false);
+              });
+          } else {
+            this.initIngredients();
+            this.initCategories();
           }
-        );
+        });
     });
   }
 
@@ -268,10 +259,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           addedIngredient => addedIngredient.id === ingredient.id
         );
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
-          result.push({ ...ingredient, isOptional: false });
+          result.push(new RecipeIngredient({ ...ingredient, isOptional: false }));
         }
         return result;
-      }, [])
+      }, [] as RecipeIngredients)
       .sort((a, b) => a.name.localeCompare(b.name));
 
     this.applyIngredientFilter(false);

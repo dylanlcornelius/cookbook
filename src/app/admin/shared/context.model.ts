@@ -1,9 +1,10 @@
 import { FirestoreService } from '@firestoreService';
+import { Models } from '@model';
 
 export class Context {
   title: string;
   displayedColumns: string[];
-  dataSource = [];
+  dataSource: Models = [];
   service: FirestoreService;
   revert: Function;
   save: Function;

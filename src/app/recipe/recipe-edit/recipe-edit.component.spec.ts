@@ -215,7 +215,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load ingredients for a new recipe', () => {
-      component.addedIngredients = [new Ingredient({ id: 'id2' })];
+      component.addedIngredients = [new RecipeIngredient({ id: 'id2' })];
 
       const ingredients = [
         new Ingredient({
@@ -255,7 +255,7 @@ describe('RecipeEditComponent', () => {
     });
 
     it('should load a continued recipe', () => {
-      component.addedIngredients = [new Ingredient({ id: 'id2' })];
+      component.addedIngredients = [new RecipeIngredient({ id: 'id2' })];
 
       const ingredients = [
         new Ingredient({
@@ -589,17 +589,8 @@ describe('RecipeEditComponent', () => {
 
   describe('applyIngredientFilter', () => {
     it('should filter ingredients', () => {
-      component.allAvailableIngredients = [
-        {
-          name: 'filter1',
-        },
-      ];
-
-      component.addedIngredients = [
-        {
-          id: 'id',
-        },
-      ];
+      component.allAvailableIngredients = [new RecipeIngredient({ name: 'filter1' })];
+      component.addedIngredients = [new RecipeIngredient({ id: 'id' })];
 
       component.applyIngredientFilter('filter');
 
