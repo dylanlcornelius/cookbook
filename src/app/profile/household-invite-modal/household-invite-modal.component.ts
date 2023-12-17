@@ -15,6 +15,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User, Users } from '@user';
 import { ModalComponent } from '@modalComponent';
+import { HouseholdComponent } from '../household/household.component';
 
 @Component({
   selector: 'app-household-invite-modal',
@@ -27,7 +28,7 @@ export class HouseholdInviteModalComponent {
   params;
 
   @Input()
-  set Params(params: { function: Function; users: Users }) {
+  set Params(params: { function: HouseholdComponent['sendInviteEvent']; users: Users }) {
     this.inviteSearchControl = new FormControl();
     this.params = params;
   }

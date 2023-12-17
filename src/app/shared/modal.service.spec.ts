@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { SuccessNotification } from '@notification';
-import { BehaviorSubject } from 'rxjs';
+import { Notification, SuccessNotification } from '@notification';
 import { take } from 'rxjs/operators';
 
-import { Modal, ModalService } from './modal.service';
+import { ModalService } from './modal.service';
 
 describe('ModalService', () => {
-  let service: ModalService;
+  let service: ModalService<Notification>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -19,7 +18,7 @@ describe('ModalService', () => {
 
   describe('getModal', () => {
     it('should return a subject of Modal', () => {
-      service.modal = new BehaviorSubject<Modal>(new SuccessNotification('text'));
+      service.modal.next(new SuccessNotification('text'));
 
       service
         .getModal()
@@ -32,7 +31,6 @@ describe('ModalService', () => {
 
   describe('setModal', () => {
     it('should set a subject with a Modal', () => {
-      service.modal = new BehaviorSubject<Modal>(undefined);
       service.setModal(new SuccessNotification('text'));
 
       service.modal.pipe(take(1)).subscribe(modal => {

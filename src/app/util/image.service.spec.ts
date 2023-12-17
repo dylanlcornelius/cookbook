@@ -43,7 +43,12 @@ describe('ImageService', () => {
   describe('upload', () => {
     it('should upload a file', waitForAsync(() => {
       const uploadTask = {
-        on: (_task: string, callback: Function, _error: Function, final: Function) => {
+        on: (
+          _task: string,
+          callback: (props: { bytesTransferred: number; totalBytes: number }) => void,
+          _error: () => void,
+          final: () => void
+        ) => {
           callback({ bytesTransferred: 50, totalBytes: 100 });
           final();
         },
@@ -64,7 +69,11 @@ describe('ImageService', () => {
 
     it('should catch an error with uploading a file', waitForAsync(() => {
       const uploadTask = {
-        on: (_task: string, callback: Function, error: Function) => {
+        on: (
+          _task: string,
+          callback: (props: { bytesTransferred: number; totalBytes: number }) => void,
+          error: () => void
+        ) => {
           callback({ bytesTransferred: 50, totalBytes: 100 });
           error();
         },

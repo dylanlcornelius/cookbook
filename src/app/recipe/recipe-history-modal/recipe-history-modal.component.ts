@@ -19,6 +19,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalComponent } from '@modalComponent';
 import { ErrorMatcher } from '../../util/error-matcher';
+import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
 
 @Component({
   selector: 'app-recipe-history-modal',
@@ -35,7 +36,7 @@ export class RecipeHistoryModalComponent implements OnInit {
 
   @Input()
   set Params(params: {
-    function: Function;
+    function: RecipeDetailComponent['updateRecipeHistoryEvent'];
     recipeId: string;
     uid: string;
     householdId: string;

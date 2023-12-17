@@ -11,6 +11,7 @@ import { UserIngredient, UserIngredients } from '@userIngredient';
 import { Ingredient, Ingredients } from '@ingredient';
 import { NumberService } from '@numberService';
 import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
+import { MealPlannerComponent } from 'src/app/shopping/meal-planner/meal-planner.component';
 
 @Injectable({
   providedIn: 'root',
@@ -153,7 +154,7 @@ export class RecipeIngredientService {
     userIngredients: UserIngredients,
     uid: string,
     householdId: string,
-    callback?: Function
+    callback?: MealPlannerComponent['addAllIngredients']
   ): void {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 

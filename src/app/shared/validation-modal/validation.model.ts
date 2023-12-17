@@ -1,12 +1,9 @@
-import { Modal } from '@modalService';
-
-export class Validation extends Modal {
+export class Validation {
   text: string;
-  function: Function;
+  function: (...args: any[]) => any;
   args: any[];
 
-  constructor(text: string, event: Function, args?: any[]) {
-    super();
+  constructor(text: string, event: (...args: any[]) => any, args?: any[]) {
     this.text = text;
     this.function = event;
     this.args = args || [];

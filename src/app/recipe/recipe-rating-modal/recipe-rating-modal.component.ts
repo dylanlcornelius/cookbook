@@ -28,7 +28,7 @@ export class RecipeRatingModalComponent {
 
   @Input()
   set Params(params: {
-    function: Function;
+    function: () => void;
     recipe: Recipe;
     uid: string;
     timesCooked: number;

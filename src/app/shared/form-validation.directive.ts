@@ -1,17 +1,15 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
+import { RecipeEditComponent } from '../recipe/recipe-edit/recipe-edit.component';
 
 @Directive({
   selector: '[appFormValidation]',
 })
 export class FormValidationDirective {
   @Input()
-  stepperOnSubmit: Function;
+  stepperOnSubmit: RecipeEditComponent['stepperOnSubmit'];
 
-  constructor(
-    private el: ElementRef,
-    private formGroupDirective: FormGroupDirective
-  ) {}
+  constructor(private el: ElementRef, private formGroupDirective: FormGroupDirective) {}
 
   @HostListener('ngSubmit') onSubmit(): void {
     if (this.formGroupDirective.control.invalid) {

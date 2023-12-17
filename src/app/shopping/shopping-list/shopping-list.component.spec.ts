@@ -17,11 +17,9 @@ import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { RouterModule } from '@angular/router';
 import { RecipeIngredientService } from '@recipeIngredientService';
-import { NumberService } from '@numberService';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
-import { RecipeIngredient } from '@recipeIngredient';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -34,7 +32,6 @@ describe('ShoppingListComponent', () => {
   let notificationService: NotificationService;
   let validationService: ValidationService;
   let recipeIngredientService: RecipeIngredientService;
-  let numberService: NumberService;
   let configService: ConfigService;
 
   beforeEach(waitForAsync(() => {
@@ -60,7 +57,6 @@ describe('ShoppingListComponent', () => {
     notificationService = TestBed.inject(NotificationService);
     validationService = TestBed.inject(ValidationService);
     recipeIngredientService = TestBed.inject(RecipeIngredientService);
-    numberService = TestBed.inject(NumberService);
     configService = TestBed.inject(ConfigService);
   });
 

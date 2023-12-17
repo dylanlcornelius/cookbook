@@ -1,4 +1,3 @@
-import { Modal } from '@modalService';
 import { Model } from '@model';
 
 export class Tutorial extends Model {
@@ -27,12 +26,11 @@ export enum POSITION {
   LEFT = 'left',
 }
 
-export class TutorialModal extends Modal {
+export class TutorialModal {
   originalUrl: string;
   startingUrl?: string;
 
   constructor(originalUrl: string, startingUrl?: string) {
-    super();
     this.originalUrl = originalUrl;
     this.startingUrl = startingUrl;
   }
