@@ -527,6 +527,7 @@ describe('RecipeListComponent', () => {
       component.filtersList = [
         {
           icon: 'icon',
+          iconTooltip: '',
           values: [
             {
               displayName: '',
@@ -647,6 +648,7 @@ describe('RecipeListComponent', () => {
     it('should narrow filter types to a nested filter', () => {
       const filters = {
         icon: '',
+        iconTooltip: '',
         values: [
           {
             displayName: '',
