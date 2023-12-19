@@ -40,7 +40,7 @@
           [matMenuTriggerFor]="menu"
           matBadge="{{ filters.numberOfSelected === 0 ? '' : filters.numberOfSelected }}"
         >
-          <mat-icon>{{ filters.icon }}</mat-icon>
+          <mat-icon [matTooltip]="filters.iconTooltip">{{ filters.icon }}</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
           <ng-container *ngFor="let subFilters of filters.values">

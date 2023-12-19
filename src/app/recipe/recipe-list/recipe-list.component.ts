@@ -58,7 +58,12 @@ type DisplayFilter = {
   numberOfSelected?: number;
 };
 
-type NestedDisplayFilter = { icon: string; values: DisplayFilter[]; numberOfSelected?: number };
+type NestedDisplayFilter = {
+  icon: string;
+  iconTooltip: string;
+  values: DisplayFilter[];
+  numberOfSelected?: number;
+};
 
 type DisplayFilters = Array<DisplayFilter | NestedDisplayFilter>;
 
@@ -369,7 +374,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         } else {
           this.filtersList = [
             {
-              icon: 'more_vert',
+              icon: 'filter_list',
+              iconTooltip: 'Filter Recipes',
               values: [
                 { displayName: 'Authors', name: 'author', values: authors },
                 { displayName: 'Types', name: 'type', values: types },
