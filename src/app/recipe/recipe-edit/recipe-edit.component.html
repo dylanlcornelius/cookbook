@@ -85,20 +85,6 @@
       </mat-form-field>
 
       <mat-form-field class="form-field">
-        <input
-          matInput
-          placeholder="Calories"
-          formControlName="calories"
-          [errorStateMatcher]="matcher"
-        />
-        <mat-error>
-          <span *ngIf="!recipesForm.get('calories').valid">
-            Please enter a valid number for Recipe Calories
-          </span>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="form-field">
         <mat-label>Type</mat-label>
         <mat-select formControlName="type">
           <mat-option *ngFor="let type of types" [value]="type.value">
