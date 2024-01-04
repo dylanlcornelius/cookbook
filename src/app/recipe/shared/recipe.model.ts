@@ -1,6 +1,6 @@
 import { Model } from '@model';
 import { UOM } from '@uoms';
-import { RecipeIngredients } from '@recipeIngredient';
+import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
 
 export class Recipe extends Model {
   name: string;
@@ -51,7 +51,7 @@ export class Recipe extends Model {
     this.servings = data.servings || '';
     this.categories = data.categories || [];
     this.steps = data.steps || [];
-    this.ingredients = data.ingredients || [];
+    this.ingredients = (data.ingredients || []).map(ingredient => new RecipeIngredient(ingredient));
     this.hasImage = data.hasImage || false;
     this.meanRating = data.meanRating || 0;
     this.ratings = data.ratings || [];
@@ -82,7 +82,10 @@ export class Recipe extends Model {
       ...recipe
     } = this;
     /* eslint-enable @typescript-eslint/no-unused-vars */
-    return recipe;
+    return {
+      ...recipe,
+      ingredients: recipe.ingredients.map(ingredient => ingredient.getObject()),
+    };
   }
 }
 

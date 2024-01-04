@@ -19,6 +19,13 @@ export class RecipeIngredient extends Model {
     this.name = data.name || '';
     this.selected = data.selected || false;
   }
+
+  public getObject(): RecipeIngredientObject {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { name, selected, ...recipeIngredient } = this;
+
+    return recipeIngredient;
+  }
 }
 
 export type RecipeIngredientObject = Omit<
