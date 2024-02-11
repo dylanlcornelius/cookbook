@@ -455,7 +455,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(recipeHistoryService, 'set');
       spyOn(notificationService, 'setModal');
 
-      component.updateRecipeHistoryEvent('id', 'uid', 'householdId', 10);
+      component.updateRecipeHistoryEvent('id', 'uid', 'householdId', 10, false);
 
       expect(recipeHistoryService.set).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();

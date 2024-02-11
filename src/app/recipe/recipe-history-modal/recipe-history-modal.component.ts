@@ -66,7 +66,7 @@ export class RecipeHistoryModalComponent implements OnInit {
     this.modal.close();
   }
 
-  onSubmit(): void {
+  onSubmit(updateDate = false): void {
     if (this.form.invalid) {
       return;
     }
@@ -75,7 +75,8 @@ export class RecipeHistoryModalComponent implements OnInit {
       this.params.recipeId,
       this.params.uid,
       this.params.householdId,
-      this.form.get('timesCooked').value
+      this.form.get('timesCooked').value,
+      updateDate
     );
     this.modal.close();
   }

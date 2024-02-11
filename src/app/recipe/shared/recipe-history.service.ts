@@ -48,14 +48,27 @@ export class RecipeHistoryService extends FirestoreService {
       });
   }
 
-  set(uid: string, recipeId: string, timesCooked: number): void {
+  set(uid: string, recipeId: string, timesCooked: number, updateDate: boolean): void {
     this.get(uid, recipeId)
       .pipe(take(1))
       .subscribe(recipeHistory => {
+        const today = new Date();
+        const lastDateCooked = `${today.getDate()}/${
+          today.getMonth() + 1
+        }/${today.getFullYear()}`.toString();
+
         if (!recipeHistory.id) {
-          this.create(new RecipeHistory({ uid: uid, recipeId: recipeId, timesCooked }));
+          const newRecipeHistory = new RecipeHistory({ uid: uid, recipeId: recipeId, timesCooked });
+          if (updateDate) {
+            newRecipeHistory.lastDateCooked = lastDateCooked;
+          }
+          this.create(newRecipeHistory);
         } else {
-          this.update(new RecipeHistory({ ...recipeHistory, timesCooked }));
+          const updatedRecipeHistory = new RecipeHistory({ ...recipeHistory, timesCooked });
+          if (updateDate) {
+            updatedRecipeHistory.lastDateCooked = lastDateCooked;
+          }
+          this.update(updatedRecipeHistory);
         }
       });
   }
