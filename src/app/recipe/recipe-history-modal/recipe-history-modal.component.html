@@ -3,7 +3,7 @@
     <h4>{{ params?.text }}</h4>
   </div>
   <br />
-  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit()" appFormValidation>
+  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(true)" appFormValidation>
     <div class="center">
       <mat-form-field>
         <input
@@ -23,9 +23,14 @@
 
     <br />
     <div class="button-row">
+      <button mat-raised-button color="accent" type="button" (click)="onSubmit()">
+        Confirm without Updating Date
+      </button>
+    </div>
+    <div class="button-row">
       <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" style="margin-right: 20px">
-        Confirm
+      <button mat-raised-button color="primary" type="submit" style="margin-left: 20px">
+        Confirm and Update Date
       </button>
     </div>
   </form>

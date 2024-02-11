@@ -293,10 +293,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     recipeId: string,
     uid: string,
     householdId: string,
-    timesCooked: number
+    timesCooked: number,
+    updateDate: boolean
   ): void => {
-    this.recipeHistoryService.set(uid, recipeId, timesCooked);
-    this.recipeHistoryService.set(householdId, recipeId, timesCooked);
+    this.recipeHistoryService.set(uid, recipeId, timesCooked, updateDate);
+    this.recipeHistoryService.set(householdId, recipeId, timesCooked, updateDate);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   };
 
