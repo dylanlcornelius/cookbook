@@ -43,6 +43,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 input[type='number'] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 dt {
@@ -138,6 +139,9 @@ dt {
 }
 .mat-card-actions .mat-button {
   margin: 0 !important;
+}
+.mat-menu-panel {
+  max-height: min(100vh - 50px, 500px) !important;
 }
 .categories .mat-chip {
   font-size: 12px;
