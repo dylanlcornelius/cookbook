@@ -27,6 +27,10 @@ h2 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  &.has-image + &.no-image {
+    grid-column-start: 1;
+  }
 }
 .mat-card-header .mat-card-subtitle {
   width: min-content;

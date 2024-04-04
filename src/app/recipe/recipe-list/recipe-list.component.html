@@ -99,6 +99,7 @@
       *ngFor="let recipe of dataSource.connect().value; trackBy: identify"
       [id]="recipe.id"
       class="recipe-card mat-elevation-z8"
+      [ngClass]="recipe.image ? 'has-image' : 'no-image'"
       (click)="openRecipeDetail(recipe)"
     >
       <mat-card-header>
