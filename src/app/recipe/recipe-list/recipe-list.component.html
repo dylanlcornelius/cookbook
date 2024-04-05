@@ -1,6 +1,6 @@
 <app-loading-modal *ngIf="loading"></app-loading-modal>
 
-<h2>The Recipes</h2>
+<h2 id="top">The Recipes</h2>
 
 <div [hidden]="loading">
   <mat-paginator
@@ -154,5 +154,6 @@
     [length]="paginator.length"
     [pageSizeOptions]="paginator.pageSizeOptions"
     class="full-width"
+    id="bottom"
   ></mat-paginator>
 </div>
