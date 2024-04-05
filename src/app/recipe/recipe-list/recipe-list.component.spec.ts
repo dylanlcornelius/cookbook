@@ -837,10 +837,21 @@ describe('RecipeListComponent', () => {
     it('should store the page index', () => {
       const event = new PageEvent();
       event.pageIndex = 2;
+      event.previousPageIndex = 1;
 
       component.pageEvent(event);
 
       expect(recipeFilterService.pageIndex).toEqual(2);
+    });
+
+    it('should store the page index and scroll down', () => {
+      const event = new PageEvent();
+      event.pageIndex = 1;
+      event.previousPageIndex = 2;
+
+      component.pageEvent(event);
+
+      expect(recipeFilterService.pageIndex).toEqual(1);
     });
   });
 

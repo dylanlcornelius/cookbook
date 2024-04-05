@@ -557,6 +557,15 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   pageEvent(event: PageEvent): PageEvent {
     this.recipeFilterService.pageIndex = event.pageIndex;
+    setTimeout(() => {
+      if (event.pageIndex < event.previousPageIndex) {
+        const element = document.getElementById('bottom');
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        const element = document.getElementById('top');
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
     return event;
   }
 
