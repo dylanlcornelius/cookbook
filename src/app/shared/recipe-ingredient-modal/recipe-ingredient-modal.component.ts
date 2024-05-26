@@ -4,7 +4,8 @@ import { takeUntil } from 'rxjs/operators';
 import { ModalComponent } from '@modalComponent';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
-import { RecipeIngredients } from '@recipeIngredient';
+import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
+import { RecipeMultiplierService } from '../recipe-multiplier/recipe-multiplier.service';
 
 @Component({
   selector: 'app-recipe-ingredient-modal',
@@ -20,7 +21,10 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
 
   selectionCount = 0;
 
-  constructor(private recipeIngredientModalService: RecipeIngredientModalService) {}
+  constructor(
+    private recipeIngredientModalService: RecipeIngredientModalService,
+    private recipeMultiplierService: RecipeMultiplierService
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -40,6 +44,8 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
       });
   }
 
+  getQuantity = this.recipeMultiplierService.getQuantity;
+
   select(isSelected: boolean): void {
     this.selectionCount += isSelected ? 1 : -1;
   }
@@ -57,7 +63,19 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
     }
 
     this.params.function(
-      selectedIngredients,
+      selectedIngredients.map(
+        recipeIngredient =>
+          new RecipeIngredient({
+            ...recipeIngredient,
+            quantity: this.recipeMultiplierService
+              .getQuantity(
+                this.params?.recipe.id,
+                this.params?.recipe.servings,
+                recipeIngredient.quantity
+              )
+              .toString(),
+          })
+      ),
       this.params.userIngredients,
       this.params.ingredients,
       this.params.uid,

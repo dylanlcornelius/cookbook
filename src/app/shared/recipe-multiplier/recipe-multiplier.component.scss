@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin: 10px auto;
+}
+.servings {
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  width: 32px;
+  padding: 10px 15px;
+  text-align: center;
+}

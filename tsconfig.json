@@ -51,6 +51,7 @@
       "@recipeIngredientModal": [
         "src/app/shared/recipe-ingredient-modal/recipe-ingredient-modal.model"
       ],
+      "@recipeMultiplierService": ["src/app/shared/recipe-multiplier/recipe-multiplier.service"],
       "@recipeIngredientService": ["src/app/recipe/shared/recipe-ingredient.service"],
       "@recipeFilterService": ["src/app/recipe/shared/recipe-filter.service"],
       "@recipeHistory": ["src/app/recipe/shared/recipe-history.model"],

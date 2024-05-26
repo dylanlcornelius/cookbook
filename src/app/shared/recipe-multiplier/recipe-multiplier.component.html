@@ -1,0 +1,9 @@
+<button mat-button class="decrement" (click)="decrement(recipeId, defaultServings)">
+  <mat-icon>remove</mat-icon>
+</button>
+<div class="servings">
+  {{ multipliers[recipeId] || defaultServings || 1 }}
+</div>
+<button mat-button class="increment" (click)="increment(recipeId, defaultServings)">
+  <mat-icon>add</mat-icon>
+</button>

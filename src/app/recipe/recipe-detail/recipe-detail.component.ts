@@ -25,6 +25,7 @@ import { ConfigType } from '@configType';
 import { ConfigService } from '@configService';
 import { FirebaseService } from '@firebaseService';
 import { TitleService } from '@TitleService';
+import { Multipliers, RecipeMultiplierService } from '@recipeMultiplierService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -37,6 +38,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   loading = true;
   recipeHistoryModalParams;
+  multipliers: Multipliers;
 
   user: User;
   householdId: string;
@@ -65,6 +67,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
+    private recipeMultiplierService: RecipeMultiplierService,
     private userIngredientService: UserIngredientService,
     private recipeFilterService: RecipeFilterService,
     private validationService: ValidationService,
@@ -194,6 +197,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           });
       });
   }
+
+  getQuantity = this.recipeMultiplierService.getQuantity;
 
   updateImage = (hasImage: boolean): void => {
     this.recipe.hasImage = hasImage;
