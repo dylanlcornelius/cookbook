@@ -1,5 +1,11 @@
 <app-modal [params]="params">
   <h4>Select {{ params?.recipe?.name }} Ingredients</h4>
+
+  <app-recipe-multiplier
+    [recipeId]="params?.recipe.id"
+    [defaultServings]="params?.recipe.servings"
+  />
+
   <div class="ingredient-list">
     <div *ngFor="let recipeIngredient of params?.recipeIngredients | filterOptional : false">
       <mat-checkbox
@@ -8,6 +14,8 @@
         (change)="select(recipeIngredient.selected)"
         *ngIf="recipeIngredient.name"
       >
+        {{ getQuantity(params?.recipe.id, params?.recipe.servings, recipeIngredient.quantity) }}
+        {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
         {{ recipeIngredient.name }}
       </mat-checkbox>
     </div>
@@ -24,6 +32,8 @@
           (change)="select(recipeIngredient.selected)"
           *ngIf="recipeIngredient.name"
         >
+          {{ getQuantity(params?.recipe.id, params?.recipe.servings, recipeIngredient.quantity) }}
+          {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
           {{ recipeIngredient.name }}
         </mat-checkbox>
       </div>

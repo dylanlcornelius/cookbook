@@ -9,15 +9,19 @@ import { RecipeIngredientModalService } from '@modalService';
 import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
 import { Recipe } from '@recipe';
 import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeMultiplierService } from '@recipeMultiplierService';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RecipeIngredientModalComponent', () => {
   let component: RecipeIngredientModalComponent;
   let fixture: ComponentFixture<RecipeIngredientModalComponent>;
   let recipeIngredientModalService: RecipeIngredientModalService;
+  let recipeMultiplierService: RecipeMultiplierService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [RecipeIngredientModalComponent, ModalComponent, OptionalIngredientsPipe],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   }));
 
@@ -26,6 +30,7 @@ describe('RecipeIngredientModalComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     recipeIngredientModalService = TestBed.inject(RecipeIngredientModalService);
+    recipeMultiplierService = TestBed.inject(RecipeMultiplierService);
   });
 
   it('should create', () => {
@@ -72,13 +77,15 @@ describe('RecipeIngredientModalComponent', () => {
     });
 
     it('should use all ingredients', () => {
-      component.params.recipeIngredients = [new RecipeIngredient({})];
+      component.params.recipeIngredients = [new RecipeIngredient({ quantity: '1' })];
 
+      spyOn(recipeMultiplierService, 'getQuantity').and.returnValue(1);
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
 
       component.add();
 
+      expect(recipeMultiplierService.getQuantity).toHaveBeenCalled();
       expect(component.params.function).toHaveBeenCalledWith(
         component.params.recipeIngredients,
         component.params.userIngredients,
@@ -92,16 +99,18 @@ describe('RecipeIngredientModalComponent', () => {
     });
 
     it('should use only selected ingredients', () => {
-      const recipeIngredient1 = new RecipeIngredient({ selected: true });
+      const recipeIngredient1 = new RecipeIngredient({ selected: true, quantity: '1' });
       const recipeIngredient2 = new RecipeIngredient({});
 
       component.params.recipeIngredients = [recipeIngredient1, recipeIngredient2];
 
+      spyOn(recipeMultiplierService, 'getQuantity').and.returnValue(1);
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
 
       component.add();
 
+      expect(recipeMultiplierService.getQuantity).toHaveBeenCalled();
       expect(component.params.function).toHaveBeenCalledWith(
         [recipeIngredient1],
         component.params.userIngredients,

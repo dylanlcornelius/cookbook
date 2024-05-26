@@ -26,6 +26,7 @@ import { TutorialComponent } from './tutorial-modal/tutorial/tutorial.component'
 import { TutorialButtonComponent } from './tutorial-button/tutorial-button.component';
 import { OptionalIngredientsPipe } from './optional-ingredients.pipe';
 import { FormValidationDirective } from './form-validation.directive';
+import { RecipeMultiplierComponent } from './recipe-multiplier/recipe-multiplier.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { FormValidationDirective } from './form-validation.directive';
     TutorialButtonComponent,
     OptionalIngredientsPipe,
     FormValidationDirective,
+    RecipeMultiplierComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +87,7 @@ import { FormValidationDirective } from './form-validation.directive';
     TutorialButtonComponent,
     OptionalIngredientsPipe,
     FormValidationDirective,
+    RecipeMultiplierComponent,
   ],
 })
 export class SharedModule {}
