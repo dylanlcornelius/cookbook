@@ -13,10 +13,12 @@ export class RecipeMultiplierService {
 
   constructor(private numberService: NumberService) {}
 
-  getQuantity = (recipeId: string, defaultServings: string, quantity: string): number => {
+  getQuantity = (recipeId: string, defaultServings: string, quantity: string): string => {
     const servings = Number(defaultServings) || 1;
     const convertedQuantity = this.numberService.toDecimal(quantity);
-    return (convertedQuantity || 1) * ((this.multipliers[recipeId] || servings) / servings);
+    return this.numberService.toFraction(
+      (convertedQuantity || 1) * ((this.multipliers[recipeId] || servings) / servings)
+    );
   };
 
   decrement(recipeId: string, defaultServings: string): void {
