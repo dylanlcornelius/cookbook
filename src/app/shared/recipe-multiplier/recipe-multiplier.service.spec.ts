@@ -28,6 +28,14 @@ describe('RecipeMultiplierService', () => {
 
       expect(quantity).toEqual(1.5);
     });
+
+    it('should return scaled quantities from fractions', () => {
+      service.multipliers = { recipeId: 3 };
+
+      const quantity = service.getQuantity('recipeId', '2', '1/2');
+
+      expect(quantity).toEqual(0.75);
+    });
   });
 
   describe('decrement', () => {

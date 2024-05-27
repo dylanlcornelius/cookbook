@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { NumberService } from '../../util/number.service';
 
 export interface Multipliers {
   [key: string]: number;
@@ -10,12 +11,12 @@ export interface Multipliers {
 export class RecipeMultiplierService {
   multipliers: Multipliers = {} as Multipliers;
 
-  constructor() {}
+  constructor(private numberService: NumberService) {}
 
   getQuantity = (recipeId: string, defaultServings: string, quantity: string): number => {
     const servings = Number(defaultServings) || 1;
-
-    return (Number(quantity) || 1) * ((this.multipliers[recipeId] || servings) / servings);
+    const convertedQuantity = this.numberService.toDecimal(quantity);
+    return (convertedQuantity || 1) * ((this.multipliers[recipeId] || servings) / servings);
   };
 
   decrement(recipeId: string, defaultServings: string): void {
