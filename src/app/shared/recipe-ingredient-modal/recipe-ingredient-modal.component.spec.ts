@@ -79,7 +79,7 @@ describe('RecipeIngredientModalComponent', () => {
     it('should use all ingredients', () => {
       component.params.recipeIngredients = [new RecipeIngredient({ quantity: '1' })];
 
-      spyOn(recipeMultiplierService, 'getQuantity').and.returnValue(1);
+      spyOn(recipeMultiplierService, 'getQuantity').and.returnValue('1');
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
 
@@ -104,7 +104,7 @@ describe('RecipeIngredientModalComponent', () => {
 
       component.params.recipeIngredients = [recipeIngredient1, recipeIngredient2];
 
-      spyOn(recipeMultiplierService, 'getQuantity').and.returnValue(1);
+      spyOn(recipeMultiplierService, 'getQuantity').and.returnValue('1');
       spyOn(component.params, 'function');
       spyOn(component.modal, 'close');
 

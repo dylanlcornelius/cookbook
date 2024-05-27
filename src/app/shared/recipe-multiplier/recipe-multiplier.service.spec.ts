@@ -18,7 +18,7 @@ describe('RecipeMultiplierService', () => {
     it('should return default quantities', () => {
       const quantity = service.getQuantity('recipeId', undefined, undefined);
 
-      expect(quantity).toEqual(1);
+      expect(quantity).toEqual('1');
     });
 
     it('should return scaled quantities', () => {
@@ -26,7 +26,7 @@ describe('RecipeMultiplierService', () => {
 
       const quantity = service.getQuantity('recipeId', '2', '1');
 
-      expect(quantity).toEqual(1.5);
+      expect(quantity).toEqual('1 1/2');
     });
 
     it('should return scaled quantities from fractions', () => {
@@ -34,7 +34,7 @@ describe('RecipeMultiplierService', () => {
 
       const quantity = service.getQuantity('recipeId', '2', '1/2');
 
-      expect(quantity).toEqual(0.75);
+      expect(quantity).toEqual('3/4');
     });
   });
 

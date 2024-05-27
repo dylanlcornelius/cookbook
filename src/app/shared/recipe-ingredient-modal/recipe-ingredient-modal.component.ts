@@ -67,13 +67,11 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
         recipeIngredient =>
           new RecipeIngredient({
             ...recipeIngredient,
-            quantity: this.recipeMultiplierService
-              .getQuantity(
-                this.params?.recipe.id,
-                this.params?.recipe.servings,
-                recipeIngredient.quantity
-              )
-              .toString(),
+            quantity: this.recipeMultiplierService.getQuantity(
+              this.params?.recipe.id,
+              this.params?.recipe.servings,
+              recipeIngredient.quantity
+            ),
           })
       ),
       this.params.userIngredients,
