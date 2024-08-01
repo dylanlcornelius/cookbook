@@ -109,24 +109,25 @@ describe('RecipeEditComponent', () => {
       route.queryParams = of({ step: 1 });
 
       const recipe = new Recipe({
+        id: 'id',
         name: 'Title',
         categories: [{}],
         steps: [{}],
         ingredients: [
           {
-            id: 'id',
+            id: 'ingredient-1',
           },
         ],
       });
 
       const recipes = [
-        new Recipe({ categories: [{ category: '1' }, { category: '2' }] }),
-        new Recipe({ categories: [{ category: '1' }] }),
+        new Recipe({ id: 'recipe-1', categories: [{ category: '1' }, { category: '2' }] }),
+        new Recipe({ id: 'recipe-2', categories: [{ category: '1' }] }),
       ];
 
       const ingredients = [
         new Ingredient({
-          id: 'id',
+          id: 'ingredient-1',
         }),
         new Ingredient({
           id: 'id2',
@@ -570,20 +571,21 @@ describe('RecipeEditComponent', () => {
 
   describe('getUOMs', () => {
     it('should return a list of uoms', () => {
-      spyOn(uomService, 'relatedUOMs').and.returnValue([]);
+      spyOn(uomService, 'relatedUOMs').and.returnValues(['tsp'], ['oz']);
 
-      const result = component.getUOMs(UOM.CUP);
+      const result = component.getUOMs(UOM.CUP, UOM.LITER);
 
-      expect(result).toEqual([]);
+      expect(result).toEqual(['tsp', 'oz']);
       expect(uomService.relatedUOMs).toHaveBeenCalled();
     });
 
     it('should handle undefined', () => {
-      spyOn(uomService, 'relatedUOMs');
+      spyOn(uomService, 'relatedUOMs').and.returnValue([]);
 
-      component.getUOMs(undefined);
+      const result = component.getUOMs(undefined, undefined);
 
-      expect(uomService.relatedUOMs).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+      expect(uomService.relatedUOMs).toHaveBeenCalledTimes(2);
     });
   });
 

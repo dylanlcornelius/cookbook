@@ -45,7 +45,7 @@ describe('UomService', () => {
     it('should not find any related uoms', () => {
       const result = service.relatedUOMs(null);
 
-      expect(result).toBeUndefined();
+      expect(result).toEqual([]);
     });
   });
 });

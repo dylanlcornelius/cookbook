@@ -8,6 +8,8 @@ export class RecipeIngredient extends Model {
   isOptional: boolean;
 
   name: string;
+  volumeUnit: UOM;
+  weightUnit: UOM;
   selected: boolean;
 
   constructor(data: any) {
@@ -17,6 +19,8 @@ export class RecipeIngredient extends Model {
     this.uom = data.uom || '';
     this.isOptional = data.isOptional || false;
     this.name = data.name || '';
+    this.volumeUnit = data.volumeUnit || '';
+    this.weightUnit = data.weightUnit || '';
     this.selected = data.selected || false;
   }
 

@@ -513,7 +513,7 @@ describe('RecipeIngredientService', () => {
       ]);
 
       expect(numberService.toDecimal).toHaveBeenCalled();
-      expect(uomService.convert).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(1);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
       expect(notificationService.setModal).toHaveBeenCalled();
@@ -567,7 +567,7 @@ describe('RecipeIngredientService', () => {
       ]);
 
       expect(numberService.toDecimal).toHaveBeenCalled();
-      expect(uomService.convert).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(1);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
       expect(notificationService.setModal).toHaveBeenCalled();
@@ -664,7 +664,7 @@ describe('RecipeIngredientService', () => {
       );
 
       expect(numberService.toDecimal).toHaveBeenCalled();
-      expect(uomService.convert).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(1);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(recipeHistoryService.add).toHaveBeenCalledTimes(6);
       expect(notificationService.setModal).toHaveBeenCalled();
@@ -702,7 +702,7 @@ describe('RecipeIngredientService', () => {
       service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '');
 
       expect(numberService.toDecimal).toHaveBeenCalled();
-      expect(uomService.convert).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(2);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(recipeHistoryService.add).not.toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
@@ -741,6 +741,44 @@ describe('RecipeIngredientService', () => {
 
       expect(numberService.toDecimal).not.toHaveBeenCalled();
       expect(uomService.convert).not.toHaveBeenCalled();
+      expect(userIngredientService.update).toHaveBeenCalled();
+      expect(recipeHistoryService.add).not.toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should use ingredient weight units', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          altUOM: 'y',
+          altAmount: 2,
+        }),
+      ];
+
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
+
+      spyOn(numberService, 'toDecimal').and.returnValue(10);
+      spyOn(uomService, 'convert').and.returnValues(false, 5);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '');
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(2);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(recipeHistoryService.add).not.toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();

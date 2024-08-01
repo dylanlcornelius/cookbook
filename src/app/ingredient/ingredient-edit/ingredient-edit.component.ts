@@ -1,17 +1,17 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { IngredientService } from '@ingredientService';
-import { FormGroupDirective, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UOM, UOMs } from '@uoms';
-import { ErrorMatcher } from '../../util/error-matcher';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { LoadingService } from '@loadingService';
-import { Ingredient } from '@ingredient';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { Ingredient } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { LoadingService } from '@loadingService';
 import { TitleService } from '@TitleService';
+import { VOLUME_UOM, VOLUME_UOMs, WEIGHT_UOM, WEIGHT_UOMs } from '@uoms';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ErrorMatcher } from '../../util/error-matcher';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -26,9 +26,13 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   ingredientsForm: FormGroup;
   ingredient: Ingredient;
   id: string;
-  uoms: UOMs;
+  volumeUnits: VOLUME_UOMs;
+  weightUnits: WEIGHT_UOMs;
   categories: Configs;
-  hasAlternative = false;
+  buyableOptions = [
+    { value: 'volume', label: 'Volume' },
+    { value: 'weight', label: 'Weight' },
+  ];
 
   matcher = new ErrorMatcher();
 
@@ -46,7 +50,8 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
     private ingredientService: IngredientService,
     private configService: ConfigService
   ) {
-    this.uoms = Object.values(UOM);
+    this.volumeUnits = Object.values(VOLUME_UOM);
+    this.weightUnits = Object.values(WEIGHT_UOM);
   }
 
   ngOnInit() {
@@ -66,17 +71,11 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       this.id = params['ingredient-id'];
       this.ingredientsForm = new FormBuilder().group({
         name: [null, Validators.required],
-        amount: [
-          null,
-          [
-            Validators.required,
-            Validators.min(0),
-            Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$'),
-          ],
-        ],
-        uom: [null, Validators.required],
+        amount: [null, [Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
+        uom: [null],
         altAmount: [null, [Validators.min(0), Validators.pattern('(^[0-9]*)+(\\.[0-9]{0,2})?$')]],
         altUOM: [null],
+        buyableUOM: [null],
         category: [null, Validators.required],
         calories: [null, [Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       });
@@ -101,9 +100,6 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
           if (ingredient) {
             this.titleService.set(`Edit ${ingredient.name}`);
 
-            this.hasAlternative = !!this.ingredient.altAmount;
-            this.setAltValidators();
-
             this.ingredientsForm.patchValue({
               name: this.ingredient.name,
               category: this.ingredient.category,
@@ -111,36 +107,34 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
               uom: this.ingredient.uom || '',
               altAmount: this.ingredient.altAmount || '',
               altUOM: this.ingredient.altUOM || '',
+              buyableUOM: this.ingredient.buyableUOM,
               calories: this.ingredient.calories,
             });
+
+            this.onBuyableSelect();
           }
           this.loading = this.loadingService.set(false);
         });
     });
   }
 
-  setAltValidators(): void {
-    if (this.hasAlternative) {
-      this.ingredientsForm.controls['altAmount'].addValidators([Validators.required]);
-      this.ingredientsForm.controls['altUOM'].addValidators([Validators.required]);
-    } else {
+  onBuyableSelect(): void {
+    const isVolume = this.ingredientsForm.controls['buyableUOM'].value === 'volume';
+    if (isVolume) {
+      this.ingredientsForm.controls['amount'].addValidators([Validators.required]);
+      this.ingredientsForm.controls['uom'].addValidators([Validators.required]);
       this.ingredientsForm.controls['altAmount'].removeValidators([Validators.required]);
       this.ingredientsForm.controls['altUOM'].removeValidators([Validators.required]);
+    } else {
+      this.ingredientsForm.controls['amount'].removeValidators([Validators.required]);
+      this.ingredientsForm.controls['uom'].removeValidators([Validators.required]);
+      this.ingredientsForm.controls['altAmount'].addValidators([Validators.required]);
+      this.ingredientsForm.controls['altUOM'].addValidators([Validators.required]);
     }
+    this.ingredientsForm.controls['amount'].updateValueAndValidity();
+    this.ingredientsForm.controls['uom'].updateValueAndValidity();
     this.ingredientsForm.controls['altAmount'].updateValueAndValidity();
     this.ingredientsForm.controls['altUOM'].updateValueAndValidity();
-  }
-
-  select(): void {
-    this.hasAlternative = !this.hasAlternative;
-    this.setAltValidators();
-
-    if (!this.hasAlternative) {
-      this.ingredientsForm.patchValue({
-        altAmount: '',
-        altUOM: '',
-      });
-    }
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
