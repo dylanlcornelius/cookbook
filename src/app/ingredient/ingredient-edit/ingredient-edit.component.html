@@ -24,39 +24,6 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="container">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="Amount"
-          formControlName="amount"
-          [errorStateMatcher]="matcher"
-          required
-        />
-        <mat-error>
-          <span
-            *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched"
-          >
-            Please enter a valid number for Ingredient Amount
-          </span>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Unit of Measurement</mat-label>
-        <mat-select formControlName="uom" required>
-          <mat-option *ngFor="let uom of uoms" [value]="uom">
-            {{ uom }}
-          </mat-option>
-        </mat-select>
-        <mat-error>
-          <span *ngIf="!ingredientsForm.get('uom').valid && ingredientsForm.get('uom').touched">
-            Please enter a valid Unit of Measurement
-          </span>
-        </mat-error>
-      </mat-form-field>
-    </div>
-
     <mat-form-field class="form-field">
       <mat-label>Category</mat-label>
       <mat-select formControlName="category" required>
@@ -69,6 +36,94 @@
           *ngIf="!ingredientsForm.get('category').valid && ingredientsForm.get('category').touched"
         >
           Please enter a valid number for Ingredient Category
+        </span>
+      </mat-error>
+    </mat-form-field>
+
+    <div class="container">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Volume Amount"
+          formControlName="amount"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error>
+          <span
+            *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched"
+          >
+            Please enter a valid number for Ingredient Volume Amount
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Volume Unit of Measurement</mat-label>
+        <mat-select formControlName="uom">
+          <mat-option>-</mat-option>
+          <mat-option *ngFor="let uom of volumeUnits" [value]="uom">
+            {{ uom }}
+          </mat-option>
+        </mat-select>
+        <mat-error>
+          <span *ngIf="!ingredientsForm.get('uom').valid && ingredientsForm.get('uom').touched">
+            Please enter a valid Volume Unit of Measurement
+          </span>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="container">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Weight Amount"
+          formControlName="altAmount"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error>
+          <span
+            *ngIf="
+              !ingredientsForm.get('altAmount').valid && ingredientsForm.get('altAmount').touched
+            "
+          >
+            Please enter a valid number for Ingredient Weight Amount
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Weight Unit of Measurement</mat-label>
+        <mat-select formControlName="altUOM">
+          <mat-option>-</mat-option>
+          <mat-option *ngFor="let uom of weightUnits" [value]="uom">
+            {{ uom }}
+          </mat-option>
+        </mat-select>
+        <mat-error>
+          <span
+            *ngIf="!ingredientsForm.get('altUOM').valid && ingredientsForm.get('altUOM').touched"
+          >
+            Please enter a valid Weight Unit of Measurement
+          </span>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="form-field">
+      <mat-label>Buyable Unit of Measurement</mat-label>
+      <mat-select formControlName="buyableUOM" (selectionChange)="onBuyableSelect()" required>
+        <mat-option *ngFor="let option of buyableOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error>
+        <span
+          *ngIf="
+            !ingredientsForm.get('buyableUOM').valid && ingredientsForm.get('buyableUOM').touched
+          "
+        >
+          Please select a valid option for Ingredient Buyable Unit of Measurement
         </span>
       </mat-error>
     </mat-form-field>
@@ -86,53 +141,6 @@
         </span>
       </mat-error>
     </mat-form-field>
-
-    <div class="alt-amount">
-      <mat-checkbox class="mat-menu-item" [checked]="hasAlternative" (change)="select()">
-        Alternative Amount?
-      </mat-checkbox>
-      <mat-icon
-        matTooltip="An Alternative Amount is displayed on the Shopping List instead of the regular Amount. This should be used when an ingredient's usable UOM (on a recipe) differs from it's buyable UOM (on the packaging)"
-      >
-        info_i
-      </mat-icon>
-    </div>
-
-    <div class="container" *ngIf="hasAlternative">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="Alternative Amount"
-          formControlName="altAmount"
-          [errorStateMatcher]="matcher"
-        />
-        <mat-error>
-          <span
-            *ngIf="
-              !ingredientsForm.get('altAmount').valid && ingredientsForm.get('altAmount').touched
-            "
-          >
-            Please enter a valid number for Ingredient Alternative Amount
-          </span>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Alternative Unit of Measurement</mat-label>
-        <mat-select formControlName="altUOM">
-          <mat-option *ngFor="let uom of uoms" [value]="uom">
-            {{ uom }}
-          </mat-option>
-        </mat-select>
-        <mat-error>
-          <span
-            *ngIf="!ingredientsForm.get('altUOM').valid && ingredientsForm.get('altUOM').touched"
-          >
-            Please enter a valid Alternative Unit of Measurement
-          </span>
-        </mat-error>
-      </mat-form-field>
-    </div>
 
     <div class="button-row between">
       <div *ngIf="!isQuickView">

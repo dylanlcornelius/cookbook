@@ -4,10 +4,15 @@ import { UOM } from '@uoms';
 export class Ingredient extends Model {
   name: string;
   category: string;
+  /** volume amount */
   amount: string;
+  /** volume unit of measurement */
   uom: UOM;
+  /** weight amount */
   altAmount: string;
+  /** weight unit of measurement */
   altUOM: UOM;
+  buyableUOM: 'volume' | 'weight';
   calories: string;
 
   cartQuantity: number;
@@ -21,6 +26,7 @@ export class Ingredient extends Model {
     this.uom = data.uom || '';
     this.altAmount = data.altAmount || '';
     this.altUOM = data.altUOM || '';
+    this.buyableUOM = data.buyableUOM || 'volume';
     this.calories = data.calories || '';
     this.cartQuantity = data.cartQuantity;
   }

@@ -37,6 +37,8 @@ export class RecipeIngredientService {
           new RecipeIngredient({
             ...recipeIngredient,
             name: ingredient.name,
+            volumeUnit: ingredient.uom,
+            weightUnit: 'altUOM' in ingredient ? ingredient.altUOM : null,
           })
         );
       }
@@ -194,17 +196,20 @@ export class RecipeIngredientService {
       }
 
       const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-      const convertedValue = this.uomService.convert(
-        recipeIngredient.uom,
-        ingredient.uom,
-        quantity
-      );
+      let convertedValue = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
+      let cartQuantity;
+      if (convertedValue) {
+        cartQuantity = Math.ceil(convertedValue / Number(ingredient.amount));
+      } else {
+        convertedValue = this.uomService.convert(recipeIngredient.uom, ingredient.altUOM, quantity);
+        if (convertedValue) {
+          cartQuantity = Math.ceil(convertedValue / Number(ingredient.altAmount));
+        }
+      }
       if (!convertedValue) {
         this.notificationService.setModal(new FailureNotification('Calculation error!'));
         return;
       }
-
-      const cartQuantity = Math.ceil(convertedValue / Number(ingredient.amount));
 
       const userIngredient = userIngredients.find(
         ({ ingredientId }) => ingredientId === recipeIngredient.id

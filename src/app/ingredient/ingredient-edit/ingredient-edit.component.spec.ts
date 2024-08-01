@@ -102,26 +102,41 @@ describe('IngredientEditComponent', () => {
     });
   });
 
-  describe('select', () => {
-    it('should toggle alternative fields', () => {
-      spyOn(component, 'setAltValidators');
+  describe('onBuyableSelect', () => {
+    it('should toggle volume fields on', () => {
+      component.ingredientsForm = new FormBuilder().group({
+        amount: [null],
+        uom: [null],
+        altAmount: [null, Validators.required],
+        altUOM: [null],
+        buyableUOM: ['volume'],
+      });
 
-      component.select();
+      spyOn(component.ingredientsForm.controls['amount'], 'addValidators');
+      spyOn(component.ingredientsForm.controls['altAmount'], 'removeValidators');
 
-      expect(component.hasAlternative).toBeTrue();
-      expect(component.setAltValidators).toHaveBeenCalled();
+      component.onBuyableSelect();
+
+      expect(component.ingredientsForm.controls['amount'].addValidators).toHaveBeenCalled();
+      expect(component.ingredientsForm.controls['altAmount'].removeValidators).toHaveBeenCalled();
     });
 
-    it('should toggle alternative fields', () => {
-      component.ingredientsForm = new FormBuilder().group({ name: [null, Validators.required] });
-      component.hasAlternative = true;
+    it('should toggle weight fields on', () => {
+      component.ingredientsForm = new FormBuilder().group({
+        amount: [null, Validators.required],
+        uom: [null],
+        altAmount: [null],
+        altUOM: [null],
+        buyableUOM: ['weight'],
+      });
 
-      spyOn(component, 'setAltValidators');
+      spyOn(component.ingredientsForm.controls['amount'], 'removeValidators');
+      spyOn(component.ingredientsForm.controls['altAmount'], 'addValidators');
 
-      component.select();
+      component.onBuyableSelect();
 
-      expect(component.hasAlternative).toBeFalse();
-      expect(component.setAltValidators).toHaveBeenCalled();
+      expect(component.ingredientsForm.controls['amount'].removeValidators).toHaveBeenCalled();
+      expect(component.ingredientsForm.controls['altAmount'].addValidators).toHaveBeenCalled();
     });
   });
 

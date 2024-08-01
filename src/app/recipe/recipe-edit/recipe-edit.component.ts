@@ -257,7 +257,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           addedIngredient => addedIngredient.id === ingredient.id
         );
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
-          result.push(new RecipeIngredient({ ...ingredient, isOptional: false }));
+          result.push(
+            new RecipeIngredient({
+              ...ingredient,
+              isOptional: false,
+              volumeUnit: ingredient.uom,
+              weightUnit: 'altUOM' in ingredient ? ingredient.altUOM : null,
+            })
+          );
         }
         return result;
       }, [] as RecipeIngredients)
@@ -383,6 +390,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       uom: [null, [Validators.required]],
       isOptional: [false],
       name: [null],
+      volumeUnit: [null],
+      weightUnit: [null],
     });
   }
 
@@ -392,10 +401,12 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     if (data) {
       ingredientControl.patchValue({
         id: data.id,
-        name: data.name,
         quantity: data.quantity,
         uom: data.uom,
         isOptional: data.isOptional,
+        name: data.name,
+        volumeUnit: data.volumeUnit,
+        weightUnit: data.weightUnit,
       });
     }
     control.insert(index, ingredientControl);
@@ -406,10 +417,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     control.removeAt(i);
   }
 
-  getUOMs(uom: UOM): string[] {
-    if (uom) {
-      return this.uomService.relatedUOMs(uom);
-    }
+  getUOMs(volumeUnit: UOM, weightUnit: UOM): string[] {
+    return [...this.uomService.relatedUOMs(volumeUnit), ...this.uomService.relatedUOMs(weightUnit)];
   }
 
   applyIngredientFilter(filterValue: string | false): void {
@@ -477,6 +486,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
         form.ingredients.forEach(ingredient => {
           delete ingredient.name;
+          delete ingredient.volumeUnit;
+          delete ingredient.weightUnit;
         });
 
         let recipeId = this.originalRecipe?.id;

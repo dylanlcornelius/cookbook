@@ -18,10 +18,38 @@
 
       <mat-card-content class="card-column">
         <dl>
-          <dt>Amount</dt>
+          <dt>
+            Volume Amount
+            <mat-icon matTooltip="i.e. tablespoons, cups, or liters">info</mat-icon>
+            <mat-icon
+              *ngIf="ingredient.buyableUOM === 'volume'"
+              matTooltip="This is the amount that will appear on the shopping list"
+            >
+              shopping_cart
+            </mat-icon>
+          </dt>
           <dd>
-            {{ ingredient.amount || 'No Amount' }}
+            {{ ingredient.amount || 'No Volume Amount' }}
             {{ ingredient.uom === 'other' ? '' : ingredient.uom }}
+          </dd>
+        </dl>
+      </mat-card-content>
+
+      <mat-card-content class="card-column" *ngIf="!!ingredient.altAmount">
+        <dl>
+          <dt>
+            Weight Amount
+            <mat-icon matTooltip="i.e. ounces, pounds, or grams">info</mat-icon>
+            <mat-icon
+              *ngIf="ingredient.buyableUOM === 'weight'"
+              matTooltip="This is the amount that will appear on the shopping list"
+            >
+              shopping_cart
+            </mat-icon>
+          </dt>
+          <dd>
+            {{ ingredient.altAmount || 'No Weight Amount' }}
+            {{ ingredient.altUOM === 'other' ? '' : ingredient.altUOM }}
           </dd>
         </dl>
       </mat-card-content>
@@ -30,16 +58,6 @@
         <dl>
           <dt>Calories</dt>
           <dd>{{ ingredient.calories || 'No Calories' }}</dd>
-        </dl>
-      </mat-card-content>
-
-      <mat-card-content class="card-column" *ngIf="!!ingredient.altAmount">
-        <dl>
-          <dt>Alternative Amount</dt>
-          <dd>
-            {{ ingredient.altAmount }}
-            {{ ingredient.altUOM === 'other' ? '' : ingredient.altUOM }}
-          </dd>
         </dl>
       </mat-card-content>
     </div>

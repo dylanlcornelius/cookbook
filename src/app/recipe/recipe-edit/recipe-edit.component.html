@@ -243,7 +243,12 @@
                       [errorStateMatcher]="matcher"
                     >
                       <mat-option
-                        *ngFor="let uom of getUOMs(ingredient.get('uom').value)"
+                        *ngFor="
+                          let uom of getUOMs(
+                            ingredient.get('volumeUnit').value,
+                            ingredient.get('weightUnit').value
+                          )
+                        "
                         [value]="uom"
                       >
                         {{ uom }}
