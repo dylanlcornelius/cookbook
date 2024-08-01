@@ -73,7 +73,7 @@ export class AuthService {
   };
 
   googleLogin(): void {
-    this.firebase.signInWithRedirect(this.firebase.auth, new GoogleAuthProvider());
+    this.firebase.signInWithPopup(this.firebase.auth, new GoogleAuthProvider());
   }
 
   logout(): void {

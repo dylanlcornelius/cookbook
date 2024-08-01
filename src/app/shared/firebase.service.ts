@@ -16,7 +16,7 @@ import {
   Firestore,
 } from 'firebase/firestore';
 import { getApps, initializeApp } from 'firebase/app';
-import { getAuth, signInWithRedirect, GoogleAuthProvider, Auth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, Auth, signInWithPopup } from 'firebase/auth';
 import {
   deleteObject,
   FirebaseStorage,
@@ -59,7 +59,7 @@ export class FirebaseService {
   // AUTH
   getAuth = getAuth;
   onAuthStateChanged = (next: any): any => this.auth.onAuthStateChanged(next);
-  signInWithRedirect = signInWithRedirect;
+  signInWithPopup = signInWithPopup;
   signOut = (): any => this.auth.signOut();
 
   // STORAGE

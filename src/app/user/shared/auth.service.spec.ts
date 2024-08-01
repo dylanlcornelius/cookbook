@@ -149,11 +149,11 @@ describe('AuthService', () => {
 
   describe('googleLogin', () => {
     it('should sign in with a redirect', () => {
-      spyOn(firebase, 'signInWithRedirect');
+      spyOn(firebase, 'signInWithPopup');
 
       service.googleLogin();
 
-      expect(firebase.signInWithRedirect).toHaveBeenCalled();
+      expect(firebase.signInWithPopup).toHaveBeenCalled();
     });
   });
 
