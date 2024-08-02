@@ -24,7 +24,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
     firstNameControl: this.firstNameControl,
     lastNameControl: this.lastNameControl,
   });
-  themeControl = new FormControl();
+  themeControl = new FormControl(true);
   userImage: string;
   userImageProgress;
 
