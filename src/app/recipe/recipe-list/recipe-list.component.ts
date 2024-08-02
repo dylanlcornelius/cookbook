@@ -43,6 +43,7 @@ import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
 import { FirebaseService } from '@firebaseService';
+import { fadeInAnimation } from '../../theme/animations';
 
 type FilterValues = Array<{
   displayName: string;
@@ -71,6 +72,7 @@ type DisplayFilters = Array<DisplayFilter | NestedDisplayFilter>;
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
   styleUrls: ['./recipe-list.component.scss'],
+  animations: [fadeInAnimation],
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();

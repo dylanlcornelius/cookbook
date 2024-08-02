@@ -4,11 +4,13 @@ import { Navigations } from '@navigation';
 import { NavigationService } from '@navigationService';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { fadeInAnimation } from '../theme/animations';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  animations: [fadeInAnimation],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();

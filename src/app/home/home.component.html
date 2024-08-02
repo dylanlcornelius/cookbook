@@ -2,7 +2,12 @@
   <h2>Welcome to the Cookbook!</h2>
 
   <div class="container center">
-    <div *ngFor="let nav of navs" class="nav-tile" [routerLink]="nav.link">
+    <div
+      *ngFor="let nav of navs; let navIndex = index"
+      class="nav-tile"
+      [routerLink]="nav.link"
+      [@fadeInAnimation]="{ value: ':enter', params: { delay: navIndex * 100 } }"
+    >
       <mat-icon class="nav-icon">{{ nav.icon }}</mat-icon>
       <h6>{{ nav.name }}</h6>
     </div>
