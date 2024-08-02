@@ -1,26 +1,75 @@
-<h2>The Cookbook?</h2>
+<div class="about">
+  <div
+    class="description-row mat-elevation-z8"
+    [ngClass]="{ odd: recipeIndex % 2 === 1 }"
+    *ngFor="let recipe of selectedRecipes; let recipeIndex = index"
+    [@fadeInAnimation]="{ value: ':enter', params: { delay: recipeIndex * 300 } }"
+  >
+    <a
+      class="image-link"
+      [routerLink]="['/recipe/detail/', recipe?.id]"
+      *ngIf="recipeIndex % 2 === 0"
+    >
+      <img mat-card-image *ngIf="recipe?.image" [src]="recipe.image" alt="" loading="lazy" />
+    </a>
 
-<div class="highlight-box mat-elevation-z8">
-  <div class="about-text">
-    A place not only for keeping track of all of your hard-earned
-    <a class="link-text" routerLink="/recipe/list">recipes</a>
-    , but also helping you cook them!
-  </div>
-  <br />
+    <div class="highlight-box">
+      <div *ngIf="recipeIndex === 0" class="about-text">
+        A place to keep track of all of your hard-earned
+        <a class="link-text" routerLink="/recipe/list">recipes</a>
+        and help you cook them.
+      </div>
 
-  <div class="about-text">This website was built using these technologies</div>
-  <div class="container center">
-    <div class="center">
-      <figure>
-        <img class="logo" src="../../assets/angular.png" alt="Angular Logo" />
-        <figcaption class="about-text">Angular</figcaption>
-      </figure>
+      <div *ngIf="recipeIndex === 1" class="about-text">
+        Bringing recipes from idea to table for
+        <span
+          [countUp]="diff.years"
+          [options]="{ duration: 2, enableScrollSpy: true, scrollSpyDelay: 0 }"
+        >
+          0
+        </span>
+        years,
+        <span
+          [countUp]="diff.months"
+          [options]="{ duration: 2, enableScrollSpy: true, scrollSpyDelay: 1000 }"
+        >
+          0
+        </span>
+        months, and
+        <span
+          [countUp]="diff.days"
+          [options]="{ duration: 2, enableScrollSpy: true, scrollSpyDelay: 2000 }"
+        >
+          0
+        </span>
+        days.
+      </div>
+
+      <div *ngIf="recipeIndex === 2" class="about-text">
+        Discover one of the
+        <span
+          [countUp]="recipeTotal"
+          [options]="{ duration: 2, enableScrollSpy: true, scrollSpyDelay: 3000 }"
+        >
+          0
+        </span>
+        delicious recipes by our
+        <span
+          [countUp]="authorTotal"
+          [options]="{ duration: 2, enableScrollSpy: true, scrollSpyDelay: 4000 }"
+        >
+          0
+        </span>
+        incredible authors.
+      </div>
     </div>
-    <div class="center">
-      <figure>
-        <img class="logo" src="../../assets/Firebase_Logo_Logomark.png" alt="Firebase Logo" />
-        <figcaption class="about-text">Firebase</figcaption>
-      </figure>
-    </div>
+
+    <a
+      class="image-link"
+      [routerLink]="['/recipe/detail/', recipe?.id]"
+      *ngIf="recipeIndex % 2 === 1"
+    >
+      <img mat-card-image *ngIf="recipe?.image" [src]="recipe.image" alt="" loading="lazy" />
+    </a>
   </div>
 </div>

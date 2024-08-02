@@ -28,7 +28,8 @@ $light-mat-theme: mat.define-light-theme(
   --header: linear-gradient(-45deg, #373ba6, #212463);
   --footer: linear-gradient(45deg, #373ba6, #212463);
   --modal: linear-gradient(180deg, #ffffff, #f5f5f5);
-  --highlight: #373ba6;
+  --highlight: linear-gradient(120deg, #373ba6, #212463);
+  --highlight-inverse: linear-gradient(-45deg, #373ba6, #212463);
   --page: #f5f5f5;
   --block: #ffffff;
   --text: #111111;
@@ -57,7 +58,8 @@ $dark-mat-theme: mat.define-dark-theme(
   --header: linear-gradient(60deg, #029ef5 -10%, #473873 90%);
   --footer: linear-gradient(-60deg, #029ef5 -10%, #473873 90%);
   --modal: linear-gradient(180deg, #373ba6, #212463);
-  --highlight: #029ef5;
+  --highlight: linear-gradient(120deg, #029ef5 -80%, #473873 80%);
+  --highlight-inverse: linear-gradient(-45deg, #029ef5 -80%, #473873 80%);
   --page: #252525;
   --block: #3d3d3d;
   --text: #dddddd;
