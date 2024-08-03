@@ -34,12 +34,12 @@ a:hover {
   box-shadow: none !important;
 }
 .nav-button:first-child {
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
 }
 .nav-button:last-child {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
 }
 .nav-button.selected {
   background-image: linear-gradient(rgba(0, 0, 0, 0.3) 0 0);
