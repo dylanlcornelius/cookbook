@@ -53,6 +53,7 @@ dd {
   margin: 0 -16px;
   max-width: 750px;
   aspect-ratio: 1/1;
+  box-shadow: var(--shadow);
 }
 .calories {
   display: flex;
@@ -100,6 +101,11 @@ dd {
 .right-buttons {
   display: flex;
   gap: 15px;
+}
+@media screen and (min-width: 768px) {
+  .container {
+    margin-top: 1rem;
+  }
 }
 @media screen and (max-width: 767px) {
   .detail-card {
