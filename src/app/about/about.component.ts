@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { ImageService } from '@imageService';
+import { Recipe } from '@recipe';
+import { RecipeService } from '@recipeService';
+import { UserService } from '@userService';
 import { combineLatest, first } from 'rxjs';
-import { RecipeService } from '../recipe/shared/recipe.service';
-import { Recipe } from '../recipe/shared/recipe.model';
-import { ImageService } from '../util/image.service';
+import { fadeInAnimation } from 'src/app/theme/animations';
 import timediff from 'timediff';
-import { fadeInAnimation } from '../theme/animations';
-import { UserService } from '../user/shared/user.service';
 
 @Component({
   selector: 'app-about',
