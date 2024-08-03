@@ -40,6 +40,9 @@
 .table-container .mat-cell:last-of-type {
   text-align: end;
 }
+.reject-button {
+  margin-right: 10px;
+}
 @media screen and (max-width: 767px) {
   .mat-cell {
     width: 100%;

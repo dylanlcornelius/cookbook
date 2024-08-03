@@ -71,22 +71,10 @@
 </div>
 
 <div class="button-row">
-  <button
-    mat-raised-button
-    matTooltip="Revert All Changes"
-    color="warn"
-    (click)="context.revert()"
-    style="width: 100px"
-  >
+  <button mat-raised-button matTooltip="Revert All Changes" color="warn" (click)="context.revert()">
     Revert
   </button>
-  <button
-    mat-raised-button
-    matTooltip="Save All Changes"
-    color="primary"
-    (click)="context.save()"
-    style="width: 100px"
-  >
+  <button mat-raised-button matTooltip="Save All Changes" color="primary" (click)="context.save()">
     Save
   </button>
 </div>

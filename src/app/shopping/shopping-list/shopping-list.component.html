@@ -90,20 +90,14 @@
   <div class="short-container button-row" *ngIf="displayIngredients">
     <app-tutorial-button />
 
-    <button
-      mat-button
-      matTooltip="Remove All Items"
-      color="primary"
-      style="float: right"
-      (click)="addAllToPantry()"
-    >
+    <button mat-button matTooltip="Remove All Items" color="primary" (click)="addAllToPantry()">
       <mat-icon>playlist_add_check</mat-icon>
     </button>
   </div>
 </div>
 
-<div class="text-center" *ngIf="!loading && !displayIngredients">
-  <br />
+<div class="text-center empty-block" *ngIf="!loading && !displayIngredients">
   <h4 [hidden]="isCompleted">Your shopping list is empty</h4>
   <h4 [hidden]="!isCompleted">Your shopping list is completed!</h4>
+  <app-tutorial-button />
 </div>

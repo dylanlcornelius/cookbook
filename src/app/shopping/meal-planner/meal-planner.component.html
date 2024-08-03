@@ -21,47 +21,40 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-
-    <app-tutorial-button />
   </form>
 
   <div class="short-container">
-    <div class="table-container mat-elevation-z8" *ngIf="mealPlan?.recipes.length > 0">
-      <mat-table #table [dataSource]="mealPlan.recipes">
-        <ng-container matColumnDef="name">
-          <mat-cell *matCellDef="let element">
-            {{ element.name }}
-          </mat-cell>
-        </ng-container>
+    <div class="table-container mat-elevation-z8 box" *ngIf="mealPlan?.recipes.length > 0">
+      <div class="table-row" *ngFor="let recipe of mealPlan.recipes">
+        <a class="table-cell plain-link recipe-text" [routerLink]="['/recipe/detail/', recipe.id]">
+          {{ recipe.name }}
+        </a>
 
-        <ng-container matColumnDef="actions">
-          <mat-cell *matCellDef="let element; let i = index">
-            <button mat-button matTooltip="Remove Recipe" (click)="removeRecipe(i)">
-              <mat-icon>close</mat-icon>
-            </button>
+        <span class="action-buttons">
+          <button mat-button matTooltip="Remove Recipe" (click)="removeRecipe(recipe.id)">
+            <mat-icon>close</mat-icon>
+          </button>
 
-            <button
-              mat-raised-button
-              matTooltip="Add Ingredients"
-              color="primary"
-              (click)="addIngredients(i)"
-            >
-              <mat-icon>add</mat-icon>
-            </button>
-          </mat-cell>
-        </ng-container>
-
-        <mat-row *matRowDef="let row; columns: ['name', 'actions']"></mat-row>
-      </mat-table>
+          <button
+            mat-raised-button
+            matTooltip="Add Ingredients"
+            color="primary"
+            (click)="addIngredients(recipe.id)"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </span>
+      </div>
     </div>
   </div>
 
   <div class="short-container button-row" *ngIf="mealPlan?.recipes.length > 0">
+    <app-tutorial-button />
+
     <button
-      mat-raised-button
+      mat-button
       matTooltip="Add Ingredients to Shopping List"
       color="primary"
-      style="float: right"
       (click)="addAllIngredients(false, true)"
     >
       <mat-icon>playlist_add</mat-icon>
@@ -69,12 +62,12 @@
   </div>
 </div>
 
-<div class="text-center" *ngIf="!loading && mealPlan?.recipes.length === 0">
-  <br />
+<div class="text-center empty-block" *ngIf="!loading && mealPlan?.recipes.length === 0">
   <h4>Your meal plan doesn't have any recipes</h4>
+  <app-tutorial-button />
 </div>
 
-<div class="text-center" *ngIf="!loading && !mealPlan">
-  <br />
+<div class="text-center empty-block" *ngIf="!loading && !mealPlan">
   <h4>You have no meal plans</h4>
+  <app-tutorial-button />
 </div>

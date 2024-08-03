@@ -124,12 +124,14 @@ describe('MealPlannerComponent', () => {
 
   describe('removeRecipe', () => {
     it('should remove a recipe', () => {
-      component.mealPlan = new MealPlan({ recipes: [new Recipe({}), new Recipe({})] });
+      component.mealPlan = new MealPlan({
+        recipes: [new Recipe({ id: 'recipe' }), new Recipe({})],
+      });
 
       spyOn(mealPlanService, 'formattedUpdate');
       spyOn(notificationService, 'setModal');
 
-      component.removeRecipe(1);
+      component.removeRecipe('recipe');
 
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
       expect(notificationService.setModal).toHaveBeenCalled();
@@ -140,13 +142,15 @@ describe('MealPlannerComponent', () => {
   describe('addIngredients', () => {
     it('should add recipe ingredients', () => {
       component.user = new User({});
-      component.mealPlan = new MealPlan({ recipes: [new Recipe({}), new Recipe({})] });
+      component.mealPlan = new MealPlan({
+        recipes: [new Recipe({ id: 'recipe' }), new Recipe({})],
+      });
 
       spyOn(mealPlanService, 'formattedUpdate');
       const spy = jasmine.createSpy('addIngredients');
       recipeIngredientService.addIngredients = spy;
 
-      component.addIngredients(1);
+      component.addIngredients('recipe');
       spy.calls.mostRecent().args[6](true);
 
       expect(spy).toHaveBeenCalled();
@@ -161,7 +165,7 @@ describe('MealPlannerComponent', () => {
       const spy = jasmine.createSpy('addIngredients');
       recipeIngredientService.addIngredients = spy;
 
-      component.addIngredients(1);
+      component.addIngredients('recipe');
       // testing a local callback
       spy.calls.mostRecent().args[6]();
 

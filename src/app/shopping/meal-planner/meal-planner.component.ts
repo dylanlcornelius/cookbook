@@ -128,18 +128,18 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     this.recipeControl.reset();
   }
 
-  removeRecipe(index: number): void {
-    this.mealPlan.recipes = this.mealPlan.recipes.filter((_x, i) => i !== index);
+  removeRecipe(recipeId: string): void {
+    this.mealPlan.recipes = this.mealPlan.recipes.filter(({ id }) => id !== recipeId);
 
     this.mealPlanService.formattedUpdate(this.mealPlan.recipes, this.householdId, this.mealPlan.id);
     this.notificationService.setModal(new SuccessNotification('Recipe removed!'));
   }
 
-  addIngredients(index: number): void {
-    const recipe = this.mealPlan.recipes.find((_x, i) => i === index);
+  addIngredients(recipeId: string): void {
+    const recipe = this.mealPlan.recipes.find(({ id }) => id === recipeId);
     const callback = (success: boolean) => {
       if (success) {
-        this.mealPlan.recipes = this.mealPlan.recipes.filter((_x, i) => i !== index);
+        this.mealPlan.recipes = this.mealPlan.recipes.filter(({ id }) => id !== recipeId);
         this.mealPlanService.formattedUpdate(
           this.mealPlan.recipes,
           this.householdId,
