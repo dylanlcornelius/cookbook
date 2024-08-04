@@ -18,7 +18,13 @@ export const fadeComponentAnimation = trigger('fadeComponentAnimation', [
 ]);
 
 export const fadeInAnimation = trigger('fadeInAnimation', [
-  transition(':enter', [style({ opacity: 0 }), animate('1s', style({ opacity: 1 }))]),
+  transition(
+    ':enter',
+    [style({ opacity: 0 }), animate('{{duration}}ms {{delay}}ms', style({ opacity: 1 }))],
+    {
+      params: { duration: '1000', delay: '0' },
+    }
+  ),
 ]);
 
 export const fadeInFastAnimation = trigger('fadeInFastAnimation', [

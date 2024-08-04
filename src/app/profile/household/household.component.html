@@ -5,12 +5,8 @@
 
 <div *ngIf="!loading">
   <div class="button-row">
-    <button mat-button color="primary" style="float: right" (click)="createHousehold()">
-      Create Household
-    </button>
-    <button mat-button color="primary" style="float: right" (click)="sendInvite()">
-      Send Invite
-    </button>
+    <button mat-button color="primary" (click)="createHousehold()">Create Household</button>
+    <button mat-button color="primary" (click)="sendInvite()">Send Invite</button>
   </div>
 
   <div *ngIf="household">
@@ -76,11 +72,11 @@
         <ng-container matColumnDef="status">
           <mat-cell *matCellDef="let element">
             <button
+              class="reject-button"
               mat-raised-button
               matTooltip="Reject Invite"
               color="warn"
               (click)="rejectInvite(element)"
-              style="margin-right: 5px"
             >
               <mat-icon>close</mat-icon>
             </button>

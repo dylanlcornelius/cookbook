@@ -12,10 +12,7 @@ export class LoginComponent {
   redirect: string;
   isLoggedIn: Observable<boolean>;
 
-  constructor(
-    private authService: AuthService,
-    private currentUserService: CurrentUserService
-  ) {
+  constructor(private authService: AuthService, private currentUserService: CurrentUserService) {
     this.redirect = this.authService.redirectUrl;
     this.isLoggedIn = this.currentUserService.getIsLoggedIn();
   }

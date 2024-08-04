@@ -50,8 +50,6 @@
       </span>
     </div>
 
-    <div style="clear: both"></div>
-
     <div class="desktop" *ngIf="(isLoggedIn | async) && !user?.isPending" [@fadeInAnimation]>
       <a
         *ngFor="let nav of desktopNavs"

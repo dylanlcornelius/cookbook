@@ -1,15 +1,22 @@
 <app-loading-modal *ngIf="redirect && (isLoggedIn | async)"></app-loading-modal>
 
-<div *ngIf="!(redirect && (isLoggedIn | async))">
-  <h2>Welcome to the Cookbook</h2>
+<div class="image-container">
+  <img src="../../../assets/background.jpg" loading="lazy" />
+</div>
+
+<div class="container" *ngIf="!(redirect && (isLoggedIn | async))">
+  <div class="about-block">
+    <h2>Welcome to the Cookbook</h2>
+    <p>
+      Discover, save, and share your favorite recipes effortlessly with the Cookbook, designed to
+      make meal planning and cooking enjoyable and organized.
+    </p>
+  </div>
 
   <div class="login-options">
-    <div (click)="signIn()" class="google-button">
-      <img
-        draggable="false"
-        src="../../../assets/btn_google_signin_light_normal_web.png"
-        alt="Google Login"
-      />
+    <h4>Sign in</h4>
+    <div (click)="signIn()">
+      <app-google-sign-in />
     </div>
   </div>
 </div>

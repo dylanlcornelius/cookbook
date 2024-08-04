@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ProfileComponent } from 'src/app/profile/profile/profile.component';
 import { ProfileListComponent } from './profile-list/profile-list.component';
+import { AdminGuard } from '../admin/shared/admin.guard';
 
 const routes: Routes = [
   {
@@ -29,7 +30,12 @@ const routes: Routes = [
     component: ProfileComponent,
     data: { selectedTabIndex: 2 },
   },
-  { path: 'list', title: 'Profile List', component: ProfileListComponent },
+  {
+    path: 'list',
+    title: 'Profile List',
+    component: ProfileListComponent,
+    canActivate: [AdminGuard],
+  },
 ];
 
 @NgModule({

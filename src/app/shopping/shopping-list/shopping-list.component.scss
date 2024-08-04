@@ -13,7 +13,7 @@
 }
 .table-container {
   margin-bottom: 20px;
-  border-radius: 4px;
+  border-radius: var(--radius);
 }
 .table-row {
   display: flex;
@@ -39,6 +39,17 @@
   flex-direction: row;
   align-items: center;
   gap: 5px;
+}
+.empty-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+
+  h4 {
+    margin: 0;
+  }
 }
 
 @media screen and (max-width: 767px) {

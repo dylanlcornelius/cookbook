@@ -21,6 +21,7 @@ import { FirebaseService } from '@firebaseService';
 
 import { environment } from '../environments/environment';
 import { FeedbackComponent } from './footer/feedback/feedback.component';
+import { GoogleSignInComponent } from './user/google-sign-in/google-sign-in.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { FeedbackComponent } from './footer/feedback/feedback.component';
     UserPendingComponent,
     NewUserComponent,
     FeedbackComponent,
+    GoogleSignInComponent,
   ],
   imports: [
     BrowserModule,

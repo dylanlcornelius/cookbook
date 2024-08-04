@@ -199,7 +199,6 @@
             [cdkDropListData]="addedIngredients"
             [cdkDropListConnectedTo]="[availableList]"
             (cdkDropListDropped)="dropAdded($event)"
-            style="margin-bottom: 20px"
           >
             <div
               class="container box"
@@ -295,7 +294,7 @@
             <app-ingredient-quick-create></app-ingredient-quick-create>
           </div>
 
-          <mat-form-field style="width: 100%">
+          <mat-form-field>
             <input matInput (keyup)="applyIngredientFilter($event.target.value)" />
             <mat-placeholder>
               <mat-icon>search</mat-icon>
