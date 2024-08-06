@@ -338,6 +338,23 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     control.removeAt(i);
   }
 
+  moveControlInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
+    const dir = toIndex > fromIndex ? 1 : -1;
+    const from = fromIndex;
+    const to = toIndex;
+
+    const temp = formArray.at(from);
+    for (let i = from; i * dir < to * dir; i = i + dir) {
+      const current = formArray.at(i + dir);
+      formArray.setControl(i, current);
+    }
+    formArray.setControl(to, temp);
+  }
+
+  drop(event: any): void {
+    this.moveControlInFormArray(event.container.data, event.previousIndex, event.currentIndex);
+  }
+
   moveItem(data: any[], previous: number, current: number): void {
     moveItemInArray(data, previous, current);
   }
