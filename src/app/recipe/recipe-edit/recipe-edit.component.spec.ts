@@ -472,7 +472,7 @@ describe('RecipeEditComponent', () => {
 
       component.drop(event);
 
-      expect(component.moveControlInFormArray).toHaveBeenCalled;
+      expect(component.moveControlInFormArray).toHaveBeenCalled();
     });
   });
 

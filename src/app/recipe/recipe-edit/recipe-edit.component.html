@@ -176,7 +176,7 @@
             <mat-form-field>
               <textarea
                 matInput
-                placeholder="Step: {{ i + 1 }}"
+                placeholder="Step {{ i + 1 }}"
                 rows="3"
                 formControlName="step"
               ></textarea>
@@ -369,7 +369,7 @@
       </mat-step>
 
       <mat-step [editable]="true">
-        <ng-template matStepLabel>Steps</ng-template>
+        <ng-template matStepLabel>Directions</ng-template>
 
         <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
 
