@@ -52,12 +52,11 @@
             <span *ngIf="recipe.status === 'private'">Private</span>
           </button>
           <div *ngIf="!hasAuthorPermission"></div>
+          <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
           <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
             Add to Plan
           </button>
-          <button mat-button color="primary" *ngIf="!user.hasPlanner" (click)="addIngredients()">
-            Add to List
-          </button>
+          <div *ngIf="!user.hasPlanner"></div>
         </mat-card-actions>
       </mat-card-subtitle>
     </mat-card-header>

@@ -101,7 +101,7 @@
       class="recipe-card mat-elevation-z8"
       [ngClass]="recipe.image ? 'has-image' : 'no-image'"
       (click)="openRecipeDetail(recipe)"
-      [@fadeInAnimation]="{ value: ':enter', params: { duration: 300, delay: recipeIndex * 100 } }"
+      [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 300 } }"
     >
       <mat-card-header>
         <mat-card-title>{{ recipe.name }}</mat-card-title>
@@ -129,17 +129,11 @@
           <span *ngIf="recipe.status === 'private'">Private</span>
         </button>
         <div *ngIf="!recipe.hasAuthorPermission"></div>
+        <button mat-button color="primary" (click)="addIngredients(recipe.id)">Add to List</button>
         <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe(recipe)">
           Add to Plan
         </button>
-        <button
-          mat-button
-          color="primary"
-          *ngIf="!user.hasPlanner"
-          (click)="addIngredients(recipe.id)"
-        >
-          Add to List
-        </button>
+        <div *ngIf="!user.hasPlanner"></div>
       </mat-card-actions>
 
       <app-category-chips class="categories" [recipe]="recipe" />
