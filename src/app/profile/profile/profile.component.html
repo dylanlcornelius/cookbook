@@ -97,6 +97,29 @@
                 ></mat-slide-toggle>
               </div>
 
+              <div class="button-row">
+                <span
+                  *ngIf="!userForm.get('hasPlanner').value"
+                  class="theme-icon"
+                  matTooltip="Meal Planner Disabled"
+                >
+                  <mat-icon>event_busy</mat-icon>
+                </span>
+                <span
+                  *ngIf="userForm.get('hasPlanner').value"
+                  class="theme-icon"
+                  matTooltip="Meal Planner Enabled"
+                >
+                  <mat-icon>event_available</mat-icon>
+                </span>
+                <mat-slide-toggle
+                  matInput
+                  formControlName="hasPlanner"
+                  ngDefaultControl
+                  [checked]="userForm.get('hasPlanner').value"
+                ></mat-slide-toggle>
+              </div>
+
               <div *ngIf="user.isAdmin" class="button-row">
                 <span
                   *ngIf="!userForm.get('hasAdminView').value"

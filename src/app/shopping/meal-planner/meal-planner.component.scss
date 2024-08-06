@@ -40,6 +40,10 @@
   align-items: center;
   gap: 5px;
 }
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
 .empty-block {
   display: flex;
   justify-content: center;

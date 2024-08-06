@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageService } from '@imageService';
-import { Recipe } from '@recipe';
+import { Recipe, RECIPE_STATUS } from '@recipe';
 import { RecipeService } from '@recipeService';
 import { UserService } from '@userService';
 import { combineLatest, first } from 'rxjs';
@@ -41,7 +41,7 @@ export class AboutComponent implements OnInit {
       .pipe(first())
       .subscribe(([recipes, users]) => {
         const imageRecipes = recipes
-          ?.filter(({ hasImage }) => !!hasImage)
+          ?.filter(({ hasImage, status }) => !!hasImage && status !== RECIPE_STATUS.BLUEPRINT)
           .map(recipe => {
             this.imageService.download(recipe).then(
               url => {
@@ -60,7 +60,9 @@ export class AboutComponent implements OnInit {
           imageRecipes.splice(random, 1);
         }
 
-        this.recipeTotal = recipes.length;
+        this.recipeTotal = recipes.filter(
+          ({ status }) => status !== RECIPE_STATUS.BLUEPRINT
+        ).length;
         this.authorTotal = users.length;
       });
   }

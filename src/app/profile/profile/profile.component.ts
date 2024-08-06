@@ -115,6 +115,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               role: [this.user.role],
               theme: [this.user.theme],
               hasImage: [this.user.hasImage],
+              hasPlanner: [this.user.hasPlanner],
               hasAdminView: [this.user.hasAdminView],
               id: [this.user.id],
             });
@@ -234,7 +235,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     const form = this.userForm.value;
     form.creationDate = this.user.creationDate;
-    form.hasPlanner = this.user.hasPlanner;
     const user = new User(form);
 
     this.userService.update(user.getObject(), user.getId());
