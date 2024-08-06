@@ -157,9 +157,22 @@
     </ng-template>
 
     <ng-template #stepsStep>
-      <div formArrayName="steps" id="recipe-steps-div">
-        <div *ngFor="let step of recipesForm.get('steps')['controls']; let i = index">
+      <div
+        formArrayName="steps"
+        id="recipe-steps-div"
+        cdkDropList
+        [cdkDropListData]="recipesForm.get('steps')"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div
+          class="container step-box"
+          *ngFor="let step of recipesForm.get('steps')['controls']; let i = index"
+          cdkDrag
+          [cdkDragData]="step"
+          cdkDragBoundary="#recipe-steps-div"
+        >
           <div class="center steps" [formGroupName]="i">
+            <mat-icon class="box-icon" cdkDragHandle>drag_indicator</mat-icon>
             <mat-form-field>
               <textarea
                 matInput

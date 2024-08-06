@@ -439,6 +439,43 @@ describe('RecipeEditComponent', () => {
     });
   });
 
+  describe('moveControlInFormArray', () => {
+    it('should move a form control down', () => {
+      component.recipesForm = new FormBuilder().group({
+        steps: new FormBuilder().array(['step-1', 'step-2']),
+      });
+
+      component.moveControlInFormArray(component.recipesForm.get('steps') as FormArray, 0, 1);
+
+      expect(component.recipesForm.get('steps')['controls'][0].value).toEqual('step-2');
+      expect(component.recipesForm.get('steps')['controls'][1].value).toEqual('step-1');
+    });
+
+    it('should move a form control up', () => {
+      component.recipesForm = new FormBuilder().group({
+        steps: new FormBuilder().array(['step-1', 'step-2']),
+      });
+
+      component.moveControlInFormArray(component.recipesForm.get('steps') as FormArray, 1, 0);
+
+      expect(component.recipesForm.get('steps')['controls'][0].value).toEqual('step-2');
+      expect(component.recipesForm.get('steps')['controls'][1].value).toEqual('step-1');
+    });
+  });
+
+  describe('drop', () => {
+    it('should reorder a form control', () => {
+      const container = { data: ['id'] };
+      const event = { previousContainer: container, container: container, item: {} };
+
+      spyOn(component, 'moveControlInFormArray');
+
+      component.drop(event);
+
+      expect(component.moveControlInFormArray).toHaveBeenCalled;
+    });
+  });
+
   describe('moveItem', () => {
     it('should call moveItemInArray', () => {
       const list = [];
@@ -472,7 +509,7 @@ describe('RecipeEditComponent', () => {
 
       expect(component.removeIngredient).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
-      expect(component.moveItem);
+      expect(component.moveItem).toHaveBeenCalled();
     });
 
     it('should move an item', () => {
@@ -487,7 +524,7 @@ describe('RecipeEditComponent', () => {
 
       expect(component.removeIngredient).not.toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
-      expect(component.transferItem);
+      expect(component.transferItem).toHaveBeenCalled();
     });
   });
 
@@ -502,7 +539,7 @@ describe('RecipeEditComponent', () => {
       component.dropAvailable(event);
 
       expect(component.removeIngredient).not.toHaveBeenCalled();
-      expect(component.moveItem);
+      expect(component.moveItem).toHaveBeenCalled();
     });
 
     it('should move an item', () => {
@@ -515,7 +552,7 @@ describe('RecipeEditComponent', () => {
       component.dropAvailable(event);
 
       expect(component.removeIngredient).toHaveBeenCalled();
-      expect(component.transferItem);
+      expect(component.transferItem).toHaveBeenCalled();
     });
   });
 
