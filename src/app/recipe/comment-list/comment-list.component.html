@@ -4,7 +4,13 @@
     [ngTemplateOutletContext]="{ comment: comment }"
   ></ng-template>
 
-  <div *ngIf="!comment.isResolved || (comment.isResolved && comment.showResolved)">
+  <div
+    class="collapsible"
+    [ngStyle]="{
+      'max-height':
+        !comment.isResolved || (comment.isResolved && comment.showResolved) ? '1000px' : '0'
+    }"
+  >
     <div *ngFor="let childComment of childCommentsByParentId[comment.id]">
       <ng-template
         [ngTemplateOutlet]="existingComment"
@@ -25,21 +31,30 @@
 
 <ng-template #existingComment let-comment="comment">
   <div class="mat-card comment" [ngClass]="{ 'sub-comment': comment.parent }">
-    <span>{{ comment.authorName }}</span>
-    <span class="date">{{ comment.date }}</span>
+    <div class="comment-description">
+      <span>
+        <span>{{ comment.authorName }}</span>
+        <span class="date">{{ comment.date }}</span>
+      </span>
 
-    <button
-      mat-button
-      [matTooltip]="comment.showResolved ? 'Collapse Comment' : 'Expand Comment'"
-      class="resolved"
-      (click)="toggleResolved(comment)"
-      *ngIf="comment.isResolved"
+      <button
+        mat-button
+        [matTooltip]="comment.showResolved ? 'Collapse Comment' : 'Expand Comment'"
+        (click)="toggleResolved(comment)"
+        *ngIf="comment.isResolved"
+      >
+        <mat-icon *ngIf="!comment.showResolved">expand</mat-icon>
+        <mat-icon *ngIf="comment.showResolved">compress</mat-icon>
+      </button>
+    </div>
+
+    <div
+      class="text collapsible"
+      [ngStyle]="{
+        'max-height':
+          !comment.isResolved || (comment.isResolved && comment.showResolved) ? '1000px' : '0'
+      }"
     >
-      <mat-icon *ngIf="!comment.showResolved">expand</mat-icon>
-      <mat-icon *ngIf="comment.showResolved">compress</mat-icon>
-    </button>
-
-    <div class="text" *ngIf="!comment.isResolved || (comment.isResolved && comment.showResolved)">
       <span *ngIf="!comment.isEditing">{{ comment.text }}</span>
       <form *ngIf="comment.isEditing">
         <mat-form-field appearance="outline">

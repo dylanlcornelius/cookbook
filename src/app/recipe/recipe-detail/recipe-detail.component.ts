@@ -306,6 +306,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   };
 
+  toggleStep(step: Recipe['steps'][0]): void {
+    step.isSelected = !step.isSelected;
+  }
+
   openRecipeEditor(): void {
     this.recipeService
       .getForm()

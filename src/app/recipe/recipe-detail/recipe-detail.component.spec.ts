@@ -462,6 +462,16 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
+  describe('toggleStep', () => {
+    it('should toggle the selection for a recipe step', () => {
+      const recipe = new Recipe({ steps: [{ step: 'Step 1' }] });
+
+      component.toggleStep(recipe.steps[0]);
+
+      expect(recipe.steps[0].isSelected).toBeTrue();
+    });
+  });
+
   describe('openRecipeEditor', () => {
     it('should open a validation modal', () => {
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));

@@ -1,20 +1,25 @@
 .mat-form-field {
   width: 100%;
 }
+.collapsible {
+  transition: max-height 500ms ease-in-out;
+  overflow: hidden;
+}
 .comment {
   margin-bottom: 10px;
   padding: 8px 16px;
 
+  .comment-description {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 36px;
+  }
   .date {
     filter: brightness(50%);
     margin-left: 10px;
   }
-  .resolved {
-    float: right;
-    line-height: 20px;
-  }
   .text {
-    padding-top: 5px;
     width: 100%;
     font-size: 14px;
   }

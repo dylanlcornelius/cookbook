@@ -472,7 +472,7 @@ describe('RecipeEditComponent', () => {
 
       component.drop(event);
 
-      expect(component.moveControlInFormArray).toHaveBeenCalled;
+      expect(component.moveControlInFormArray).toHaveBeenCalled();
     });
   });
 
@@ -827,6 +827,7 @@ describe('RecipeEditComponent', () => {
       });
       component.recipesForm = new FormBuilder().group({
         ingredients: new FormBuilder().array([new FormBuilder().group({ name: [] })]),
+        steps: new FormBuilder().array([new FormBuilder().group({ step: 'Step 1' })]),
       });
       component.id = 'id';
 
@@ -844,6 +845,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.update).toHaveBeenCalledWith(
         new Recipe({
           ingredients: [{}],
+          steps: [{ step: 'Step 1' }],
           uid: '',
           author: '3',
           hasImage: true,

@@ -45,19 +45,7 @@
         <img *ngIf="recipeImage" class="mobile" mat-card-image [src]="recipeImage" alt="" />
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="recipe-description">{{ recipe.description }}</span>
-        <mat-card-actions class="list-buttons">
-          <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
-            <span *ngIf="recipe.status !== 'private'">Published</span>
-            <span *ngIf="recipe.status === 'private'">Private</span>
-          </button>
-          <div *ngIf="!hasAuthorPermission"></div>
-          <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
-          <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
-            Add to Plan
-          </button>
-          <div *ngIf="!user.hasPlanner"></div>
-        </mat-card-actions>
+        <div class="recipe-description">{{ recipe.description }}</div>
       </mat-card-subtitle>
     </mat-card-header>
 
@@ -66,75 +54,60 @@
         <img mat-card-image [src]="recipeImage" alt="" />
       </mat-card-content>
 
-      <mat-card-content class="center-text">
-        <dl>
-          <span *ngIf="recipe.time">
-            <dt>Preparation Time</dt>
-            <dd>{{ recipe.time }}</dd>
-          </span>
+      <mat-card-content>
+        <div class="info-container mobile-center-text">
+          <div *ngIf="recipe.time">{{ recipe.time }} prep</div>
 
-          <span *ngIf="recipe.servings">
-            <dt>Servings</dt>
-            <dd>{{ recipe.servings }}</dd>
-          </span>
+          <div *ngIf="recipe.servings">{{ recipe.servings }} servings</div>
 
-          <dt>Calories</dt>
-          <dd class="calories">
-            <span *ngIf="recipe.calories">{{ recipe.calories | number : '1.0-0' }}</span>
+          <div class="calories">
+            {{ recipe.calories | number : '1.0-0' }} calories
             <mat-icon
               matTooltip="Calories are per serving and based on non-optional ingredients. Requirements for calculation are: recipe servings and ingredients with calories"
             >
               info_i
             </mat-icon>
-          </dd>
-
-          <span *ngIf="shouldDisplayCategories()">
-            <dt>Categories</dt>
-            <dd>
-              <app-category-chips class="center" [recipe]="recipe" />
-            </dd>
-          </span>
-
-          <dt>Times Cooked</dt>
-          <dd>
-            <button
-              mat-button
-              matTooltip="Edit Times Cooked"
-              color="primary"
-              (click)="updateTimesCooked(recipe)"
-            >
-              {{ timesCooked }}
-            </button>
-          </dd>
-
-          <span *ngIf="lastDateCooked">
-            <dt>Last Date Cooked</dt>
-            <dd>{{ lastDateCooked }}</dd>
-          </span>
-
-          <span *ngIf="creationDate">
-            <dt>Created Date</dt>
-            <dd>{{ creationDate }}</dd>
-          </span>
-        </dl>
-      </mat-card-content>
-
-      <mat-card-content class="center-text" *ngIf="recipe.steps && recipe.steps.length">
-        <dl>
-          <dt>Directions</dt>
-
-          <div *ngFor="let step of recipe.steps; let i = index">
-            <span class="step-header">Step: {{ i + 1 }}</span>
-            <dd>{{ step.step }}</dd>
           </div>
-        </dl>
+
+          <button
+            mat-button
+            matTooltip="Edit Times Cooked"
+            color="primary"
+            class="times-cooked-button"
+            (click)="updateTimesCooked(recipe)"
+          >
+            {{ timesCooked }} times cooked
+          </button>
+
+          <div *ngIf="lastDateCooked">Last cooked on {{ lastDateCooked }}</div>
+
+          <div *ngIf="creationDate">Created on {{ creationDate }}</div>
+
+          <div class="categories-container" *ngIf="shouldDisplayCategories()">
+            <app-category-chips [recipe]="recipe" />
+          </div>
+
+          <div class="list-buttons">
+            <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
+              <span *ngIf="recipe.status !== 'private'">Published</span>
+              <span *ngIf="recipe.status === 'private'">Private</span>
+            </button>
+            <div *ngIf="!hasAuthorPermission"></div>
+            <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
+            <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
+              Add to Plan
+            </button>
+            <div *ngIf="!user.hasPlanner"></div>
+          </div>
+        </div>
       </mat-card-content>
 
-      <mat-card-content class="center-text" *ngIf="recipe.ingredients && recipe.ingredients.length">
-        <dl *ngIf="(recipe.ingredients | filterOptional : false)?.length !== 0">
-          <dt>Ingredients</dt>
-
-          <app-recipe-multiplier [recipeId]="recipe.id" [defaultServings]="recipe.servings" />
+      <mat-card-content
+        class="ingredients-container mobile-center-text"
+        *ngIf="recipe.ingredients && recipe.ingredients.length"
+      >
+        <div *ngIf="(recipe.ingredients | filterOptional : false)?.length !== 0">
+          <h5>Ingredients</h5>
 
           <div class="list">
             <div
@@ -142,31 +115,34 @@
               *ngFor="let recipeIngredient of recipe.ingredients | filterOptional : false"
             >
               <a
-                class="author-link"
+                class="ingredient-link"
                 [routerLink]="['/recipe/detail/', recipeIngredient.id]"
                 *ngIf="recipeIngredient.uom === 'recipe'"
                 matTooltip="Navigate to This Recipe"
               >
-                <span>{{ recipeIngredient.quantity }} - {{ recipeIngredient.name }}</span>
+                <span>
+                  {{ getQuantity(recipe.id, recipe.servings, recipeIngredient.quantity) }}
+                  {{ recipeIngredient.name }}
+                </span>
                 <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
               </a>
 
               <a
-                class="author-link"
+                class="ingredient-link"
                 [routerLink]="['/ingredient/detail/', recipeIngredient.id]"
                 *ngIf="recipeIngredient.uom !== 'recipe'"
                 matTooltip="Navigate to This Ingredient"
               >
                 {{ getQuantity(recipe.id, recipe.servings, recipeIngredient.quantity) }}
-                {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
+                {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
                 {{ recipeIngredient.name }}
               </a>
             </div>
           </div>
-        </dl>
+        </div>
 
-        <dl *ngIf="(recipe.ingredients | filterOptional : true)?.length !== 0">
-          <dt>Optional Ingredients</dt>
+        <div *ngIf="(recipe.ingredients | filterOptional : true)?.length !== 0">
+          <h5>Optional Ingredients</h5>
 
           <div class="list">
             <div
@@ -174,28 +150,53 @@
               *ngFor="let recipeIngredient of recipe.ingredients | filterOptional : true"
             >
               <a
-                class="author-link"
+                class="ingredient-link"
                 [routerLink]="['/recipe/detail/', recipeIngredient.id]"
                 *ngIf="recipeIngredient.uom === 'recipe'"
               >
-                <span>{{ recipeIngredient.quantity }} - {{ recipeIngredient.name }}</span>
+                <span>
+                  {{ getQuantity(recipe.id, recipe.servings, recipeIngredient.quantity) }}
+                  {{ recipeIngredient.name }}
+                </span>
                 <mat-icon class="indicator" matTooltip="This is a recipe">r_mobiledata</mat-icon>
               </a>
 
               <a
-                class="author-link"
+                class="ingredient-link"
                 [routerLink]="['/ingredient/detail/', recipeIngredient.id]"
                 *ngIf="recipeIngredient.uom !== 'recipe'"
               >
-                {{ recipeIngredient.quantity }}
-                {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
+                {{ getQuantity(recipe.id, recipe.servings, recipeIngredient.quantity) }}
+                {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
                 {{ recipeIngredient.name }}
               </a>
             </div>
           </div>
-        </dl>
+        </div>
+
+        <app-recipe-multiplier
+          [recipeId]="recipe.id"
+          [defaultServings]="recipe.servings"
+          *ngIf="recipe.ingredients.length !== 0"
+        />
       </mat-card-content>
     </div>
+    <mat-card-content *ngIf="recipe.steps && recipe.steps.length">
+      <h5 class="mobile-center-text">Directions</h5>
+
+      <div class="directions">
+        <div class="step" *ngFor="let step of recipe.steps; let i = index">
+          <span
+            class="step-number"
+            [ngClass]="{ selected: step.isSelected }"
+            (click)="toggleStep(step)"
+          >
+            {{ i + 1 }}
+          </span>
+          <span class="step-description">{{ step.step }}</span>
+        </div>
+      </div>
+    </mat-card-content>
 
     <mat-card-actions class="action-buttons">
       <div class="between">
