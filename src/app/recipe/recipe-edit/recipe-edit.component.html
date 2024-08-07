@@ -369,6 +369,19 @@
       </mat-step>
 
       <mat-step [editable]="true">
+        <ng-template matStepLabel>Ingredients</ng-template>
+
+        <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
+
+        <div class="stepper-button-row">
+          <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
+          <button mat-button matStepperPrevious type="button">Back</button>
+          <button mat-button type="submit" name="New">Save &#38; New</button>
+          <button mat-button type="submit" name="Save">Save</button>
+        </div>
+      </mat-step>
+
+      <mat-step [editable]="true">
         <ng-template matStepLabel>Directions</ng-template>
 
         <ng-container *ngTemplateOutlet="stepsStep"></ng-container>
@@ -377,19 +390,6 @@
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperPrevious type="button">Back</button>
           <button mat-button matStepperNext type="button">Next</button>
-          <button mat-button type="submit" name="New">Save &#38; New</button>
-          <button mat-button type="submit" name="Save">Save</button>
-        </div>
-      </mat-step>
-
-      <mat-step [editable]="true">
-        <ng-template matStepLabel>Ingredients</ng-template>
-
-        <ng-container *ngTemplateOutlet="ingredientsStep"></ng-container>
-
-        <div class="stepper-button-row">
-          <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
-          <button mat-button matStepperPrevious type="button">Back</button>
           <button mat-button type="submit" name="New">Save &#38; New</button>
           <button mat-button type="submit" name="Save">Save</button>
         </div>
