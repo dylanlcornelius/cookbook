@@ -45,19 +45,7 @@
         <img *ngIf="recipeImage" class="mobile" mat-card-image [src]="recipeImage" alt="" />
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="recipe-description">{{ recipe.description }}</span>
-        <mat-card-actions class="list-buttons">
-          <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
-            <span *ngIf="recipe.status !== 'private'">Published</span>
-            <span *ngIf="recipe.status === 'private'">Private</span>
-          </button>
-          <div *ngIf="!hasAuthorPermission"></div>
-          <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
-          <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
-            Add to Plan
-          </button>
-          <div *ngIf="!user.hasPlanner"></div>
-        </mat-card-actions>
+        <div class="recipe-description">{{ recipe.description }}</div>
       </mat-card-subtitle>
     </mat-card-header>
 
@@ -66,62 +54,60 @@
         <img mat-card-image [src]="recipeImage" alt="" />
       </mat-card-content>
 
-      <mat-card-content class="center-text">
-        <dl>
-          <span *ngIf="recipe.time">
-            <dt>Preparation Time</dt>
-            <dd>{{ recipe.time }}</dd>
-          </span>
+      <mat-card-content>
+        <div class="info-container mobile-center-text">
+          <div *ngIf="recipe.time">{{ recipe.time }} prep</div>
 
-          <span *ngIf="recipe.servings">
-            <dt>Servings</dt>
-            <dd>{{ recipe.servings }}</dd>
-          </span>
+          <div *ngIf="recipe.servings">{{ recipe.servings }} servings</div>
 
-          <dt>Calories</dt>
-          <dd class="calories">
-            <span *ngIf="recipe.calories">{{ recipe.calories | number : '1.0-0' }}</span>
+          <div class="calories">
+            {{ recipe.calories | number : '1.0-0' }} calories
             <mat-icon
               matTooltip="Calories are per serving and based on non-optional ingredients. Requirements for calculation are: recipe servings and ingredients with calories"
             >
               info_i
             </mat-icon>
-          </dd>
+          </div>
 
-          <span *ngIf="shouldDisplayCategories()">
-            <dt>Categories</dt>
-            <dd>
-              <app-category-chips class="center" [recipe]="recipe" />
-            </dd>
-          </span>
+          <button
+            mat-button
+            matTooltip="Edit Times Cooked"
+            color="primary"
+            class="times-cooked-button"
+            (click)="updateTimesCooked(recipe)"
+          >
+            {{ timesCooked }} times cooked
+          </button>
 
-          <dt>Times Cooked</dt>
-          <dd>
-            <button
-              mat-button
-              matTooltip="Edit Times Cooked"
-              color="primary"
-              (click)="updateTimesCooked(recipe)"
-            >
-              {{ timesCooked }}
+          <div *ngIf="lastDateCooked">Last cooked on {{ lastDateCooked }}</div>
+
+          <div *ngIf="creationDate">Created on {{ creationDate }}</div>
+
+          <div class="categories-container" *ngIf="shouldDisplayCategories()">
+            <app-category-chips [recipe]="recipe" />
+          </div>
+
+          <div class="list-buttons">
+            <button mat-button color="accent" (click)="changeStatus()" *ngIf="hasAuthorPermission">
+              <span *ngIf="recipe.status !== 'private'">Published</span>
+              <span *ngIf="recipe.status === 'private'">Private</span>
             </button>
-          </dd>
-
-          <span *ngIf="lastDateCooked">
-            <dt>Last Date Cooked</dt>
-            <dd>{{ lastDateCooked }}</dd>
-          </span>
-
-          <span *ngIf="creationDate">
-            <dt>Created Date</dt>
-            <dd>{{ creationDate }}</dd>
-          </span>
-        </dl>
+            <div *ngIf="!hasAuthorPermission"></div>
+            <button mat-button color="primary" (click)="addIngredients()">Add to List</button>
+            <button mat-button color="primary" *ngIf="user.hasPlanner" (click)="addRecipe()">
+              Add to Plan
+            </button>
+            <div *ngIf="!user.hasPlanner"></div>
+          </div>
+        </div>
       </mat-card-content>
 
-      <mat-card-content class="center-text" *ngIf="recipe.ingredients && recipe.ingredients.length">
-        <dl *ngIf="(recipe.ingredients | filterOptional : false)?.length !== 0">
-          <dt>Ingredients</dt>
+      <mat-card-content
+        class="ingredients-container mobile-center-text"
+        *ngIf="recipe.ingredients && recipe.ingredients.length"
+      >
+        <div *ngIf="(recipe.ingredients | filterOptional : false)?.length !== 0">
+          <h5>Ingredients</h5>
 
           <div class="list">
             <div
@@ -153,10 +139,10 @@
               </a>
             </div>
           </div>
-        </dl>
+        </div>
 
-        <dl *ngIf="(recipe.ingredients | filterOptional : true)?.length !== 0">
-          <dt>Optional Ingredients</dt>
+        <div *ngIf="(recipe.ingredients | filterOptional : true)?.length !== 0">
+          <h5>Optional Ingredients</h5>
 
           <div class="list">
             <div
@@ -186,7 +172,7 @@
               </a>
             </div>
           </div>
-        </dl>
+        </div>
 
         <app-recipe-multiplier
           [recipeId]="recipe.id"
@@ -196,22 +182,20 @@
       </mat-card-content>
     </div>
     <mat-card-content *ngIf="recipe.steps && recipe.steps.length">
-      <dl>
-        <dt class="mobile-center-text">Directions</dt>
+      <h5 class="mobile-center-text">Directions</h5>
 
-        <div class="directions">
-          <div class="step" *ngFor="let step of recipe.steps; let i = index">
-            <span
-              class="step-number"
-              [ngClass]="{ selected: step.isSelected }"
-              (click)="toggleStep(step)"
-            >
-              {{ i + 1 }}
-            </span>
-            <dd>{{ step.step }}</dd>
-          </div>
+      <div class="directions">
+        <div class="step" *ngFor="let step of recipe.steps; let i = index">
+          <span
+            class="step-number"
+            [ngClass]="{ selected: step.isSelected }"
+            (click)="toggleStep(step)"
+          >
+            {{ i + 1 }}
+          </span>
+          <span class="step-description">{{ step.step }}</span>
         </div>
-      </dl>
+      </div>
     </mat-card-content>
 
     <mat-card-actions class="action-buttons">

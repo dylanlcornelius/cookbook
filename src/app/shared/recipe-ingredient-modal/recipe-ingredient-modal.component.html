@@ -15,7 +15,7 @@
         *ngIf="recipeIngredient.name"
       >
         {{ getQuantity(params?.recipe.id, params?.recipe.servings, recipeIngredient.quantity) }}
-        {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
+        {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
         {{ recipeIngredient.name }}
       </mat-checkbox>
     </div>
@@ -33,7 +33,7 @@
           *ngIf="recipeIngredient.name"
         >
           {{ getQuantity(params?.recipe.id, params?.recipe.servings, recipeIngredient.quantity) }}
-          {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }} -
+          {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
           {{ recipeIngredient.name }}
         </mat-checkbox>
       </div>
