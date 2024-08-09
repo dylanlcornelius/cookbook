@@ -26,6 +26,7 @@ import { ConfigService } from '@configService';
 import { FirebaseService } from '@firebaseService';
 import { TitleService } from '@TitleService';
 import { Multipliers, RecipeMultiplierService } from '@recipeMultiplierService';
+import { RecipeStepService } from '@recipeStepService';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -67,6 +68,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private utilService: UtilService,
     private recipeIngredientService: RecipeIngredientService,
+    private reicpeStepService: RecipeStepService,
     private recipeMultiplierService: RecipeMultiplierService,
     private userIngredientService: UserIngredientService,
     private recipeFilterService: RecipeFilterService,
@@ -180,6 +182,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     recipe.ingredients,
                     [...ingredients, ...recipes]
                   );
+                  this.recipe.steps = this.reicpeStepService.buildRecipeSteps(this.recipe, recipes);
                   this.recipe.calories = this.recipeIngredientService.getRecipeCalories(
                     recipe,
                     recipes,
@@ -305,10 +308,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeHistoryService.set(householdId, recipeId, timesCooked, updateDate);
     this.notificationService.setModal(new SuccessNotification('Recipe updated!'));
   };
-
-  toggleStep(step: Recipe['steps'][0]): void {
-    step.isSelected = !step.isSelected;
-  }
 
   openRecipeEditor(): void {
     this.recipeService

@@ -153,6 +153,7 @@
                 class="ingredient-link"
                 [routerLink]="['/recipe/detail/', recipeIngredient.id]"
                 *ngIf="recipeIngredient.uom === 'recipe'"
+                matTooltip="Navigate to This Recipe"
               >
                 <span>
                   {{ getQuantity(recipe.id, recipe.servings, recipeIngredient.quantity) }}
@@ -165,6 +166,7 @@
                 class="ingredient-link"
                 [routerLink]="['/ingredient/detail/', recipeIngredient.id]"
                 *ngIf="recipeIngredient.uom !== 'recipe'"
+                matTooltip="Navigate to This Ingredient"
               >
                 {{ getQuantity(recipe.id, recipe.servings, recipeIngredient.quantity) }}
                 {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
@@ -184,18 +186,7 @@
     <mat-card-content *ngIf="recipe.steps && recipe.steps.length">
       <h5 class="mobile-center-text">Directions</h5>
 
-      <div class="directions">
-        <div class="step" *ngFor="let step of recipe.steps; let i = index">
-          <span
-            class="step-number"
-            [ngClass]="{ selected: step.isSelected }"
-            (click)="toggleStep(step)"
-          >
-            {{ i + 1 }}
-          </span>
-          <span class="step-description">{{ step.step }}</span>
-        </div>
-      </div>
+      <app-recipe-steps [steps]="recipe.steps" />
     </mat-card-content>
 
     <mat-card-actions class="action-buttons">

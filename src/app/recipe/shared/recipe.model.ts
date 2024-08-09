@@ -19,6 +19,11 @@ export class Recipe extends Model {
   steps: Array<{
     step?: string;
     recipeId?: string;
+
+    // calculated fields
+    recipeName?: string;
+    recipeSteps?: Recipe['steps'];
+    isExpanded?: boolean;
     isSelected?: boolean;
   }>;
   ingredients: RecipeIngredients;

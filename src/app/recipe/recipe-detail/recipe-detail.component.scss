@@ -135,48 +135,6 @@ h5 {
 .box:last-child {
   border: none;
 }
-.directions {
-  border-radius: var(--radius);
-  box-shadow: var(--highlight-shadow);
-
-  .step {
-    display: flex;
-    align-items: center;
-    background-color: var(--block);
-    border-bottom: solid 1px var(--border);
-    padding: 0.5rem 1rem;
-    gap: 1rem;
-
-    &:last-child {
-      border: none;
-    }
-    .step-number {
-      font-size: 16px;
-      margin-bottom: auto;
-      border: solid 1px var(--border);
-      border-radius: 100%;
-      font-weight: bold;
-      height: 30px;
-      width: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-sizing: border-box;
-      flex-shrink: 0;
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.5;
-      }
-      &.selected {
-        background: var(--highlight);
-      }
-    }
-    .step-description {
-      font-size: 16px;
-    }
-  }
-}
 .action-buttons {
   display: flex;
   flex-direction: column;

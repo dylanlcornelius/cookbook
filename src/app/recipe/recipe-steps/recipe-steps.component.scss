@@ -1,0 +1,66 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  transition: max-height 500ms ease-in-out;
+  overflow: hidden;
+
+  &:not(.sub-directions) {
+    border-radius: var(--radius);
+    box-shadow: var(--highlight-shadow);
+  }
+}
+.step {
+  display: flex;
+  align-items: center;
+  background-color: var(--block);
+  border-bottom: solid 1px var(--border);
+  padding: 0.5rem 0.5rem;
+  gap: 0.5rem;
+
+  &:last-child {
+    border: none;
+  }
+  .step-number {
+    font-size: 16px;
+    margin-bottom: auto;
+    border: solid 1px var(--border);
+    border-radius: 100%;
+    font-weight: bold;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.5;
+    }
+    &.selected {
+      background: var(--highlight);
+    }
+  }
+  .step-description {
+    font-size: 15px;
+  }
+  .step-recipe {
+    width: 100%;
+
+    .step-recipe-description {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .ingredient-link {
+        color: inherit;
+        height: fit-content;
+        text-decoration: underline;
+      }
+      .mat-button {
+        line-height: 30px;
+      }
+    }
+  }
+}

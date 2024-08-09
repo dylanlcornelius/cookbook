@@ -43,8 +43,8 @@
         (click)="toggleResolved(comment)"
         *ngIf="comment.isResolved"
       >
-        <mat-icon *ngIf="!comment.showResolved">expand</mat-icon>
-        <mat-icon *ngIf="comment.showResolved">compress</mat-icon>
+        <mat-icon *ngIf="!comment.showResolved">unfold_more</mat-icon>
+        <mat-icon *ngIf="comment.showResolved">unfold_less</mat-icon>
       </button>
     </div>
 
