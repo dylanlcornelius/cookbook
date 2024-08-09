@@ -156,48 +156,6 @@
       </mat-form-field>
     </ng-template>
 
-    <ng-template #stepsStep>
-      <div
-        formArrayName="steps"
-        id="recipe-steps-div"
-        cdkDropList
-        [cdkDropListData]="recipesForm.get('steps')"
-        (cdkDropListDropped)="drop($event)"
-      >
-        <div
-          class="container step-box"
-          *ngFor="let step of recipesForm.get('steps')['controls']; let i = index"
-          cdkDrag
-          [cdkDragData]="step"
-          cdkDragBoundary="#recipe-steps-div"
-        >
-          <div class="center steps" [formGroupName]="i">
-            <mat-icon class="box-icon" cdkDragHandle>drag_indicator</mat-icon>
-            <mat-form-field>
-              <textarea
-                matInput
-                placeholder="Step {{ i + 1 }}"
-                rows="3"
-                formControlName="step"
-              ></textarea>
-              <mat-error>
-                <span *ngIf="!step.valid && step.touched">Please enter valid sentences</span>
-              </mat-error>
-            </mat-form-field>
-            <button mat-button matTooltip="Remove Step" type="button" (click)="removeStep(i)">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="button-row steps-button-row">
-        <button mat-button matTooltip="Add Step" color="primary" type="button" (click)="addStep()">
-          Add Step
-        </button>
-      </div>
-    </ng-template>
-
     <ng-template #ingredientsStep>
       <div class="ingredients center">
         <div class="list-container">
@@ -348,6 +306,65 @@
         </div>
       </div>
       <app-uom-table></app-uom-table>
+    </ng-template>
+
+    <ng-template #stepsStep>
+      <div
+        formArrayName="steps"
+        id="recipe-steps-div"
+        cdkDropList
+        [cdkDropListData]="recipesForm.get('steps')"
+        (cdkDropListDropped)="dropStep($event)"
+      >
+        <div
+          class="container step-box"
+          *ngFor="let step of recipesForm.get('steps')['controls']; let i = index"
+          cdkDrag
+          [cdkDragData]="step"
+          cdkDragBoundary="#recipe-steps-div"
+        >
+          <div class="center steps" [formGroupName]="i">
+            <mat-icon class="box-icon" cdkDragHandle>drag_indicator</mat-icon>
+            <mat-form-field *ngIf="step.get('step')">
+              <textarea
+                matInput
+                placeholder="Step {{ i + 1 }}"
+                rows="3"
+                formControlName="step"
+              ></textarea>
+              <mat-error>
+                <span *ngIf="!step.valid && step.touched">Please enter valid sentences</span>
+              </mat-error>
+            </mat-form-field>
+            <div class="recipe-ingredient-steps" *ngIf="step.get('recipeId')">
+              The directions for {{ step.get('recipeName').value }} will be automatically placed
+              here.
+            </div>
+            <button mat-button matTooltip="Remove Step" type="button" (click)="removeStep(i)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row recipe-steps-button-row" *ngIf="recipeAsIngredients?.length">
+        <button
+          mat-button
+          matTooltip="Add Step"
+          color="accent"
+          type="button"
+          (click)="addStep(recipe.id, recipe.name)"
+          *ngFor="let recipe of recipeAsIngredients"
+        >
+          Add directions for {{ recipe.name }}
+        </button>
+      </div>
+
+      <div class="button-row">
+        <button mat-button matTooltip="Add Step" color="primary" type="button" (click)="addStep()">
+          Add Step
+        </button>
+      </div>
     </ng-template>
 
     <mat-stepper

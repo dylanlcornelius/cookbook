@@ -83,7 +83,7 @@
 
           <div *ngIf="creationDate">Created on {{ creationDate }}</div>
 
-          <div class="categories-container" *ngIf="shouldDisplayCategories()">
+          <div *ngIf="shouldDisplayCategories()">
             <app-category-chips [recipe]="recipe" />
           </div>
 

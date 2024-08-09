@@ -17,8 +17,9 @@ export class Recipe extends Model {
     category: string;
   }>;
   steps: Array<{
-    step: string;
-    isSelected: boolean;
+    step?: string;
+    recipeId?: string;
+    isSelected?: boolean;
   }>;
   ingredients: RecipeIngredients;
 
@@ -86,7 +87,7 @@ export class Recipe extends Model {
     return {
       ...recipe,
       ingredients: recipe.ingredients.map(ingredient => ingredient.getObject()),
-      steps: recipe.steps.map(({ step }) => ({ step })),
+      steps: recipe.steps.map(({ step, recipeId }) => (recipeId ? { recipeId } : { step })),
     };
   }
 }

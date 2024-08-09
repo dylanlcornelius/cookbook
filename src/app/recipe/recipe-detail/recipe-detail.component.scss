@@ -70,14 +70,12 @@ h5 {
   padding: 0 0.5rem;
   height: 100%;
 
-  & > *:not(.categories-container) {
-    height: 22px;
-    line-height: 22px;
-  }
   .calories {
     display: flex;
     align-items: center;
     gap: 5px;
+    height: 22px;
+    line-height: 22px;
 
     @media screen and (max-width: 767px) {
       justify-content: center;
@@ -86,6 +84,8 @@ h5 {
   .times-cooked-button {
     font-size: 18px;
     padding: 0;
+    height: 22px;
+    line-height: 22px;
 
     @media screen and (min-width: 768px) {
       width: fit-content;

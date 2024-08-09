@@ -89,6 +89,13 @@ h3 {
     width: 30px;
     padding: 1rem 0.5rem;
   }
+  .recipe-ingredient-steps {
+    text-align: start;
+    width: 100%;
+  }
+}
+.recipe-steps-button-row {
+  flex-wrap: wrap;
 }
 .box {
   display: flex;
