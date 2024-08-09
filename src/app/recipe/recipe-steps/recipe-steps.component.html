@@ -1,0 +1,34 @@
+<div class="step" *ngFor="let step of steps; let i = index">
+  <span class="step-number" [ngClass]="{ selected: step.isSelected }" (click)="toggleStep(step)">
+    {{ i + 1 }}
+  </span>
+  <span class="step-description" *ngIf="step.step">{{ step.step }}</span>
+  <div class="step-recipe" *ngIf="step.recipeId">
+    <div class="step-description step-recipe-description">
+      <span>
+        Directions for
+        <a
+          class="ingredient-link"
+          [routerLink]="['/recipe/detail/', step.recipeId]"
+          matTooltip="Navigate to This Recipe"
+        >
+          {{ step.recipeName }}
+        </a>
+      </span>
+      <button
+        mat-button
+        [matTooltip]="step.isExpanded ? 'Collapse Step' : 'Expand Step'"
+        (click)="toggleDirections(step)"
+      >
+        <mat-icon *ngIf="!step.isExpanded">expand_more</mat-icon>
+        <mat-icon *ngIf="step.isExpanded">expand_less</mat-icon>
+      </button>
+    </div>
+
+    <app-recipe-steps
+      class="sub-directions"
+      [ngStyle]="{ 'max-height': step.isExpanded ? '1000px' : '0' }"
+      [steps]="step.recipeSteps"
+    />
+  </div>
+</div>

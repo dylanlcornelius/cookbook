@@ -112,7 +112,7 @@ describe('RecipeEditComponent', () => {
         id: 'id',
         name: 'Title',
         categories: [{}],
-        steps: [{}],
+        steps: [{ step: 'step 1' }, { recipeId: 'recipe-1' }, { recipeId: 'recipe-3' }],
         ingredients: [
           {
             id: 'ingredient-1',
@@ -151,6 +151,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'setForm');
       spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(component, 'addIngredient');
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.load();
       fixture.detectChanges();
@@ -165,6 +166,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
 
     it('should load recipes without data', () => {
@@ -200,6 +202,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'setForm');
       spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.load();
       fixture.detectChanges();
@@ -213,6 +216,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
 
     it('should load ingredients for a new recipe', () => {
@@ -240,6 +244,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'setForm');
       spyOn(recipeIngredientService, 'buildRecipeIngredients');
       spyOn(component, 'addIngredient');
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.load();
       fixture.detectChanges();
@@ -253,6 +258,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).not.toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).not.toHaveBeenCalled();
     });
 
     it('should load a continued recipe', () => {
@@ -280,6 +286,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'setForm');
       spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.load();
       fixture.detectChanges();
@@ -293,6 +300,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.setForm).toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).not.toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
 
     it('should reload a recipe', () => {
@@ -330,6 +338,7 @@ describe('RecipeEditComponent', () => {
       spyOn(recipeService, 'setForm');
       spyOn(recipeIngredientService, 'buildRecipeIngredients').and.returnValue([]);
       spyOn(component, 'addIngredient');
+      spyOn(component, 'refreshRecipeAsIngredients');
       spyOn(component, 'applyIngredientFilter');
 
       component.load();
@@ -345,6 +354,7 @@ describe('RecipeEditComponent', () => {
       expect(recipeService.setForm).not.toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalledTimes(1);
       expect(component.addIngredient).not.toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
       expect(component.applyIngredientFilter).toHaveBeenCalledTimes(2);
     });
   });
@@ -412,17 +422,26 @@ describe('RecipeEditComponent', () => {
 
       expect(result).toBeDefined();
     });
+
+    it('should init a new recipe control', () => {
+      const result = component.initStep('recipe-id', 'recipe name');
+
+      expect(result.value.recipeId).toEqual('recipe-id');
+      expect(result.value.recipeName).toEqual('recipe name');
+    });
   });
 
   describe('addStep', () => {
     it('should add a control', () => {
       spyOn(component, 'initStep').and.returnValue(new FormBuilder().group({}));
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.addStep();
 
       const control = <FormArray>component.recipesForm.controls['steps'];
       expect(control.length).toEqual(1);
       expect(component.initStep).toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
   });
 
@@ -432,10 +451,32 @@ describe('RecipeEditComponent', () => {
         steps: new FormBuilder().array([{}]),
       });
 
+      spyOn(component, 'refreshRecipeAsIngredients');
+
       component.removeStep(0);
 
       const control = <FormArray>component.recipesForm.controls['steps'];
       expect(control.length).toEqual(0);
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
+    });
+  });
+
+  describe('refreshRecipeAsIngredients', () => {
+    it('should recalculate all recipe as ingredients', () => {
+      component.recipesForm = new FormBuilder().group({
+        ingredients: new FormBuilder().array([
+          new FormBuilder().group({ id: 'recipe-1', name: 'recipe name', uom: UOM.RECIPE }),
+          new FormBuilder().group({ id: 'recipe-2', name: 'recipe name 2', uom: UOM.RECIPE }),
+        ]),
+        steps: new FormBuilder().array([new FormBuilder().group({ step: 'step' })]),
+      });
+
+      component.refreshRecipeAsIngredients();
+
+      expect(component.recipeAsIngredients).toEqual([
+        { id: 'recipe-1', name: 'recipe name' },
+        { id: 'recipe-2', name: 'recipe name 2' },
+      ]);
     });
   });
 
@@ -463,14 +504,14 @@ describe('RecipeEditComponent', () => {
     });
   });
 
-  describe('drop', () => {
+  describe('dropStep', () => {
     it('should reorder a form control', () => {
       const container = { data: ['id'] };
       const event = { previousContainer: container, container: container, item: {} };
 
       spyOn(component, 'moveControlInFormArray');
 
-      component.drop(event);
+      component.dropStep(event);
 
       expect(component.moveControlInFormArray).toHaveBeenCalled();
     });
@@ -568,6 +609,7 @@ describe('RecipeEditComponent', () => {
   describe('addIngredient', () => {
     it('should add a control', () => {
       spyOn(component, 'initIngredient').and.returnValue(new FormBuilder().group({}));
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.addIngredient(
         0,
@@ -579,10 +621,12 @@ describe('RecipeEditComponent', () => {
       const control = <FormArray>component.recipesForm.controls['ingredients'];
       expect(control.length).toEqual(1);
       expect(component.initIngredient).toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
 
     it('should add a control without initial data', () => {
       spyOn(component, 'initIngredient').and.returnValue(new FormBuilder().group({}));
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.addIngredient(0);
 
@@ -590,19 +634,43 @@ describe('RecipeEditComponent', () => {
       expect(control.length).toEqual(1);
       expect(control.value.id).toBeUndefined();
       expect(component.initIngredient).toHaveBeenCalled();
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
   });
 
   describe('removeIngredient', () => {
-    it('should remove a control', () => {
+    it('should remove a ingredient control and not a step control', () => {
       component.recipesForm = new FormBuilder().group({
-        ingredients: new FormBuilder().array([{}]),
+        ingredients: new FormBuilder().array([new FormBuilder().group({ id: 'recipe-1' })]),
+        steps: new FormBuilder().array([new FormBuilder().group({ step: 'step 1' })]),
       });
+
+      spyOn(component, 'refreshRecipeAsIngredients');
 
       component.removeIngredient(0);
 
-      const control = <FormArray>component.recipesForm.controls['ingredients'];
-      expect(control.length).toEqual(0);
+      const ingredients = <FormArray>component.recipesForm.controls['ingredients'];
+      expect(ingredients.length).toEqual(0);
+      const steps = <FormArray>component.recipesForm.controls['steps'];
+      expect(steps.length).toEqual(1);
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
+    });
+
+    it('should remove an ingredient control and a steps control', () => {
+      component.recipesForm = new FormBuilder().group({
+        ingredients: new FormBuilder().array([new FormBuilder().group({ id: 'recipe-1' })]),
+        steps: new FormBuilder().array([new FormBuilder().group({ recipeId: 'recipe-1' })]),
+      });
+
+      spyOn(component, 'refreshRecipeAsIngredients');
+
+      component.removeIngredient(0);
+
+      const ingredients = <FormArray>component.recipesForm.controls['ingredients'];
+      expect(ingredients.length).toEqual(0);
+      const steps = <FormArray>component.recipesForm.controls['steps'];
+      expect(steps.length).toEqual(0);
+      expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
     });
   });
 
@@ -671,21 +739,21 @@ describe('RecipeEditComponent', () => {
 
   describe('stepperOnSubmit', () => {
     it('should return the default recipe step', () => {
-      component.stepper = { selectedIndex: 2 } as MatStepper;
+      component.stepper = { selectedIndex: 1 } as MatStepper;
 
       const result = component.stepperOnSubmit('steps');
 
       expect(result).toEqual('step');
-      expect(component.stepper.selectedIndex).toEqual(1);
+      expect(component.stepper.selectedIndex).toEqual(2);
     });
 
     it('should return the default recipe step', () => {
-      component.stepper = { selectedIndex: 1 } as MatStepper;
+      component.stepper = { selectedIndex: 2 } as MatStepper;
 
       const result = component.stepperOnSubmit('ingredients');
 
       expect(result).toEqual('quantity');
-      expect(component.stepper.selectedIndex).toEqual(2);
+      expect(component.stepper.selectedIndex).toEqual(1);
     });
 
     it('should return the default recipe step', () => {
@@ -826,8 +894,13 @@ describe('RecipeEditComponent', () => {
         meanRating: 0.33,
       });
       component.recipesForm = new FormBuilder().group({
-        ingredients: new FormBuilder().array([new FormBuilder().group({ name: [] })]),
-        steps: new FormBuilder().array([new FormBuilder().group({ step: 'Step 1' })]),
+        ingredients: new FormBuilder().array([
+          new FormBuilder().group({ id: 'recipe-1', name: [] }),
+        ]),
+        steps: new FormBuilder().array([
+          new FormBuilder().group({ step: 'Step 1' }),
+          new FormBuilder().group({ recipeId: 'recipe-1' }),
+        ]),
       });
       component.id = 'id';
 
@@ -844,8 +917,8 @@ describe('RecipeEditComponent', () => {
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(recipeService.update).toHaveBeenCalledWith(
         new Recipe({
-          ingredients: [{}],
-          steps: [{ step: 'Step 1' }],
+          ingredients: [{ id: 'recipe-1' }],
+          steps: [{ step: 'Step 1' }, { recipeId: 'recipe-1' }],
           uid: '',
           author: '3',
           hasImage: true,

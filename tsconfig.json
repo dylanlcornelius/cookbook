@@ -53,6 +53,7 @@
       ],
       "@recipeMultiplierService": ["src/app/shared/recipe-multiplier/recipe-multiplier.service"],
       "@recipeIngredientService": ["src/app/recipe/shared/recipe-ingredient.service"],
+      "@recipeStepService": ["src/app/recipe/shared/recipe-step.service"],
       "@recipeFilterService": ["src/app/recipe/shared/recipe-filter.service"],
       "@recipeHistory": ["src/app/recipe/shared/recipe-history.model"],
       "@recipeHistoryService": ["src/app/recipe/shared/recipe-history.service"],

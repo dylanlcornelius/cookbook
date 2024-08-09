@@ -70,6 +70,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   recipes: Recipes;
   ingredients: Ingredients;
   recipeCategories;
+  recipeAsIngredients: { id: string; name: string }[];
   types: Configs;
 
   uoms: UOMs;
@@ -220,9 +221,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.recipe.categories.forEach(() => {
         this.addCategory();
       });
-      this.recipe.steps.forEach(() => {
-        this.addStep();
-      });
 
       this.addedIngredients = this.recipeIngredientService.buildRecipeIngredients(
         this.recipe.ingredients,
@@ -231,6 +229,16 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       for (let i = 0; i < this.addedIngredients.length; i++) {
         this.addIngredient(i);
       }
+      this.recipe.steps.forEach(({ recipeId }) => {
+        if (recipeId) {
+          const recipe = this.recipes.find(({ id }) => id === recipeId);
+          if (recipe) {
+            this.addStep(recipeId, recipe?.name);
+          }
+        } else {
+          this.addStep();
+        }
+      });
 
       this.recipesForm.patchValue({
         name: this.recipe.name,
@@ -247,6 +255,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         steps: this.recipe.steps,
         ingredients: this.addedIngredients,
       });
+      this.refreshRecipeAsIngredients();
     }
   }
 
@@ -322,20 +331,47 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     control.removeAt(i);
   }
 
-  initStep(): FormGroup {
-    return new FormBuilder().group({
-      step: ['', [Validators.pattern(SentencePattern)]],
-    });
+  initStep(recipeId?: string, recipeName?: string): FormGroup {
+    return recipeId
+      ? new FormBuilder().group({
+          recipeId: [recipeId],
+          recipeName: [recipeName],
+        })
+      : new FormBuilder().group({
+          step: ['', [Validators.pattern(SentencePattern)]],
+        });
   }
 
-  addStep(): void {
-    const control = <FormArray>this.recipesForm.controls['steps'];
-    control.push(this.initStep());
+  addStep(recipeId?: string, recipeName?: string): void {
+    const steps = <FormArray>this.recipesForm.controls['steps'];
+    steps.push(this.initStep(recipeId, recipeName));
+    this.refreshRecipeAsIngredients();
   }
 
-  removeStep(i: number): void {
-    const control = <FormArray>this.recipesForm.controls['steps'];
-    control.removeAt(i);
+  removeStep(index: number): void {
+    const steps = <FormArray>this.recipesForm.controls['steps'];
+    steps.removeAt(index);
+    this.refreshRecipeAsIngredients();
+  }
+
+  refreshRecipeAsIngredients(): void {
+    const ingredients = <FormArray>this.recipesForm.controls['ingredients'];
+    const steps = <FormArray>this.recipesForm.controls['steps'];
+
+    this.recipeAsIngredients = ingredients.controls
+      .reduce((list, ingredient) => {
+        if (
+          ingredient.get('uom').value === UOM.RECIPE &&
+          !steps.controls.some(step => step.get('recipeId')?.value === ingredient.get('id').value)
+        ) {
+          list.push({
+            id: ingredient.get('id').value,
+            name: ingredient.get('name').value,
+          });
+        }
+        return list;
+      }, [] as typeof this.recipeAsIngredients)
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   moveControlInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
@@ -351,7 +387,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     formArray.setControl(to, temp);
   }
 
-  drop(event: any): void {
+  dropStep(event: any): void {
     this.moveControlInFormArray(event.container.data, event.previousIndex, event.currentIndex);
   }
 
@@ -413,7 +449,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   addIngredient(index: number, data?: RecipeIngredient): void {
-    const control = <FormArray>this.recipesForm.controls['ingredients'];
+    const ingredients = <FormArray>this.recipesForm.controls['ingredients'];
     const ingredientControl = this.initIngredient();
     if (data) {
       ingredientControl.patchValue({
@@ -426,12 +462,24 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         weightUnit: data.weightUnit,
       });
     }
-    control.insert(index, ingredientControl);
+    ingredients.insert(index, ingredientControl);
+    this.refreshRecipeAsIngredients();
   }
 
-  removeIngredient(i: number): void {
-    const control = <FormArray>this.recipesForm.controls['ingredients'];
-    control.removeAt(i);
+  removeIngredient(index: number): void {
+    const ingredients = <FormArray>this.recipesForm.controls['ingredients'];
+
+    const ingredient = ingredients.controls[index].value;
+    const steps = <FormArray>this.recipesForm.controls['steps'];
+    const recipeIndex = steps.controls.findIndex(
+      control => control.get('recipeId')?.value === ingredient.id
+    );
+    if (recipeIndex !== -1) {
+      steps.removeAt(recipeIndex);
+    }
+
+    ingredients.removeAt(index);
+    this.refreshRecipeAsIngredients();
   }
 
   getUOMs(volumeUnit: UOM, weightUnit: UOM): string[] {
@@ -479,11 +527,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   stepperOnSubmit = (key: string): string => {
     if (key === 'steps') {
-      this.stepper.selectedIndex = 1;
+      this.stepper.selectedIndex = 2;
       return 'step';
     }
     if (key === 'ingredients') {
-      this.stepper.selectedIndex = 2;
+      this.stepper.selectedIndex = 1;
       return 'quantity';
     }
     this.stepper.selectedIndex = 0;
