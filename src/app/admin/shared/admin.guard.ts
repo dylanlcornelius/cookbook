@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild } from '@angular/router';
+import { CurrentUserService } from '@currentUserService';
+import { User } from '@user';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-
-import { User } from '@user';
-import { CurrentUserService } from '@currentUserService';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AdminGuard implements CanActivate, CanActivateChild {
+export class AdminGuard {
   constructor(private currentUserService: CurrentUserService) {}
 
   canActivate(): Observable<boolean> {
