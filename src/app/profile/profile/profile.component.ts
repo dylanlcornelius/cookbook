@@ -234,6 +234,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     const form = this.userForm.value;
+    form.hasCookbooks = this.user.hasCookbooks;
     form.creationDate = this.user.creationDate;
     const user = new User(form);
 

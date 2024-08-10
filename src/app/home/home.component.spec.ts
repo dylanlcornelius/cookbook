@@ -54,12 +54,12 @@ describe('HomeComponent', () => {
       expect(navigationService.get).toHaveBeenCalled();
     });
 
-    it('should load navs with a feature flag', () => {
+    it('should load navs with feature flags', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
-        of(new User({ hasPlanner: true }))
+        of(new User({ hasPlanner: true, hasCookbooks: true }))
       );
       spyOn(navigationService, 'get').and.returnValue(
-        of([new Navigation({ link: '/shopping/plan' })])
+        of([new Navigation({ link: '/shopping/plan' }), new Navigation({ link: '/recipe/books' })])
       );
 
       component.load();
