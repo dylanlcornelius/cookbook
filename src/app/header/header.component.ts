@@ -91,20 +91,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.user.isAdmin && feedbacks.length ? feedbacks.length : undefined;
         }
 
-        this.desktopNavs = navs.filter(
-          ({ subMenu, link }) =>
-            !subMenu &&
+        const filteredNavs = navs.filter(
+          ({ link }) =>
             (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)) &&
-            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks))
+            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks)) &&
+            (link !== '/profile/list' || (link === '/profile/list' && user.hasAdminView))
         );
-        this.mobileNavs = navs.filter(
-          ({ subMenu, link }) =>
-            subMenu !== NavigationMenu.PROFILE &&
-            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)) &&
-            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks))
-        );
-        this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
-        this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
+
+        this.desktopNavs = filteredNavs.filter(({ subMenu }) => !subMenu);
+        this.mobileNavs = filteredNavs.filter(({ subMenu }) => subMenu !== NavigationMenu.PROFILE);
+        this.profileNavs = filteredNavs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
+        this.toolNavs = filteredNavs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);
 
         if (form) {
           const link = form.id ? `/recipe/edit/${form.id}` : '/recipe/edit';
