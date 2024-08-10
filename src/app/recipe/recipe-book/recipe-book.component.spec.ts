@@ -12,12 +12,16 @@ import { User } from '@user';
 import { UtilService } from '@utilService';
 import { of } from 'rxjs';
 import { RecipeBookComponent } from './recipe-book.component';
+import { CategoryFilter, TypeFilter } from '@recipeFilterService';
+import { ConfigService } from '@configService';
+import { Config } from '@config';
 
 describe('RecipeBookComponent', () => {
   let component: RecipeBookComponent;
   let fixture: ComponentFixture<RecipeBookComponent>;
   let recipeService: RecipeService;
   let imageService: ImageService;
+  let configService: ConfigService;
   let currentUserService: CurrentUserService;
   let householdService: HouseholdService;
   let utilService: UtilService;
@@ -39,6 +43,7 @@ describe('RecipeBookComponent', () => {
     householdService = TestBed.inject(HouseholdService);
     recipeService = TestBed.inject(RecipeService);
     imageService = TestBed.inject(ImageService);
+    configService = TestBed.inject(ConfigService);
     utilService = TestBed.inject(UtilService);
     firebase = TestBed.inject(FirebaseService);
   });
@@ -75,22 +80,26 @@ describe('RecipeBookComponent', () => {
           hasImage: true,
         }),
       ];
+      const configs = [new Config({})];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
       tick();
       flush();
+      expect(component.categories.length).toEqual(1);
       expect(component.categories[0].name).toEqual('Dessert');
       expect(component.categories[0].recipes.length).toEqual(4);
       expect(component.categories[0].recipes[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     }));
 
@@ -99,44 +108,52 @@ describe('RecipeBookComponent', () => {
         new Recipe({
           id: 'recipe-1',
           status: RECIPE_STATUS.PUBLISHED,
+          type: 'entree',
           categories: [{ category: 'Dessert' }, {}],
           hasImage: true,
         }),
         new Recipe({
           id: 'recipe-2',
           status: RECIPE_STATUS.PUBLISHED,
+          type: 'entree',
           categories: [{ category: 'Dessert' }],
           hasImage: true,
         }),
         new Recipe({
           id: 'recipe-3',
           status: RECIPE_STATUS.PUBLISHED,
+          type: 'entree',
           categories: [{ category: 'Dessert' }],
           hasImage: true,
         }),
         new Recipe({
           id: 'recipe-4',
           status: RECIPE_STATUS.PUBLISHED,
+          type: 'entree',
           categories: [{ category: 'Dessert' }],
           hasImage: true,
         }),
       ];
+      const configs = [new Config({ value: 'entree', displayValue: 'Entree' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
       spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
       spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
 
       component.load();
 
       tick();
       flush();
+      expect(component.categories.length).toEqual(2);
       expect(component.categories[0].name).toEqual('Dessert');
       expect(component.categories[0].recipes.length).toEqual(4);
       expect(component.categories[0].recipes[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();
       expect(recipeService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     }));
   });
@@ -144,8 +161,8 @@ describe('RecipeBookComponent', () => {
   describe('sortCategoriesByName', () => {
     it('should sort recipe a less than recipe b', () => {
       const result = component.sortCategoriesByName(
-        { name: 'a', recipes: [] },
-        { name: 'b', recipes: [] }
+        { name: 'a', filter: new CategoryFilter('a'), recipes: [] },
+        { name: 'b', filter: new TypeFilter('b'), recipes: [] }
       );
 
       expect(result).toEqual(-1);
@@ -153,8 +170,8 @@ describe('RecipeBookComponent', () => {
 
     it('should sort recipe b greater than recipe a', () => {
       const result = component.sortCategoriesByName(
-        { name: 'b', recipes: [] },
-        { name: 'a', recipes: [] }
+        { name: 'b', filter: new TypeFilter('b'), recipes: [] },
+        { name: 'a', filter: new CategoryFilter('a'), recipes: [] }
       );
 
       expect(result).toEqual(1);
@@ -166,7 +183,7 @@ describe('RecipeBookComponent', () => {
       spyOn(utilService, 'setListFilter');
       spyOn(firebase, 'logEvent');
 
-      component.openRecipeList('Dessert');
+      component.openRecipeList(new TypeFilter('Dessert'));
 
       expect(utilService.setListFilter).toHaveBeenCalled();
       expect(firebase.logEvent).toHaveBeenCalled();
