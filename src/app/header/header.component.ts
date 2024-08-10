@@ -94,12 +94,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.desktopNavs = navs.filter(
           ({ subMenu, link }) =>
             !subMenu &&
-            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner))
+            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)) &&
+            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks))
         );
         this.mobileNavs = navs.filter(
           ({ subMenu, link }) =>
             subMenu !== NavigationMenu.PROFILE &&
-            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner))
+            (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)) &&
+            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks))
         );
         this.profileNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.PROFILE);
         this.toolNavs = navs.filter(({ subMenu }) => subMenu === NavigationMenu.TOOLS);

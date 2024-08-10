@@ -8,6 +8,7 @@ export class User extends Model {
   theme: boolean;
   hasImage: boolean;
   hasPlanner: boolean;
+  hasCookbooks: boolean;
   hasAdminView: boolean;
 
   name: string;
@@ -27,6 +28,7 @@ export class User extends Model {
     this.theme = data.theme || false;
     this.hasImage = data.hasImage || false;
     this.hasPlanner = data.hasPlanner || false;
+    this.hasCookbooks = data.hasCookbooks || false;
     this.hasAdminView = data.hasAdminView || false;
     this.isAdmin = data.role === ROLE.ADMIN;
     this.isPending = data.role === ROLE.PENDING;

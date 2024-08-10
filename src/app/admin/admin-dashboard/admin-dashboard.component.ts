@@ -19,6 +19,7 @@ import { HouseholdService } from '@householdService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { TutorialService } from '@tutorialService';
 import { FeedbackService } from '@feedbackService';
+import { ConfigType } from '@configType';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,6 +30,8 @@ export class AdminDashboardComponent implements OnDestroy {
   private unsubscribe$ = new Subject<void>();
   private refresh$ = new BehaviorSubject(undefined);
   private context$;
+
+  configTypes: ConfigType[];
 
   constructor(
     private configService: ConfigService,
@@ -45,7 +48,9 @@ export class AdminDashboardComponent implements OnDestroy {
     private validationService: ValidationService,
     private notificationService: NotificationService,
     private feedbackService: FeedbackService
-  ) {}
+  ) {
+    this.configTypes = Object.values(ConfigType);
+  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
@@ -147,7 +152,7 @@ export class AdminDashboardComponent implements OnDestroy {
     ),
     new Context(
       'Users',
-      ['firstName', 'lastName', 'role', 'theme', 'hasPlanner', 'hasAdminView'],
+      ['firstName', 'lastName', 'role', 'theme', 'hasPlanner', 'hasCookbooks', 'hasAdminView'],
       this.userService,
       this.revert,
       this.save,

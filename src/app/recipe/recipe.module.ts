@@ -19,6 +19,7 @@ import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/m
 import { RecipeRatingModalComponent } from './recipe-rating-modal/recipe-rating-modal.component';
 import { CategoryChipsComponent } from './category-chips/category-chips.component';
 import { RecipeStepsComponent } from './recipe-steps/recipe-steps.component';
+import { RecipeBookComponent } from './recipe-book/recipe-book.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { RecipeStepsComponent } from './recipe-steps/recipe-steps.component';
     RecipeRatingModalComponent,
     CategoryChipsComponent,
     RecipeStepsComponent,
+    RecipeBookComponent,
   ],
   imports: [
     CommonModule,

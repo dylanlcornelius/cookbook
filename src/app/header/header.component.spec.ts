@@ -108,11 +108,11 @@ describe('HeaderComponent', () => {
 
     it('should load the continue nav and feature flag navs', () => {
       spyOn(navigationService, 'get').and.returnValue(
-        of([new Navigation({ link: '/shopping/plan' })])
+        of([new Navigation({ link: '/shopping/plan' }), new Navigation({ link: '/recipe/books' })])
       );
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({ id: 'test' }));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
-        of(new User({ uid: 'uid', hasPlanner: true }))
+        of(new User({ uid: 'uid', hasPlanner: true, hasCookbooks: true }))
       );
       spyOn(feedbackService, 'get').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
