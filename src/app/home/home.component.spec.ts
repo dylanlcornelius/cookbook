@@ -56,10 +56,14 @@ describe('HomeComponent', () => {
 
     it('should load navs with feature flags', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
-        of(new User({ hasPlanner: true, hasCookbooks: true }))
+        of(new User({ hasPlanner: true, hasCookbooks: true, hasAdminView: true }))
       );
       spyOn(navigationService, 'get').and.returnValue(
-        of([new Navigation({ link: '/shopping/plan' }), new Navigation({ link: '/recipe/books' })])
+        of([
+          new Navigation({ link: '/shopping/plan' }),
+          new Navigation({ link: '/recipe/books' }),
+          new Navigation({ link: '/profile/list' }),
+        ])
       );
 
       component.load();

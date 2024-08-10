@@ -41,7 +41,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           ({ isNavOnly, link }) =>
             !isNavOnly &&
             (link !== '/shopping/plan' || (link === '/shopping/plan' && user.hasPlanner)) &&
-            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks))
+            (link !== '/recipe/books' || (link === '/recipe/books' && user.hasCookbooks)) &&
+            (link !== '/profile/list' || (link === '/profile/list' && user.hasAdminView))
         );
       });
   }

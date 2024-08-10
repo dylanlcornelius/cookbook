@@ -4,7 +4,7 @@ import { AuthService } from '../user/shared/auth.service';
 
 import { HeaderComponent } from './header.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Navigation } from '@navigation';
+import { Navigation, NavigationMenu } from '@navigation';
 import { BehaviorSubject, of } from 'rxjs';
 import { NavigationService } from '@navigationService';
 import { CurrentUserService } from '@currentUserService';
@@ -73,7 +73,9 @@ describe('HeaderComponent', () => {
 
   describe('load', () => {
     it('should load navs and household invites', () => {
-      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
+      spyOn(navigationService, 'get').and.returnValue(
+        of([new Navigation({ subMenu: NavigationMenu.TOOLS })])
+      );
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
         of(new User({ uid: 'uid', role: 'admin' }))
@@ -83,6 +85,10 @@ describe('HeaderComponent', () => {
 
       component.load();
 
+      expect(component.desktopNavs.length).toEqual(0);
+      expect(component.mobileNavs.length).toEqual(1);
+      expect(component.profileNavs.length).toEqual(0);
+      expect(component.toolNavs.length).toEqual(1);
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
@@ -99,6 +105,10 @@ describe('HeaderComponent', () => {
 
       component.load();
 
+      expect(component.desktopNavs.length).toEqual(1);
+      expect(component.mobileNavs.length).toEqual(1);
+      expect(component.profileNavs.length).toEqual(0);
+      expect(component.toolNavs.length).toEqual(0);
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
@@ -108,17 +118,25 @@ describe('HeaderComponent', () => {
 
     it('should load the continue nav and feature flag navs', () => {
       spyOn(navigationService, 'get').and.returnValue(
-        of([new Navigation({ link: '/shopping/plan' }), new Navigation({ link: '/recipe/books' })])
+        of([
+          new Navigation({ link: '/shopping/plan' }),
+          new Navigation({ link: '/recipe/books' }),
+          new Navigation({ link: '/profile/list', subMenu: NavigationMenu.PROFILE }),
+        ])
       );
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({ id: 'test' }));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
-        of(new User({ uid: 'uid', hasPlanner: true, hasCookbooks: true }))
+        of(new User({ uid: 'uid', hasPlanner: true, hasCookbooks: true, hasAdminView: true }))
       );
       spyOn(feedbackService, 'get').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();
 
+      expect(component.desktopNavs.length).toEqual(2);
+      expect(component.mobileNavs.length).toEqual(2);
+      expect(component.profileNavs.length).toEqual(1);
+      expect(component.toolNavs.length).toEqual(0);
       expect(navigationService.get).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
