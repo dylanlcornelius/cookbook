@@ -127,6 +127,7 @@ export class SearchFilter extends Filter {
       this.contains(recipe.type, this.value) ||
       !!recipe.categories.find(({ category }) => this.contains(category, this.value)) ||
       !!recipe.steps.find(({ step }) => this.contains(step, this.value)) ||
+      !!recipe.ingredients.find(({ name }) => this.contains(name, this.value)) ||
       this.contains(recipe.author, this.value)
     );
   };

@@ -6,7 +6,7 @@
   <mat-card
     *ngFor="let category of categories"
     class="category-card mat-elevation-z8"
-    (click)="openRecipeList(category.name)"
+    (click)="openRecipeList(category.filter)"
     [@fadeInAnimation]="{ value: ':enter', params: { duration: 300, delay: 200 } }"
   >
     <mat-card-header>

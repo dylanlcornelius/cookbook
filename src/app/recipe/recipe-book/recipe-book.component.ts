@@ -5,15 +5,17 @@ import { HouseholdService } from '@householdService';
 import { ImageService } from '@imageService';
 import { LoadingService } from '@loadingService';
 import { Recipes } from '@recipe';
-import { CategoryFilter } from '@recipeFilterService';
+import { CategoryFilter, Filter, TypeFilter } from '@recipeFilterService';
 import { RecipeService } from '@recipeService';
 import { User } from '@user';
 import { UtilService } from '@utilService';
-import { Subject } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { fadeInAnimation } from '../../theme/animations';
+import { ConfigType } from '@configType';
+import { ConfigService } from '@configService';
 
-type Category = { name: string; recipes: Recipes };
+type Category = { name: string; filter: CategoryFilter | TypeFilter; recipes: Recipes };
 type Categories = Category[];
 
 @Component({
@@ -35,6 +37,7 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private recipeService: RecipeService,
     private imageService: ImageService,
+    private configService: ConfigService,
     private currentUserService: CurrentUserService,
     private householdService: HouseholdService,
     private utilService: UtilService,
@@ -67,10 +70,12 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
           .subscribe(household => {
             this.householdId = household.id;
 
-            this.recipeService
-              .get()
+            const recipes$ = this.recipeService.get();
+            const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
+
+            combineLatest([recipes$, configs$])
               .pipe(takeUntil(this.unsubscribe$), debounceTime(100))
-              .subscribe(recipes => {
+              .subscribe(([recipes, configs]) => {
                 const categories: Categories = [];
 
                 recipes
@@ -96,11 +101,31 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
                       let current = categories.find(({ name }) => name === category?.category);
 
                       if (!current) {
-                        current = { name: category.category, recipes: [] };
+                        current = {
+                          name: category.category,
+                          filter: new CategoryFilter(category.category),
+                          recipes: [],
+                        };
                         categories.push(current);
                       }
                       current.recipes.push(recipe);
                     });
+
+                    const displayType = configs.find(
+                      ({ value }) => value === recipe.type
+                    )?.displayValue;
+                    if (displayType) {
+                      let current = categories.find(({ name }) => name === displayType);
+                      if (!current) {
+                        current = {
+                          name: displayType,
+                          filter: new TypeFilter(recipe.type),
+                          recipes: [],
+                        };
+                        categories.push(current);
+                      }
+                      current.recipes.push(recipe);
+                    }
                   });
 
                 this.categories = categories
@@ -130,11 +155,11 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
     return a.name.localeCompare(b.name);
   }
 
-  openRecipeList(category: Category['name']): void {
-    this.utilService.setListFilter(new CategoryFilter(category));
-    this.firebase.logEvent('select_content', {
+  openRecipeList(filter: Filter): void {
+    this.utilService.setListFilter(filter);
+    this.firebase.logEvent('filter', {
       content_type: 'recipe-list',
-      item_name: category,
+      filter_term: filter.value,
     });
   }
 }
