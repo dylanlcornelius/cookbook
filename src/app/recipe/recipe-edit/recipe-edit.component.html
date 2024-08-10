@@ -120,14 +120,14 @@
       </div>
 
       <mat-form-field class="form-field">
-        <mat-chip-list #categoryList>
-          <mat-chip
+        <mat-chip-grid #categoryList>
+          <mat-chip-row
             *ngFor="let category of recipesForm.get('categories')['controls']; let i = index"
             (removed)="removeCategory(i)"
           >
             {{ category.value.category }}
             <mat-icon matChipRemove>cancel</mat-icon>
-          </mat-chip>
+          </mat-chip-row>
           <input
             #categoryInput
             placeholder="Categories"
@@ -152,7 +152,7 @@
               {{ category }}
             </mat-option>
           </mat-autocomplete>
-        </mat-chip-list>
+        </mat-chip-grid>
       </mat-form-field>
     </ng-template>
 

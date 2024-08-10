@@ -3,14 +3,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminDashboardComponent } from './admin-dashboard.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatTableModule } from '@angular/material/table';
 import { ConfigService } from '@configService';
 import { of } from 'rxjs';
 import { NotificationService, ValidationService } from '@modalService';
 import {
-  MatLegacyTab as MatTab,
-  MatLegacyTabChangeEvent as MatTabChangeEvent,
-} from '@angular/material/legacy-tabs';
+  MatTab,
+  MatTabChangeEvent,
+} from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 
 describe('AdminDashboardComponent', () => {

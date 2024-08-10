@@ -16,7 +16,7 @@ h2 {
     margin: 5px;
   }
 }
-.mat-card-header .mat-card-subtitle {
+.mat-mdc-card-header .mat-mdc-card-subtitle {
   width: min-content;
   margin: -8px auto 0 !important;
 }
@@ -26,7 +26,7 @@ h2 {
   grid-template-rows: 1fr 1fr;
   gap: 4px;
 }
-.mat-card-image {
+.mat-mdc-card-image {
   margin: 0 !important;
   width: 100%;
   object-fit: cover;

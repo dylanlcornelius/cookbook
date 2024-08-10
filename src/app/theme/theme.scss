@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@include mat.all-legacy-component-typographies();
-@include mat.legacy-core();
+@include mat.all-component-typographies();
+@include mat.core();
 
 :root {
   --shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.3);
@@ -25,7 +25,7 @@ $light-mat-theme: mat.define-light-theme(
 );
 
 .light {
-  @include mat.all-legacy-component-themes($light-mat-theme);
+  @include mat.all-component-themes($light-mat-theme);
 
   --header: linear-gradient(-45deg, #373ba6, #212463);
   --footer: linear-gradient(45deg, #373ba6, #212463);
@@ -55,7 +55,7 @@ $dark-mat-theme: mat.define-dark-theme(
 );
 
 .dark {
-  @include mat.all-legacy-component-colors($dark-mat-theme);
+  @include mat.all-component-colors($dark-mat-theme);
 
   --header: linear-gradient(60deg, #029ef5 -10%, #473873 90%);
   --footer: linear-gradient(-60deg, #029ef5 -10%, #473873 90%);

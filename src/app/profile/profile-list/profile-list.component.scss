@@ -2,7 +2,7 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   column-gap: 50px;
 }
-.mat-form-field {
+.mat-mdc-form-field {
   width: 60%;
 }
 .user-card {
@@ -10,34 +10,34 @@
   margin: 10px;
   text-align: center;
 }
-.mat-card-header {
+.mat-mdc-card-header {
   flex-grow: 1;
   overflow: auto;
 }
-.mat-card-header .mat-card-subtitle {
+.mat-mdc-card-header .mat-mdc-card-subtitle {
   width: min-content;
   margin: -8px auto 0 !important;
 }
-.mat-card-image {
+.mat-mdc-card-image {
   margin: 0 -16px 16px !important;
   object-fit: cover;
   aspect-ratio: 1/1;
 }
-.mat-card-actions {
+.mat-mdc-card-actions {
   display: flex !important;
   justify-content: center;
   width: min-content;
   margin: 0 auto !important;
   padding: 0 !important;
 }
-.mat-card-actions .mat-button {
+.mat-mdc-card-actions .mat-mdc-button {
   margin: 0 0 0 20px !important;
   padding: 0;
 }
-.mat-card-actions .mat-button:first-child {
+.mat-mdc-card-actions .mat-mdc-button:first-child {
   margin: 0 !important;
 }
-.mat-paginator {
+.mat-mdc-paginator {
   background: inherit;
 }
 .full-width {

@@ -37,7 +37,7 @@ td {
   flex-grow: 1;
   flex-basis: 280px;
 }
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100%;
 }
 .swap-icon {
@@ -112,7 +112,7 @@ h3 {
   border-radius: var(--radius);
   box-shadow: var(--highlight-shadow);
 
-  .mat-form-field {
+  .mat-mdc-form-field {
     width: 50px;
   }
   .ingredient-name {

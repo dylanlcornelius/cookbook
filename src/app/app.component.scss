@@ -69,13 +69,13 @@ section {
 .indicator {
   color: var(--border);
 }
-.mat-button,
-.mat-raised-button {
+.mat-mdc-button,
+.mat-mdc-raised-button {
   outline: none !important;
 }
-.mat-paginator {
+.mat-mdc-paginator {
   background: inherit !important;
 }
-.mat-card {
+.mat-mdc-card {
   color: var(--text) !important;
 }

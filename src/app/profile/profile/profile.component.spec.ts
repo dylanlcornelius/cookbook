@@ -9,7 +9,7 @@ import { CurrentUserService } from '@currentUserService';
 import { of } from 'rxjs';
 import { ActionService } from '@actionService';
 import { User } from '@user';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NotificationService } from '@modalService';

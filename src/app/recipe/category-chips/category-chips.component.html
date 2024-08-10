@@ -1,58 +1,58 @@
-<mat-chip-list *ngIf="recipe">
-  <mat-chip
+<mat-chip-listbox *ngIf="recipe">
+  <mat-chip-option
     (click)="setCategoryFilter('New!')"
     *ngIf="recipe.hasNewCategory"
     matTooltip="Filter Recipes by This Category"
   >
     New!
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     (click)="setCategoryFilter('Needs Image')"
     *ngIf="recipe.hasNeedsImageCategory"
     matTooltip="Filter Recipes by This Category"
   >
     Needs Image
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     *ngIf="!!recipe.type"
     (click)="setTypeFilter(recipe.type)"
     matTooltip="Filter Recipes by This Category"
   >
     {{ recipe.displayType }}
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     *ngIf="recipe.isVegetarian"
     (click)="setRestrictionFilter('isVegetarian')"
     matTooltip="Filter Recipes by This Category"
   >
     Vegetarian
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     *ngIf="recipe.isVegan"
     (click)="setRestrictionFilter('isVegan')"
     matTooltip="Filter Recipes by This Category"
   >
     Vegan
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     *ngIf="recipe.isGlutenFree"
     (click)="setRestrictionFilter('isGlutenFree')"
     matTooltip="Filter Recipes by This Category"
   >
     Gluten Free
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     *ngIf="recipe.isDairyFree"
     (click)="setRestrictionFilter('isDairyFree')"
     matTooltip="Filter Recipes by This Category"
   >
     Dairy Free
-  </mat-chip>
-  <mat-chip
+  </mat-chip-option>
+  <mat-chip-option
     *ngFor="let category of recipe.categories"
     (click)="setCategoryFilter(category.category)"
     matTooltip="Filter Recipes by This Category"
   >
     {{ category.category }}
-  </mat-chip>
-</mat-chip-list>
+  </mat-chip-option>
+</mat-chip-listbox>

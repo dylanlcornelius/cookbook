@@ -28,7 +28,7 @@ h5 {
   padding: 0;
   min-width: 35px;
 }
-.mat-card-title {
+.mat-mdc-card-title {
   margin-top: 15px;
 
   @media screen and (min-width: 768px) {
@@ -51,7 +51,7 @@ h5 {
   padding: 0.5rem 0 1rem;
   font-style: italic;
 }
-.mat-card-image {
+.mat-mdc-card-image {
   object-fit: cover;
   margin: 0 -16px;
   max-width: 750px;

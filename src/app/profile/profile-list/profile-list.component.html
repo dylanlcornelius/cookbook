@@ -12,6 +12,7 @@
 
   <div *ngIf="!loading" class="container center">
     <mat-card
+      appearance="outlined"
       *ngFor="let user of dataSource.connect().value; trackBy: identify"
       class="user-card mat-elevation-z8"
       (click)="setAuthorFilter(user.name)"
