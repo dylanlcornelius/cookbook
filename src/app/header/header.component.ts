@@ -1,18 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd } from '@angular/router';
-import { combineLatest, Observable, Subject } from 'rxjs';
-
-import { environment } from '../../environments/environment';
-import { AuthService } from '../user/shared/auth.service';
-import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../theme/animations';
-import { User } from '@user';
+import { Event, NavigationEnd, Router } from '@angular/router';
 import { CurrentUserService } from '@currentUserService';
-import { NavigationService } from '@navigationService';
-import { Navigation, NavigationMenu, Navigations } from '@navigation';
-import { takeUntil } from 'rxjs/operators';
-import { HouseholdService } from '@householdService';
-import { RecipeService } from '@recipeService';
 import { FeedbackService } from '@feedbackService';
+import { HouseholdService } from '@householdService';
+import { Navigation, NavigationMenu, Navigations } from '@navigation';
+import { NavigationService } from '@navigationService';
+import { RecipeService } from '@recipeService';
+import { User } from '@user';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { fadeInAnimation, fadeInFastAnimation, slideInOutAnimation } from '../theme/animations';
+import { AuthService } from '../user/shared/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -44,13 +43,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private feedbackService: FeedbackService
   ) {
-    this.router.events.subscribe((event: RouterEvent) => {
-      if (event.url) {
-        this.route = event.url;
-      }
-
+    this.router.events.subscribe((event: Event) => {
       if (!(event instanceof NavigationEnd)) {
         return;
+      }
+      if (event.url) {
+        this.route = event.url;
       }
       window.scrollTo(0, 0);
     });
