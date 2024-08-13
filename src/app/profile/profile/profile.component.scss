@@ -1,3 +1,6 @@
+hr {
+  width: 100%;
+}
 .mat-mdc-tab-group {
   max-width: 1000px;
   margin: 0 auto;
@@ -29,7 +32,7 @@
   top: -16px;
 }
 .mat-mdc-card-image {
-  max-width: 750px;
+  width: 100%;
   object-fit: cover;
   aspect-ratio: 1/1;
 }

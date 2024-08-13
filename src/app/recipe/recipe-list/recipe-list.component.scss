@@ -32,12 +32,16 @@ h2 {
     grid-column-start: 1;
   }
 }
-.mat-mdc-card-header .mat-mdc-card-subtitle {
-  width: min-content;
-  margin: -8px auto 0 !important;
+.mat-mdc-card-header {
+  padding: 8px 16px 4px;
+  justify-content: center;
+
+  .mat-mdc-card-subtitle {
+    width: min-content;
+    margin: -8px auto 0 !important;
+  }
 }
 .mat-mdc-card-image {
-  margin: 0 -16px 5px !important;
   object-fit: cover;
   aspect-ratio: 1/1;
 }

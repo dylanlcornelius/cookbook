@@ -11,10 +11,10 @@
   </div>
 
   <mat-form-field class="search-bar">
-    <input matInput (keyup)="applyFilter($event.target.value)" />
-    <mat-placeholder>
+    <mat-label>
       <mat-icon>search</mat-icon>
-    </mat-placeholder>
+    </mat-label>
+    <input matInput (keyup)="applyFilter($event.target.value)" />
   </mat-form-field>
 
   <div class="table-container mat-elevation-z8">

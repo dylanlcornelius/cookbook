@@ -9,10 +9,22 @@
   flex-direction: column;
   border-radius: var(--radius);
 
-  .mat-mdc-table,
-  .mat-mdc-cell,
-  .mat-mdc-header-cell {
+  .mat-mdc-table {
     border-radius: var(--radius);
+  }
+  .mat-mdc-header-cell:first-of-type {
+    border-top-left-radius: var(--radius);
+  }
+  .mat-mdc-header-cell:last-of-type {
+    border-top-right-radius: var(--radius);
+  }
+  .mat-mdc-row:last-of-type {
+    .mat-mdc-cell:first-of-type {
+      border-bottom-left-radius: var(--radius);
+    }
+    .mat-mdc-cell:last-of-type {
+      border-bottom-right-radius: var(--radius);
+    }
   }
   .mat-mdc-header-row {
     border-color: var(--border);

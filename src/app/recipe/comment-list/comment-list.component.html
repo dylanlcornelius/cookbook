@@ -30,7 +30,7 @@
 ></ng-template>
 
 <ng-template #existingComment let-comment="comment">
-  <div class="mat-card comment" [ngClass]="{ 'sub-comment': comment.parent }">
+  <div class="comment mat-elevation-z2" [ngClass]="{ 'sub-comment': comment.parent }">
     <div class="comment-description">
       <span>
         <span>{{ comment.authorName }}</span>
@@ -91,7 +91,7 @@
 </ng-template>
 
 <ng-template #newComment let-control="control" let-parent="parent">
-  <form class="mat-card comment" [ngClass]="{ 'sub-comment': parent }" *ngIf="control">
+  <form class="comment mat-elevation-z2" [ngClass]="{ 'sub-comment': parent }" *ngIf="control">
     <mat-form-field appearance="outline">
       <mat-label>Add a comment</mat-label>
       <textarea matInput [formControl]="control"></textarea>

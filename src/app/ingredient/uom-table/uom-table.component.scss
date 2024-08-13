@@ -6,15 +6,13 @@ label {
   margin: 0;
   padding-right: 5px;
 }
-input {
-  width: 50px;
-}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 input[type='number'] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 .table-container {

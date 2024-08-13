@@ -336,11 +336,11 @@ describe('RecipeDetailComponent', () => {
     });
   });
 
-  describe('shouldDisplayCategories', () => {
+  describe('showDisplayCategories', () => {
     it('should return true when there are recipe categories', () => {
       component.recipe = new Recipe({ categories: [{ category: 'test' }] });
 
-      const result = component.shouldDisplayCategories();
+      const result = component.showDisplayCategories();
 
       expect(result).toBeTrue();
     });
@@ -348,7 +348,7 @@ describe('RecipeDetailComponent', () => {
     it('should return true when the recipe has the new category', () => {
       component.recipe = new Recipe({ hasNewCategory: true });
 
-      const result = component.shouldDisplayCategories();
+      const result = component.showDisplayCategories();
 
       expect(result).toBeTrue();
     });
@@ -356,7 +356,7 @@ describe('RecipeDetailComponent', () => {
     it('should return true when the recipe has the needs image category', () => {
       component.recipe = new Recipe({ hasNeedsImageCategory: true });
 
-      const result = component.shouldDisplayCategories();
+      const result = component.showDisplayCategories();
 
       expect(result).toBeTrue();
     });
@@ -364,7 +364,7 @@ describe('RecipeDetailComponent', () => {
     it('should return true when there is a dietary restirction', () => {
       component.recipe = new Recipe({ isDairyFree: true });
 
-      const result = component.shouldDisplayCategories();
+      const result = component.showDisplayCategories();
 
       expect(result).toBeTrue();
     });
@@ -372,7 +372,7 @@ describe('RecipeDetailComponent', () => {
     it('should return false when there are no category', () => {
       component.recipe = new Recipe({});
 
-      const result = component.shouldDisplayCategories();
+      const result = component.showDisplayCategories();
 
       expect(result).toBeFalse();
     });

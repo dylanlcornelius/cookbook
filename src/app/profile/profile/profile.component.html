@@ -8,7 +8,7 @@
     [selectedIndex]="selectedIndex"
   >
     <mat-tab label="Profile">
-      <mat-card appearance="outlined" class="tab-body">
+      <mat-card class="tab-body">
         <mat-progress-bar
           class="image-progress"
           mode="determinate"
@@ -41,7 +41,7 @@
                 <mat-label>First Name</mat-label>
                 <input
                   matInput
-                  placeholder="First Name"
+                  placeholder="ex. Bob"
                   formControlName="firstName"
                   [errorStateMatcher]="matcher"
                   required
@@ -59,7 +59,7 @@
                 <mat-label>Last Name</mat-label>
                 <input
                   matInput
-                  placeholder="Last Name"
+                  placeholder="ex. Wright"
                   formControlName="lastName"
                   [errorStateMatcher]="matcher"
                   required

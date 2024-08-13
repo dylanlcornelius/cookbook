@@ -5,9 +5,10 @@
 <div *ngIf="!loading">
   <form class="short-container item-form">
     <mat-form-field class="item-form-field">
+      <mat-label>Add a Recipe</mat-label>
       <input
         matInput
-        placeholder="Add a Recipe"
+        placeholder="ex. Cookies"
         [formControl]="recipeControl"
         [matAutocomplete]="auto"
       />

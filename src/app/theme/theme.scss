@@ -8,6 +8,10 @@
   --radius: 4px;
 }
 
+$typography-config: mat.define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+);
+
 //light theme
 $light-primary: mat.define-palette(mat.$indigo-palette);
 $light-accent: mat.define-palette(mat.$pink-palette);
@@ -19,7 +23,7 @@ $light-mat-theme: mat.define-light-theme(
       accent: $light-accent,
       warn: $light-warn,
     ),
-    typography: mat.define-typography-config(),
+    typography: $typography-config,
     density: 0,
   )
 );
@@ -49,7 +53,7 @@ $dark-mat-theme: mat.define-dark-theme(
       accent: $dark-accent,
       warn: $dark-warn,
     ),
-    typography: mat.define-typography-config(),
+    typography: $typography-config,
     density: 0,
   )
 );

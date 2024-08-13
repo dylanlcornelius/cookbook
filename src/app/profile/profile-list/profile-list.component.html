@@ -4,15 +4,14 @@
 
 <div [hidden]="loading">
   <mat-form-field class="search-bar">
-    <input matInput (keyup)="applyFilter($event.target.value)" />
-    <mat-placeholder>
+    <mat-label>
       <mat-icon>search</mat-icon>
-    </mat-placeholder>
+    </mat-label>
+    <input matInput (keyup)="applyFilter($event.target.value)" />
   </mat-form-field>
 
   <div *ngIf="!loading" class="container center">
     <mat-card
-      appearance="outlined"
       *ngFor="let user of dataSource.connect().value; trackBy: identify"
       class="user-card mat-elevation-z8"
       (click)="setAuthorFilter(user.name)"

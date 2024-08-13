@@ -6,10 +6,11 @@
   <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(true)" appFormValidation>
     <div class="center">
       <mat-form-field>
+        <mat-label>Times Cooked</mat-label>
         <input
           type="number"
           matInput
-          placeholder="Times Cooked"
+          placeholder="ex. 12"
           formControlName="timesCooked"
           [errorStateMatcher]="matcher"
         />
