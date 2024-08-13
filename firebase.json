@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/cookbook",
+    "public": "dist/cookbook/browser",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {

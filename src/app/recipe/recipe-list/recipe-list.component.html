@@ -78,13 +78,12 @@
   </div>
 
   <mat-form-field class="search-bar">
-    <input matInput [ngModel]="searchFilter" (ngModelChange)="searchChanged($event)" />
-    <mat-placeholder>
+    <mat-label>
       <mat-icon>search</mat-icon>
-    </mat-placeholder>
+    </mat-label>
+    <input matInput [ngModel]="searchFilter" (ngModelChange)="searchChanged($event)" />
     <button
       mat-button
-      mat-icon-button
       matSuffix
       matTooltip="Clear filters"
       (click)="clearFilters()"

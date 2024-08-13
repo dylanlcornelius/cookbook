@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { RecipeService } from '@recipeService';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import {
-  MatLegacyPaginator as MatPaginator,
-  LegacyPageEvent as PageEvent,
-} from '@angular/material/legacy-paginator';
+  MatPaginator,
+  PageEvent,
+} from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ImageService } from '@imageService';
 import { combineLatest, Subject, Subscription } from 'rxjs';

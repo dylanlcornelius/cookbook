@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IngredientListComponent } from './ingredient-list.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
-  MatLegacyTableModule as MatTableModule,
-  MatLegacyTableDataSource as MatTableDataSource,
-} from '@angular/material/legacy-table';
+  MatTableModule,
+  MatTableDataSource,
+} from '@angular/material/table';
 import { UserIngredientService } from '@userIngredientService';
 import { IngredientService } from '@ingredientService';
 import { User } from '@user';

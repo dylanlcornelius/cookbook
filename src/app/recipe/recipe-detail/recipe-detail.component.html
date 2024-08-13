@@ -83,7 +83,7 @@
 
           <div *ngIf="creationDate">Created on {{ creationDate }}</div>
 
-          <div *ngIf="shouldDisplayCategories()">
+          <div *ngIf="shouldDisplayCategories">
             <app-category-chips [recipe]="recipe" />
           </div>
 
@@ -183,7 +183,7 @@
         />
       </mat-card-content>
     </div>
-    <mat-card-content *ngIf="recipe.steps && recipe.steps.length">
+    <mat-card-content class="directions-container" *ngIf="recipe.steps && recipe.steps.length">
       <h5 class="mobile-center-text">Directions</h5>
 
       <app-recipe-steps [steps]="recipe.steps" />

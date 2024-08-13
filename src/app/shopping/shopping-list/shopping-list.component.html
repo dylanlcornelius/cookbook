@@ -5,9 +5,10 @@
 <div *ngIf="!loading">
   <form class="short-container item-form center" (ngSubmit)="addItem(ingredientControl.value)">
     <mat-form-field class="item-form-field">
+      <mat-label>Add an Ingredient</mat-label>
       <input
         matInput
-        placeholder="Add an Ingredient"
+        placeholder="ex. Flour"
         [formControl]="ingredientControl"
         [matAutocomplete]="auto"
       />

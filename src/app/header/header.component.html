@@ -19,7 +19,9 @@
           class="title-button"
           [matMenuTriggerFor]="profileMenu"
         >
-          <mat-icon [matBadge]="householdNotifications" matBadgeSize="small">person</mat-icon>
+          <mat-icon [matBadge]="householdNotifications" matBadgeSize="small" aria-hidden="false">
+            person
+          </mat-icon>
         </button>
         <mat-menu #profileMenu="matMenu">
           <a *ngFor="let nav of profileNavs" mat-menu-item [routerLink]="nav.link">
@@ -35,7 +37,9 @@
           routerLink="/admin/dashboard"
           *ngIf="user?.isAdmin"
         >
-          <mat-icon [matBadge]="feedbackNotifications" matBadgeSize="small">apps</mat-icon>
+          <mat-icon [matBadge]="feedbackNotifications" matBadgeSize="small" aria-hidden="false">
+            apps
+          </mat-icon>
         </a>
 
         <button

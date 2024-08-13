@@ -20,3 +20,9 @@ dd {
   min-width: 200px;
   text-align: center;
 }
+.mat-mdc-card-content:first-child {
+  padding-top: 0;
+}
+.mat-mdc-card-content:last-child {
+  padding-bottom: 0;
+}

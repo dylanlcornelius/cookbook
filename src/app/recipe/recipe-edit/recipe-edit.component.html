@@ -12,9 +12,10 @@
   >
     <ng-template #recipeStep>
       <mat-form-field class="form-field">
+        <mat-label>Name</mat-label>
         <input
           matInput
-          placeholder="Name"
+          placeholder="ex. Cookies"
           formControlName="name"
           [errorStateMatcher]="matcher"
           required
@@ -42,11 +43,17 @@
       </mat-form-field>
 
       <mat-form-field class="form-field">
-        <input matInput placeholder="Link" formControlName="link" />
+        <mat-label>Link</mat-label>
+        <input matInput placeholder="ex. https://www.example-recipe.com" formControlName="link" />
       </mat-form-field>
 
       <mat-form-field class="form-field">
-        <textarea matInput placeholder="Description" formControlName="description"></textarea>
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          placeholder="ex. This is an example recipe description."
+          formControlName="description"
+        ></textarea>
         <mat-error>
           <span
             *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched"
@@ -57,9 +64,10 @@
       </mat-form-field>
 
       <mat-form-field class="form-field">
+        <mat-label>Preparation Time</mat-label>
         <input
           matInput
-          placeholder="Preparation Time"
+          placeholder="ex. 1 hour"
           formControlName="time"
           [errorStateMatcher]="matcher"
         />
@@ -71,9 +79,10 @@
       </mat-form-field>
 
       <mat-form-field class="form-field">
+        <mat-label>Servings</mat-label>
         <input
           matInput
-          placeholder="Servings"
+          placeholder="ex. 8"
           formControlName="servings"
           [errorStateMatcher]="matcher"
         />
@@ -98,39 +107,36 @@
 
         <div class="restrictions">
           <span>
-            <mat-label>Vegetarian?</mat-label>
-            <mat-checkbox formControlName="isVegetarian"></mat-checkbox>
+            <mat-checkbox formControlName="isVegetarian">Vegetarian?</mat-checkbox>
           </span>
 
           <span>
-            <mat-label>Vegan?</mat-label>
-            <mat-checkbox formControlName="isVegan"></mat-checkbox>
+            <mat-checkbox formControlName="isVegan">Vegan?</mat-checkbox>
           </span>
 
           <span>
-            <mat-label>Gluten Free?</mat-label>
-            <mat-checkbox formControlName="isGlutenFree"></mat-checkbox>
+            <mat-checkbox formControlName="isGlutenFree">Gluten Free?</mat-checkbox>
           </span>
 
           <span>
-            <mat-label>Dairy Free?</mat-label>
-            <mat-checkbox formControlName="isDairyFree"></mat-checkbox>
+            <mat-checkbox formControlName="isDairyFree">Dairy Free?</mat-checkbox>
           </span>
         </div>
       </div>
 
       <mat-form-field class="form-field">
-        <mat-chip-list #categoryList>
-          <mat-chip
+        <mat-label>Categories</mat-label>
+        <mat-chip-grid #categoryList>
+          <mat-chip-row
             *ngFor="let category of recipesForm.get('categories')['controls']; let i = index"
             (removed)="removeCategory(i)"
           >
             {{ category.value.category }}
             <mat-icon matChipRemove>cancel</mat-icon>
-          </mat-chip>
+          </mat-chip-row>
           <input
             #categoryInput
-            placeholder="Categories"
+            placeholder="ex. Pie"
             [formControl]="categoryControl"
             [matAutocomplete]="auto"
             [matChipInputFor]="categoryList"
@@ -152,7 +158,7 @@
               {{ category }}
             </mat-option>
           </mat-autocomplete>
-        </mat-chip-list>
+        </mat-chip-grid>
       </mat-form-field>
     </ng-template>
 
@@ -189,11 +195,12 @@
                 </mat-icon>
               </mat-label>
               <div class="between">
-                <div>
+                <div class="ingredient-quantity">
                   <mat-form-field>
+                    <mat-label>QTY</mat-label>
                     <input
                       matInput
-                      placeholder="QTY"
+                      placeholder="ex. 3"
                       formControlName="quantity"
                       [errorStateMatcher]="matcher"
                     />
@@ -202,16 +209,14 @@
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field
+                    class="uom-field"
                     *ngIf="
                       ingredient.get('uom').value !== 'other' &&
                       ingredient.get('uom').value !== 'recipe'
                     "
                   >
-                    <mat-select
-                      placeholder="UOM"
-                      formControlName="uom"
-                      [errorStateMatcher]="matcher"
-                    >
+                    <mat-label>UOM</mat-label>
+                    <mat-select formControlName="uom" [errorStateMatcher]="matcher">
                       <mat-option
                         *ngFor="
                           let uom of getUOMs(
@@ -266,10 +271,10 @@
           </div>
 
           <mat-form-field>
-            <input matInput (keyup)="applyIngredientFilter($event.target.value)" />
-            <mat-placeholder>
+            <mat-label>
               <mat-icon>search</mat-icon>
-            </mat-placeholder>
+            </mat-label>
+            <input matInput (keyup)="applyIngredientFilter($event.target.value)" />
           </mat-form-field>
 
           <div
@@ -326,9 +331,10 @@
           <div class="center steps" [formGroupName]="i">
             <mat-icon class="box-icon" cdkDragHandle>drag_indicator</mat-icon>
             <mat-form-field *ngIf="step.get('step')">
+              <mat-label>Step {{ i + 1 }}</mat-label>
               <textarea
                 matInput
-                placeholder="Step {{ i + 1 }}"
+                placeholder="ex. This is an example recipe step."
                 rows="3"
                 formControlName="step"
               ></textarea>

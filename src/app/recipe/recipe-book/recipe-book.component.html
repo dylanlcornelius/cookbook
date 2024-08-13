@@ -9,43 +9,45 @@
     (click)="openRecipeList(category.filter)"
     [@fadeInAnimation]="{ value: ':enter', params: { duration: 300, delay: 200 } }"
   >
-    <mat-card-header>
+    <mat-card-header class="center">
       <mat-card-title>{{ category.name }}</mat-card-title>
     </mat-card-header>
 
-    <div class="category-images">
-      <img
-        mat-card-image
-        *ngIf="category.recipes[0].image"
-        [src]="category.recipes[0].image"
-        alt=""
-        loading="lazy"
-        [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 500 } }"
-      />
-      <img
-        mat-card-image
-        *ngIf="category.recipes[1].image"
-        [src]="category.recipes[1].image"
-        alt=""
-        loading="lazy"
-        [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 1000 } }"
-      />
-      <img
-        mat-card-image
-        *ngIf="category.recipes[2].image"
-        [src]="category.recipes[2].image"
-        alt=""
-        loading="lazy"
-        [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 1500 } }"
-      />
-      <img
-        mat-card-image
-        *ngIf="category.recipes[3].image"
-        [src]="category.recipes[3].image"
-        alt=""
-        loading="lazy"
-        [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 2000 } }"
-      />
-    </div>
+    <mat-card-content>
+      <div class="category-images">
+        <img
+          mat-card-image
+          *ngIf="category.recipes[0].image"
+          [src]="category.recipes[0].image"
+          alt=""
+          loading="lazy"
+          [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 500 } }"
+        />
+        <img
+          mat-card-image
+          *ngIf="category.recipes[1].image"
+          [src]="category.recipes[1].image"
+          alt=""
+          loading="lazy"
+          [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 1000 } }"
+        />
+        <img
+          mat-card-image
+          *ngIf="category.recipes[2].image"
+          [src]="category.recipes[2].image"
+          alt=""
+          loading="lazy"
+          [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 1500 } }"
+        />
+        <img
+          mat-card-image
+          *ngIf="category.recipes[3].image"
+          [src]="category.recipes[3].image"
+          alt=""
+          loading="lazy"
+          [@fadeInAnimation]="{ value: ':enter', params: { duration: 500, delay: 2000 } }"
+        />
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>

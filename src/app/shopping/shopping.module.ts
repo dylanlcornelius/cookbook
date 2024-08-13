@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { ShoppingRoutingModule } from './shopping-routing.module';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';

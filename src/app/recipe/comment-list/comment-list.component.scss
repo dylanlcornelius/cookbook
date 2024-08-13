@@ -1,4 +1,4 @@
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100%;
 }
 .collapsible {
@@ -6,6 +6,8 @@
   overflow: hidden;
 }
 .comment {
+  background-color: var(--block);
+  border-radius: var(--radius);
   margin-bottom: 10px;
   padding: 8px 16px;
 

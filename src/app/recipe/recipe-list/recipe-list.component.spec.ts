@@ -8,9 +8,9 @@ import {
 } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
 import {
-  MatLegacyTableDataSource as MatTableDataSource,
-  MatLegacyTableModule as MatTableModule,
-} from '@angular/material/legacy-table';
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { RecipeService } from '@recipeService';
 import {
@@ -44,9 +44,9 @@ import { take } from 'rxjs/operators';
 import { NotificationService, ValidationService } from '@modalService';
 import { BehaviorSubject } from 'rxjs';
 import {
-  MatLegacyPaginatorModule as MatPaginatorModule,
-  LegacyPageEvent as PageEvent,
-} from '@angular/material/legacy-paginator';
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';

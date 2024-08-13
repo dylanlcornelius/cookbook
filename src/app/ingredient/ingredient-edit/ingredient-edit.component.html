@@ -10,9 +10,10 @@
     appFormValidation
   >
     <mat-form-field class="form-field">
+      <mat-label>Name</mat-label>
       <input
         matInput
-        placeholder="Name"
+        placeholder="ex. Flour"
         formControlName="name"
         [errorStateMatcher]="matcher"
         required
@@ -42,9 +43,10 @@
 
     <div class="container">
       <mat-form-field>
+        <mat-label>Volume Amount</mat-label>
         <input
           matInput
-          placeholder="Volume Amount"
+          placeholder="ex. 1.5"
           formControlName="amount"
           [errorStateMatcher]="matcher"
         />
@@ -75,9 +77,10 @@
 
     <div class="container">
       <mat-form-field>
+        <mat-label>Weight Amount</mat-label>
         <input
           matInput
-          placeholder="Weight Amount"
+          placeholder="ex. 1/4"
           formControlName="altAmount"
           [errorStateMatcher]="matcher"
         />
@@ -129,9 +132,10 @@
     </mat-form-field>
 
     <mat-form-field class="form-field">
+      <mat-label>Calories</mat-label>
       <input
         matInput
-        placeholder="Calories"
+        placeholder="ex. 160"
         formControlName="calories"
         [errorStateMatcher]="matcher"
       />

@@ -17,7 +17,7 @@ import { HouseholdService } from '@householdService';
 import { Household } from '@household';
 import { RouterModule } from '@angular/router';
 import { RecipeIngredientService } from '@recipeIngredientService';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigService } from '@configService';
 import { Config } from '@config';
 

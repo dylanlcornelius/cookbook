@@ -4,7 +4,7 @@ h2 {
 .container {
   column-gap: 50px;
 }
-.mat-form-field {
+.mat-mdc-form-field {
   width: 60%;
 }
 .button-row {
@@ -17,7 +17,7 @@ h2 {
   padding: 5px;
   min-width: fit-content;
 }
-.mat-menu-item {
+.mat-mdc-menu-item {
   display: block;
 }
 .recipe-card {
@@ -32,16 +32,20 @@ h2 {
     grid-column-start: 1;
   }
 }
-.mat-card-header .mat-card-subtitle {
-  width: min-content;
-  margin: -8px auto 0 !important;
+.mat-mdc-card-header {
+  padding: 8px 16px 4px;
+  justify-content: center;
+
+  .mat-mdc-card-subtitle {
+    width: min-content;
+    margin: -8px auto 0 !important;
+  }
 }
-.mat-card-image {
-  margin: 0 -16px 5px !important;
+.mat-mdc-card-image {
   object-fit: cover;
   aspect-ratio: 1/1;
 }
-.mat-card-actions {
+.mat-mdc-card-actions {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr);
   margin: 0 !important;
@@ -50,7 +54,7 @@ h2 {
 .categories {
   display: none;
 }
-.mat-card:hover .categories {
+.mat-mdc-card:hover .categories {
   display: block;
   position: absolute;
   left: 0;
@@ -61,7 +65,7 @@ h2 {
   z-index: 2;
   overflow: clip;
 }
-.mat-paginator {
+.mat-mdc-paginator {
   background: inherit;
 }
 .full-width {

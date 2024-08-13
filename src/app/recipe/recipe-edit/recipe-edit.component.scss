@@ -18,8 +18,9 @@ td {
   span {
     display: flex;
     padding: 10px;
-    flex-basis: 125px;
+    flex-basis: 150px;
     justify-content: space-between;
+    align-items: center;
   }
 }
 .steps {
@@ -37,7 +38,7 @@ td {
   flex-grow: 1;
   flex-basis: 280px;
 }
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100%;
 }
 .swap-icon {
@@ -51,20 +52,21 @@ td {
   max-height: 60vh;
   overflow: auto;
   display: block;
-}
-.list::-webkit-scrollbar {
-  -webkit-appearance: none;
-}
-.list::-webkit-scrollbar:vertical {
-  width: 20px;
-}
-.list::-webkit-scrollbar:horizontal {
-  height: 20px;
-}
-.list::-webkit-scrollbar-thumb {
-  border-radius: var(--radius);
-  border: 2px solid inherit;
-  background-color: rgba(0, 0, 0, 0.3);
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
+  &::-webkit-scrollbar:vertical {
+    width: 20px;
+  }
+  &::-webkit-scrollbar:horizontal {
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--radius);
+    border: 2px solid inherit;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
 }
 h3 {
   font-size: 18px;
@@ -105,24 +107,32 @@ h3 {
   cursor: move;
   font-size: 12px;
   min-height: 40px;
-  padding: 5px 20px 0 10px;
+  padding: 5px 5px 0 10px;
   position: relative;
   margin-bottom: 15px;
   margin-right: 10px;
   border-radius: var(--radius);
-  box-shadow: var(--highlight-shadow);
+  box-shadow: var(--highlight-shadow) !important;
+  font-family: 'Roboto', arial, sans-serif;
 
-  .mat-form-field {
-    width: 50px;
+  .mat-mdc-form-field {
+    width: 60px;
+  }
+  .mat-mdc-form-field.uom-field {
+    width: 120px;
   }
   .ingredient-name {
     font-weight: 900;
     font-size: 14px;
-    margin: auto;
+    letter-spacing: 0;
+    margin: 0.5rem auto;
+  }
+  .ingredient-quantity {
+    display: flex;
+    flex-wrap: nowrap;
   }
   .optional-toggle {
     display: flex;
-    gap: 10px;
     align-items: center;
   }
   .box-icon {
@@ -140,6 +150,7 @@ mat-label {
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
     0 3px 14px 2px rgba(0, 0, 0, 0.12);
   color: var(--text);
+  overflow: hidden;
 }
 .cdk-drag-placeholder {
   opacity: 0;
@@ -152,6 +163,6 @@ mat-label {
 }
 @media screen and (max-width: 767px) {
   .list {
-    max-height: 250px;
+    max-height: 450px;
   }
 }

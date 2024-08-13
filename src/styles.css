@@ -98,8 +98,8 @@ dt {
   margin: 10px auto;
 }
 .search-bar {
-  display: contents !important;
-  padding: 0 5%;
+  margin-top: 0.5rem;
+  width: 100% !important;
 }
 .icon-buttons {
   display: flex;
@@ -120,7 +120,28 @@ dt {
   overflow: visible;
 }
 
-.mat-progress-bar,
+.mat-mdc-button,
+.mat-mdc-raised-button {
+  letter-spacing: 0 !important;
+  font-weight: 400 !important;
+}
+.mat-mdc-button .mat-icon,
+.mat-mdc-raised-button .mat-icon {
+  height: 1.5rem !important;
+  width: 1.5rem !important;
+  font-size: 1.5rem !important;
+  margin: 0 !important;
+}
+.mdc-text-field {
+  padding: 0 8px !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: unset !important;
+}
+.mat-mdc-form-field-error-wrapper {
+  padding: 0 !important;
+}
+.mat-mdc-progress-bar,
 .mat-progress-bar .mat-progress-bar-fill {
   transition: transform 100ms ease !important;
 }
@@ -128,41 +149,45 @@ dt {
 .mat-vertical-content {
   padding: 10px 24px !important;
 }
-.mat-card-header-text {
-  margin: 0 !important;
-  width: 100%;
+.mat-mdc-menu-content {
+  display: flex;
+  flex-direction: column;
 }
-.mat-card-header .mat-card-subtitle {
+.mat-mdc-menu-panel .mat-mdc-checkbox .mdc-label {
+  padding-right: 10px;
+}
+.mat-mdc-card-title {
+  margin-bottom: 0.5rem !important;
+}
+.mat-mdc-card-header .mat-mdc-card-subtitle {
   margin-bottom: 0 !important;
 }
-.mat-card-actions {
+.mat-mdc-card-actions {
   display: flex !important;
   justify-content: center;
-  padding: 0 !important;
 }
-.mat-card-actions .mat-button {
+.mat-mdc-card-actions .mat-mdc-button {
   margin: 0 !important;
 }
-.mat-menu-panel {
+.mat-mdc-menu-panel {
   max-height: min(100vh - 50px, 500px) !important;
 }
-.categories .mat-chip {
-  font-size: 12px;
-  padding: 8px;
-  margin: 4px 2px;
-  min-height: 24px;
+.categories .mat-mdc-chip {
+  margin: 0 2px !important;
+  height: 24px;
 }
-.mat-standard-chip,
+.categories .mat-mdc-chip .mat-mdc-chip-action-label {
+  font-size: 12px;
+}
+.mat-mdc-standard-chip,
 .mat-stepper-horizontal,
 .mat-stepper-vertical,
-.mat-tab-group {
+.mat-mdc-tab-group {
   border-radius: 4px !important;
 }
-app-comment-list .mat-form-field-wrapper {
-  padding: 0 !important;
-}
-app-admin-dashboard .mat-tab-label {
-  min-width: unset;
+.mat-mdc-tab-labels .mat-mdc-tab {
+  letter-spacing: 0 !important;
+  font-weight: 400 !important;
 }
 @media screen and (max-width: 767px) {
   .mat-vertical-stepper-header {

@@ -53,6 +53,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   timesCooked: number;
   lastDateCooked: string;
   creationDate: string;
+  shouldDisplayCategories: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -194,11 +195,26 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
                   this.recipe.hasNeedsImageCategory =
                     this.hasAuthorPermission && this.timesCooked && !this.recipe.hasImage;
+
+                  this.shouldDisplayCategories = this.showDisplayCategories();
                   this.loading = this.loadingService.set(false);
                 }
               );
           });
       });
+  }
+
+  showDisplayCategories(): boolean {
+    return (
+      !!(this.recipe.categories && this.recipe.categories.length) ||
+      this.recipe.hasNewCategory ||
+      this.recipe.hasNeedsImageCategory ||
+      this.recipe.isVegetarian ||
+      this.recipe.isVegan ||
+      this.recipe.isGlutenFree ||
+      this.recipe.isDairyFree ||
+      !!this.recipe.type
+    );
   }
 
   getQuantity = this.recipeMultiplierService.getQuantity;
@@ -226,19 +242,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/recipe/list']);
     }
   };
-
-  shouldDisplayCategories(): boolean {
-    return (
-      !!(this.recipe.categories && this.recipe.categories.length) ||
-      this.recipe.hasNewCategory ||
-      this.recipe.hasNeedsImageCategory ||
-      this.recipe.isVegetarian ||
-      this.recipe.isVegan ||
-      this.recipe.isGlutenFree ||
-      this.recipe.isDairyFree ||
-      !!this.recipe.type
-    );
-  }
 
   setAuthorFilter = (filter: string): void =>
     this.utilService.setListFilter(new AuthorFilter(filter));
