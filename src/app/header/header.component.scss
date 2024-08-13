@@ -70,9 +70,11 @@ a:hover {
   border-bottom: 1px solid var(--border);
   border-radius: 0;
   text-align: start;
+  justify-content: start;
 }
 .mobile-nav-text {
   margin-left: 20px;
+  text-wrap: nowrap;
 }
 .mobile-nav-bottom {
   bottom: 10px;
