@@ -21,7 +21,7 @@ firebase init
 
 ```
 Hosting: Configure and deploy Firebase Hosting Sites
-Set public directory: dist/cookbook
+Set public directory: dist/cookbook/browser
 SPA: Yes
 ```
 
