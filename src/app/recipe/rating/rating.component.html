@@ -6,7 +6,11 @@
   </div>
   <div
     class="top"
-    [ngStyle]="{ width: recipe.meanRating + '%', height: userRating.rating ? '20px' : '100%' }"
+    [ngStyle]="{
+      width: recipe.meanRating + '%',
+      height:
+        recipe.ratings.length === 1 && userRating.rating ? '0' : userRating.rating ? '13px' : '100%'
+    }"
   >
     <span (click)="handleRate(1)">★</span>
     <span (click)="handleRate(2)">★</span>
