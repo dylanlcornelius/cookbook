@@ -2,18 +2,23 @@
   max-height: 30vh;
   overflow: auto;
   margin-bottom: 10px;
-}
-.ingredient-list::-webkit-scrollbar {
-  -webkit-appearance: none;
-}
-.ingredient-list::-webkit-scrollbar:vertical {
-  width: 20px;
-}
-.ingredient-list::-webkit-scrollbar:horizontal {
-  height: 20px;
-}
-.ingredient-list::-webkit-scrollbar-thumb {
-  border-radius: var(--radius);
-  border: 2px solid inherit;
-  background-color: rgba(0, 0, 0, 0.3);
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
+  &::-webkit-scrollbar:vertical {
+    width: 20px;
+  }
+  &::-webkit-scrollbar:horizontal {
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--radius);
+    border: 2px solid inherit;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  & .mat-mdc-checkbox {
+    overflow: hidden;
+  }
 }

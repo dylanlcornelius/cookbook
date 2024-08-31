@@ -1,16 +1,15 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Ingredient } from '@ingredient';
-import { UserIngredient } from '@userIngredient';
 import { ModalComponent } from '@modalComponent';
-
-import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.component';
-import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
-import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
 import { Recipe } from '@recipe';
 import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeMultiplierService } from '@recipeMultiplierService';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { UserIngredient } from '@userIngredient';
+import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
+import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.component';
 
 describe('RecipeIngredientModalComponent', () => {
   let component: RecipeIngredientModalComponent;
@@ -65,7 +64,7 @@ describe('RecipeIngredientModalComponent', () => {
         () => {},
         new Recipe({}),
         [],
-        [],
+        [new RecipeIngredient({})],
         [new Ingredient({})],
         userIngredients,
         uid,
