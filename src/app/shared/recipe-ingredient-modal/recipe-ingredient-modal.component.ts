@@ -41,6 +41,18 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((modal: RecipeIngredientModal) => {
         this.params = modal;
+
+        if (this.params) {
+          this.params = {
+            ...this.params,
+            recipeIngredients: this.params.recipeIngredients.map(recipeIngredient => {
+              recipeIngredient.selected = true;
+              return recipeIngredient;
+            }),
+          };
+
+          this.selectionCount = this.params.recipeIngredients.length;
+        }
       });
   }
 
