@@ -591,7 +591,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         if (buttonName === 'New') {
           this.router.navigate(['/recipe/edit']);
         } else {
-          this.router.navigate(['/recipe/detail/', recipeId]);
+          this.router.navigate(['/recipe/detail/', recipeId], { replaceUrl: true });
         }
       });
   }

@@ -239,7 +239,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.imageService.deleteFile(id);
       this.recipeService.delete(id);
       this.notificationService.setModal(new SuccessNotification('Recipe deleted!'));
-      this.router.navigate(['/recipe/list']);
+      this.router.navigate(['/recipe/list'], { replaceUrl: true });
     }
   };
 
@@ -332,7 +332,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   openRecipeEditorEvent = (): void => {
     this.recipeService.setForm(null);
-    this.router.navigate(['/recipe/edit/', this.recipe.id]);
+    this.router.navigate(['/recipe/edit/', this.recipe.id], { skipLocationChange: true });
   };
 
   cloneRecipe(): void {
