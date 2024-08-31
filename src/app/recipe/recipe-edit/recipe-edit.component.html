@@ -395,8 +395,6 @@
         <div class="stepper-button-row">
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperNext type="button">Next</button>
-          <button mat-button type="submit" name="New">Save &#38; New</button>
-          <button mat-button type="submit" name="Save">Save</button>
         </div>
       </mat-step>
 
@@ -409,8 +407,6 @@
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperPrevious type="button">Back</button>
           <button mat-button matStepperNext type="button">Next</button>
-          <button mat-button type="submit" name="New">Save &#38; New</button>
-          <button mat-button type="submit" name="Save">Save</button>
         </div>
       </mat-step>
 
@@ -422,8 +418,6 @@
         <div class="stepper-button-row">
           <button mat-button type="button" (click)="resetForm(formDirective)">Undo</button>
           <button mat-button matStepperPrevious type="button">Back</button>
-          <button mat-button type="submit" name="New">Save &#38; New</button>
-          <button mat-button type="submit" name="Save">Save</button>
         </div>
       </mat-step>
     </mat-stepper>
@@ -451,9 +445,21 @@
         <app-tutorial-button />
       </div>
 
-      <button mat-button matTooltip="Save Recipe" type="submit" name="Save" color="primary">
-        <mat-icon>done</mat-icon>
-      </button>
+      <div>
+        <button
+          mat-button
+          matTooltip="Save & Add New Recipe"
+          type="submit"
+          name="New"
+          color="primary"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+
+        <button mat-button matTooltip="Save Recipe" type="submit" name="Save" color="primary">
+          <mat-icon>done</mat-icon>
+        </button>
+      </div>
     </div>
   </form>
 </div>

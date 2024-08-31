@@ -83,7 +83,7 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
     if (id) {
       this.ingredientService.delete(id);
       this.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));
-      this.router.navigate(['/ingredient/list']);
+      this.router.navigate(['/ingredient/list'], { replaceUrl: true });
     }
   };
 }

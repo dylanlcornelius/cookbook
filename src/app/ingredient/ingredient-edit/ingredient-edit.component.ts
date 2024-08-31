@@ -155,7 +155,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
       if (this.isQuickView) {
         this.handleIngredientCreate.emit(true);
       } else {
-        this.router.navigate(['/ingredient/detail/', id]);
+        this.router.navigate(['/ingredient/detail/', id], { replaceUrl: true });
       }
     }
     formDirective.resetForm();
