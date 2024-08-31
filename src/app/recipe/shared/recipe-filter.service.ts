@@ -51,6 +51,7 @@ export enum FILTER_TYPE {
   AUTHOR = 'AUTHOR',
   TYPE = 'TYPE',
   RESTRICTION = 'RESTRICTION',
+  TEMPERATURE = 'TEMPERATURE',
   CATEGORY = 'CATEGORY',
   RATING = 'RATING',
   STATUS = 'STATUS',
@@ -91,6 +92,11 @@ export class TypeFilter extends Filter {
 
 export class RestrictionFilter extends Filter {
   type = FILTER_TYPE.RESTRICTION;
+  filterPredicate = (recipe: Recipe): boolean => recipe[this.value] === true;
+}
+
+export class TemperatureFilter extends Filter {
+  type = FILTER_TYPE.TEMPERATURE;
   filterPredicate = (recipe: Recipe): boolean => recipe[this.value] === true;
 }
 

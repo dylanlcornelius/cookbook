@@ -49,6 +49,27 @@
     Dairy Free
   </mat-chip-option>
   <mat-chip-option
+    *ngIf="recipe.isServedHot"
+    (click)="setTemperatureFilter('isServedHot')"
+    matTooltip="Filter Recipes by This Category"
+  >
+    Hot
+  </mat-chip-option>
+  <mat-chip-option
+    *ngIf="recipe.isServedRoom"
+    (click)="setTemperatureFilter('isServedRoom')"
+    matTooltip="Filter Recipes by This Category"
+  >
+    Room Temperature
+  </mat-chip-option>
+  <mat-chip-option
+    *ngIf="recipe.isServedCold"
+    (click)="setTemperatureFilter('isServedCold')"
+    matTooltip="Filter Recipes by This Category"
+  >
+    Cold
+  </mat-chip-option>
+  <mat-chip-option
     *ngFor="let category of recipe.categories"
     (click)="setCategoryFilter(category.category)"
     matTooltip="Filter Recipes by This Category"

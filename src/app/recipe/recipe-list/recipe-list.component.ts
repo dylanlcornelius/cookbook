@@ -1,48 +1,46 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { RecipeService } from '@recipeService';
-import { UserIngredientService } from '@userIngredientService';
-import { IngredientService } from '@ingredientService';
-import { MatTableDataSource } from '@angular/material/table';
-import {
-  MatPaginator,
-  PageEvent,
-} from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import { ImageService } from '@imageService';
-import { combineLatest, Subject, Subscription } from 'rxjs';
-import { CurrentUserService } from '@currentUserService';
-import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
-import { Recipe, Recipes } from '@recipe';
-import { UtilService } from '@utilService';
-import { User } from '@user';
-import {
-  RecipeFilterService,
-  AuthorFilter,
-  CategoryFilter,
-  RatingFilter,
-  SearchFilter,
-  FILTER_TYPE,
-  Filter,
-  StatusFilter,
-  ImageFilter,
-  RestrictionFilter,
-  TypeFilter,
-} from '@recipeFilterService';
-import { UserIngredients } from '@userIngredient';
-import { RecipeIngredientService } from '@recipeIngredientService';
-import { HouseholdService } from '@householdService';
-import { LoadingService } from '@loadingService';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { NotificationService, ValidationService } from '@modalService';
-import { Validation } from '@validation';
-import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
-import { SuccessNotification } from '@notification';
-import { RecipeHistoryService } from '@recipeHistoryService';
-import { Ingredients } from '@ingredient';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
+import { HouseholdService } from '@householdService';
+import { ImageService } from '@imageService';
+import { Ingredients } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { LoadingService } from '@loadingService';
+import { NotificationService, ValidationService } from '@modalService';
+import { SuccessNotification } from '@notification';
+import { Recipe, Recipes, RestrictionLabels, TemperatureLabels } from '@recipe';
+import {
+  AuthorFilter,
+  CategoryFilter,
+  Filter,
+  FILTER_TYPE,
+  ImageFilter,
+  RatingFilter,
+  RecipeFilterService,
+  RestrictionFilter,
+  SearchFilter,
+  StatusFilter,
+  TemperatureFilter,
+  TypeFilter,
+} from '@recipeFilterService';
+import { RecipeHistoryService } from '@recipeHistoryService';
+import { RecipeIngredientService } from '@recipeIngredientService';
+import { RecipeService } from '@recipeService';
+import { User } from '@user';
+import { UserIngredients } from '@userIngredient';
+import { UserIngredientService } from '@userIngredientService';
+import { UtilService } from '@utilService';
+import { Validation } from '@validation';
+import { combineLatest, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
+import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { fadeInAnimation } from '../../theme/animations';
 
 type FilterValues = Array<{
@@ -254,12 +252,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       });
 
     const restrictions = [];
-    [
-      { displayName: 'Vegetarian', name: 'isVegetarian' },
-      { displayName: 'Vegan', name: 'isVegan' },
-      { displayName: 'Gluten Free', name: 'isGlutenFree' },
-      { displayName: 'Dairy Free', name: 'isDairyFree' },
-    ].forEach(({ displayName, name }) => {
+    RestrictionLabels.forEach(({ displayName, name }) => {
       const checked =
         filters.find(f => f.type === FILTER_TYPE.RESTRICTION && f.value === name) !== undefined;
       restrictions.push({
@@ -267,6 +260,18 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         name,
         checked: checked,
         filter: new RestrictionFilter(name),
+      });
+    });
+
+    const temperatures = [];
+    TemperatureLabels.forEach(({ displayName, name }) => {
+      const checked =
+        filters.find(f => f.type === FILTER_TYPE.TEMPERATURE && f.value === name) !== undefined;
+      temperatures.push({
+        displayName,
+        name,
+        checked: checked,
+        filter: new TemperatureFilter(name),
       });
     });
 
@@ -367,7 +372,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           this.filtersList = [
             { displayName: 'Authors', name: 'author', values: authors },
             { displayName: 'Types', name: 'type', values: types },
-            { displayName: 'Restrictions', name: 'restriction', values: restrictions },
+            { displayName: 'Restrictions', name: 'restrictions', values: restrictions },
+            { displayName: 'Best Served', name: 'temperatures', values: temperatures },
             { displayName: 'Categories', name: 'categories', values: categories },
             { displayName: 'Ratings', name: 'ratings', values: ratings },
             { displayName: 'Statuses', name: 'statuses', values: statuses },
@@ -381,7 +387,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
               values: [
                 { displayName: 'Authors', name: 'author', values: authors },
                 { displayName: 'Types', name: 'type', values: types },
-                { displayName: 'Restrictions', name: 'restriction', values: restrictions },
+                { displayName: 'Restrictions', name: 'restrictions', values: restrictions },
+                { displayName: 'Best Served', name: 'temperatures', values: temperatures },
                 { displayName: 'Ratings', name: 'ratings', values: ratings },
                 { displayName: 'Statuses', name: 'statuses', values: statuses },
                 { displayName: 'Images', name: 'images', values: images },

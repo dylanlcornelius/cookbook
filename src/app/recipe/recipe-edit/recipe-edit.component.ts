@@ -159,6 +159,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         isVegan: [false],
         isGlutenFree: [false],
         isDairyFree: [false],
+        bestServed: [''],
         categories: new FormBuilder().array([]),
         steps: new FormBuilder().array([]),
         ingredients: new FormBuilder().array([]),
@@ -251,6 +252,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         isVegan: this.recipe.isVegan,
         isGlutenFree: this.recipe.isGlutenFree,
         isDairyFree: this.recipe.isDairyFree,
+        bestServed: this.recipe.isServedHot
+          ? 'HOT'
+          : this.recipe.isServedRoom
+          ? 'ROOM'
+          : this.recipe.isServedCold
+          ? 'COLD'
+          : '',
         categories: this.recipe.categories,
         steps: this.recipe.steps,
         ingredients: this.addedIngredients,
@@ -548,6 +556,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(user => {
         const form = this.recipesForm.value;
+
+        form.isServedHot = form.bestServed === 'HOT';
+        form.isServedRoom = form.bestServed === 'ROOM';
+        form.isServedCold = form.bestServed === 'COLD';
+        delete form.bestServed;
 
         form.ingredients.forEach(ingredient => {
           delete ingredient.name;

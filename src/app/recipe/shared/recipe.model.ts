@@ -1,6 +1,6 @@
 import { Model } from '@model';
-import { UOM } from '@uoms';
 import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
+import { UOM } from '@uoms';
 
 export class Recipe extends Model {
   name: string;
@@ -13,6 +13,9 @@ export class Recipe extends Model {
   isVegan: boolean;
   isGlutenFree: boolean;
   isDairyFree: boolean;
+  isServedHot: boolean;
+  isServedRoom: boolean;
+  isServedCold: boolean;
   categories: Array<{
     category: string;
   }>;
@@ -69,6 +72,9 @@ export class Recipe extends Model {
     this.isVegan = data.isVegan || false;
     this.isGlutenFree = data.isGlutenFree || false;
     this.isDairyFree = data.isDairyFree || false;
+    this.isServedHot = data.isServedHot || false;
+    this.isServedRoom = data.isServedRoom || false;
+    this.isServedCold = data.isServedCold || false;
     this.type = data.type || '';
     this.hasNewCategory = data.hasNewCategory || false;
     this.hasNeedsImageCategory = data.hasNeedsImageCategory || false;
@@ -118,3 +124,16 @@ export enum RECIPE_STATUS {
   PRIVATE = 'private',
   BLUEPRINT = 'blueprint',
 }
+
+export const RestrictionLabels = [
+  { displayName: 'Vegetarian', name: 'isVegetarian' },
+  { displayName: 'Vegan', name: 'isVegan' },
+  { displayName: 'Gluten Free', name: 'isGlutenFree' },
+  { displayName: 'Dairy Free', name: 'isDairyFree' },
+] as const;
+
+export const TemperatureLabels = [
+  { displayName: 'Hot', name: 'isServedHot' },
+  { displayName: 'Room Temperature', name: 'isServedRoom' },
+  { displayName: 'Cold', name: 'isServedCold' },
+] as const;

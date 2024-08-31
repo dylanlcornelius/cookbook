@@ -66,18 +66,32 @@ describe('RecipeBookComponent', () => {
           status: RECIPE_STATUS.PUBLISHED,
           categories: [{ category: 'Dessert' }],
           hasImage: true,
+          isDairyFree: true,
+          isServedHot: true,
         }),
         new Recipe({
           id: 'recipe-3',
           status: RECIPE_STATUS.PUBLISHED,
           categories: [{ category: 'Dessert' }],
           hasImage: true,
+          isDairyFree: true,
+          isServedHot: true,
         }),
         new Recipe({
           id: 'recipe-4',
           status: RECIPE_STATUS.PUBLISHED,
           categories: [{ category: 'Dessert' }],
           hasImage: true,
+          isDairyFree: true,
+          isServedHot: true,
+        }),
+        new Recipe({
+          id: 'recipe-5',
+          status: RECIPE_STATUS.PUBLISHED,
+          categories: [{ category: 'Side' }],
+          hasImage: true,
+          isDairyFree: true,
+          isServedHot: true,
         }),
       ];
       const configs = [new Config({})];
@@ -92,9 +106,15 @@ describe('RecipeBookComponent', () => {
 
       tick();
       flush();
-      expect(component.categories.length).toEqual(1);
-      expect(component.categories[0].name).toEqual('Dessert');
+      expect(component.categories.length).toEqual(3);
+      expect(component.categories.map(({ name }) => name).sort()).toEqual([
+        'Dairy Free',
+        'Dessert',
+        'Hot',
+      ]);
       expect(component.categories[0].recipes.length).toEqual(4);
+      expect(component.categories[1].recipes.length).toEqual(4);
+      expect(component.categories[2].recipes.length).toEqual(4);
       expect(component.categories[0].recipes[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
       expect(householdService.get).toHaveBeenCalled();

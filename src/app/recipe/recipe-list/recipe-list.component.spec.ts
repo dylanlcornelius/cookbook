@@ -1,61 +1,56 @@
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
+  flush,
+  TestBed,
   tick,
   waitForAsync,
-  flush,
 } from '@angular/core/testing';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
+import { ImageService } from '@imageService';
+import { IngredientService } from '@ingredientService';
 import {
-  MatTableDataSource,
-  MatTableModule,
-} from '@angular/material/table';
-import { of } from 'rxjs/internal/observable/of';
-import { RecipeService } from '@recipeService';
-import {
-  RecipeFilterService,
-  CategoryFilter,
-  RatingFilter,
   AuthorFilter,
+  CategoryFilter,
+  ImageFilter,
+  RatingFilter,
+  RecipeFilterService,
+  RestrictionFilter,
   SearchFilter,
   StatusFilter,
-  ImageFilter,
-  RestrictionFilter,
+  TemperatureFilter,
   TypeFilter,
 } from '@recipeFilterService';
-import { UserIngredientService } from '@userIngredientService';
-import { UserIngredient } from '@userIngredient';
-import { IngredientService } from '@ingredientService';
-import { ImageService } from '@imageService';
+import { RecipeService } from '@recipeService';
 import { User } from '@user';
+import { UserIngredient } from '@userIngredient';
+import { UserIngredientService } from '@userIngredientService';
+import { of } from 'rxjs/internal/observable/of';
 
-import { RecipeListComponent } from './recipe-list.component';
-import { Recipe, RECIPE_STATUS } from '@recipe';
-import { Ingredient } from '@ingredient';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from '@currentUserService';
-import { RecipeIngredientService } from '@recipeIngredientService';
-import { HouseholdService } from '@householdService';
-import { Household } from '@household';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { take } from 'rxjs/operators';
-import { NotificationService, ValidationService } from '@modalService';
-import { BehaviorSubject } from 'rxjs';
-import {
-  MatPaginatorModule,
-  PageEvent,
-} from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
-import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
-import { RecipeHistoryService } from '@recipeHistoryService';
-import { RecipeHistory } from '@recipeHistory';
-import { UOM } from '@uoms';
-import { ConfigService } from '@configService';
 import { Config } from '@config';
+import { ConfigService } from '@configService';
+import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
+import { Household } from '@household';
+import { HouseholdService } from '@householdService';
+import { Ingredient } from '@ingredient';
+import { NotificationService, ValidationService } from '@modalService';
+import { Recipe, RECIPE_STATUS } from '@recipe';
+import { RecipeHistory } from '@recipeHistory';
+import { RecipeHistoryService } from '@recipeHistoryService';
+import { RecipeIngredientService } from '@recipeIngredientService';
+import { UOM } from '@uoms';
+import { BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { MealPlan } from 'src/app/shopping/shared/meal-plan.model';
+import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
+import { RecipeListComponent } from './recipe-list.component';
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -444,6 +439,7 @@ describe('RecipeListComponent', () => {
         new AuthorFilter('author'),
         new TypeFilter('SALAD'),
         new RestrictionFilter('isVegetarian'),
+        new TemperatureFilter('isServedCold'),
         new SearchFilter('search'),
         new StatusFilter(RECIPE_STATUS.PUBLISHED),
         new ImageFilter(false),

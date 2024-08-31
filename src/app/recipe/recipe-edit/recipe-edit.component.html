@@ -124,6 +124,15 @@
         </div>
       </div>
 
+      <div class="form-field">
+        <mat-label>Best Served</mat-label>
+        <mat-radio-group class="temperature" formControlName="bestServed" ngDefaultControl>
+          <mat-radio-button value="HOT">Hot</mat-radio-button>
+          <mat-radio-button value="ROOM">Room Temperature</mat-radio-button>
+          <mat-radio-button value="COLD">Cold</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
       <mat-form-field class="form-field">
         <mat-label>Categories</mat-label>
         <mat-chip-grid #categoryList>

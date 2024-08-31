@@ -1,21 +1,31 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfigService } from '@configService';
+import { ConfigType } from '@configType';
 import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
 import { HouseholdService } from '@householdService';
 import { ImageService } from '@imageService';
 import { LoadingService } from '@loadingService';
-import { Recipes } from '@recipe';
-import { CategoryFilter, Filter, TypeFilter } from '@recipeFilterService';
+import { Recipes, RestrictionLabels, TemperatureLabels } from '@recipe';
+import {
+  CategoryFilter,
+  Filter,
+  RestrictionFilter,
+  TemperatureFilter,
+  TypeFilter,
+} from '@recipeFilterService';
 import { RecipeService } from '@recipeService';
 import { User } from '@user';
 import { UtilService } from '@utilService';
 import { combineLatest, Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { fadeInAnimation } from '../../theme/animations';
-import { ConfigType } from '@configType';
-import { ConfigService } from '@configService';
 
-type Category = { name: string; filter: CategoryFilter | TypeFilter; recipes: Recipes };
+type Category = {
+  name: string;
+  filter: CategoryFilter | TypeFilter | RestrictionFilter | TemperatureFilter;
+  recipes: Recipes;
+};
 type Categories = Category[];
 
 @Component({
@@ -126,6 +136,36 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
                       }
                       current.recipes.push(recipe);
                     }
+
+                    RestrictionLabels.filter(({ name }) => recipe[name] === true).forEach(
+                      ({ displayName, name }) => {
+                        let current = categories.find(({ name }) => name === displayName);
+                        if (!current) {
+                          current = {
+                            name: displayName,
+                            filter: new RestrictionFilter(name),
+                            recipes: [],
+                          };
+                          categories.push(current);
+                        }
+                        current.recipes.push(recipe);
+                      }
+                    );
+
+                    TemperatureLabels.filter(({ name }) => recipe[name] === true).forEach(
+                      ({ displayName, name }) => {
+                        let current = categories.find(({ name }) => name === displayName);
+                        if (!current) {
+                          current = {
+                            name: displayName,
+                            filter: new TemperatureFilter(name),
+                            recipes: [],
+                          };
+                          categories.push(current);
+                        }
+                        current.recipes.push(recipe);
+                      }
+                    );
                   });
 
                 this.categories = categories
