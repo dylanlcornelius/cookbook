@@ -111,6 +111,7 @@ describe('RecipeEditComponent', () => {
       const recipe = new Recipe({
         id: 'id',
         name: 'Title',
+        isServedHot: true,
         categories: [{}],
         steps: [{ step: 'step 1' }, { recipeId: 'recipe-1' }, { recipeId: 'recipe-3' }],
         ingredients: [
@@ -175,6 +176,7 @@ describe('RecipeEditComponent', () => {
       route.queryParams = of({});
 
       const recipe = new Recipe({
+        isServedCold: true,
         ingredients: [
           {
             id: 'id2',
@@ -309,6 +311,7 @@ describe('RecipeEditComponent', () => {
       route.queryParams = of({});
 
       const recipe = new Recipe({
+        isServedRoom: true,
         ingredients: [
           {
             id: 'id2',

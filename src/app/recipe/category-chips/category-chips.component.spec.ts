@@ -48,6 +48,16 @@ describe('CategoryChipsComponent', () => {
     });
   });
 
+  describe('setTemperatureFilter', () => {
+    it('should set a restriction filter', () => {
+      spyOn(utilService, 'setListFilter');
+
+      component.setTemperatureFilter('isServedCold');
+
+      expect(utilService.setListFilter).toHaveBeenCalled();
+    });
+  });
+
   describe('setTypeFilter', () => {
     it('should set a restriction filter', () => {
       spyOn(utilService, 'setListFilter');

@@ -1,6 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Recipe } from '@recipe';
-import { CategoryFilter, RestrictionFilter, TypeFilter } from '@recipeFilterService';
+import {
+  CategoryFilter,
+  RestrictionFilter,
+  TemperatureFilter,
+  TypeFilter,
+} from '@recipeFilterService';
 import { UtilService } from '@utilService';
 
 @Component({
@@ -17,5 +22,7 @@ export class CategoryChipsComponent {
     this.utilService.setListFilter(new CategoryFilter(filter));
   setRestrictionFilter = (filter: string): void =>
     this.utilService.setListFilter(new RestrictionFilter(filter));
+  setTemperatureFilter = (filter: string): void =>
+    this.utilService.setListFilter(new TemperatureFilter(filter));
   setTypeFilter = (filter: string): void => this.utilService.setListFilter(new TypeFilter(filter));
 }

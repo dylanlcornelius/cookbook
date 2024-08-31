@@ -18,7 +18,19 @@ td {
   span {
     display: flex;
     padding: 10px;
-    flex-basis: 150px;
+    flex-basis: 175px;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.temperature {
+  display: flex;
+  flex-wrap: wrap;
+
+  .mat-mdc-radio-button {
+    display: flex;
+    padding: 10px;
+    flex-basis: 175px;
     justify-content: space-between;
     align-items: center;
   }
