@@ -297,9 +297,16 @@
           >
             <div
               class="box box-bottom"
+              [ngClass]="{ disabled: ingredient.disabled }"
               *ngFor="let ingredient of availableIngredients"
               cdkDrag
               [cdkDragData]="ingredient"
+              [cdkDragDisabled]="ingredient.disabled"
+              [matTooltip]="
+                ingredient.disabled
+                  ? 'The current recipe is used as an ingredient in this recipe'
+                  : ''
+              "
             >
               <mat-label class="ingredient-name col-12">
                 {{ ingredient.name }}
@@ -311,7 +318,7 @@
                   r_mobiledata
                 </mat-icon>
               </mat-label>
-              <mat-icon class="box-icon">drag_indicator</mat-icon>
+              <mat-icon class="box-icon" *ngIf="!ingredient.disabled">drag_indicator</mat-icon>
             </div>
             <div class="box box-bottom" *ngIf="availableIngredients.length === 0">
               <mat-label class="ingredient-name col-12">No Ingredients</mat-label>
