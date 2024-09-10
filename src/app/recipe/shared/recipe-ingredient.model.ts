@@ -12,6 +12,8 @@ export class RecipeIngredient extends Model {
   weightUnit: UOM;
   selected: boolean;
   disabled: boolean;
+  parent: string;
+  cartQuantity: number;
 
   constructor(data: any) {
     super(data);
@@ -24,11 +26,13 @@ export class RecipeIngredient extends Model {
     this.weightUnit = data.weightUnit || '';
     this.selected = data.selected || false;
     this.disabled = data.disabled || false;
+    this.parent = data.parent || '';
+    this.cartQuantity = data.cartQuantity;
   }
 
   public getObject(): RecipeIngredientObject {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { name, selected, disabled, ...recipeIngredient } = this;
+    const { name, selected, disabled, parent, cartQuantity, ...recipeIngredient } = this;
 
     return recipeIngredient;
   }
@@ -36,6 +40,6 @@ export class RecipeIngredient extends Model {
 
 export type RecipeIngredientObject = Omit<
   RecipeIngredient,
-  'id' | 'getId' | 'getObject' | 'name' | 'selected' | 'disabled'
+  'id' | 'getId' | 'getObject' | 'name' | 'selected' | 'disabled' | 'parent' | 'cartQuantity'
 >;
 export type RecipeIngredients = RecipeIngredient[];

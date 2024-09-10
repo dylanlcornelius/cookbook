@@ -47,8 +47,8 @@ export class RecipeIngredientService {
   }
 
   /**
-   * Iterative version of finding recipe ingredients
-   * Doesn't combine duplicate ingredient quantities (buyable amounts should handle quantities)
+   * Iterative version of finding recipe ingredients.
+   * Flattens recipe ingredients hierarchy into a single list with parent ids.
    * @param recipe recipe to find ingredients for
    * @param recipes all recipes
    * @returns ingredients
@@ -57,30 +57,32 @@ export class RecipeIngredientService {
     const addedIngredients: RecipeIngredients = [];
 
     // sort required ingredients before optional ingredients
-    let startingIngredients: any = [...recipe.ingredients].sort(
+    let startingIngredients: RecipeIngredients = [...recipe.ingredients].sort(
       ({ isOptional: a }, { isOptional: b }) => Number(b) - Number(a)
     );
     while (startingIngredients.length) {
       const recipeIngredient = startingIngredients.pop();
 
-      const isAdded = addedIngredients.find(({ id }) => id === recipeIngredient.id);
-      if (!isAdded) {
-        addedIngredients.push(recipeIngredient);
+      const isRecipeAdded = addedIngredients.find(
+        ({ id, uom }) => id === recipeIngredient.id && uom === UOM.RECIPE
+      );
+      if (isRecipeAdded) {
+        continue;
+      }
 
-        const ingredientRecipe = recipes.find(({ id }) => id === recipeIngredient.id);
-        if (ingredientRecipe) {
-          const recipeIngredients = ingredientRecipe.ingredients.map(current => {
-            // recipe ingredient should allow optional
-            return new RecipeIngredient({
-              ...current,
-              isOptional: current.isOptional || recipeIngredient.isOptional,
-            });
+      addedIngredients.push(recipeIngredient);
+
+      const ingredientRecipe = recipes.find(({ id }) => id === recipeIngredient.id);
+      if (ingredientRecipe) {
+        const recipeIngredients = ingredientRecipe.ingredients.map(current => {
+          // recipe ingredient should allow optional
+          return new RecipeIngredient({
+            ...current,
+            isOptional: current.isOptional || recipeIngredient.isOptional,
+            parent: ingredientRecipe.id,
           });
-          startingIngredients = startingIngredients.concat(recipeIngredients);
-        }
-      } else {
-        // recipe ingredient should always prioritize required
-        isAdded.isOptional = isAdded.isOptional && recipeIngredient.isOptional;
+        });
+        startingIngredients = startingIngredients.concat(recipeIngredients);
       }
     }
 
@@ -189,43 +191,72 @@ export class RecipeIngredientService {
     recipe?: Recipe,
     recipes?: Recipes
   ): void => {
-    recipeIngredients.forEach(recipeIngredient => {
-      const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
-      if (!ingredient) {
-        return;
-      }
-
-      const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
-      let convertedValue = this.uomService.convert(recipeIngredient.uom, ingredient.uom, quantity);
-      let cartQuantity;
-      if (convertedValue) {
-        cartQuantity = Math.ceil(convertedValue / Number(ingredient.amount));
-      } else {
-        convertedValue = this.uomService.convert(recipeIngredient.uom, ingredient.altUOM, quantity);
-        if (convertedValue) {
-          cartQuantity = Math.ceil(convertedValue / Number(ingredient.altAmount));
+    recipeIngredients
+      .reduce((list, recipeIngredient) => {
+        const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
+        if (!ingredient) {
+          return list;
         }
-      }
-      if (!convertedValue) {
-        this.notificationService.setModal(new FailureNotification('Calculation error!'));
-        return;
-      }
 
-      const userIngredient = userIngredients.find(
-        ({ ingredientId }) => ingredientId === recipeIngredient.id
-      );
-      if (userIngredient) {
-        userIngredient.cartQuantity += cartQuantity;
-      } else {
-        userIngredients.push(
-          new UserIngredient({
-            uid: householdId,
-            ingredientId: String(recipeIngredient.id),
-            cartQuantity: cartQuantity,
-          })
+        const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
+
+        let cartQuantity;
+        let convertedValue = this.uomService.convert(
+          recipeIngredient.uom,
+          ingredient.uom,
+          quantity
         );
-      }
-    });
+        if (convertedValue) {
+          cartQuantity = convertedValue / Number(ingredient.amount);
+        } else {
+          convertedValue = this.uomService.convert(
+            recipeIngredient.uom,
+            ingredient.altUOM,
+            quantity
+          );
+          if (convertedValue) {
+            cartQuantity = convertedValue / Number(ingredient.altAmount);
+          }
+        }
+        if (!convertedValue) {
+          this.notificationService.setModal(new FailureNotification('Calculation error!'));
+          return list;
+        }
+
+        const isConverted = list.find(({ id }) => id === recipeIngredient.id);
+        if (isConverted) {
+          isConverted.cartQuantity += cartQuantity;
+        } else {
+          recipeIngredient.cartQuantity = cartQuantity;
+          list.push(recipeIngredient);
+        }
+
+        return list;
+      }, [])
+      .forEach(recipeIngredient => {
+        const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
+
+        const userIngredient = userIngredients.find(
+          ({ ingredientId }) => ingredientId === recipeIngredient.id
+        );
+
+        const quantity =
+          ingredient.buyableUOM === 'volume'
+            ? Math.ceil(recipeIngredient.cartQuantity) * Number(ingredient.amount)
+            : Math.ceil(recipeIngredient.cartQuantity) * Number(ingredient.altAmount);
+
+        if (userIngredient) {
+          userIngredient.cartQuantity += quantity;
+        } else {
+          userIngredients.push(
+            new UserIngredient({
+              uid: householdId,
+              ingredientId: String(recipeIngredient.id),
+              cartQuantity: quantity,
+            })
+          );
+        }
+      });
     this.userIngredientService.update(userIngredients);
 
     if (recipe && recipes) {
