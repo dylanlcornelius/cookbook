@@ -63,30 +63,30 @@ export class RecipeIngredientService {
     while (startingIngredients.length) {
       const recipeIngredient = startingIngredients.pop();
 
-      const isRecipeAdded = addedIngredients.find(
-        ({ id, uom }) => id === recipeIngredient.id && uom === UOM.RECIPE
-      );
-      if (isRecipeAdded) {
+      const ingredientRecipe = recipes.find(({ id }) => id === recipeIngredient.id);
+      const alreadyEvaluated = recipeIngredient.paths.includes(ingredientRecipe?.id);
+      if (alreadyEvaluated) {
         continue;
       }
 
       addedIngredients.push(recipeIngredient);
-
-      const ingredientRecipe = recipes.find(({ id }) => id === recipeIngredient.id);
-      if (ingredientRecipe) {
-        const recipeIngredients = ingredientRecipe.ingredients.map(current => {
-          // recipe ingredient should allow optional
-          return new RecipeIngredient({
-            ...current,
-            isOptional: current.isOptional || recipeIngredient.isOptional,
-            parent: ingredientRecipe.id,
-          });
-        });
-        startingIngredients = startingIngredients.concat(recipeIngredients);
+      if (!ingredientRecipe) {
+        continue;
       }
+
+      const recipeIngredients = ingredientRecipe.ingredients.map(current => {
+        // recipe ingredient should allow optional
+        return new RecipeIngredient({
+          ...current,
+          isOptional: current.isOptional || recipeIngredient.isOptional,
+          parent: ingredientRecipe.id,
+          paths: recipeIngredient.paths.concat(ingredientRecipe.id),
+        });
+      });
+      startingIngredients = startingIngredients.concat(recipeIngredients);
     }
 
-    return addedIngredients.filter(({ uom }) => uom !== UOM.RECIPE);
+    return addedIngredients;
   }
 
   /**
@@ -129,7 +129,7 @@ export class RecipeIngredientService {
 
     return (
       recipeIngredients
-        .filter(({ isOptional }) => !isOptional)
+        .filter(({ isOptional, uom }) => !isOptional && uom !== UOM.RECIPE)
         .reduce((calories, recipeIngredient) => {
           const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
@@ -192,6 +192,7 @@ export class RecipeIngredientService {
     recipes?: Recipes
   ): void => {
     recipeIngredients
+      .filter(({ uom }) => uom !== UOM.RECIPE)
       .reduce((list, recipeIngredient) => {
         const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
         if (!ingredient) {

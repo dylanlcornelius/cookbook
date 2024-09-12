@@ -13,6 +13,7 @@ export class RecipeIngredient extends Model {
   selected: boolean;
   disabled: boolean;
   parent: string;
+  paths: string[];
   cartQuantity: number;
 
   constructor(data: any) {
@@ -27,12 +28,13 @@ export class RecipeIngredient extends Model {
     this.selected = data.selected || false;
     this.disabled = data.disabled || false;
     this.parent = data.parent || '';
+    this.paths = data.paths || [];
     this.cartQuantity = data.cartQuantity;
   }
 
   public getObject(): RecipeIngredientObject {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { name, selected, disabled, parent, cartQuantity, ...recipeIngredient } = this;
+    const { name, selected, disabled, parent, paths, cartQuantity, ...recipeIngredient } = this;
 
     return recipeIngredient;
   }
@@ -40,6 +42,14 @@ export class RecipeIngredient extends Model {
 
 export type RecipeIngredientObject = Omit<
   RecipeIngredient,
-  'id' | 'getId' | 'getObject' | 'name' | 'selected' | 'disabled' | 'parent' | 'cartQuantity'
+  | 'id'
+  | 'getId'
+  | 'getObject'
+  | 'name'
+  | 'selected'
+  | 'disabled'
+  | 'parent'
+  | 'paths'
+  | 'cartQuantity'
 >;
 export type RecipeIngredients = RecipeIngredient[];

@@ -126,6 +126,7 @@ describe('RecipeEditComponent', () => {
       const recipes = [
         new Recipe({ id: 'recipe-1', categories: [{ category: '1' }, { category: '2' }] }),
         new Recipe({ id: 'recipe-2', categories: [{ category: '1' }] }),
+        new Recipe({ id: 'recipe-3', ingredients: [{ id: 'recipe-4' }] }),
         new Recipe({ id: 'recipe-4', ingredients: [{ id: 'id' }] }),
       ];
 
@@ -171,6 +172,9 @@ describe('RecipeEditComponent', () => {
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
       expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
+      expect(component.allAvailableIngredients.filter(({ disabled }) => disabled).length).toEqual(
+        2
+      );
     });
 
     it('should load recipes without data', () => {

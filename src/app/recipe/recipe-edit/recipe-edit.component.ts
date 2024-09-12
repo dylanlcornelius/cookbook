@@ -281,7 +281,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
           const disabled =
             'ingredients' in ingredient
-              ? ingredient.ingredients.find(({ id }) => id === this.recipe?.id)
+              ? !!this.recipeIngredientService
+                  .findRecipeIngredients(ingredient, this.recipes)
+                  .find(({ id }) => id === this.recipe?.id)
               : false;
 
           result.push(

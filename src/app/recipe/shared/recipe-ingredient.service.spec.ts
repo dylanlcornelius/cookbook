@@ -81,7 +81,7 @@ describe('RecipeIngredientService', () => {
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(3);
+      expect(result.length).toEqual(5);
     });
 
     it('should handle circularly dependent recipe ingredients', () => {
@@ -114,7 +114,49 @@ describe('RecipeIngredientService', () => {
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(3);
+      expect(result.length).toEqual(5);
+    });
+
+    it('should handle indirect circularly dependent recipe ingredients', () => {
+      const recipes = [
+        new Recipe({
+          id: '1',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'a' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+          ],
+        }),
+        new Recipe({
+          id: '2',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'b' }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+          ],
+        }),
+        new Recipe({
+          id: '3',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'c' }),
+            new RecipeIngredient({ id: '4', uom: UOM.RECIPE }),
+          ],
+        }),
+        new Recipe({
+          id: '4',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'd' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+          ],
+        }),
+      ];
+
+      const result = service.findRecipeIngredients(recipes[0], recipes);
+
+      expect(result.length).toEqual(13);
     });
 
     it('should handle optional recipe ingredients', () => {
@@ -150,7 +192,7 @@ describe('RecipeIngredientService', () => {
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(9);
+      expect(result.length).toEqual(11);
     });
   });
 
