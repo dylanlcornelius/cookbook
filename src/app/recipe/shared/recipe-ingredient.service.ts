@@ -57,9 +57,14 @@ export class RecipeIngredientService {
     const addedIngredients: RecipeIngredients = [];
 
     // sort required ingredients before optional ingredients
-    let startingIngredients: RecipeIngredients = [...recipe.ingredients].sort(
-      ({ isOptional: a }, { isOptional: b }) => Number(b) - Number(a)
-    );
+    let startingIngredients: RecipeIngredients = [...recipe.ingredients]
+      .sort(({ name: a }, { name: b }) =>
+        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+      )
+      .sort((a, b) =>
+        a.uom === UOM.RECIPE && b.uom === UOM.RECIPE ? 0 : a.uom === UOM.RECIPE ? -1 : 1
+      )
+      .sort(({ isOptional: a }, { isOptional: b }) => Number(b) - Number(a));
     while (startingIngredients.length) {
       const recipeIngredient = startingIngredients.pop();
 
@@ -74,15 +79,23 @@ export class RecipeIngredientService {
         continue;
       }
 
-      const recipeIngredients = ingredientRecipe.ingredients.map(current => {
-        // recipe ingredient should allow optional
-        return new RecipeIngredient({
-          ...current,
-          isOptional: current.isOptional || recipeIngredient.isOptional,
-          parent: ingredientRecipe.id,
-          paths: recipeIngredient.paths.concat(ingredientRecipe.id),
-        });
-      });
+      const recipeIngredients = ingredientRecipe.ingredients
+        .map(current => {
+          // recipe ingredient should allow optional
+          return new RecipeIngredient({
+            ...current,
+            isOptional: current.isOptional || recipeIngredient.isOptional,
+            parent: ingredientRecipe.id,
+            parentName: ingredientRecipe.name,
+            paths: recipeIngredient.paths.concat(ingredientRecipe.id),
+          });
+        })
+        .sort(({ name: a }, { name: b }) =>
+          a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+        )
+        .sort((a, b) =>
+          a.uom === UOM.RECIPE && b.uom === UOM.RECIPE ? 0 : a.uom === UOM.RECIPE ? -1 : 1
+        );
       startingIngredients = startingIngredients.concat(recipeIngredients);
     }
 

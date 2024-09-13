@@ -70,6 +70,7 @@ describe('RecipeIngredientService', () => {
           ingredients: [
             new RecipeIngredient({ id: 'b' }),
             new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+            new RecipeIngredient({ id: '4', uom: UOM.RECIPE }),
           ],
         }),
         new Recipe({
@@ -77,11 +78,16 @@ describe('RecipeIngredientService', () => {
           uom: UOM.RECIPE,
           ingredients: [new RecipeIngredient({ id: 'c' })],
         }),
+        new Recipe({
+          id: '4',
+          uom: UOM.RECIPE,
+          ingredients: [new RecipeIngredient({ id: 'd' })],
+        }),
       ];
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(5);
+      expect(result.length).toEqual(7);
     });
 
     it('should handle circularly dependent recipe ingredients', () => {

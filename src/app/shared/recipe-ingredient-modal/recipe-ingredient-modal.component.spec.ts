@@ -7,7 +7,9 @@ import { Recipe } from '@recipe';
 import { RecipeIngredient } from '@recipeIngredient';
 import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeMultiplierService } from '@recipeMultiplierService';
+import { UOM } from '@uoms';
 import { UserIngredient } from '@userIngredient';
+import { BehaviorSubject } from 'rxjs';
 import { OptionalIngredientsPipe } from '../optional-ingredients.pipe';
 import { RecipeIngredientModalComponent } from './recipe-ingredient-modal.component';
 
@@ -36,20 +38,73 @@ describe('RecipeIngredientModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('load', () => {
+    it('should load recipe ingredient params', () => {
+      const userIngredients = [new UserIngredient({})];
+      const uid = 'uid';
+      const householdId = 'default';
+
+      const recipeIngredientModal = new RecipeIngredientModal(
+        () => {},
+        new Recipe({}),
+        [],
+        [new RecipeIngredient({}), new RecipeIngredient({ id: 'recipe-1', uom: UOM.RECIPE })],
+        [new Ingredient({})],
+        userIngredients,
+        uid,
+        householdId
+      );
+      recipeIngredientModalService.setModal(recipeIngredientModal);
+
+      const modal = new BehaviorSubject(recipeIngredientModal);
+
+      spyOn(recipeIngredientModalService, 'getModal').and.returnValue(modal);
+
+      component.load();
+
+      expect(component.params.recipeIngredients.length).toEqual(1);
+      expect(component.selectionCount).toEqual(1);
+    });
+  });
+
   describe('select', () => {
+    const userIngredients = [new UserIngredient({})];
+    const uid = 'uid';
+    const householdId = 'default';
+
+    beforeEach(() => {
+      const recipeIngredientModal = new RecipeIngredientModal(
+        () => {},
+        new Recipe({}),
+        [],
+        [new RecipeIngredient({})],
+        [new Ingredient({})],
+        userIngredients,
+        uid,
+        householdId
+      );
+      recipeIngredientModalService.setModal(recipeIngredientModal);
+
+      spyOn(recipeIngredientModalService, 'getModal');
+    });
+
     it('should add when selected', () => {
       component.selectionCount = 0;
+      component.params.recipeIngredients = [new RecipeIngredient({})];
 
-      component.select(true);
+      component.select(component.params.recipeIngredients[0], true);
 
+      expect(component.params.recipeIngredients[0].selected).toEqual(true);
       expect(component.selectionCount).toEqual(1);
     });
 
     it('should subtract when unselected', () => {
       component.selectionCount = 1;
+      component.params.recipeIngredients = [new RecipeIngredient({ selected: false })];
 
-      component.select(false);
+      component.select(component.params.recipeIngredients[0], false);
 
+      expect(component.params.recipeIngredients[0].selected).toEqual(false);
       expect(component.selectionCount).toEqual(0);
     });
   });

@@ -133,6 +133,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
       spyOn(userIngredientService, 'buildUserIngredients');
       spyOn(recipeIngredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'findRecipeIngredients');
       spyOn(recipeStepService, 'buildRecipeSteps');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
 
@@ -150,6 +151,7 @@ describe('RecipeDetailComponent', () => {
       expect(imageService.download).toHaveBeenCalled();
       expect(userIngredientService.buildUserIngredients).toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.findRecipeIngredients).toHaveBeenCalled();
       expect(recipeStepService.buildRecipeSteps).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
     }));
@@ -175,6 +177,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
       spyOn(recipeIngredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'findRecipeIngredients');
       spyOn(recipeStepService, 'buildRecipeSteps');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
 
@@ -191,6 +194,7 @@ describe('RecipeDetailComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.findRecipeIngredients).toHaveBeenCalled();
       expect(recipeStepService.buildRecipeSteps).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
     }));
@@ -216,6 +220,7 @@ describe('RecipeDetailComponent', () => {
       spyOn(configService, 'get').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
       spyOn(recipeIngredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'findRecipeIngredients');
       spyOn(recipeStepService, 'buildRecipeSteps');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
 
@@ -232,6 +237,7 @@ describe('RecipeDetailComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.findRecipeIngredients).toHaveBeenCalled();
       expect(recipeStepService.buildRecipeSteps).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
     }));
@@ -260,6 +266,7 @@ describe('RecipeDetailComponent', () => {
       const imageSpy = spyOn(imageService, 'download');
       imageSpy.and.returnValue(Promise.resolve('url'));
       spyOn(recipeIngredientService, 'buildRecipeIngredients');
+      spyOn(recipeIngredientService, 'findRecipeIngredients');
       spyOn(recipeStepService, 'buildRecipeSteps');
       spyOn(recipeIngredientService, 'getRecipeCalories').and.returnValue(0);
 
@@ -282,6 +289,7 @@ describe('RecipeDetailComponent', () => {
       expect(configService.get).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
+      expect(recipeIngredientService.findRecipeIngredients).toHaveBeenCalled();
       expect(recipeStepService.buildRecipeSteps).toHaveBeenCalled();
       expect(recipeIngredientService.getRecipeCalories).toHaveBeenCalled();
     }));
