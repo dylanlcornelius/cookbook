@@ -7,47 +7,67 @@
   />
 
   <div class="ingredient-list">
-    <div *ngFor="let recipeIngredient of params?.recipeIngredients | filterOptional : false">
+    <ng-container
+      *ngFor="let recipeIngredient of params?.recipeIngredients | filterOptional : false"
+    >
+      <div class="ingredient-recipe" *ngIf="recipeIngredient.uom === 'recipe'">
+        {{ recipeIngredient.name }}
+        <mat-icon
+          class="indicator"
+          *ngIf="recipeIngredient.parentName"
+          [matTooltip]="'Originates from ' + recipeIngredient.parentName"
+        >
+          r_mobiledata
+        </mat-icon>
+      </div>
       <mat-checkbox
         class="mat-menu-item"
-        [(ngModel)]="recipeIngredient.selected"
-        (change)="select(recipeIngredient.selected)"
-        *ngIf="recipeIngredient.name"
+        [checked]="recipeIngredient.selected"
+        (change)="select(recipeIngredient, $event.checked)"
+        *ngIf="recipeIngredient.name && recipeIngredient.uom !== 'recipe'"
       >
         {{ getQuantity(params?.recipe.id, params?.recipe.servings, recipeIngredient.quantity) }}
         {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
         {{ recipeIngredient.name }}
       </mat-checkbox>
-    </div>
+    </ng-container>
   </div>
   <br />
 
   <div *ngIf="(params?.recipeIngredients | filterOptional : true)?.length !== 0">
     <h6>Optional Ingredients:</h6>
     <div class="ingredient-list">
-      <div *ngFor="let recipeIngredient of params?.recipeIngredients | filterOptional : true">
+      <ng-container
+        *ngFor="let recipeIngredient of params?.recipeIngredients | filterOptional : true"
+      >
+        <div class="ingredient-recipe" *ngIf="recipeIngredient.uom === 'recipe'">
+          {{ recipeIngredient.name }}
+          <mat-icon
+            class="indicator"
+            *ngIf="recipeIngredient.parentName"
+            [matTooltip]="'Originates from ' + recipeIngredient.parentName"
+          >
+            r_mobiledata
+          </mat-icon>
+        </div>
         <mat-checkbox
           class="mat-menu-item"
-          [(ngModel)]="recipeIngredient.selected"
-          (change)="select(recipeIngredient.selected)"
-          *ngIf="recipeIngredient.name"
+          [checked]="recipeIngredient.selected"
+          (change)="select(recipeIngredient, $event.checked)"
+          *ngIf="recipeIngredient.name && recipeIngredient.uom !== 'recipe'"
         >
           {{ getQuantity(params?.recipe.id, params?.recipe.servings, recipeIngredient.quantity) }}
           {{ recipeIngredient.uom === 'other' ? '' : recipeIngredient.uom }}
           {{ recipeIngredient.name }}
         </mat-checkbox>
-      </div>
+      </ng-container>
     </div>
   </div>
   <div class="button-row">
     <button mat-raised-button color="warn" (click)="cancel()">Cancel</button>
     <button mat-raised-button color="primary" (click)="add()">
       Add
-      {{
-        selectionCount === params?.recipeIngredients.length || selectionCount === 0
-          ? 'All'
-          : selectionCount
-      }}
+      {{ selectionCount === ingredientCount || selectionCount === 0 ? 'All' : selectionCount }}
     </button>
   </div>
 </app-modal>

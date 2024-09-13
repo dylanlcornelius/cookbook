@@ -121,6 +121,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     const recipe = this.originalRecipe || new Recipe({});
     const form = this.recipesForm.value;
 
+    form.isServedHot = form.bestServed === 'HOT';
+    form.isServedRoom = form.bestServed === 'ROOM';
+    form.isServedCold = form.bestServed === 'COLD';
+    delete form.bestServed;
+
     const isUnchanged = Object.keys(form).find(key => {
       const listField = this.listFields[key];
 
@@ -274,12 +279,20 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           addedIngredient => addedIngredient.id === ingredient.id
         );
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
+          const disabled =
+            'ingredients' in ingredient
+              ? !!this.recipeIngredientService
+                  .findRecipeIngredients(ingredient, this.recipes)
+                  .find(({ id }) => id === this.recipe?.id)
+              : false;
+
           result.push(
             new RecipeIngredient({
               ...ingredient,
               isOptional: false,
               volumeUnit: ingredient.uom,
               weightUnit: 'altUOM' in ingredient ? ingredient.altUOM : null,
+              disabled,
             })
           );
         }

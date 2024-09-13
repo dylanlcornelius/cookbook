@@ -36,6 +36,7 @@ import { FormValidationDirective } from 'src/app/shared/form-validation.directiv
 import { MatStepper } from '@angular/material/stepper';
 import { RecipeIngredient } from '@recipeIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('RecipeEditComponent', () => {
   let component: RecipeEditComponent;
@@ -61,6 +62,7 @@ describe('RecipeEditComponent', () => {
         MatChipsModule,
         MatCheckboxModule,
         MatSelectModule,
+        MatTooltipModule,
         BrowserAnimationsModule,
       ],
       declarations: [RecipeEditComponent, FormValidationDirective],
@@ -124,6 +126,8 @@ describe('RecipeEditComponent', () => {
       const recipes = [
         new Recipe({ id: 'recipe-1', categories: [{ category: '1' }, { category: '2' }] }),
         new Recipe({ id: 'recipe-2', categories: [{ category: '1' }] }),
+        new Recipe({ id: 'recipe-3', ingredients: [{ id: 'recipe-4' }] }),
+        new Recipe({ id: 'recipe-4', ingredients: [{ id: 'id' }] }),
       ];
 
       const ingredients = [
@@ -168,6 +172,9 @@ describe('RecipeEditComponent', () => {
       expect(recipeIngredientService.buildRecipeIngredients).toHaveBeenCalled();
       expect(component.addIngredient).toHaveBeenCalled();
       expect(component.refreshRecipeAsIngredients).toHaveBeenCalled();
+      expect(component.allAvailableIngredients.filter(({ disabled }) => disabled).length).toEqual(
+        2
+      );
     });
 
     it('should load recipes without data', () => {

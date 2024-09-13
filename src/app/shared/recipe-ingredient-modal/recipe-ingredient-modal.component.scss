@@ -1,7 +1,9 @@
 .ingredient-list {
   max-height: 30vh;
   overflow: auto;
-  margin-bottom: 10px;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
 
   &::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -16,9 +18,5 @@
     border-radius: var(--radius);
     border: 2px solid inherit;
     background-color: rgba(0, 0, 0, 0.3);
-  }
-
-  & .mat-mdc-checkbox {
-    overflow: hidden;
   }
 }

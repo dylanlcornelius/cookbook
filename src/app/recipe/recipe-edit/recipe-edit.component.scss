@@ -127,6 +127,11 @@ h3 {
   box-shadow: var(--highlight-shadow) !important;
   font-family: 'Roboto', arial, sans-serif;
 
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
   .mat-mdc-form-field {
     width: 60px;
   }

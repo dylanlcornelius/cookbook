@@ -70,6 +70,7 @@ describe('RecipeIngredientService', () => {
           ingredients: [
             new RecipeIngredient({ id: 'b' }),
             new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+            new RecipeIngredient({ id: '4', uom: UOM.RECIPE }),
           ],
         }),
         new Recipe({
@@ -77,11 +78,16 @@ describe('RecipeIngredientService', () => {
           uom: UOM.RECIPE,
           ingredients: [new RecipeIngredient({ id: 'c' })],
         }),
+        new Recipe({
+          id: '4',
+          uom: UOM.RECIPE,
+          ingredients: [new RecipeIngredient({ id: 'd' })],
+        }),
       ];
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(3);
+      expect(result.length).toEqual(7);
     });
 
     it('should handle circularly dependent recipe ingredients', () => {
@@ -114,7 +120,49 @@ describe('RecipeIngredientService', () => {
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(3);
+      expect(result.length).toEqual(5);
+    });
+
+    it('should handle indirect circularly dependent recipe ingredients', () => {
+      const recipes = [
+        new Recipe({
+          id: '1',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'a' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+          ],
+        }),
+        new Recipe({
+          id: '2',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'b' }),
+            new RecipeIngredient({ id: '3', uom: UOM.RECIPE }),
+          ],
+        }),
+        new Recipe({
+          id: '3',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'c' }),
+            new RecipeIngredient({ id: '4', uom: UOM.RECIPE }),
+          ],
+        }),
+        new Recipe({
+          id: '4',
+          uom: UOM.RECIPE,
+          ingredients: [
+            new RecipeIngredient({ id: 'd' }),
+            new RecipeIngredient({ id: '2', uom: UOM.RECIPE }),
+          ],
+        }),
+      ];
+
+      const result = service.findRecipeIngredients(recipes[0], recipes);
+
+      expect(result.length).toEqual(13);
     });
 
     it('should handle optional recipe ingredients', () => {
@@ -150,7 +198,7 @@ describe('RecipeIngredientService', () => {
 
       const result = service.findRecipeIngredients(recipes[0], recipes);
 
-      expect(result.length).toEqual(4);
+      expect(result.length).toEqual(11);
     });
   });
 
@@ -781,6 +829,175 @@ describe('RecipeIngredientService', () => {
       expect(uomService.convert).toHaveBeenCalledTimes(2);
       expect(userIngredientService.update).toHaveBeenCalled();
       expect(recipeHistoryService.add).not.toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should add duplicate volume ingredients to the cart', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 1,
+        }),
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 2,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'y',
+          amount: 10,
+        }),
+      ];
+
+      const userIngredients = [];
+
+      const recipe = new Recipe({
+        id: 'id',
+        count: 1,
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
+      });
+
+      spyOn(numberService, 'toDecimal').and.returnValues(1, 2);
+      spyOn(uomService, 'convert').and.returnValues(0.1, 0.2);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '', recipe, [
+        recipe,
+      ]);
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(2);
+      expect(userIngredientService.update).toHaveBeenCalledWith([
+        new UserIngredient({ uid: '', ingredientId: 'ingredientId', cartQuantity: 10 }),
+      ]);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should add duplicate weight ingredients to the cart', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 100,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          altUOM: 'y',
+          altAmount: 10,
+          buyableUOM: 'weight',
+        }),
+      ];
+
+      const userIngredients = [];
+
+      const recipe = new Recipe({
+        id: 'id',
+        count: 1,
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
+      });
+
+      spyOn(numberService, 'toDecimal').and.returnValues(10, 100);
+      spyOn(uomService, 'convert').and.returnValues(false, 1, false, 10);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '', recipe, [
+        recipe,
+      ]);
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(4);
+      expect(userIngredientService.update).toHaveBeenCalledWith([
+        new UserIngredient({ uid: '', ingredientId: 'ingredientId', cartQuantity: 20 }),
+      ]);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should add duplicate ingredients of differing uom types to the cart', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x1',
+          quantity: 1,
+        }),
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'y1',
+          quantity: 100,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'x2',
+          amount: 10,
+          altUOM: 'y2',
+          altAmount: 10,
+          buyableUOM: 'weight',
+        }),
+      ];
+
+      const userIngredients = [];
+
+      const recipe = new Recipe({
+        id: 'id',
+        count: 1,
+        ingredients: [
+          {
+            id: 'ingredientId',
+            uom: 'x',
+            quantity: 10,
+          },
+        ],
+      });
+
+      spyOn(numberService, 'toDecimal').and.returnValues(1, 100);
+      spyOn(uomService, 'convert').and.returnValues(0.1, false, 10);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '', recipe, [
+        recipe,
+      ]);
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(3);
+      expect(userIngredientService.update).toHaveBeenCalledWith([
+        new UserIngredient({ uid: '', ingredientId: 'ingredientId', cartQuantity: 20 }),
+      ]);
+      expect(recipeHistoryService.add).toHaveBeenCalledTimes(1);
       expect(notificationService.setModal).toHaveBeenCalled();
     });
   });

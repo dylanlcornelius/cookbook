@@ -140,6 +140,10 @@ h5 {
   .ingredient-link {
     color: inherit;
     height: fit-content;
+
+    &.child {
+      margin-left: 1rem;
+    }
   }
 }
 .box:last-child {

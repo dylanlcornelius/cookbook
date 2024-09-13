@@ -6,6 +6,7 @@ import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeIngredientModalService } from '@modalService';
 import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
 import { RecipeMultiplierService } from '../recipe-multiplier/recipe-multiplier.service';
+import { UOM } from '@uoms';
 
 @Component({
   selector: 'app-recipe-ingredient-modal',
@@ -20,6 +21,7 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
   modal: ModalComponent;
 
   selectionCount = 0;
+  ingredientCount = 0;
 
   constructor(
     private recipeIngredientModalService: RecipeIngredientModalService,
@@ -45,21 +47,37 @@ export class RecipeIngredientModalComponent implements OnInit, OnDestroy {
         if (this.params) {
           this.params = {
             ...this.params,
-            recipeIngredients: this.params.recipeIngredients.map(recipeIngredient => {
-              recipeIngredient.selected = true;
-              return recipeIngredient;
-            }),
+            recipeIngredients: this.params.recipeIngredients
+              .map(recipeIngredient => {
+                recipeIngredient.selected = true;
+                if (recipeIngredient.uom === UOM.RECIPE) {
+                  recipeIngredient.parent = null;
+                }
+                return recipeIngredient;
+              })
+              .filter(
+                ({ id, uom }) =>
+                  uom !== UOM.RECIPE ||
+                  this.params.recipeIngredients.filter(({ parent }) => parent === id).length
+              ),
           };
 
-          this.selectionCount = this.params.recipeIngredients.length;
+          this.selectionCount = this.params.recipeIngredients.filter(
+            ({ uom }) => uom !== UOM.RECIPE
+          ).length;
+          this.ingredientCount = this.selectionCount;
         }
       });
   }
 
   getQuantity = this.recipeMultiplierService.getQuantity;
 
-  select(isSelected: boolean): void {
-    this.selectionCount += isSelected ? 1 : -1;
+  select(recipeIngredient: RecipeIngredient, isSelected: boolean): void {
+    recipeIngredient.selected = isSelected;
+
+    this.selectionCount = this.params.recipeIngredients
+      .filter(({ uom }) => uom !== UOM.RECIPE)
+      .reduce((count, recipeIngredient) => (count += recipeIngredient.selected ? 1 : 0), 0);
   }
 
   add(): void {

@@ -27,6 +27,7 @@ import { FirebaseService } from '@firebaseService';
 import { TitleService } from '@TitleService';
 import { Multipliers, RecipeMultiplierService } from '@recipeMultiplierService';
 import { RecipeStepService } from '@recipeStepService';
+import { RecipeIngredients } from '@recipeIngredient';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -54,6 +55,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   lastDateCooked: string;
   creationDate: string;
   shouldDisplayCategories: boolean;
+  recipeIngredients: RecipeIngredients;
 
   constructor(
     private route: ActivatedRoute,
@@ -181,6 +183,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                   this.ingredients = ingredients;
                   this.recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                     recipe.ingredients,
+                    [...ingredients, ...recipes]
+                  );
+                  this.recipeIngredients = this.recipeIngredientService.buildRecipeIngredients(
+                    this.recipeIngredientService.findRecipeIngredients(recipe, this.recipes),
                     [...ingredients, ...recipes]
                   );
                   this.recipe.steps = this.reicpeStepService.buildRecipeSteps(this.recipe, recipes);
