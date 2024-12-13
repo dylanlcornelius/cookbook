@@ -33,6 +33,7 @@ type DisplayIngredients = {
         uom: UOM;
         altAmount: string;
         altUOM: UOM;
+        buyableUOM: Ingredient['buyableUOM'];
         cartQuantity: number;
       }
     | {
@@ -120,10 +121,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
                     const ingredient = ingredients.find(
                       ({ id }) => id === userIngredient.ingredientId
                     );
-                    if (ingredient) {
-                      userIngredient.uom = ingredient.uom;
-                      userIngredient.amount = ingredient.amount;
-                    }
 
                     if (ingredient && userIngredient.cartQuantity !== 0) {
                       const category =
@@ -142,6 +139,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
                         uom: ingredient.uom,
                         altAmount: ingredient.altAmount,
                         altUOM: ingredient.altUOM,
+                        buyableUOM: ingredient.buyableUOM,
                         cartQuantity: userIngredient.cartQuantity,
                       });
                     }
@@ -191,8 +189,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       [
         new RecipeIngredient({
           id: ingredient.id,
-          quantity: ingredient.amount,
-          uom: ingredient.uom,
+          quantity: ingredient.buyableUOM === 'volume' ? ingredient.amount : ingredient.altAmount,
+          uom: ingredient.buyableUOM === 'volume' ? ingredient.uom : ingredient.altUOM,
         }),
       ],
       this.userIngredients,

@@ -756,6 +756,80 @@ describe('RecipeIngredientService', () => {
       expect(notificationService.setModal).toHaveBeenCalled();
     });
 
+    it('should show an error if the volume amount is missing', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          uom: 'y',
+        }),
+      ];
+
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
+
+      spyOn(numberService, 'toDecimal').and.returnValue(10);
+      spyOn(uomService, 'convert').and.returnValue(5);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '');
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(1);
+      expect(userIngredientService.update).toHaveBeenCalled();
+      expect(recipeHistoryService.add).not.toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
+    it('should show an error if the weight amount is missing', () => {
+      const recipeIngredients = [
+        new RecipeIngredient({
+          id: 'ingredientId',
+          uom: 'x',
+          quantity: 10,
+        }),
+      ];
+
+      const ingredients = [
+        new Ingredient({
+          id: 'ingredientId',
+          altUOM: 'y',
+        }),
+      ];
+
+      const userIngredients = [
+        new UserIngredient({
+          ingredientId: 'ingredientId',
+        }),
+      ];
+
+      spyOn(numberService, 'toDecimal').and.returnValue(10);
+      spyOn(uomService, 'convert').and.returnValues(false, 5);
+      spyOn(userIngredientService, 'update');
+      spyOn(recipeHistoryService, 'add');
+      spyOn(notificationService, 'setModal');
+
+      service.addIngredientsEvent(recipeIngredients, userIngredients, ingredients, '', '');
+
+      expect(numberService.toDecimal).toHaveBeenCalled();
+      expect(uomService.convert).toHaveBeenCalledTimes(2);
+      expect(userIngredientService.update).toHaveBeenCalled();
+      expect(recipeHistoryService.add).not.toHaveBeenCalled();
+      expect(notificationService.setModal).toHaveBeenCalled();
+    });
+
     it('should skip ingredients that are not available', () => {
       const recipeIngredients = [
         new RecipeIngredient({

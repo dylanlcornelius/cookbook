@@ -43,7 +43,7 @@
               {{ ingredient.cartQuantity }}
               {{ ingredient.name }}
             </span>
-            <span *ngIf="!ingredient.altAmount">
+            <span *ngIf="ingredient.buyableUOM === 'volume'">
               <span *ngIf="ingredient.uom !== 'other'">
                 ({{ ingredient.amount | number : '1.0-2' }} {{ ingredient.uom }})
               </span>
@@ -52,7 +52,7 @@
               </span>
             </span>
 
-            <span *ngIf="!!ingredient.altAmount">
+            <span *ngIf="ingredient.buyableUOM === 'weight'">
               <span *ngIf="ingredient.altUOM !== 'other'">
                 ({{ ingredient.altAmount | number : '1.0-2' }} {{ ingredient.altUOM }})
               </span>
