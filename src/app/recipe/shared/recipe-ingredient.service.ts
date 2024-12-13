@@ -221,6 +221,12 @@ export class RecipeIngredientService {
           quantity
         );
         if (convertedValue) {
+          if (!ingredient.amount) {
+            this.notificationService.setModal(
+              new FailureNotification(`Calculation error: ${recipeIngredient.name}`)
+            );
+            return list;
+          }
           cartQuantity = convertedValue / Number(ingredient.amount);
         } else {
           convertedValue = this.uomService.convert(
@@ -229,11 +235,19 @@ export class RecipeIngredientService {
             quantity
           );
           if (convertedValue) {
+            if (!ingredient.altAmount) {
+              this.notificationService.setModal(
+                new FailureNotification(`Calculation error: ${recipeIngredient.name}`)
+              );
+              return list;
+            }
             cartQuantity = convertedValue / Number(ingredient.altAmount);
           }
         }
         if (!convertedValue) {
-          this.notificationService.setModal(new FailureNotification('Calculation error!'));
+          this.notificationService.setModal(
+            new FailureNotification(`Calculation error: ${recipeIngredient.name}`)
+          );
           return list;
         }
 

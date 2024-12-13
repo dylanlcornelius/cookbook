@@ -171,7 +171,20 @@ describe('ShoppingListComponent', () => {
   describe('addIngredient', () => {
     it('should update user ingredients', () => {
       component.user = new User({});
-      const ingredient = new Ingredient({ id: 'id', amount: '5' });
+      const ingredient = new Ingredient({ id: 'id', amount: '5', buyableUOM: 'volume' });
+
+      spyOn(recipeIngredientService, 'addIngredientsEvent');
+      spyOn(component.ingredientControl, 'reset');
+
+      component.addIngredient(ingredient);
+
+      expect(recipeIngredientService.addIngredientsEvent).toHaveBeenCalled();
+      expect(component.ingredientControl.reset).toHaveBeenCalled();
+    });
+
+    it('should update user ingredients for a weight ingredient', () => {
+      component.user = new User({});
+      const ingredient = new Ingredient({ id: 'id', altAmount: '5', buyableUOM: 'weight' });
 
       spyOn(recipeIngredientService, 'addIngredientsEvent');
       spyOn(component.ingredientControl, 'reset');

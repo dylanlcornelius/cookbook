@@ -50,7 +50,7 @@ describe('IngredientsDetailComponent', () => {
       route.params = of({ id: 'id' });
 
       spyOn(ingredientService, 'get').and.returnValue(
-        of(new Ingredient({ category: 'BAKING', altAmount: '1' }))
+        of(new Ingredient({ category: 'BAKING', amount: '2', altAmount: '1' }))
       );
       spyOn(configService, 'get').and.returnValue(
         of([new Config({ value: 'BAKING', displayValue: 'Baking' })])
@@ -61,7 +61,7 @@ describe('IngredientsDetailComponent', () => {
 
       expect(ingredientService.get).toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
-      expect(numberService.toFormattedFraction).toHaveBeenCalled();
+      expect(numberService.toFormattedFraction).toHaveBeenCalledTimes(2);
       expect(component).toBeTruthy();
       expect(component.ingredient.displayCategory).toEqual('Baking');
     });
@@ -78,7 +78,7 @@ describe('IngredientsDetailComponent', () => {
 
       expect(ingredientService.get).toHaveBeenCalled();
       expect(configService.get).toHaveBeenCalled();
-      expect(numberService.toFormattedFraction).toHaveBeenCalled();
+      expect(numberService.toFormattedFraction).not.toHaveBeenCalled();
       expect(component).toBeTruthy();
     });
   });

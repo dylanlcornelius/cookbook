@@ -58,7 +58,9 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
           this.ingredient.displayCategory =
             configs.find(({ value }) => value === this.ingredient.category)?.displayValue ||
             'Other';
-          this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
+          if (this.ingredient.amount) {
+            this.ingredient.amount = this.numberService.toFormattedFraction(this.ingredient.amount);
+          }
           if (this.ingredient.altAmount) {
             this.ingredient.altAmount = this.numberService.toFormattedFraction(
               this.ingredient.altAmount
