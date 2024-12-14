@@ -16,7 +16,6 @@ import { RecipeIngredientService } from '@recipeIngredientService';
 import { User } from '@user';
 import { UserIngredientService } from '@userIngredientService';
 import { UserIngredients } from '@userIngredient';
-import { Validation } from '@validation';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
@@ -28,6 +27,8 @@ import { TitleService } from '@TitleService';
 import { Multipliers, RecipeMultiplierService } from '@recipeMultiplierService';
 import { RecipeStepService } from '@recipeStepService';
 import { RecipeIngredients } from '@recipeIngredient';
+import { RecipeHistoryModalParams } from 'src/app/recipe/recipe-history-modal/recipe-history-modal.component';
+import { ImageUploadProgress } from 'src/app/shared/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -39,7 +40,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   online$: Observable<boolean>;
 
   loading = true;
-  recipeHistoryModalParams;
+  recipeHistoryModalParams: RecipeHistoryModalParams;
   multipliers: Multipliers;
 
   user: User;
@@ -49,8 +50,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   userIngredients: UserIngredients;
   ingredients: Ingredients;
   recipes: Recipes = [];
-  recipeImage: string;
-  recipeImageProgress;
+  recipeImage?: string;
+  recipeImageProgress: ImageUploadProgress;
   timesCooked: number;
   lastDateCooked: string;
   creationDate: string;
@@ -102,10 +103,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
 
-        const household$ = this.householdService.get(this.user.uid);
+        const household$ = this.householdService.getByUser(this.user.uid);
         const params$ = this.route.params;
 
         combineLatest([household$, params$])
@@ -114,12 +115,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
             this.loading = this.loadingService.set(true);
             this.householdId = household.id;
 
-            const recipe$ = this.recipeService.get(params['id']);
-            const ingredients$ = this.ingredientService.get();
-            const recipes$ = this.recipeService.get();
-            const userIngredient$ = this.userIngredientService.get(this.householdId);
-            const recipeHistory$ = this.recipeHistoryService.get(this.householdId, params['id']);
-            const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
+            const recipe$ = this.recipeService.getById(params['id']);
+            const ingredients$ = this.ingredientService.getAll();
+            const recipes$ = this.recipeService.getAll();
+            const userIngredient$ = this.userIngredientService.getByUser(this.householdId);
+            const recipeHistory$ = this.recipeHistoryService.getByUserAndRecipe(
+              this.householdId,
+              params['id']
+            );
+            const configs$ = this.configService.getByName(ConfigType.RECIPE_TYPE);
 
             combineLatest([
               recipe$,
@@ -140,7 +144,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     this.recipe
                   );
                   this.imageService.download(this.recipe).then(
-                    url => {
+                    (url) => {
                       if (url) {
                         this.recipeImage = url;
                       }
@@ -169,7 +173,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                     day: 'numeric',
                   });
 
-                  this.recipes = recipes.map(recipe => {
+                  this.recipes = recipes.map((recipe) => {
                     recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                       recipe.ingredients,
                       [...ingredients, ...recipes]
@@ -200,7 +204,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
                   this.recipe.hasNewCategory =
                     !this.timesCooked || (this.timesCooked === 1 && !this.recipe.hasImage);
                   this.recipe.hasNeedsImageCategory =
-                    this.hasAuthorPermission && this.timesCooked && !this.recipe.hasImage;
+                    this.hasAuthorPermission && !!this.timesCooked && !this.recipe.hasImage;
 
                   this.shouldDisplayCategories = this.showDisplayCategories();
                   this.loading = this.loadingService.set(false);
@@ -231,13 +235,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   };
 
   deleteRecipe(id: string): void {
-    this.validationService.setModal(
-      new Validation(
-        `Are you sure you want to delete recipe ${this.recipe.name}?`,
-        this.deleteRecipeEvent,
-        [id]
-      )
-    );
+    this.validationService.setModal({
+      text: `Are you sure you want to delete recipe ${this.recipe.name}?`,
+      function: this.deleteRecipeEvent,
+      args: [id],
+    });
   }
 
   deleteRecipeEvent = (id: string): void => {
@@ -256,9 +258,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   addRecipe(): void {
     this.mealPlanService
-      .get(this.householdId)
+      .getByUser(this.householdId)
       .pipe(first())
-      .subscribe(mealPlan => {
+      .subscribe((mealPlan) => {
         this.mealPlanService.formattedUpdate(
           [...mealPlan.recipes, this.recipe],
           this.householdId,
@@ -322,14 +324,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeService
       .getForm()
       .pipe(first())
-      .subscribe(form => {
+      .subscribe((form) => {
         if (form) {
-          this.validationService.setModal(
-            new Validation(
-              `Are you sure you want to undo your current changes in the recipe wizard?`,
-              this.openRecipeEditorEvent
-            )
-          );
+          this.validationService.setModal({
+            text: `Are you sure you want to undo your current changes in the recipe wizard?`,
+            function: this.openRecipeEditorEvent,
+          });
         } else {
           this.openRecipeEditorEvent();
         }

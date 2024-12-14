@@ -9,7 +9,7 @@ import { CurrentUserService } from '@currentUserService';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  redirect: string;
+  redirect: string | null;
   isLoggedIn: Observable<boolean>;
 
   constructor(private authService: AuthService, private currentUserService: CurrentUserService) {

@@ -21,7 +21,7 @@ describe('TableViewComponent', () => {
     component.context = new Context(
       'title',
       [],
-      null,
+      null as any,
       () => {},
       () => {},
       () => {},

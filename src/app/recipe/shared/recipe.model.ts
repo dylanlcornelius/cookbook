@@ -61,7 +61,9 @@ export class Recipe extends Model {
     this.servings = data.servings || '';
     this.categories = data.categories || [];
     this.steps = data.steps || [];
-    this.ingredients = (data.ingredients || []).map(ingredient => new RecipeIngredient(ingredient));
+    this.ingredients = (data.ingredients || []).map(
+      (ingredient: any) => new RecipeIngredient(ingredient)
+    );
     this.hasImage = data.hasImage || false;
     this.meanRating = data.meanRating || 0;
     this.ratings = data.ratings || [];
@@ -97,7 +99,7 @@ export class Recipe extends Model {
     /* eslint-enable @typescript-eslint/no-unused-vars */
     return {
       ...recipe,
-      ingredients: recipe.ingredients.map(ingredient => ingredient.getObject()),
+      ingredients: recipe.ingredients.map((ingredient) => ingredient.getObject()),
       steps: recipe.steps.map(({ step, recipeId }) => (recipeId ? { recipeId } : { step })),
     };
   }

@@ -1,13 +1,12 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { HomeComponent } from './home.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { of } from 'rxjs';
+import { CurrentUserService } from '@currentUserService';
 import { Navigation } from '@navigation';
 import { NavigationService } from '@navigationService';
-import { CurrentUserService } from '@currentUserService';
 import { User } from '@user';
+import { of } from 'rxjs';
+import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -46,19 +45,19 @@ describe('HomeComponent', () => {
   describe('load', () => {
     it('should load navs', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
+      spyOn(navigationService, 'getAll').and.returnValue(of([new Navigation({})]));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(navigationService.get).toHaveBeenCalled();
+      expect(navigationService.getAll).toHaveBeenCalled();
     });
 
     it('should load navs with feature flags', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
         of(new User({ hasPlanner: true, hasCookbooks: true, hasAdminView: true }))
       );
-      spyOn(navigationService, 'get').and.returnValue(
+      spyOn(navigationService, 'getAll').and.returnValue(
         of([
           new Navigation({ link: '/shopping/plan' }),
           new Navigation({ link: '/recipe/books' }),
@@ -69,7 +68,7 @@ describe('HomeComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(navigationService.get).toHaveBeenCalled();
+      expect(navigationService.getAll).toHaveBeenCalled();
     });
   });
 });

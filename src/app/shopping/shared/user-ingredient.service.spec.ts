@@ -31,37 +31,27 @@ describe('UserIngredientService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('get', () => {
+  describe('factory', () => {
+    it('should construct a model', () => {
+      const result = service.factory({});
+
+      expect(result).toBeInstanceOf(UserIngredient);
+    });
+  });
+
+  describe('getByUser', () => {
     it('should get documents based on a uid', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
+      spyOn(FirestoreService.prototype, 'getByQuery').and.returnValue(of([{}]));
 
-      service.get('uid').subscribe(docs => {
+      service.getByUser('uid').subscribe((docs) => {
         expect(docs).toBeDefined();
       });
 
       expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get all documents', () => {
-      spyOn(firebase, 'where');
-      spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
-
-      service.get().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(firebase.where).not.toHaveBeenCalled();
-      expect(firebase.query).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getByQuery).toHaveBeenCalled();
     });
   });
 

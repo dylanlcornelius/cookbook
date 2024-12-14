@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { IngredientService } from '@ingredientService';
-import { Ingredient } from '@ingredient';
-
-import { IngredientDetailComponent } from './ingredient-detail.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
-import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Config } from '@config';
+import { ConfigService } from '@configService';
+import { Ingredient } from '@ingredient';
+import { IngredientService } from '@ingredientService';
 import { ValidationService } from '@modalService';
 import { NumberService } from '@numberService';
-import { ConfigService } from '@configService';
-import { Config } from '@config';
+import { of } from 'rxjs';
+import { IngredientListComponent } from '../ingredient-list/ingredient-list.component';
+import { IngredientDetailComponent } from './ingredient-detail.component';
 
 describe('IngredientsDetailComponent', () => {
   let component: IngredientDetailComponent;
@@ -49,18 +48,18 @@ describe('IngredientsDetailComponent', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
 
-      spyOn(ingredientService, 'get').and.returnValue(
+      spyOn(ingredientService, 'getById').and.returnValue(
         of(new Ingredient({ category: 'BAKING', amount: '2', altAmount: '1' }))
       );
-      spyOn(configService, 'get').and.returnValue(
+      spyOn(configService, 'getByName').and.returnValue(
         of([new Config({ value: 'BAKING', displayValue: 'Baking' })])
       );
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       component.load();
 
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(ingredientService.getById).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalledTimes(2);
       expect(component).toBeTruthy();
       expect(component.ingredient.displayCategory).toEqual('Baking');
@@ -70,14 +69,14 @@ describe('IngredientsDetailComponent', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ id: 'id' });
 
-      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
-      spyOn(configService, 'get').and.returnValue(of([]));
+      spyOn(ingredientService, 'getById').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'getByName').and.returnValue(of([]));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       component.load();
 
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(ingredientService.getById).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).not.toHaveBeenCalled();
       expect(component).toBeTruthy();
     });

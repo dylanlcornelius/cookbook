@@ -7,7 +7,7 @@ export class RecipeHistory extends Model {
   timesCooked: number;
   lastDateCooked: string;
 
-  constructor(data: any = {}) {
+  constructor(data: any) {
     super(data);
     this.uid = data.uid;
     this.recipeId = data.recipeId;

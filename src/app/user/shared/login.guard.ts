@@ -9,7 +9,7 @@ import { AuthService } from '../shared/auth.service';
   providedIn: 'root',
 })
 export class LoginGuard {
-  pageLoad;
+  pageLoad: string;
 
   constructor(
     private router: Router,

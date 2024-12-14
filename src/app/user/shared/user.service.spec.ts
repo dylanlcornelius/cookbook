@@ -24,53 +24,41 @@ describe('UserService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('get', () => {
+  describe('factory', () => {
+    it('should construct a model', () => {
+      const result = service.factory({});
+
+      expect(result).toBeInstanceOf(User);
+    });
+  });
+
+  describe('getByUser', () => {
     it('should get one document based on an id', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
+      spyOn(FirestoreService.prototype, 'getByQuery').and.returnValue(of([{}]));
 
-      service.get('id').subscribe(doc => {
+      service.getByUser('id').subscribe((doc) => {
         expect(doc).toBeDefined();
       });
 
       expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
+      expect(FirestoreService.prototype.getByQuery).toHaveBeenCalled();
     });
 
     it('should handle a user id that does not match any documents', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([]));
-      spyOn(FirestoreService.prototype, 'get');
+      spyOn(FirestoreService.prototype, 'getByQuery').and.returnValue(of([]));
 
-      service.get('id').subscribe(doc => {
+      service.getByUser('id').subscribe((doc) => {
         expect(doc).toBeUndefined();
       });
 
       expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get all documents', () => {
-      spyOn(firebase, 'where');
-      spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
-
-      service.get().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(firebase.where).not.toHaveBeenCalled();
-      expect(firebase.query).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getByQuery).toHaveBeenCalled();
     });
   });
 

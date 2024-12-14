@@ -13,22 +13,24 @@ export class RecipeStepService {
    */
   buildRecipeSteps(recipe: Recipe, recipes: Recipes): Recipe['steps'] {
     const startingRecipes = [recipe];
-    const finalRecipes = [];
+    const finalRecipes: Recipes = [];
 
     while (startingRecipes.length) {
-      const current = startingRecipes.pop();
+      const current = startingRecipes.pop()!;
       finalRecipes.push(current);
 
       current.steps.forEach(({ recipeId }) => {
         if (recipeId && finalRecipes.every(({ id }) => id !== recipeId)) {
           const recipe = recipes.find(({ id }) => id === recipeId);
-          startingRecipes.push(recipe);
+          if (recipe) {
+            startingRecipes.push(recipe);
+          }
         }
       });
     }
 
     while (finalRecipes.length) {
-      const current = finalRecipes.pop();
+      const current = finalRecipes.pop()!;
 
       current.steps = current.steps.map(({ step, recipeId }) => {
         // TODO: if necessary (any recipe ingredients loop), remove duplicate recipeIds that have already been added to any step

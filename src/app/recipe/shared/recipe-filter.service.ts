@@ -15,7 +15,7 @@ export class RecipeFilterService {
   }
 
   pageIndex: number;
-  recipeId: Recipe['id'];
+  recipeId?: Recipe['id'];
 
   constructor() {}
 
@@ -71,7 +71,7 @@ export abstract class Filter {
   }
 
   contains(a: string, b: string): boolean {
-    return a && a.toLowerCase().includes(b.toLowerCase());
+    return !!a && a.toLowerCase().includes(b.toLowerCase());
   }
 
   abstract type: string;
@@ -91,11 +91,13 @@ export class TypeFilter extends Filter {
 }
 
 export class RestrictionFilter extends Filter {
+  value: keyof Recipe;
   type = FILTER_TYPE.RESTRICTION;
   filterPredicate = (recipe: Recipe): boolean => recipe[this.value] === true;
 }
 
 export class TemperatureFilter extends Filter {
+  value: keyof Recipe;
   type = FILTER_TYPE.TEMPERATURE;
   filterPredicate = (recipe: Recipe): boolean => recipe[this.value] === true;
 }
@@ -132,7 +134,7 @@ export class SearchFilter extends Filter {
       this.contains(recipe.description, this.value) ||
       this.contains(recipe.type, this.value) ||
       !!recipe.categories.find(({ category }) => this.contains(category, this.value)) ||
-      !!recipe.steps.find(({ step }) => this.contains(step, this.value)) ||
+      !!recipe.steps.find(({ step }) => this.contains(step || '', this.value)) ||
       !!recipe.ingredients.find(({ name }) => this.contains(name, this.value)) ||
       this.contains(recipe.author, this.value)
     );

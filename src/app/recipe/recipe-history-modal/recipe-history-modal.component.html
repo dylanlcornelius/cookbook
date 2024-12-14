@@ -15,7 +15,7 @@
           [errorStateMatcher]="matcher"
         />
         <mat-error>
-          <span *ngIf="!form.get('timesCooked').valid && form.get('timesCooked').touched">
+          <span *ngIf="!form.get('timesCooked')?.valid && form.get('timesCooked')?.touched">
             Please enter a valid amount for Times Cooked
           </span>
         </mat-error>

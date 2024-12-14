@@ -1,27 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserIngredientService } from '@userIngredientService';
-import { IngredientService } from '@ingredientService';
-import { UserItemService } from '@userItemService';
-import { FormControl } from '@angular/forms';
-import { CurrentUserService } from '@currentUserService';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, startWith, takeUntil } from 'rxjs/operators';
-import { NotificationService, ValidationService } from '@modalService';
-import { SuccessNotification } from '@notification';
-import { User } from '@user';
-import { Validation } from '@validation';
-import { HouseholdService } from '@householdService';
-import { LoadingService } from '@loadingService';
-import { Ingredient, Ingredients } from '@ingredient';
-import { UserIngredients } from '@userIngredient';
-import { UserItem, UserItems } from '@userItem';
-import { RecipeIngredientService } from '@recipeIngredientService';
 import { KeyValue } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Configs } from '@config';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { CurrentUserService } from '@currentUserService';
+import { HouseholdService } from '@householdService';
+import { Ingredient, Ingredients } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { LoadingService } from '@loadingService';
+import { NotificationService, ValidationService } from '@modalService';
+import { SuccessNotification } from '@notification';
 import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredientService } from '@recipeIngredientService';
 import { UOM } from '@uoms';
+import { User } from '@user';
+import { UserIngredients } from '@userIngredient';
+import { UserIngredientService } from '@userIngredientService';
+import { UserItem, UserItems } from '@userItem';
+import { UserItemService } from '@userItemService';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 
 type DisplayIngredients = {
   [category: string]: Array<
@@ -64,7 +63,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   ingredientControl = new FormControl();
   filteredIngredients: Observable<Ingredients>;
-  displayIngredients: DisplayIngredients;
+  displayIngredients?: DisplayIngredients;
 
   constructor(
     private loadingService: LoadingService,
@@ -94,19 +93,19 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
 
         this.householdService
-          .get(this.user.uid)
+          .getByUser(this.user.uid)
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(household => {
+          .subscribe((household) => {
             this.householdId = household.id;
 
-            const userIngredients$ = this.userIngredientService.get(this.householdId);
-            const userItems$ = this.userItemService.get(this.householdId);
-            const ingredients$ = this.ingredientService.get();
-            const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+            const userIngredients$ = this.userIngredientService.getByUser(this.householdId);
+            const userItems$ = this.userItemService.getByUser(this.householdId);
+            const ingredients$ = this.ingredientService.getAll();
+            const configs$ = this.configService.getByName(ConfigType.INGREDIENT_CATEGORY);
 
             combineLatest([userIngredients$, userItems$, ingredients$, configs$])
               .pipe(takeUntil(this.unsubscribe$))
@@ -156,12 +155,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
                 }
 
                 if (!Object.keys(this.displayIngredients).length) {
-                  this.displayIngredients = null;
+                  this.displayIngredients = undefined;
                 }
 
                 this.filteredIngredients = this.ingredientControl.valueChanges.pipe(
                   startWith(''),
-                  map(value =>
+                  map((value) =>
                     this.ingredients.filter(({ name }) =>
                       name.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : '')
                     )
@@ -178,8 +177,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     { key: b }: KeyValue<string, any>
   ): number => {
     return (
-      this.categories.find(({ displayValue }) => displayValue === a)?.order -
-      this.categories.find(({ displayValue }) => displayValue === b)?.order
+      (this.categories.find(({ displayValue }) => displayValue === a)?.order || Infinity) -
+      (this.categories.find(({ displayValue }) => displayValue === b)?.order || Infinity)
     );
   };
 
@@ -210,7 +209,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.userIngredientService.buyUserIngredient(1, this.isCompleted);
   }
 
-  addItem(item: string): void {
+  addItem(item?: string): void {
     const name = item?.toString().trim();
     if (!name) {
       return;
@@ -231,9 +230,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addAllToPantry(): void {
-    this.validationService.setModal(
-      new Validation('Complete shopping list?', this.addAllToPantryEvent)
-    );
+    this.validationService.setModal({
+      text: 'Complete shopping list?',
+      function: this.addAllToPantryEvent,
+    });
   }
 
   addAllToPantryEvent = (): void => {

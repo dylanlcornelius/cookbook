@@ -1,17 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IngredientService } from '@ingredientService';
-import { takeUntil } from 'rxjs/operators';
-import { Subject, combineLatest } from 'rxjs';
-import { NotificationService, ValidationService } from '@modalService';
-import { SuccessNotification } from '@notification';
-import { Ingredient } from '@ingredient';
-import { Validation } from '@validation';
-import { LoadingService } from '@loadingService';
-import { NumberService } from '@numberService';
 import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { Ingredient } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { LoadingService } from '@loadingService';
+import { NotificationService, ValidationService } from '@modalService';
+import { SuccessNotification } from '@notification';
+import { NumberService } from '@numberService';
 import { TitleService } from '@TitleService';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ingredient-detail',
@@ -45,10 +44,10 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.loading = this.loadingService.set(true);
-      const ingredient$ = this.ingredientService.get(params['id']);
-      const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+      const ingredient$ = this.ingredientService.getById(params['id']);
+      const configs$ = this.configService.getByName(ConfigType.INGREDIENT_CATEGORY);
 
       combineLatest([ingredient$, configs$])
         .pipe(takeUntil(this.unsubscribe$))
@@ -72,16 +71,14 @@ export class IngredientDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteIngredient(id: string): void {
-    this.validationService.setModal(
-      new Validation(
-        `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
-        this.deleteIngredientEvent,
-        [id]
-      )
-    );
+    this.validationService.setModal({
+      text: `Are you sure you want to delete ingredient ${this.ingredient.name}?`,
+      function: this.deleteIngredientEvent,
+      args: [id],
+    });
   }
 
-  deleteIngredientEvent = (id: string): void => {
+  deleteIngredientEvent = (id?: string): void => {
     if (id) {
       this.ingredientService.delete(id);
       this.notificationService.setModal(new SuccessNotification('Ingredient deleted!'));

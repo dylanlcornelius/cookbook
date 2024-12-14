@@ -17,14 +17,14 @@ import { FirebaseService } from '@firebaseService';
 })
 export class TutorialModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  params: TutorialModal;
+  params?: TutorialModal;
 
   tutorials: Tutorials;
   tutorial: Tutorial;
   tutorialIndex: number;
 
-  top: string;
-  left: string;
+  top?: string;
+  left?: string;
 
   constructor(
     private router: Router,
@@ -51,15 +51,15 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
         this.params = params;
 
         this.tutorialService
-          .get()
+          .getAll()
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe((tutorials: Tutorials) => {
             this.tutorials = tutorials;
 
             if (this.params) {
               if (this.params.startingUrl) {
-                this.tutorialIndex = this.tutorials.findIndex(tutorial =>
-                  this.params.startingUrl.includes(tutorial.baseUrl)
+                this.tutorialIndex = this.tutorials.findIndex((tutorial) =>
+                  this.params?.startingUrl?.includes(tutorial.baseUrl)
                 );
               }
               if (!this.params.startingUrl || this.tutorialIndex === -1) {
@@ -143,7 +143,7 @@ export class TutorialModalComponent implements OnInit, OnDestroy {
       const element = document.querySelector(this.tutorial.element);
       element?.classList.remove('highlighted-element');
     }
-    this.router.navigate([this.params.originalUrl]);
+    this.router.navigate([this.params?.originalUrl]);
     this.tutorialModalService.setModal(undefined);
   }
 }

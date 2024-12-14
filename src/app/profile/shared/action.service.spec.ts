@@ -100,7 +100,7 @@ describe('ActionService', () => {
     }));
 
     it('should create a new user action object', fakeAsync(() => {
-      const userActions = null;
+      const userActions = undefined;
 
       spyOn(service, 'get').and.returnValue(Promise.resolve(userActions));
       spyOn(service, 'create');
@@ -131,15 +131,7 @@ describe('ActionService', () => {
     it('should get a document', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
-      spyOn(firebase, 'getDocs').and.returnValue(
-        Promise.resolve([
-          {
-            data: () => {
-              return {};
-            },
-          },
-        ])
-      );
+      spyOn(firebase, 'getDocs').and.returnValue(Promise.resolve([{ data: () => ({}) }]) as any);
 
       service.get('uid');
 

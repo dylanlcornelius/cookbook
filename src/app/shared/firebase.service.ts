@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
+import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
+import { getApps, initializeApp } from 'firebase/app';
+import { Auth, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import {
-  collection,
-  getFirestore,
-  doc,
-  setDoc,
-  deleteDoc,
-  onSnapshot,
   addDoc,
-  where,
-  query,
-  getDocs,
+  collection,
   CollectionReference,
-  Query,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  DocumentSnapshot,
   enableMultiTabIndexedDbPersistence,
   Firestore,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  query,
+  Query,
+  QuerySnapshot,
+  setDoc,
+  where,
 } from 'firebase/firestore';
-import { getApps, initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, Auth, signInWithPopup } from 'firebase/auth';
 import {
   deleteObject,
   FirebaseStorage,
@@ -25,7 +29,6 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -46,10 +49,28 @@ export class FirebaseService {
   getFirestore = getFirestore;
   enableMultiTabIndexedDbPersistence = enableMultiTabIndexedDbPersistence;
   collection = collection;
-  doc = (reference: any, path?: any): any => (path ? doc(reference, path) : doc(reference));
-  getDocs = (query: any): any => getDocs(query);
-  onSnapshot = (reference: any): any =>
-    new Observable(observable => onSnapshot(reference, snapshot => observable.next(snapshot)));
+  doc = <Model>(reference: any, path?: any): DocumentReference<Model> =>
+    path ? doc<Model>(reference, path) : doc<Model>(reference);
+  getDocs = getDocs;
+  onSnapshot<Model>(reference: DocumentReference<Model>): Observable<DocumentSnapshot<Model>>;
+  onSnapshot<Model>(reference: Query<Model>): Observable<QuerySnapshot<Model>>;
+  onSnapshot<Model>(reference: CollectionReference<Model>): Observable<CollectionReference<Model>>;
+  onSnapshot<Model>(
+    reference: Query<Model> | CollectionReference<Model>
+  ): Observable<QuerySnapshot<Model> | CollectionReference<Model>>;
+  onSnapshot<Model>(
+    reference: DocumentReference<Model> | Query<Model> | CollectionReference<Model>
+  ): Observable<DocumentSnapshot<Model> | QuerySnapshot<Model> | CollectionReference<Model>> {
+    return new Observable<DocumentSnapshot<Model> | QuerySnapshot<Model>>((observable) => {
+      if (reference.type === 'document') {
+        onSnapshot<Model>(reference, (snapshot: DocumentSnapshot<Model>) =>
+          observable.next(snapshot)
+        );
+      } else {
+        onSnapshot<Model>(reference, (snapshot: QuerySnapshot<Model>) => observable.next(snapshot));
+      }
+    });
+  }
   query = query;
   where = where;
   addDoc = addDoc;
@@ -66,8 +87,7 @@ export class FirebaseService {
   getStorage = getStorage;
   ref = ref;
   getDownloadURL = getDownloadURL;
-  uploadBytesResumable = (ref: any, file: any, options: any): any =>
-    uploadBytesResumable(ref, file, options);
+  uploadBytesResumable = uploadBytesResumable;
   deleteObject = deleteObject;
 
   // ANALYTICS
@@ -78,8 +98,7 @@ export class FirebaseService {
 export {
   // FIRESTORE
   CollectionReference,
-  Query,
-
   // AUTH
   GoogleAuthProvider,
+  Query,
 };

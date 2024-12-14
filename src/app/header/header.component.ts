@@ -30,9 +30,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mobileNavs: Navigations = [];
   profileNavs: Navigations = [];
   toolNavs: Navigations = [];
-  householdNotifications: number;
-  feedbackNotifications: number;
-  continueNav: Navigation;
+  householdNotifications?: number;
+  feedbackNotifications?: number;
+  continueNav?: Navigation;
 
   constructor(
     private router: Router,
@@ -68,9 +68,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   load(): void {
     const user$ = this.currentUserService.getCurrentUser();
-    const navs$ = this.navigationService.get();
+    const navs$ = this.navigationService.getAll();
     const recipeForm$ = this.recipeService.getForm();
-    const feedbacks$ = this.feedbackService.get();
+    const feedbacks$ = this.feedbackService.getAll();
 
     combineLatest([user$, navs$, recipeForm$, feedbacks$])
       .pipe(takeUntil(this.unsubscribe$))
@@ -81,7 +81,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.householdService
             .getInvites(this.user.uid)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(households => {
+            .subscribe((households) => {
               this.householdNotifications = households.length ? households.length : undefined;
             });
 
@@ -111,7 +111,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             icon: 'edit',
           });
         } else {
-          this.continueNav = null;
+          this.continueNav = undefined;
         }
       });
   }

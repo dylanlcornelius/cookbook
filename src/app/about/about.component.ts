@@ -34,17 +34,17 @@ export class AboutComponent implements OnInit {
   }
 
   load(): void {
-    const recipes$ = this.recipeService.get();
-    const users$ = this.userService.get();
+    const recipes$ = this.recipeService.getAll();
+    const users$ = this.userService.getAll();
 
     combineLatest([recipes$, users$])
       .pipe(first())
       .subscribe(([recipes, users]) => {
         const imageRecipes = recipes
           ?.filter(({ hasImage, status }) => !!hasImage && status !== RECIPE_STATUS.BLUEPRINT)
-          .map(recipe => {
+          .map((recipe) => {
             this.imageService.download(recipe).then(
-              url => {
+              (url) => {
                 if (url) {
                   recipe.image = url;
                 }

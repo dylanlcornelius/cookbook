@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
-import { ActionService } from '@actionService';
-import { Observable } from 'rxjs';
-import { CurrentUserService } from '@currentUserService';
 import { Action } from '@actions';
-import { Models, ModelObject } from '@model';
-import { first } from 'rxjs/operators';
+import { ActionService } from '@actionService';
+import { Injectable } from '@angular/core';
+import { CurrentUserService } from '@currentUserService';
 import { CollectionReference, FirebaseService, Query } from '@firebaseService';
+import { Model as BaseModel } from '@model';
+import { DocumentSnapshot, QueryDocumentSnapshot } from 'firebase/firestore';
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export abstract class FirestoreService {
-  ref: CollectionReference;
+export abstract class FirestoreService<Model extends BaseModel> {
+  ref: CollectionReference<Model>;
 
   constructor(
     private collectionPath: string,
+    public factory: (data: any) => Model,
     protected firebase: FirebaseService,
     protected currentUserService: CurrentUserService,
     protected actionService: ActionService
@@ -24,11 +26,14 @@ export abstract class FirestoreService {
 
   load(): void {
     if (this.firebase.appLoaded && !this.ref && this.collectionPath) {
-      this.ref = this.firebase.collection(this.firebase.firestore, this.collectionPath);
+      this.ref = this.firebase.collection(
+        this.firebase.firestore,
+        this.collectionPath
+      ) as CollectionReference<Model>;
     }
   }
 
-  commitAction(action: Action): void {
+  commitAction(action?: Action): void {
     if (!action) {
       return;
     }
@@ -36,40 +41,48 @@ export abstract class FirestoreService {
     this.currentUserService
       .getCurrentUser()
       .pipe(first())
-      .subscribe(user => {
+      .subscribe((user) => {
         this.actionService.commitAction(user.uid, action, 1);
       });
   }
 
-  getOne(id: string): Observable<any> {
-    return new Observable(observable => {
-      this.firebase.onSnapshot(this.firebase.doc(this.ref, id)).subscribe(snapshot => {
-        observable.next({ ...snapshot.data(), id: snapshot.id });
+  construct(snapshot: DocumentSnapshot<Model> | QueryDocumentSnapshot<Model>): Model {
+    return this.factory({ ...snapshot.data(), id: snapshot.id });
+  }
+
+  getById(id: string): Observable<Model> {
+    return new Observable((observable) => {
+      this.firebase.onSnapshot<Model>(this.firebase.doc(this.ref, id)).subscribe((snapshot) => {
+        observable.next(this.construct(snapshot));
       });
     });
   }
 
-  getMany(ref?: Query): Observable<any> {
-    return new Observable(observable => {
-      this.firebase.onSnapshot(ref || this.ref).subscribe(snapshot => {
-        const docs = [];
-        snapshot.forEach(doc => {
-          docs.push({ ...doc.data(), id: doc.id });
+  getByQuery(ref: Query<Model>): Observable<Model[]> {
+    return new Observable((observable) => {
+      this.firebase.onSnapshot<Model>(ref).subscribe((snapshot) => {
+        const docs: Model[] = [];
+        snapshot.forEach((doc) => {
+          docs.push(this.construct(doc));
         });
         observable.next(docs);
       });
     });
   }
 
-  get(id?: string): Observable<any> {
-    if (id) {
-      return this.getOne(id);
-    } else {
-      return this.getMany();
-    }
+  getAll(): Observable<Model[]> {
+    return new Observable((observable) => {
+      this.firebase.onSnapshot<Model>(this.ref).subscribe((snapshot) => {
+        const docs: Model[] = [];
+        snapshot.forEach((doc) => {
+          docs.push(this.construct(doc));
+        });
+        observable.next(docs);
+      });
+    });
   }
 
-  create(data: ModelObject, action?: Action): string {
+  create(data: ReturnType<Model['getObject']>, action?: Action): string {
     this.commitAction(action);
 
     const currentDoc = this.firebase.doc(this.ref);
@@ -77,21 +90,21 @@ export abstract class FirestoreService {
     return currentDoc.id;
   }
 
-  updateOne(data: ModelObject, id: string, action?: Action): void {
+  updateOne(data: ReturnType<Model['getObject']>, id: string, action?: Action): void {
     this.commitAction(action);
 
     const currentDoc = this.firebase.doc(this.ref, id);
     this.firebase.setDoc(currentDoc, data);
   }
 
-  updateAll(data: Models): void {
-    data.forEach(d => {
+  updateAll(data: Model[]): void {
+    data.forEach((d) => {
       const currentDoc = this.firebase.doc(this.ref, d.getId());
       this.firebase.setDoc(currentDoc, d.getObject());
     });
   }
 
-  update(data: ModelObject | Models, id?: string, action?: Action): void {
+  update(data: ReturnType<Model['getObject']> | Model[], id?: string, action?: Action): void {
     if (id && !Array.isArray(data)) {
       this.updateOne(data, id, action);
     } else if (Array.isArray(data)) {

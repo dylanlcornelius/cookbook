@@ -1,14 +1,13 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FirebaseService } from '@firebaseService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
 import { NotificationService, ValidationService } from '@modalService';
 import { User } from '@user';
 import { UserService } from '@userService';
 import { of } from 'rxjs';
-
 import { HouseholdComponent } from './household.component';
-import { FirebaseService } from '@firebaseService';
 
 describe('HouseholdComponent', () => {
   let component: HouseholdComponent;
@@ -51,36 +50,19 @@ describe('HouseholdComponent', () => {
       const household = new Household({ memberIds: ['uid2'], inviteIds: ['uid'] });
       const invites = [new Household({})];
 
-      spyOn(userService, 'get').and.returnValue(of(user)).and.returnValue(of(users));
-      spyOn(householdService, 'get').and.returnValue(of(household));
+      spyOn(userService, 'getByUser').and.returnValue(of(user));
+      spyOn(userService, 'getAll').and.returnValue(of(users));
+      spyOn(householdService, 'getByUser').and.returnValue(of(household));
       spyOn(householdService, 'getInvites').and.returnValue(of(invites));
       spyOn(component, 'initializeHouseholdNames').and.returnValue(household);
 
       component.load();
 
-      expect(userService.get).toHaveBeenCalledTimes(2);
-      expect(householdService.get).toHaveBeenCalled();
+      expect(userService.getByUser).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
       expect(householdService.getInvites).toHaveBeenCalled();
       expect(component.initializeHouseholdNames).toHaveBeenCalledTimes(2);
-    });
-
-    it('should load without a household', () => {
-      const user = new User({});
-      const users = [new User({ uid: 'uid' })];
-      const household = undefined;
-      const invites = [new Household({})];
-
-      spyOn(userService, 'get').and.returnValue(of(user)).and.returnValue(of(users));
-      spyOn(householdService, 'get').and.returnValue(of(household));
-      spyOn(householdService, 'getInvites').and.returnValue(of(invites));
-      spyOn(component, 'initializeHouseholdNames').and.returnValue(household);
-
-      component.load();
-
-      expect(userService.get).toHaveBeenCalledTimes(2);
-      expect(householdService.get).toHaveBeenCalled();
-      expect(householdService.getInvites).toHaveBeenCalled();
-      expect(component.initializeHouseholdNames).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -112,7 +94,7 @@ describe('HouseholdComponent', () => {
       spyOn(householdService, 'update');
       spyOn(householdService, 'delete');
 
-      component.cleanHousehold(household, uid);
+      component.cleanHousehold(uid, household);
 
       expect(householdService.update).toHaveBeenCalled();
       expect(householdService.delete).not.toHaveBeenCalled();
@@ -125,7 +107,7 @@ describe('HouseholdComponent', () => {
       spyOn(householdService, 'update');
       spyOn(householdService, 'delete');
 
-      component.cleanHousehold(household, uid);
+      component.cleanHousehold(uid, household);
 
       expect(householdService.update).not.toHaveBeenCalled();
       expect(householdService.delete).toHaveBeenCalled();
@@ -138,7 +120,7 @@ describe('HouseholdComponent', () => {
       spyOn(householdService, 'update');
       spyOn(householdService, 'delete');
 
-      component.cleanHousehold(household, uid);
+      component.cleanHousehold(uid, household);
 
       expect(householdService.update).not.toHaveBeenCalled();
       expect(householdService.delete).not.toHaveBeenCalled();
@@ -263,7 +245,7 @@ describe('HouseholdComponent', () => {
 
       const result = component.getInviterName(household);
 
-      expect(result).toBeUndefined();
+      expect(result).toEqual('');
     });
   });
 

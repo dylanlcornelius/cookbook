@@ -56,7 +56,7 @@ describe('AuthService', () => {
   describe('handleLogin', () => {
     it('should handle logging out a user', () => {
       spyOn(currentUserService, 'setIsGuest');
-      spyOn(userService, 'get').and.returnValue(of(new User({})));
+      spyOn(userService, 'getByUser').and.returnValue(of(new User({})));
       spyOn(userService, 'create');
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
@@ -67,7 +67,7 @@ describe('AuthService', () => {
       service.handleUserChange(undefined);
 
       expect(currentUserService.setIsGuest).toHaveBeenCalled();
-      expect(userService.get).not.toHaveBeenCalled();
+      expect(userService.getByUser).not.toHaveBeenCalled();
       expect(userService.create).not.toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).not.toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).not.toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('AuthService', () => {
 
     it('should handle logging in an existing user', () => {
       spyOn(currentUserService, 'setIsGuest');
-      spyOn(userService, 'get').and.returnValue(of(new User({})));
+      spyOn(userService, 'getByUser').and.returnValue(of(new User({})));
       spyOn(userService, 'create');
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
@@ -89,7 +89,7 @@ describe('AuthService', () => {
       service.handleUserChange({ uid: 'uid' });
 
       expect(currentUserService.setIsGuest).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
+      expect(userService.getByUser).toHaveBeenCalled();
       expect(userService.create).not.toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('AuthService', () => {
       service.redirectUrl = 'url';
 
       spyOn(currentUserService, 'setIsGuest');
-      spyOn(userService, 'get').and.returnValue(of(new User({})));
+      spyOn(userService, 'getByUser').and.returnValue(of(new User({})));
       spyOn(userService, 'create');
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
@@ -113,7 +113,7 @@ describe('AuthService', () => {
       service.handleUserChange({ uid: 'uid' });
 
       expect(currentUserService.setIsGuest).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
+      expect(userService.getByUser).toHaveBeenCalled();
       expect(userService.create).not.toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();
@@ -126,7 +126,7 @@ describe('AuthService', () => {
       service.redirectUrl = 'url';
 
       spyOn(currentUserService, 'setIsGuest');
-      spyOn(userService, 'get').and.returnValue(of(undefined));
+      spyOn(userService, 'getByUser').and.returnValue(of(undefined));
       spyOn(userService, 'create');
       spyOn(currentUserService, 'setCurrentUser');
       spyOn(currentUserService, 'setIsLoggedIn');
@@ -137,7 +137,7 @@ describe('AuthService', () => {
       service.handleUserChange({ uid: 'uid' });
 
       expect(currentUserService.setIsGuest).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
+      expect(userService.getByUser).toHaveBeenCalled();
       expect(userService.create).toHaveBeenCalled();
       expect(currentUserService.setCurrentUser).toHaveBeenCalled();
       expect(currentUserService.setIsLoggedIn).toHaveBeenCalled();

@@ -1,26 +1,25 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { ProfileComponent } from './profile.component';
-import { UserService } from '@userService';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CurrentUserService } from '@currentUserService';
-import { of } from 'rxjs';
+import { Action } from '@actions';
 import { ActionService } from '@actionService';
-import { User } from '@user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NotificationService } from '@modalService';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CurrentUserService } from '@currentUserService';
+import { Household } from '@household';
+import { HouseholdService } from '@householdService';
 import { ImageService } from '@imageService';
-import { RecipeService } from '@recipeService';
-import { RecipeHistoryService } from '@recipeHistoryService';
+import { NotificationService } from '@modalService';
 import { Recipe } from '@recipe';
 import { RecipeHistory } from '@recipeHistory';
-import { HouseholdService } from '@householdService';
-import { Household } from '@household';
-import { Action } from '@actions';
+import { RecipeHistoryService } from '@recipeHistoryService';
+import { RecipeService } from '@recipeService';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { User } from '@user';
+import { UserService } from '@userService';
+import { of } from 'rxjs';
+import { ProfileComponent } from './profile.component';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -74,8 +73,8 @@ describe('ProfileComponent', () => {
   describe('load', () => {
     it('should load data with an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userService, 'get').and.returnValue(of([new User({})]));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userService, 'getAll').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
@@ -83,7 +82,8 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
@@ -91,8 +91,8 @@ describe('ProfileComponent', () => {
 
     it('should load data without an image', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userService, 'get').and.returnValue(of([new User({})]));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userService, 'getAll').and.returnValue(of([new User({})]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
@@ -100,7 +100,8 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
@@ -111,8 +112,8 @@ describe('ProfileComponent', () => {
       route.params = of({ id: 'id' });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({ role: 'admin' })));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userService, 'get').and.returnValue(of([new User({ id: 'id' })]));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userService, 'getAll').and.returnValue(of([new User({ id: 'id' })]));
       spyOn(component, 'loadActions');
       spyOn(component, 'loadHistory');
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
@@ -120,7 +121,8 @@ describe('ProfileComponent', () => {
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
       expect(component.loadActions).toHaveBeenCalled();
       expect(component.loadHistory).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
@@ -177,7 +179,7 @@ describe('ProfileComponent', () => {
     it('should handle no actions', fakeAsync(() => {
       component.user = new User({ uid: 'uid' });
 
-      spyOn(actionService, 'get').and.returnValue(undefined);
+      spyOn(actionService, 'get').and.returnValue(Promise.resolve(undefined));
       spyOn(component, 'sortActions');
 
       component.loadActions();
@@ -216,10 +218,10 @@ describe('ProfileComponent', () => {
     it('should load histories', () => {
       component.user = new User({});
 
-      spyOn(recipeService, 'get').and.returnValue(
+      spyOn(recipeService, 'getAll').and.returnValue(
         of([new Recipe({ id: 'id', name: 'recipe' }), new Recipe({ id: 'id2', name: 'recipe' })])
       );
-      spyOn(recipeHistoryService, 'get').and.returnValue(
+      spyOn(recipeHistoryService, 'getByUser').and.returnValue(
         of([
           new RecipeHistory({ recipeId: 'id', timesCooked: 2 }),
           new RecipeHistory({ recipeId: 'id2', timesCooked: 1 }),
@@ -231,24 +233,26 @@ describe('ProfileComponent', () => {
       expect(component.history.length).toEqual(2);
       expect(component.history[0].name).toEqual('recipe');
       expect(component.history[0].value).toEqual(2);
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(recipeHistoryService.getByUser).toHaveBeenCalled();
       expect(component.totalRecipesCooked).toEqual(3);
     });
 
     it('should load histories with missing recipes', () => {
       component.user = new User({});
 
-      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ id: 'id', name: 'recipe' })]));
-      spyOn(recipeHistoryService, 'get').and.returnValue(
+      spyOn(recipeService, 'getAll').and.returnValue(
+        of([new Recipe({ id: 'id', name: 'recipe' })])
+      );
+      spyOn(recipeHistoryService, 'getByUser').and.returnValue(
         of([new RecipeHistory({ recipeId: 'id2', timesCooked: 2 })])
       );
 
       component.loadHistory();
 
       expect(component.history.length).toEqual(0);
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(recipeHistoryService.get).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(recipeHistoryService.getByUser).toHaveBeenCalled();
       expect(component.totalRecipesCooked).toBeUndefined();
     });
   });

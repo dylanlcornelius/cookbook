@@ -14,8 +14,13 @@ this.householdInviteModalParams = {
 import { Component, Input, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User, Users } from '@user';
-import { ModalComponent } from '@modalComponent';
+import { ModalComponent, ModalComponentParams } from '@modalComponent';
 import { HouseholdComponent } from '../household/household.component';
+
+export interface HouseholdInviteModalParams extends ModalComponentParams {
+  function: HouseholdComponent['sendInviteEvent'];
+  users: Users;
+}
 
 @Component({
   selector: 'app-household-invite-modal',
@@ -25,21 +30,21 @@ import { HouseholdComponent } from '../household/household.component';
 export class HouseholdInviteModalComponent {
   inviteSearchControl = new FormControl();
 
-  params;
+  params?: HouseholdInviteModalParams;
 
   @Input()
-  set Params(params: { function: HouseholdComponent['sendInviteEvent']; users: Users }) {
+  set Params(params: HouseholdInviteModalParams | undefined) {
     this.inviteSearchControl = new FormControl();
     this.params = params;
   }
 
   @ViewChild(ModalComponent)
-  modal: ModalComponent;
+  modal: ModalComponent<HouseholdInviteModalParams>;
 
   constructor() {}
 
-  displayFn(user: User): string {
-    return user?.name;
+  displayFn(user?: User): string {
+    return user?.name || '';
   }
 
   cancel(): void {
@@ -47,7 +52,7 @@ export class HouseholdInviteModalComponent {
   }
 
   confirm(): void {
-    this.params.function(this.inviteSearchControl.value);
+    this.params?.function(this.inviteSearchControl.value);
     this.modal.close();
   }
 }

@@ -1,39 +1,30 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User, UserObject, Users } from '@user';
-import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
+import { Injectable } from '@angular/core';
+import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
+import { FirestoreService } from '@firestoreService';
+import { User, UserObject, Users } from '@user';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService extends FirestoreService {
+export class UserService extends FirestoreService<User> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('users', firebase, currentUserService, actionService);
+    super('users', (data): User => new User(data), firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<User>;
-  get(): Observable<Users>;
-  get(uid?: string): Observable<User | Users>; // type of spyOn
-  get(uid?: string): Observable<User | Users> {
-    return new Observable(observer => {
-      if (uid) {
-        super
-          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
-          .subscribe(docs => {
-            observer.next(docs[0] ? new User(docs[0]) : undefined);
-          });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new User(doc)));
+  getByUser(uid: string): Observable<User | undefined> {
+    return new Observable((observer) => {
+      super
+        .getByQuery(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+        .subscribe((docs) => {
+          observer.next(docs[0] ? new User(docs[0]) : undefined);
         });
-      }
     });
   }
 

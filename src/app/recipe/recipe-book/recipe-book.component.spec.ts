@@ -1,20 +1,20 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Config } from '@config';
+import { ConfigService } from '@configService';
 import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
 import { Household } from '@household';
 import { HouseholdService } from '@householdService';
 import { ImageService } from '@imageService';
 import { Recipe, RECIPE_STATUS } from '@recipe';
+import { CategoryFilter, TypeFilter } from '@recipeFilterService';
 import { RecipeService } from '@recipeService';
 import { User } from '@user';
 import { UtilService } from '@utilService';
 import { of } from 'rxjs';
 import { RecipeBookComponent } from './recipe-book.component';
-import { CategoryFilter, TypeFilter } from '@recipeFilterService';
-import { ConfigService } from '@configService';
-import { Config } from '@config';
 
 describe('RecipeBookComponent', () => {
   let component: RecipeBookComponent;
@@ -97,9 +97,9 @@ describe('RecipeBookComponent', () => {
       const configs = [new Config({})];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(recipeService, 'getAll').and.returnValue(of(recipes));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
@@ -117,9 +117,9 @@ describe('RecipeBookComponent', () => {
       expect(component.categories[2].recipes.length).toEqual(4);
       expect(component.categories[0].recipes[0].image).toEqual('url');
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     }));
 
@@ -157,9 +157,9 @@ describe('RecipeBookComponent', () => {
       const configs = [new Config({ value: 'entree', displayValue: 'Entree' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(recipeService, 'getAll').and.returnValue(of(recipes));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
 
       component.load();
@@ -171,9 +171,9 @@ describe('RecipeBookComponent', () => {
       expect(component.categories[0].recipes.length).toEqual(4);
       expect(component.categories[0].recipes[0].image).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     }));
   });

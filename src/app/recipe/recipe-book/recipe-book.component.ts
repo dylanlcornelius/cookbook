@@ -71,17 +71,17 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
 
         this.householdService
-          .get(this.user.uid)
+          .getByUser(this.user.uid)
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(household => {
+          .subscribe((household) => {
             this.householdId = household.id;
 
-            const recipes$ = this.recipeService.get();
-            const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
+            const recipes$ = this.recipeService.getAll();
+            const configs$ = this.configService.getByName(ConfigType.RECIPE_TYPE);
 
             combineLatest([recipes$, configs$])
               .pipe(takeUntil(this.unsubscribe$), debounceTime(100))
@@ -90,13 +90,13 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
 
                 recipes
                   .filter(
-                    recipe =>
+                    (recipe) =>
                       this.householdService.hasUserPermission(household, this.user, recipe) &&
                       !!recipe.hasImage
                   )
-                  .forEach(recipe => {
+                  .forEach((recipe) => {
                     this.imageService.download(recipe).then(
-                      url => {
+                      (url) => {
                         if (url) {
                           recipe.image = url;
                         }
@@ -104,7 +104,7 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
                       () => {}
                     );
 
-                    recipe.categories.forEach(category => {
+                    recipe.categories.forEach((category) => {
                       if (!category?.category) {
                         return;
                       }
@@ -170,7 +170,7 @@ export class RecipeBookComponent implements OnInit, OnDestroy {
 
                 this.categories = categories
                   .filter(({ recipes }) => recipes.length >= 4)
-                  .map(category => {
+                  .map((category) => {
                     const categoryRecipes = category.recipes;
                     const selectedRecipes = [];
 

@@ -5,7 +5,6 @@ import { ModalComponent } from '@modalComponent';
 import { RecipeIngredientModalService } from '@modalService';
 import { Recipe } from '@recipe';
 import { RecipeIngredient } from '@recipeIngredient';
-import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { RecipeMultiplierService } from '@recipeMultiplierService';
 import { UOM } from '@uoms';
 import { UserIngredient } from '@userIngredient';
@@ -44,16 +43,19 @@ describe('RecipeIngredientModalComponent', () => {
       const uid = 'uid';
       const householdId = 'default';
 
-      const recipeIngredientModal = new RecipeIngredientModal(
-        () => {},
-        new Recipe({}),
-        [],
-        [new RecipeIngredient({}), new RecipeIngredient({ id: 'recipe-1', uom: UOM.RECIPE })],
-        [new Ingredient({})],
+      const recipeIngredientModal = {
+        function: () => {},
+        recipe: new Recipe({}),
+        recipes: [],
+        recipeIngredients: [
+          new RecipeIngredient({}),
+          new RecipeIngredient({ id: 'recipe-1', uom: UOM.RECIPE }),
+        ],
+        ingredients: [new Ingredient({})],
         userIngredients,
         uid,
-        householdId
-      );
+        householdId,
+      };
       recipeIngredientModalService.setModal(recipeIngredientModal);
 
       const modal = new BehaviorSubject(recipeIngredientModal);
@@ -62,7 +64,7 @@ describe('RecipeIngredientModalComponent', () => {
 
       component.load();
 
-      expect(component.params.recipeIngredients.length).toEqual(1);
+      expect(component.params!.recipeIngredients.length).toEqual(1);
       expect(component.selectionCount).toEqual(1);
     });
   });
@@ -73,16 +75,16 @@ describe('RecipeIngredientModalComponent', () => {
     const householdId = 'default';
 
     beforeEach(() => {
-      const recipeIngredientModal = new RecipeIngredientModal(
-        () => {},
-        new Recipe({}),
-        [],
-        [new RecipeIngredient({})],
-        [new Ingredient({})],
+      const recipeIngredientModal = {
+        function: () => {},
+        recipe: new Recipe({}),
+        recipes: [],
+        recipeIngredients: [new RecipeIngredient({})],
+        ingredients: [new Ingredient({})],
         userIngredients,
         uid,
-        householdId
-      );
+        householdId,
+      };
       recipeIngredientModalService.setModal(recipeIngredientModal);
 
       spyOn(recipeIngredientModalService, 'getModal');
@@ -90,21 +92,21 @@ describe('RecipeIngredientModalComponent', () => {
 
     it('should add when selected', () => {
       component.selectionCount = 0;
-      component.params.recipeIngredients = [new RecipeIngredient({})];
+      component.params!.recipeIngredients = [new RecipeIngredient({})];
 
-      component.select(component.params.recipeIngredients[0], true);
+      component.select(component.params!.recipeIngredients[0], true);
 
-      expect(component.params.recipeIngredients[0].selected).toEqual(true);
+      expect(component.params!.recipeIngredients[0].selected).toEqual(true);
       expect(component.selectionCount).toEqual(1);
     });
 
     it('should subtract when unselected', () => {
       component.selectionCount = 1;
-      component.params.recipeIngredients = [new RecipeIngredient({ selected: false })];
+      component.params!.recipeIngredients = [new RecipeIngredient({ selected: false })];
 
-      component.select(component.params.recipeIngredients[0], false);
+      component.select(component.params!.recipeIngredients[0], false);
 
-      expect(component.params.recipeIngredients[0].selected).toEqual(false);
+      expect(component.params!.recipeIngredients[0].selected).toEqual(false);
       expect(component.selectionCount).toEqual(0);
     });
   });
@@ -115,39 +117,39 @@ describe('RecipeIngredientModalComponent', () => {
     const householdId = 'default';
 
     beforeEach(() => {
-      const recipeIngredientModal = new RecipeIngredientModal(
-        () => {},
-        new Recipe({}),
-        [],
-        [new RecipeIngredient({})],
-        [new Ingredient({})],
+      const recipeIngredientModal = {
+        function: () => {},
+        recipe: new Recipe({}),
+        recipes: [],
+        recipeIngredients: [new RecipeIngredient({})],
+        ingredients: [new Ingredient({})],
         userIngredients,
         uid,
-        householdId
-      );
+        householdId,
+      };
       recipeIngredientModalService.setModal(recipeIngredientModal);
 
       spyOn(recipeIngredientModalService, 'getModal');
     });
 
     it('should use all ingredients', () => {
-      component.params.recipeIngredients = [new RecipeIngredient({ quantity: '1' })];
+      component.params!.recipeIngredients = [new RecipeIngredient({ quantity: '1' })];
 
       spyOn(recipeMultiplierService, 'getQuantity').and.returnValue('1');
-      spyOn(component.params, 'function');
+      spyOn(component.params, 'function' as never);
       spyOn(component.modal, 'close');
 
       component.add();
 
       expect(recipeMultiplierService.getQuantity).toHaveBeenCalled();
-      expect(component.params.function).toHaveBeenCalledWith(
-        component.params.recipeIngredients,
-        component.params.userIngredients,
-        component.params.ingredients,
-        component.params.uid,
-        component.params.householdId,
-        component.params.recipe,
-        component.params.recipes
+      expect(component.params!.function).toHaveBeenCalledWith(
+        component.params!.recipeIngredients,
+        component.params!.userIngredients,
+        component.params!.ingredients,
+        component.params!.uid,
+        component.params!.householdId,
+        component.params!.recipe,
+        component.params!.recipes
       );
       expect(component.modal.close).toHaveBeenCalled();
     });
@@ -156,23 +158,23 @@ describe('RecipeIngredientModalComponent', () => {
       const recipeIngredient1 = new RecipeIngredient({ selected: true, quantity: '1' });
       const recipeIngredient2 = new RecipeIngredient({});
 
-      component.params.recipeIngredients = [recipeIngredient1, recipeIngredient2];
+      component.params!.recipeIngredients = [recipeIngredient1, recipeIngredient2];
 
       spyOn(recipeMultiplierService, 'getQuantity').and.returnValue('1');
-      spyOn(component.params, 'function');
+      spyOn(component.params, 'function' as never);
       spyOn(component.modal, 'close');
 
       component.add();
 
       expect(recipeMultiplierService.getQuantity).toHaveBeenCalled();
-      expect(component.params.function).toHaveBeenCalledWith(
+      expect(component.params!.function).toHaveBeenCalledWith(
         [recipeIngredient1],
-        component.params.userIngredients,
-        component.params.ingredients,
-        component.params.uid,
-        component.params.householdId,
-        component.params.recipe,
-        component.params.recipes
+        component.params!.userIngredients,
+        component.params!.ingredients,
+        component.params!.uid,
+        component.params!.householdId,
+        component.params!.recipe,
+        component.params!.recipes
       );
       expect(component.modal.close).toHaveBeenCalled();
     });

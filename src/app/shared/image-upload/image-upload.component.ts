@@ -3,10 +3,11 @@ import { ImageService } from '@imageService';
 import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { UtilService } from '@utilService';
-import { Validation } from '@validation';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import Compressor from 'compressorjs';
+
+export type ImageUploadProgress = number | undefined | void;
 
 @Component({
   selector: 'app-image-upload',
@@ -24,14 +25,14 @@ export class ImageUploadComponent implements OnDestroy {
   updateImage: (hasImage: boolean) => void;
 
   @Input()
-  progress;
+  progress: ImageUploadProgress;
   @Output()
-  progressChange = new EventEmitter<number>();
+  progressChange = new EventEmitter<ImageUploadProgress>();
 
   @Input()
-  image: string;
+  image: string | undefined;
   @Output()
-  imageChange = new EventEmitter<string>();
+  imageChange = new EventEmitter<typeof this.image>();
 
   constructor(
     private utilService: UtilService,
@@ -62,7 +63,7 @@ export class ImageUploadComponent implements OnDestroy {
     this.imageService
       .upload(this.id, image)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(progress => {
+      .subscribe((progress) => {
         if (typeof progress === 'string') {
           this.image = progress;
           this.imageChange.emit(this.image);
@@ -80,9 +81,11 @@ export class ImageUploadComponent implements OnDestroy {
   };
 
   deleteFile(path: string): void {
-    this.validationService.setModal(
-      new Validation('Are you sure you want to remove this image?', this.deleteFileEvent, [path])
-    );
+    this.validationService.setModal({
+      text: 'Are you sure you want to remove this image?',
+      function: this.deleteFileEvent,
+      args: [path],
+    });
   }
 
   deleteFileEvent = (path: string): void => {

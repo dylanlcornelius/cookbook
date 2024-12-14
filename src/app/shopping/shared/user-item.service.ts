@@ -12,32 +12,23 @@ import { FirebaseService } from '@firebaseService';
 @Injectable({
   providedIn: 'root',
 })
-export class UserItemService extends FirestoreService {
+export class UserItemService extends FirestoreService<UserItem> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService,
     private notificationService: NotificationService
   ) {
-    super('user-items', firebase, currentUserService, actionService);
+    super('user-items', (data) => new UserItem(data), firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<UserItems>;
-  get(): Observable<UserItems>;
-  get(): Observable<UserItems>; // type for spyOn
-  get(uid?: string): Observable<UserItems> {
-    return new Observable(observer => {
-      if (uid) {
-        super
-          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
-          .subscribe(docs => {
-            observer.next(docs.map(doc => new UserItem(doc)));
-          });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new UserItem(doc)));
+  getByUser(uid: string): Observable<UserItems> {
+    return new Observable((observer) => {
+      super
+        .getByQuery(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+        .subscribe((docs) => {
+          observer.next(docs.map((doc) => new UserItem(doc)));
         });
-      }
     });
   }
 
@@ -45,7 +36,7 @@ export class UserItemService extends FirestoreService {
   delete = (id: string): void => super.delete(id);
 
   buyUserItem(actions: number, isCompleted: boolean): void {
-    this.currentUserService.getCurrentUser().subscribe(user => {
+    this.currentUserService.getCurrentUser().subscribe((user) => {
       this.actionService.commitAction(user.uid, Action.BUY_INGREDIENT, actions);
       if (isCompleted) {
         this.actionService.commitAction(user.uid, Action.COMPLETE_SHOPPING_LIST, 1);

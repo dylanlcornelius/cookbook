@@ -1,19 +1,18 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Action } from '@actions';
-import { Recipe, RecipeObject, RECIPE_STATUS, Recipes } from '@recipe';
-import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
-import { Validation } from '@validation';
-import { SuccessNotification } from '@notification';
-import { NotificationService, ValidationService } from '@modalService';
+import { Injectable } from '@angular/core';
+import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
+import { FirestoreService } from '@firestoreService';
+import { NotificationService, ValidationService } from '@modalService';
+import { SuccessNotification } from '@notification';
+import { Recipe, RECIPE_STATUS, RecipeObject, Recipes } from '@recipe';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RecipeService extends FirestoreService {
+export class RecipeService extends FirestoreService<Recipe> {
   editorForm = new BehaviorSubject<any>(null);
 
   getForm(): BehaviorSubject<any> {
@@ -30,24 +29,7 @@ export class RecipeService extends FirestoreService {
     private validationService: ValidationService,
     private notificationService: NotificationService
   ) {
-    super('recipes', firebase, currentUserService, actionService);
-  }
-
-  get(id: string): Observable<Recipe>;
-  get(): Observable<Recipes>;
-  get(id?: string): Observable<Recipe | Recipes>; // type for spyOn
-  get(id?: string): Observable<Recipe | Recipes> {
-    return new Observable(observer => {
-      if (id) {
-        super.get(id).subscribe(doc => {
-          observer.next(new Recipe(doc));
-        });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new Recipe(doc)));
-        });
-      }
-    });
+    super('recipes', (data) => new Recipe(data), firebase, currentUserService, actionService);
   }
 
   create = (data: RecipeObject): string => super.create(data, Action.CREATE_RECIPE);
@@ -55,7 +37,7 @@ export class RecipeService extends FirestoreService {
     super.update(data, id, Action.UPDATE_RECIPE);
   delete = (id: string): void => super.delete(id, Action.DELETE_RECIPE);
 
-  calculateMeanRating(ratings: { rating: number }[]): number {
+  calculateMeanRating(ratings?: { rating: number }[]): number {
     if (!ratings || ratings.length === 0) {
       return 0;
     }
@@ -64,7 +46,7 @@ export class RecipeService extends FirestoreService {
   }
 
   rateRecipe(rating: number, uid: string, recipe: Recipe): void {
-    recipe.ratings = recipe.ratings.filter(value => value.uid !== uid);
+    recipe.ratings = recipe.ratings.filter((value) => value.uid !== uid);
     if (rating !== 0) {
       recipe.ratings.push({ uid: uid, rating: rating });
     }
@@ -75,13 +57,11 @@ export class RecipeService extends FirestoreService {
   }
 
   changeStatus(recipe: Recipe): void {
-    this.validationService.setModal(
-      new Validation(
-        `Are you sure you want to change the visibility of this recipe?`,
-        this.changeStatusEvent,
-        [recipe]
-      )
-    );
+    this.validationService.setModal({
+      text: `Are you sure you want to change the visibility of this recipe?`,
+      function: this.changeStatusEvent,
+      args: [recipe],
+    });
   }
 
   changeStatusEvent = (recipe: Recipe): void => {

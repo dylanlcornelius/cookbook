@@ -1,13 +1,12 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router, RouterModule } from '@angular/router';
+import { FirebaseService } from '@firebaseService';
 import { LoadingService } from '@loadingService';
 import { TutorialModalService } from '@modalService';
 import { POSITION, Tutorial, TutorialModal } from '@tutorial';
 import { TutorialService } from '@tutorialService';
 import { BehaviorSubject, of } from 'rxjs';
-
 import { TutorialModalComponent } from './tutorial-modal.component';
-import { FirebaseService } from '@firebaseService';
 
 describe('TutorialModalComponent', () => {
   let component: TutorialModalComponent;
@@ -50,13 +49,13 @@ describe('TutorialModalComponent', () => {
       ];
 
       spyOn(tutorialModalService, 'getModal').and.returnValue(new BehaviorSubject(undefined));
-      spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
+      spyOn(tutorialService, 'getAll').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
       component.load();
 
       expect(tutorialModalService.getModal).toHaveBeenCalled();
-      expect(tutorialService.get).toHaveBeenCalled();
+      expect(tutorialService.getAll).toHaveBeenCalled();
       expect(component.changeTutorial).not.toHaveBeenCalled();
     });
 
@@ -70,13 +69,13 @@ describe('TutorialModalComponent', () => {
       spyOn(tutorialModalService, 'getModal').and.returnValue(
         new BehaviorSubject(new TutorialModal('/recipe/detail/test', '/recipe/detail/test'))
       );
-      spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
+      spyOn(tutorialService, 'getAll').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
       component.load();
 
       expect(tutorialModalService.getModal).toHaveBeenCalled();
-      expect(tutorialService.get).toHaveBeenCalled();
+      expect(tutorialService.getAll).toHaveBeenCalled();
       expect(component.changeTutorial).toHaveBeenCalled();
     });
 
@@ -90,13 +89,13 @@ describe('TutorialModalComponent', () => {
       spyOn(tutorialModalService, 'getModal').and.returnValue(
         new BehaviorSubject(new TutorialModal('/recipe/detail/test', '/recipe/detail/test'))
       );
-      spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
+      spyOn(tutorialService, 'getAll').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
       component.load();
 
       expect(tutorialModalService.getModal).toHaveBeenCalled();
-      expect(tutorialService.get).toHaveBeenCalled();
+      expect(tutorialService.getAll).toHaveBeenCalled();
       expect(component.changeTutorial).toHaveBeenCalled();
     });
 
@@ -108,15 +107,15 @@ describe('TutorialModalComponent', () => {
       ];
 
       spyOn(tutorialModalService, 'getModal').and.returnValue(
-        new BehaviorSubject(new TutorialModal('/home', null))
+        new BehaviorSubject(new TutorialModal('/home', undefined))
       );
-      spyOn(tutorialService, 'get').and.returnValue(of(tutorials));
+      spyOn(tutorialService, 'getAll').and.returnValue(of(tutorials));
       spyOn(component, 'changeTutorial');
 
       component.load();
 
       expect(tutorialModalService.getModal).toHaveBeenCalled();
-      expect(tutorialService.get).toHaveBeenCalled();
+      expect(tutorialService.getAll).toHaveBeenCalled();
       expect(component.changeTutorial).toHaveBeenCalled();
     });
   });

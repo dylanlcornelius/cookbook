@@ -18,6 +18,7 @@ import { RecipeHistoryService } from '@recipeHistoryService';
 import { RecipeService } from '@recipeService';
 import { HouseholdService } from '@householdService';
 import { LoadingService } from '@loadingService';
+import { ImageUploadProgress } from 'src/app/shared/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-profile',
@@ -38,7 +39,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   id: string;
 
   userImage: string;
-  userImageProgress;
+  userImageProgress: ImageUploadProgress;
 
   users: Users;
 
@@ -56,7 +57,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) actionPaginator: any;
 
-  history = [];
+  history: { name: string; value: number }[] = [];
   totalRecipesCooked: number;
 
   constructor(
@@ -90,7 +91,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.loading = this.loadingService.set(true);
     const params$ = this.route.params;
     const user$ = this.currentUserService.getCurrentUser();
-    const users$ = this.userService.get();
+    const users$ = this.userService.getAll();
 
     combineLatest([params$, user$, users$])
       .pipe(takeUntil(this.unsubscribe$))
@@ -100,12 +101,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         const paramId = params['id'];
         this.user =
-          paramId && this.currentUser.isAdmin ? this.users.find(({ id }) => id === paramId) : user;
+          paramId && this.currentUser.isAdmin ? this.users.find(({ id }) => id === paramId)! : user;
 
         this.householdService
-          .get(this.user.uid)
+          .getByUser(this.user.uid)
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(household => {
+          .subscribe((household) => {
             this.householdId = household.id;
 
             this.userForm = new FormBuilder().group({
@@ -121,7 +122,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             });
 
             this.imageService.download(this.user).then(
-              url => {
+              (url) => {
                 if (url) {
                   this.userImage = url;
                 }
@@ -138,13 +139,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   loadActions(): void {
-    this.actionService.get(this.user.uid)?.then(userAction => {
+    this.actionService.get(this.user.uid).then((userAction) => {
+      if (!userAction) {
+        return;
+      }
       const sortedActions = this.sortActions(userAction.actions);
 
-      this.actions = sortedActions.map(action => {
+      this.actions = sortedActions?.map((action) => {
         const actionData = Object.keys(action.data)
-          .filter(key => ActionLabel[key])
-          .map(key => ({ name: ActionLabel[key], value: action.data[key] }));
+          .filter((key: keyof typeof ActionLabel) => ActionLabel[key])
+          .map((key: keyof typeof ActionLabel) => ({
+            name: ActionLabel[key],
+            value: action.data[key],
+          }));
 
         return {
           data: actionData,
@@ -162,20 +169,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   sortActions(userActions: any): { year: number; data: any }[] {
-    const dateArray = Object.keys(userActions).map(key => {
+    const dateArray = Object.keys(userActions).map((key) => {
       return key.split('/').map(Number);
     });
 
     dateArray.sort((a, b) => a[2] - b[2]);
 
     return dateArray
-      .map(date => {
+      .map((date) => {
         return {
           year: date[2],
           data: userActions[date.join('/')],
         };
       })
-      .reduce((yearList, dateActions) => {
+      .reduce((yearList: { year: number; data: any }[], dateActions) => {
         const yearActions = yearList.find(({ year }) => year === dateActions.year);
         if (yearActions) {
           for (const action of Object.values(Action)) {
@@ -193,8 +200,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   loadHistory(): void {
-    const recipes$ = this.recipeService.get();
-    const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
+    const recipes$ = this.recipeService.getAll();
+    const recipeHistory$ = this.recipeHistoryService.getByUser(this.householdId);
 
     combineLatest([recipes$, recipeHistory$])
       .pipe(takeUntil(this.unsubscribe$))
@@ -202,8 +209,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         let total = 0;
 
         this.history = histories
-          .reduce((list, recipeHistory) => {
-            const recipe = recipes.find(recipe => recipe.id === recipeHistory.recipeId);
+          .reduce((list: typeof this.history, recipeHistory) => {
+            const recipe = recipes.find((recipe) => recipe.id === recipeHistory.recipeId);
 
             if (recipe) {
               list.push({ name: recipe.name, value: recipeHistory.timesCooked });

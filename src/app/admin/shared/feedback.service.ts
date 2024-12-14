@@ -1,31 +1,22 @@
+import { Action } from '@actions';
 import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
-import { FirestoreService } from '@firestoreService';
-import { Observable } from 'rxjs';
 import { CurrentUserService } from '@currentUserService';
-import { ModelObject } from '@model';
-import { FirebaseService } from '@firebaseService';
 import { Feedback, Feedbacks } from '@feedback';
-import { Action } from '@actions';
+import { FirebaseService } from '@firebaseService';
+import { FirestoreService } from '@firestoreService';
+import { ModelObject } from '@model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FeedbackService extends FirestoreService {
+export class FeedbackService extends FirestoreService<Feedback> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('feedbacks', firebase, currentUserService, actionService);
-  }
-
-  get(): Observable<Feedbacks> {
-    return new Observable(observer => {
-      super.get().subscribe(docs => {
-        observer.next(docs.map(doc => new Feedback(doc)));
-      });
-    });
+    super('feedbacks', (data) => new Feedback(data), firebase, currentUserService, actionService);
   }
 
   create = (data: ModelObject): string => super.create(data, Action.SUBMIT_FEEDBACK);

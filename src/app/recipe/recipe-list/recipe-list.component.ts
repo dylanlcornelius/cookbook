@@ -37,34 +37,35 @@ import { User } from '@user';
 import { UserIngredients } from '@userIngredient';
 import { UserIngredientService } from '@userIngredientService';
 import { UtilService } from '@utilService';
-import { Validation } from '@validation';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
 import { MealPlanService } from 'src/app/shopping/shared/meal-plan.service';
 import { fadeInAnimation } from '../../theme/animations';
 
-type FilterValues = Array<{
+type FilterValues<FilterType extends Filter> = Array<{
   displayName: string;
   name: string;
   checked: boolean;
-  filter: Filter;
+  filter: FilterType;
 }>;
 
-type DisplayFilter = {
+type DisplayFilter<FilterType extends Filter> = {
   displayName: string;
   name: string;
-  values: FilterValues;
+  values: FilterValues<FilterType>;
   numberOfSelected?: number;
 };
 
-type NestedDisplayFilter = {
+type NestedDisplayFilter<FilterType extends Filter> = {
   icon: string;
   iconTooltip: string;
-  values: DisplayFilter[];
+  values: DisplayFilter<FilterType>[];
   numberOfSelected?: number;
 };
 
-type DisplayFilters = Array<DisplayFilter | NestedDisplayFilter>;
+type DisplayFilters<FilterType extends Filter> = Array<
+  DisplayFilter<FilterType> | NestedDisplayFilter<FilterType>
+>;
 
 @Component({
   selector: 'app-recipe-list',
@@ -79,12 +80,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   user: User;
   householdId: string;
 
-  filtersList: DisplayFilters = [];
+  filtersList: DisplayFilters<Filter> = [];
   searchFilter$ = new Subject<string>();
   searchFilter = '';
   pageIndex: number;
 
-  dataSource;
+  dataSource: any;
   recipes: Recipes = [];
   userIngredients: UserIngredients;
   ingredients: Ingredients;
@@ -134,20 +135,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
 
         this.householdService
-          .get(this.user.uid)
+          .getByUser(this.user.uid)
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(household => {
+          .subscribe((household) => {
             this.householdId = household.id;
 
-            const recipes$ = this.recipeService.get();
-            const ingredients$ = this.ingredientService.get();
-            const userIngredient$ = this.userIngredientService.get(this.householdId);
-            const recipeHistory$ = this.recipeHistoryService.get(this.householdId);
-            const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
+            const recipes$ = this.recipeService.getAll();
+            const ingredients$ = this.ingredientService.getAll();
+            const userIngredient$ = this.userIngredientService.getByUser(this.householdId);
+            const recipeHistory$ = this.recipeHistoryService.getByUser(this.householdId);
+            const configs$ = this.configService.getByName(ConfigType.RECIPE_TYPE);
 
             combineLatest([recipes$, ingredients$, userIngredient$, recipeHistory$, configs$])
               .pipe(takeUntil(this.unsubscribe$), debounceTime(100))
@@ -159,12 +160,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                 this.ingredients = ingredients;
                 this.types = configs;
                 this.recipes = recipes
-                  .filter(recipe =>
+                  .filter((recipe) =>
                     this.householdService.hasUserPermission(household, this.user, recipe)
                   )
                   .sort(this.sortRecipesByName)
                   .sort(this.sortRecipesByImages)
-                  .map(recipe => {
+                  .map((recipe) => {
                     recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                       recipe.ingredients,
                       [...ingredients, ...recipes]
@@ -183,10 +184,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
                     )?.timesCooked;
                     recipe.hasNewCategory = !timesCooked || (timesCooked === 1 && !recipe.hasImage);
                     recipe.hasNeedsImageCategory =
-                      recipe.hasAuthorPermission && timesCooked && !recipe.hasImage;
+                      recipe.hasAuthorPermission && !!timesCooked && !recipe.hasImage;
 
                     this.imageService.download(recipe).then(
-                      url => {
+                      (url) => {
                         if (url) {
                           recipe.image = url;
                         }
@@ -206,9 +207,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
                 if (this.recipeFilterService.recipeId) {
                   setTimeout(() => {
-                    const element = document.getElementById(this.recipeFilterService.recipeId);
-                    element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    this.recipeFilterService.recipeId = null;
+                    if (this.recipeFilterService.recipeId) {
+                      const element = document.getElementById(this.recipeFilterService.recipeId);
+                      element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      this.recipeFilterService.recipeId = undefined;
+                    }
                   }, 1500);
                 }
 
@@ -221,11 +224,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   initFilters(): void {
     const filters = this.recipeFilterService.selectedFilters;
 
-    const searchFilter = filters.find(f => f.type === FILTER_TYPE.SEARCH);
+    const searchFilter = filters.find((f) => f.type === FILTER_TYPE.SEARCH);
     this.searchFilter = searchFilter ? searchFilter.value : '';
 
-    const ratings = [];
-    [0, 1, 2, 3].forEach(ratingOption => {
+    const ratings: FilterValues<RatingFilter> = [];
+    [0, 1, 2, 3].forEach((ratingOption) => {
       const rating = (ratingOption / 3) * 100;
       let displayValue = '';
       for (let i = 0; i < ratingOption; i++) {
@@ -233,28 +236,28 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       }
 
       const checked =
-        filters.find(f => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
+        filters.find((f) => f.type === FILTER_TYPE.RATING && f.value === rating) !== undefined;
       ratings.push({
         displayName: `${displayValue}`,
-        name: rating,
+        name: `${rating}`,
         checked: checked,
         filter: new RatingFilter(rating),
       });
     });
 
-    const types = [];
+    const types: FilterValues<TypeFilter> = [];
     this.types
-      .map(type => ({ displayName: type.displayValue, name: type.value }))
+      .map((type) => ({ displayName: type.displayValue, name: type.value }))
       .forEach(({ displayName, name }) => {
         const checked =
-          filters.find(f => f.type === FILTER_TYPE.TYPE && f.value === name) !== undefined;
+          filters.find((f) => f.type === FILTER_TYPE.TYPE && f.value === name) !== undefined;
         types.push({ displayName, name, checked: checked, filter: new TypeFilter(name) });
       });
 
-    const restrictions = [];
+    const restrictions: FilterValues<RestrictionFilter> = [];
     RestrictionLabels.forEach(({ displayName, name }) => {
       const checked =
-        filters.find(f => f.type === FILTER_TYPE.RESTRICTION && f.value === name) !== undefined;
+        filters.find((f) => f.type === FILTER_TYPE.RESTRICTION && f.value === name) !== undefined;
       restrictions.push({
         displayName,
         name,
@@ -263,10 +266,10 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       });
     });
 
-    const temperatures = [];
+    const temperatures: FilterValues<TemperatureFilter> = [];
     TemperatureLabels.forEach(({ displayName, name }) => {
       const checked =
-        filters.find(f => f.type === FILTER_TYPE.TEMPERATURE && f.value === name) !== undefined;
+        filters.find((f) => f.type === FILTER_TYPE.TEMPERATURE && f.value === name) !== undefined;
       temperatures.push({
         displayName,
         name,
@@ -275,15 +278,15 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       });
     });
 
-    const categories: FilterValues = [];
-    const authors: FilterValues = [];
-    const statuses: FilterValues = [];
-    const images: FilterValues = [];
-    this.recipes.forEach(recipe => {
+    const categories: FilterValues<CategoryFilter> = [];
+    const authors: FilterValues<AuthorFilter> = [];
+    const statuses: FilterValues<StatusFilter> = [];
+    const images: FilterValues<ImageFilter> = [];
+    this.recipes.forEach((recipe) => {
       recipe.categories.forEach(({ category }) => {
-        if (categories.find(c => c.name === category) === undefined) {
+        if (categories.find((c) => c.name === category) === undefined) {
           const checked =
-            filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === category) !==
+            filters.find((f) => f.type === FILTER_TYPE.CATEGORY && f.value === category) !==
             undefined;
           categories.push({
             displayName: category,
@@ -294,9 +297,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         }
       });
 
-      if (categories.find(c => c.name === 'New!') === undefined && recipe.hasNewCategory) {
+      if (categories.find((c) => c.name === 'New!') === undefined && recipe.hasNewCategory) {
         const checked =
-          filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === 'New!') !== undefined;
+          filters.find((f) => f.type === FILTER_TYPE.CATEGORY && f.value === 'New!') !== undefined;
         categories.push({
           displayName: 'New!',
           name: 'New!',
@@ -306,11 +309,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       }
 
       if (
-        categories.find(c => c.name === 'Needs Image') === undefined &&
+        categories.find((c) => c.name === 'Needs Image') === undefined &&
         recipe.hasNeedsImageCategory
       ) {
         const checked =
-          filters.find(f => f.type === FILTER_TYPE.CATEGORY && f.value === 'Needs Image') !==
+          filters.find((f) => f.type === FILTER_TYPE.CATEGORY && f.value === 'Needs Image') !==
           undefined;
         categories.push({
           displayName: 'Needs Image',
@@ -320,9 +323,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         });
       }
 
-      if (authors.find(a => a.name === recipe.author) === undefined && recipe.author !== '') {
+      if (authors.find((a) => a.name === recipe.author) === undefined && recipe.author !== '') {
         const checked =
-          filters.find(f => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !==
+          filters.find((f) => f.type === FILTER_TYPE.AUTHOR && f.value === recipe.author) !==
           undefined;
         authors.push({
           displayName: recipe.author,
@@ -332,24 +335,24 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         });
       }
 
-      if (statuses.find(s => s.name === recipe.status) === undefined) {
+      if (statuses.find((s) => s.name === recipe.status) === undefined) {
         const checked =
-          filters.find(f => f.type === FILTER_TYPE.STATUS && f.value === recipe.status) !==
+          filters.find((f) => f.type === FILTER_TYPE.STATUS && f.value === recipe.status) !==
           undefined;
         statuses.push({
-          displayName: recipe.status.replace(/\b\w/g, l => l.toUpperCase()),
+          displayName: recipe.status.replace(/\b\w/g, (l) => l.toUpperCase()),
           name: recipe.status,
           checked: checked,
           filter: new StatusFilter(recipe.status),
         });
       }
 
-      if (images.find(i => i.name === `${recipe.hasImage}`) === undefined) {
+      if (images.find((i) => i.name === `${recipe.hasImage}`) === undefined) {
         const checked =
-          filters.find(f => f.type === FILTER_TYPE.IMAGE && f.value === recipe.hasImage) !==
+          filters.find((f) => f.type === FILTER_TYPE.IMAGE && f.value === recipe.hasImage) !==
           undefined;
         images.push({
-          displayName: recipe.hasImage.toString().replace(/\b\w/g, l => l.toUpperCase()),
+          displayName: recipe.hasImage.toString().replace(/\b\w/g, (l) => l.toUpperCase()),
           name: `${recipe.hasImage}`,
           checked: checked,
           filter: new ImageFilter(recipe.hasImage),
@@ -405,7 +408,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     }
     this.searchSubscription = this.searchFilter$
       .pipe(takeUntil(this.unsubscribe$), debounceTime(500), distinctUntilChanged())
-      .subscribe(searchFilter => {
+      .subscribe((searchFilter) => {
         this.searchFilter = searchFilter;
         this.setFilters();
 
@@ -417,17 +420,17 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   setSelectedFilterCount(): void {
-    this.filtersList.forEach(filterList => {
+    this.filtersList.forEach((filterList) => {
       let i = 0;
       if (this.isDisplayFilter(filterList)) {
-        filterList.values.forEach(filter => {
+        filterList.values.forEach((filter) => {
           if (filter.checked) {
             i++;
           }
         });
       } else {
-        filterList.values.forEach(subFilterList => {
-          subFilterList.values.forEach(subFilter => {
+        filterList.values.forEach((subFilterList) => {
+          subFilterList.values.forEach((subFilter) => {
             if (subFilter.checked) {
               i++;
             }
@@ -440,7 +443,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   setFilters(): void {
     this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(
-      f => FILTER_TYPE.SEARCH !== f.type
+      (f) => FILTER_TYPE.SEARCH !== f.type
     );
     if (this.searchFilter?.trim().toLowerCase()) {
       this.recipeFilterService.selectedFilters.push(
@@ -455,7 +458,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       this.recipeFilterService.selectedFilters.push(selectedFilter.filter);
     } else {
       this.recipeFilterService.selectedFilters = this.recipeFilterService.selectedFilters.filter(
-        f => !(selectedFilter.filter.type === f.type && selectedFilter.filter.value == f.value)
+        (f) => !(selectedFilter.filter.type === f.type && selectedFilter.filter.value == f.value)
       );
     }
 
@@ -473,7 +476,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.setFilters();
   }
 
-  isDisplayFilter(filters: DisplayFilter | NestedDisplayFilter): filters is DisplayFilter {
+  isDisplayFilter(
+    filters: DisplayFilter<Filter> | NestedDisplayFilter<Filter>
+  ): filters is DisplayFilter<Filter> {
     return !('icon' in filters);
   }
 
@@ -498,16 +503,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   findRecipe(id: string): Recipe {
-    return this.dataSource.data.find(x => x.id === id);
+    return this.dataSource.data.find((x: Recipe) => x.id === id);
   }
 
   changeStatus = (recipe: Recipe): void => this.recipeService.changeStatus(recipe);
 
   addRecipe(recipe: Recipe): void {
     this.mealPlanService
-      .get(this.householdId)
+      .getByUser(this.householdId)
       .pipe(first())
-      .subscribe(mealPlan => {
+      .subscribe((mealPlan) => {
         this.mealPlanService.formattedUpdate(
           [...mealPlan.recipes, recipe],
           this.householdId,
@@ -536,14 +541,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipeService
       .getForm()
       .pipe(first())
-      .subscribe(form => {
+      .subscribe((form) => {
         if (form) {
-          this.validationService.setModal(
-            new Validation(
-              `Are you sure you want to undo your current changes in the recipe wizard?`,
-              this.openRecipeEditorEvent
-            )
-          );
+          this.validationService.setModal({
+            text: `Are you sure you want to undo your current changes in the recipe wizard?`,
+            function: this.openRecipeEditorEvent,
+          });
         } else {
           this.openRecipeEditorEvent();
         }
@@ -567,7 +570,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   pageEvent(event: PageEvent): PageEvent {
     this.recipeFilterService.pageIndex = event.pageIndex;
     setTimeout(() => {
-      if (event.pageIndex < event.previousPageIndex) {
+      if (event.previousPageIndex && event.pageIndex < event.previousPageIndex) {
         const element = document.getElementById('bottom');
         element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {

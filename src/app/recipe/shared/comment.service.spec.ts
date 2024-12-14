@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { Comment } from '@comment';
+import { FirebaseService } from '@firebaseService';
 import { FirestoreService } from '@firestoreService';
 import { of } from 'rxjs';
-import { Comment } from '@comment';
-
 import { CommentService } from './comment.service';
-import { FirebaseService } from '@firebaseService';
 
 describe('CommentService', () => {
   let service: CommentService;
@@ -20,37 +19,27 @@ describe('CommentService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('get', () => {
-    it('should get many document based on an id', () => {
+  describe('factory', () => {
+    it('should construct a model', () => {
+      const result = service.factory({});
+
+      expect(result).toBeInstanceOf(Comment);
+    });
+  });
+
+  describe('getByDocument', () => {
+    it('should get many documents based on an id', () => {
       spyOn(firebase, 'where');
       spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany').and.returnValue(of([{}]));
-      spyOn(FirestoreService.prototype, 'get');
+      spyOn(FirestoreService.prototype, 'getByQuery').and.returnValue(of([{}]));
 
-      service.get('id').subscribe(docs => {
+      service.getByDocument('id').subscribe((docs) => {
         expect(docs).toBeDefined();
       });
 
       expect(firebase.where).toHaveBeenCalled();
       expect(firebase.query).toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).not.toHaveBeenCalled();
-    });
-
-    it('should get all documents', () => {
-      spyOn(firebase, 'where');
-      spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
-
-      service.get().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(firebase.where).not.toHaveBeenCalled();
-      expect(firebase.query).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getByQuery).toHaveBeenCalled();
     });
   });
 

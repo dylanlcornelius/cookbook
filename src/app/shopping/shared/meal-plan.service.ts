@@ -1,51 +1,42 @@
-import { Injectable } from '@angular/core';
 import { ActionService } from '@actionService';
-import { Observable } from 'rxjs';
-import { FirestoreService } from '@firestoreService';
+import { Injectable } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
-import { Models, ModelObject } from '@model';
-import { MealPlan, MealPlans } from './meal-plan.model';
 import { FirebaseService } from '@firebaseService';
+import { FirestoreService } from '@firestoreService';
+import { Observable } from 'rxjs';
+import { MealPlan, MealPlans } from './meal-plan.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MealPlanService extends FirestoreService {
+export class MealPlanService extends FirestoreService<MealPlan> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('meal-plans', firebase, currentUserService, actionService);
+    super('meal-plans', (data) => new MealPlan(data), firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<MealPlan>;
-  get(): Observable<MealPlans>;
-  get(): Observable<MealPlan | MealPlans>; // type for spyOn
-  get(uid?: string): Observable<MealPlan | MealPlans> {
-    return new Observable(observer => {
-      if (uid) {
-        super
-          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
-          .subscribe(docs => {
-            if (docs.length > 0) {
-              observer.next(new MealPlan(docs[0]));
-            } else {
-              const mealPlan = new MealPlan({ uid: uid });
-              mealPlan.id = this.create(mealPlan);
-              observer.next(mealPlan);
-            }
-          });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new MealPlan(doc)));
+  getByUser(uid: string): Observable<MealPlan> {
+    return new Observable((observer) => {
+      super
+        .getByQuery(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+        .subscribe((docs) => {
+          if (docs.length > 0) {
+            observer.next(new MealPlan(docs[0]));
+          } else {
+            const mealPlan = new MealPlan({ uid: uid });
+            mealPlan.id = this.create(mealPlan);
+            observer.next(mealPlan);
+          }
         });
-      }
     });
   }
 
   create = (data: MealPlan): string => super.create(data.getObject());
-  update = (data: ModelObject | Models, id?: string): void => super.update(data, id);
+  update = (data: ReturnType<MealPlan['getObject']> | MealPlans, id?: string): void =>
+    super.update(data, id);
 
   formattedUpdate(data: MealPlan['recipes'], uid: string, id: string): void {
     const recipes = data.map(({ id }) => ({ id }));

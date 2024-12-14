@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UOM } from '@uoms';
 
-const uoms = {
+const uoms: Record<UOM, Partial<Record<UOM, number>>> = {
   tsp: {
     tsp: 1,
     tbsp: 0.3333333333,
@@ -138,8 +138,9 @@ const uoms = {
 })
 export class UomService {
   convert(fromUOM: UOM, toUOM: UOM, value: number): number | false {
-    if (uoms[fromUOM] && uoms[fromUOM][toUOM]) {
-      return uoms[fromUOM][toUOM] * value;
+    const conversionFactor = uoms[fromUOM][toUOM];
+    if (conversionFactor) {
+      return conversionFactor * value;
     }
     return false;
   }

@@ -75,6 +75,9 @@
       "@comment": ["src/app/recipe/shared/comment.model"],
       "@commentService": ["src/app/recipe/shared/comment.service"]
     },
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
     "useDefineForClassFields": false
   }
 }

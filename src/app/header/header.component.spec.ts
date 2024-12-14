@@ -1,20 +1,19 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NavigationEnd, NavigationStart, Router, RouterModule } from '@angular/router';
-import { AuthService } from '../user/shared/auth.service';
-
-import { HeaderComponent } from './header.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Navigation, NavigationMenu } from '@navigation';
-import { BehaviorSubject, of } from 'rxjs';
-import { NavigationService } from '@navigationService';
-import { CurrentUserService } from '@currentUserService';
-import { HouseholdService } from '@householdService';
-import { User } from '@user';
-import { Household } from '@household';
-import { RecipeService } from '@recipeService';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FeedbackService } from '@feedbackService';
+import { CurrentUserService } from '@currentUserService';
 import { Feedback } from '@feedback';
+import { FeedbackService } from '@feedbackService';
+import { Household } from '@household';
+import { HouseholdService } from '@householdService';
+import { Navigation, NavigationMenu } from '@navigation';
+import { NavigationService } from '@navigationService';
+import { RecipeService } from '@recipeService';
+import { User } from '@user';
+import { BehaviorSubject, of } from 'rxjs';
+import { AuthService } from '../user/shared/auth.service';
+import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -63,7 +62,7 @@ describe('HeaderComponent', () => {
     });
 
     it('should ignore non navigation events', () => {
-      const event = new NavigationStart(1, null);
+      const event = new NavigationStart(1, '');
       const router = TestBed.inject(Router);
       (<any>router).events.next(event);
 
@@ -73,14 +72,14 @@ describe('HeaderComponent', () => {
 
   describe('load', () => {
     it('should load navs and household invites', () => {
-      spyOn(navigationService, 'get').and.returnValue(
+      spyOn(navigationService, 'getAll').and.returnValue(
         of([new Navigation({ subMenu: NavigationMenu.TOOLS })])
       );
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject(null));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
         of(new User({ uid: 'uid', role: 'admin' }))
       );
-      spyOn(feedbackService, 'get').and.returnValue(of([new Feedback({})]));
+      spyOn(feedbackService, 'getAll').and.returnValue(of([new Feedback({})]));
       spyOn(householdService, 'getInvites').and.returnValue(of([new Household({})]));
 
       component.load();
@@ -89,18 +88,18 @@ describe('HeaderComponent', () => {
       expect(component.mobileNavs.length).toEqual(1);
       expect(component.profileNavs.length).toEqual(0);
       expect(component.toolNavs.length).toEqual(1);
-      expect(navigationService.get).toHaveBeenCalled();
+      expect(navigationService.getAll).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(feedbackService.get).toHaveBeenCalled();
+      expect(feedbackService.getAll).toHaveBeenCalled();
       expect(householdService.getInvites).toHaveBeenCalled();
     });
 
     it('should not load household invites', () => {
-      spyOn(navigationService, 'get').and.returnValue(of([new Navigation({})]));
+      spyOn(navigationService, 'getAll').and.returnValue(of([new Navigation({})]));
       spyOn(recipeService, 'getForm').and.returnValue(new BehaviorSubject({}));
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(feedbackService, 'get').and.returnValue(of([]));
+      spyOn(feedbackService, 'getAll').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();
@@ -109,15 +108,15 @@ describe('HeaderComponent', () => {
       expect(component.mobileNavs.length).toEqual(1);
       expect(component.profileNavs.length).toEqual(0);
       expect(component.toolNavs.length).toEqual(0);
-      expect(navigationService.get).toHaveBeenCalled();
+      expect(navigationService.getAll).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(feedbackService.get).toHaveBeenCalled();
+      expect(feedbackService.getAll).toHaveBeenCalled();
       expect(householdService.getInvites).not.toHaveBeenCalled();
     });
 
     it('should load the continue nav and feature flag navs', () => {
-      spyOn(navigationService, 'get').and.returnValue(
+      spyOn(navigationService, 'getAll').and.returnValue(
         of([
           new Navigation({ link: '/shopping/plan' }),
           new Navigation({ link: '/recipe/books' }),
@@ -128,7 +127,7 @@ describe('HeaderComponent', () => {
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(
         of(new User({ uid: 'uid', hasPlanner: true, hasCookbooks: true, hasAdminView: true }))
       );
-      spyOn(feedbackService, 'get').and.returnValue(of([]));
+      spyOn(feedbackService, 'getAll').and.returnValue(of([]));
       spyOn(householdService, 'getInvites').and.returnValue(of([]));
 
       component.load();
@@ -137,10 +136,10 @@ describe('HeaderComponent', () => {
       expect(component.mobileNavs.length).toEqual(2);
       expect(component.profileNavs.length).toEqual(1);
       expect(component.toolNavs.length).toEqual(0);
-      expect(navigationService.get).toHaveBeenCalled();
+      expect(navigationService.getAll).toHaveBeenCalled();
       expect(recipeService.getForm).toHaveBeenCalled();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(feedbackService.get).toHaveBeenCalled();
+      expect(feedbackService.getAll).toHaveBeenCalled();
       expect(householdService.getInvites).toHaveBeenCalled();
     });
   });

@@ -88,14 +88,14 @@ describe('CommentListComponent', () => {
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(user));
-      spyOn(commentService, 'get').and.returnValue(of(comments));
-      spyOn(userService, 'get').and.returnValue(of([user]));
+      spyOn(commentService, 'getByDocument').and.returnValue(of(comments));
+      spyOn(userService, 'getAll').and.returnValue(of([user]));
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(commentService.get).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
+      expect(commentService.getByDocument).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
     });
   });
 

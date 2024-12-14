@@ -43,7 +43,7 @@ describe('UomService', () => {
     });
 
     it('should not find any related uoms', () => {
-      const result = service.relatedUOMs(null);
+      const result = service.relatedUOMs(null as any);
 
       expect(result).toEqual([]);
     });

@@ -13,7 +13,7 @@ const DISPLAY_TIME = 2000;
 })
 export class NotificationModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  params: Notification;
+  params?: Notification;
 
   constructor(private notificationService: NotificationService) {}
 
@@ -32,8 +32,8 @@ export class NotificationModalComponent implements OnInit, OnDestroy {
       .getModal()
       .pipe(
         takeUntil(this.unsubscribe$),
-        filter(x => !!x),
-        concatMap(x => concat(of(x), timer(DISPLAY_TIME).pipe(ignoreElements())))
+        filter((x) => !!x),
+        concatMap((x) => concat(of(x), timer(DISPLAY_TIME).pipe(ignoreElements())))
       )
       .subscribe((notification: Notification) => {
         this.params = notification;
@@ -44,8 +44,8 @@ export class NotificationModalComponent implements OnInit, OnDestroy {
       .getModal()
       .pipe(
         takeUntil(this.unsubscribe$),
-        filter(x => !!x),
-        concatMap(x => concat(of(x), timer(DISPLAY_TIME).pipe(ignoreElements()))),
+        filter((x) => !!x),
+        concatMap((x) => concat(of(x), timer(DISPLAY_TIME).pipe(ignoreElements()))),
         debounceTime(DISPLAY_TIME + 500)
       )
       .subscribe(() => {

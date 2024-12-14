@@ -1,24 +1,20 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { IngredientListComponent } from './ingredient-list.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {
-  MatTableModule,
-  MatTableDataSource,
-} from '@angular/material/table';
-import { UserIngredientService } from '@userIngredientService';
-import { IngredientService } from '@ingredientService';
-import { User } from '@user';
-import { of } from 'rxjs';
-import { UserIngredient } from '@userIngredient';
-import { Ingredient } from '@ingredient';
-import { CurrentUserService } from '@currentUserService';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
-import { HouseholdService } from '@householdService';
-import { Household } from '@household';
-import { NumberService } from '@numberService';
 import { Config } from '@config';
 import { ConfigService } from '@configService';
+import { CurrentUserService } from '@currentUserService';
+import { Household } from '@household';
+import { HouseholdService } from '@householdService';
+import { Ingredient } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { NumberService } from '@numberService';
+import { User } from '@user';
+import { UserIngredient } from '@userIngredient';
+import { UserIngredientService } from '@userIngredientService';
+import { of } from 'rxjs';
+import { IngredientListComponent } from './ingredient-list.component';
 
 describe('IngredientListComponent', () => {
   let component: IngredientListComponent;
@@ -64,19 +60,19 @@ describe('IngredientListComponent', () => {
       const configs = [new Config({ value: 'BAKING', displayValue: 'Baking' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'getByUser').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'getAll').and.returnValue(of(ingredients));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userIngredientService.getByUser).toHaveBeenCalled();
+      expect(ingredientService.getAll).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
     });
 
@@ -86,19 +82,19 @@ describe('IngredientListComponent', () => {
       const configs = [new Config({ value: 'BAKING', displayValue: 'Baking' })];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'getByUser').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'getAll').and.returnValue(of(ingredients));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
       spyOn(numberService, 'toFormattedFraction').and.returnValue('1/2');
 
       component.load();
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userIngredientService.getByUser).toHaveBeenCalled();
+      expect(ingredientService.getAll).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
       expect(numberService.toFormattedFraction).toHaveBeenCalled();
     });
   });

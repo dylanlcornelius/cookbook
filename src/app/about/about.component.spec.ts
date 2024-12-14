@@ -1,14 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { AboutComponent } from './about.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { Recipe } from '@recipe';
-import { User } from '@user';
-import { of } from 'rxjs';
-import { RecipeService } from '@recipeService';
-import { UserService } from '@userService';
 import { ImageService } from '@imageService';
+import { Recipe } from '@recipe';
+import { RecipeService } from '@recipeService';
+import { User } from '@user';
+import { UserService } from '@userService';
+import { of } from 'rxjs';
+import { AboutComponent } from './about.component';
 
 describe('AboutComponent', () => {
   let component: AboutComponent;
@@ -43,26 +42,26 @@ describe('AboutComponent', () => {
 
   describe('load', () => {
     it('should load recipes and authors', () => {
-      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ hasImage: true })]));
-      spyOn(userService, 'get').and.returnValue(of([new User({})]));
+      spyOn(recipeService, 'getAll').and.returnValue(of([new Recipe({ hasImage: true })]));
+      spyOn(userService, 'getAll').and.returnValue(of([new User({})]));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
 
     it('should handle image errors', () => {
-      spyOn(recipeService, 'get').and.returnValue(of([new Recipe({ hasImage: true })]));
-      spyOn(userService, 'get').and.returnValue(of([new User({})]));
+      spyOn(recipeService, 'getAll').and.returnValue(of([new Recipe({ hasImage: true })]));
+      spyOn(userService, 'getAll').and.returnValue(of([new User({})]));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
 
       component.load();
 
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(userService.get).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
   });

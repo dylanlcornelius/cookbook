@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { ProfileListComponent } from './profile-list.component';
-import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserService } from '@userService';
-import { RecipeService } from '@recipeService';
+import { RouterModule } from '@angular/router';
 import { ImageService } from '@imageService';
-import { User } from '@user';
-import { of } from 'rxjs';
 import { Recipe } from '@recipe';
+import { RecipeService } from '@recipeService';
+import { User } from '@user';
+import { UserService } from '@userService';
 import { UtilService } from '@utilService';
+import { of } from 'rxjs';
+import { ProfileListComponent } from './profile-list.component';
 
 describe('ProfileListComponent', () => {
   let component: ProfileListComponent;
@@ -66,14 +65,14 @@ describe('ProfileListComponent', () => {
         new Recipe({ uid: 'uid' }),
       ];
 
-      spyOn(userService, 'get').and.returnValue(of(users));
-      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(userService, 'getAll').and.returnValue(of(users));
+      spyOn(recipeService, 'getAll').and.returnValue(of(recipes));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve('url'));
 
       component.load();
 
-      expect(userService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
 
@@ -81,14 +80,14 @@ describe('ProfileListComponent', () => {
       const users = [new User({ firstName: 'b' }), new User({ firstName: 'a' })];
       const recipes = [new Recipe({}), new Recipe({})];
 
-      spyOn(userService, 'get').and.returnValue(of(users));
-      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(userService, 'getAll').and.returnValue(of(users));
+      spyOn(recipeService, 'getAll').and.returnValue(of(recipes));
       spyOn(imageService, 'download').and.returnValue(Promise.resolve());
 
       component.load();
 
-      expect(userService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
 
@@ -96,14 +95,14 @@ describe('ProfileListComponent', () => {
       const users = [new User({ firstName: 'b' }), new User({ firstName: 'a' })];
       const recipes = [new Recipe({}), new Recipe({})];
 
-      spyOn(userService, 'get').and.returnValue(of(users));
-      spyOn(recipeService, 'get').and.returnValue(of(recipes));
+      spyOn(userService, 'getAll').and.returnValue(of(users));
+      spyOn(recipeService, 'getAll').and.returnValue(of(recipes));
       spyOn(imageService, 'download').and.returnValue(Promise.reject());
 
       component.load();
 
-      expect(userService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
+      expect(userService.getAll).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
       expect(imageService.download).toHaveBeenCalled();
     });
   });
@@ -118,14 +117,14 @@ describe('ProfileListComponent', () => {
     });
 
     it('should apply a filter and go to the first page', () => {
-      component.dataSource = { paginator: { firstPage: () => {} } };
+      component.dataSource = { paginator: { firstPage: () => {} } } as MatTableDataSource<User>;
 
-      spyOn(component.dataSource.paginator, 'firstPage');
+      spyOn(component.dataSource.paginator, 'firstPage' as never);
 
       component.applyFilter('filter');
 
       expect(component.dataSource.filter).toEqual('filter');
-      expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
+      expect(component.dataSource.paginator?.firstPage).toHaveBeenCalled();
     });
   });
 });

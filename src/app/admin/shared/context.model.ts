@@ -1,12 +1,12 @@
 import { FirestoreService } from '@firestoreService';
-import { Models } from '@model';
+import { Model, Models } from '@model';
 import { AdminDashboardComponent } from '../admin-dashboard/admin-dashboard.component';
 
 export class Context {
   title: string;
   displayedColumns: string[];
   dataSource: Models = [];
-  service: FirestoreService;
+  service: FirestoreService<Model>;
   revert: () => void;
   save: () => void;
   remove: (id: string) => void;
@@ -15,7 +15,7 @@ export class Context {
   constructor(
     title: string,
     displayedColumns: string[],
-    service: FirestoreService,
+    service: FirestoreService<Model>,
     revert: AdminDashboardComponent['revert'],
     save: AdminDashboardComponent['save'],
     remove: AdminDashboardComponent['remove'],

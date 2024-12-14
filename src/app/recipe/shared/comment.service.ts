@@ -10,31 +10,22 @@ import { FirebaseService } from '@firebaseService';
 @Injectable({
   providedIn: 'root',
 })
-export class CommentService extends FirestoreService {
+export class CommentService extends FirestoreService<Comment> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('comments', firebase, currentUserService, actionService);
+    super('comments', (data) => new Comment(data), firebase, currentUserService, actionService);
   }
 
-  get(id: string): Observable<Comments>;
-  get(): Observable<Comments>;
-  get(id?: string): Observable<Comments>; // type for spyOn
-  get(id?: string): Observable<Comments> {
-    return new Observable(observer => {
-      if (id) {
-        super
-          .getMany(this.firebase.query(this.ref, this.firebase.where('documentId', '==', id)))
-          .subscribe(docs => {
-            observer.next(docs.map(doc => new Comment(doc)));
-          });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new Comment(doc)));
+  getByDocument(id: string): Observable<Comments> {
+    return new Observable((observer) => {
+      super
+        .getByQuery(this.firebase.query(this.ref, this.firebase.where('documentId', '==', id)))
+        .subscribe((docs) => {
+          observer.next(docs.map((doc) => new Comment(doc)));
         });
-      }
     });
   }
 

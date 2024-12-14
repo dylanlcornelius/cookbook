@@ -26,7 +26,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   loading = true;
 
   displayedColumns = ['name', 'category', 'amount', 'calories', 'cartQuantity'];
-  dataSource;
+  dataSource: any;
 
   ingredients: Ingredients;
   userIngredients: UserIngredients = [];
@@ -62,28 +62,28 @@ export class IngredientListComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
 
         this.householdService
-          .get(this.user.uid)
+          .getByUser(this.user.uid)
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(household => {
+          .subscribe((household) => {
             this.householdId = household.id;
 
-            const userIngredients$ = this.userIngredientService.get(this.householdId);
-            const ingredients$ = this.ingredientService.get();
-            const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+            const userIngredients$ = this.userIngredientService.getByUser(this.householdId);
+            const ingredients$ = this.ingredientService.getAll();
+            const configs$ = this.configService.getByName(ConfigType.INGREDIENT_CATEGORY);
             combineLatest([userIngredients$, ingredients$, configs$])
               .pipe(takeUntil(this.unsubscribe$))
               .subscribe(([userIngredients, ingredients, configs]) => {
-                this.ingredients = ingredients.map(ingredient => {
+                this.ingredients = ingredients.map((ingredient) => {
                   ingredient.displayCategory =
                     configs.find(({ value }) => value === ingredient.category)?.displayValue ||
                     'Other';
                   ingredient.amount = this.numberService.toFormattedFraction(ingredient.amount);
 
-                  userIngredients.forEach(userIngredient => {
+                  userIngredients.forEach((userIngredient) => {
                     if (userIngredient.ingredientId === ingredient.id) {
                       ingredient.cartQuantity = userIngredient.cartQuantity;
                     }
@@ -111,7 +111,7 @@ export class IngredientListComponent implements OnInit, OnDestroy {
   }
 
   findIngredient(id: string): Ingredient {
-    return this.dataSource.data.find(x => x.id === id);
+    return this.dataSource.data.find((x: Ingredient) => x.id === id);
   }
 
   removeIngredient(id: string): void {

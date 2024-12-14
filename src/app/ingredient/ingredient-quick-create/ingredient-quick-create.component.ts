@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { ModalComponent } from '@modalComponent';
+import { ModalComponent, ModalComponentParams } from '@modalComponent';
 import { IngredientEditComponent } from '../ingredient-edit/ingredient-edit.component';
 
 @Component({
@@ -9,10 +9,10 @@ import { IngredientEditComponent } from '../ingredient-edit/ingredient-edit.comp
 })
 export class IngredientQuickCreateComponent {
   @Input()
-  params;
+  params: ModalComponentParams;
 
   @ViewChild(ModalComponent)
-  modal: ModalComponent;
+  modal: ModalComponent<ModalComponentParams>;
 
   @ViewChild(IngredientEditComponent)
   edit: IngredientEditComponent;

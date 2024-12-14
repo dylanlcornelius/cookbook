@@ -25,7 +25,7 @@
   </form>
 
   <div class="short-container">
-    <div class="table-container mat-elevation-z8 box" *ngIf="mealPlan?.recipes.length > 0">
+    <div class="table-container mat-elevation-z8 box" *ngIf="mealPlan?.recipes?.length || 0 > 0">
       <div class="table-row" *ngFor="let recipe of mealPlan.recipes">
         <a class="table-cell plain-link recipe-text" [routerLink]="['/recipe/detail/', recipe.id]">
           {{ recipe.name }}
@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="short-container button-row" *ngIf="mealPlan?.recipes.length > 0">
+  <div class="short-container button-row" *ngIf="mealPlan?.recipes?.length || 0 > 0">
     <app-tutorial-button />
 
     <button
@@ -63,7 +63,7 @@
   </div>
 </div>
 
-<div class="text-center empty-block" *ngIf="!loading && mealPlan?.recipes.length === 0">
+<div class="text-center empty-block" *ngIf="(!loading && mealPlan?.recipes?.length) || 0 === 0">
   <h4>Your meal plan doesn't have any recipes</h4>
   <app-tutorial-button />
 </div>

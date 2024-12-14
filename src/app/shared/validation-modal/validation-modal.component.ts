@@ -1,9 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ValidationService } from '@modalService';
-import { Validation } from '@validation';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ModalComponent } from '@modalComponent';
+
+import { ModalComponentParams } from '@modalComponent';
+
+export interface ValidationModalParams extends ModalComponentParams {
+  text: string;
+  function: (...args: any[]) => any;
+  args?: any[];
+}
 
 @Component({
   selector: 'app-validation-modal',
@@ -12,10 +19,10 @@ import { ModalComponent } from '@modalComponent';
 })
 export class ValidationModalComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  params: Validation;
+  params?: ValidationModalParams;
 
   @ViewChild(ModalComponent)
-  modal: ModalComponent;
+  modal: ModalComponent<ValidationModalParams>;
 
   constructor(private validationService: ValidationService) {}
 
@@ -32,7 +39,7 @@ export class ValidationModalComponent implements OnInit, OnDestroy {
     this.validationService
       .getModal()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((validation: Validation) => {
+      .subscribe((validation: ValidationModalParams) => {
         this.params = validation;
       });
   }
@@ -42,7 +49,7 @@ export class ValidationModalComponent implements OnInit, OnDestroy {
   }
 
   confirm(): void {
-    this.params.function(...this.params.args);
+    this.params?.function(...(this.params?.args || []));
     this.modal.close();
   }
 }

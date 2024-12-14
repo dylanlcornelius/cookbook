@@ -1,13 +1,17 @@
 import { Component, Input } from '@angular/core';
 
+export interface ModalComponentParams {
+  callback?: (success: boolean) => void;
+}
+
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
-export class ModalComponent {
+export class ModalComponent<ModalParams extends ModalComponentParams> {
   @Input()
-  params;
+  params?: boolean | ModalParams;
 
   constructor() {}
 
@@ -16,7 +20,9 @@ export class ModalComponent {
   }
 
   close(success = false): void {
-    this.params.callback?.(success);
+    if (typeof this.params !== 'boolean') {
+      this.params?.callback?.(success);
+    }
     this.params = undefined;
   }
 }

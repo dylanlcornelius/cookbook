@@ -26,15 +26,23 @@ describe('TutorialService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('get', () => {
-    it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
+  describe('factory', () => {
+    it('should construct a model', () => {
+      const result = service.factory({});
 
-      service.get().subscribe(docs => {
+      expect(result).toBeInstanceOf(Tutorial);
+    });
+  });
+
+  describe('getAll', () => {
+    it('should get all documents', () => {
+      spyOn(FirestoreService.prototype, 'getAll').and.returnValue(of([{}]));
+
+      service.getAll().subscribe((docs) => {
         expect(docs).toBeDefined();
       });
 
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(FirestoreService.prototype.getAll).toHaveBeenCalled();
     });
   });
 

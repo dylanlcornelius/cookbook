@@ -8,7 +8,7 @@ import { Recipe } from '@recipe';
 })
 export class RecipeStepsComponent {
   @Input()
-  steps: Recipe['steps'];
+  steps?: Recipe['steps'];
 
   toggleStep(step: Recipe['steps'][0]): void {
     step.isSelected = !step.isSelected;

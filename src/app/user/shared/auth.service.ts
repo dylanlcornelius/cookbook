@@ -12,7 +12,7 @@ import { FirebaseService, GoogleAuthProvider } from '@firebaseService';
   providedIn: 'root',
 })
 export class AuthService {
-  redirectUrl: string;
+  redirectUrl: string | null;
 
   constructor(
     private router: Router,
@@ -37,9 +37,9 @@ export class AuthService {
     }
 
     this.userService
-      .get(user.uid)
+      .getByUser(user.uid)
       .pipe(first())
-      .subscribe(current => {
+      .subscribe((current) => {
         let isNewUser = false;
 
         if (!current) {

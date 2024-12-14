@@ -1,61 +1,52 @@
 import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
 import { CurrentUserService } from '@currentUserService';
+import { FirebaseService } from '@firebaseService';
 import { FirestoreService } from '@firestoreService';
 import { Household, Households } from '@household';
-import { Models, ModelObject } from '@model';
 import { Recipe, RECIPE_STATUS } from '@recipe';
 import { User } from '@user';
 import { Observable } from 'rxjs';
-import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HouseholdService extends FirestoreService {
+export class HouseholdService extends FirestoreService<Household> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('households', firebase, currentUserService, actionService);
+    super('households', (data) => new Household(data), firebase, currentUserService, actionService);
   }
 
-  get(uid: string): Observable<Household>;
-  get(): Observable<Households>;
-  get(uid?: string): Observable<Household | Households>; // type for spyOn
-  get(uid?: string): Observable<Household | Households> {
-    return new Observable(observer => {
-      if (uid) {
-        super
-          .getMany(
-            this.firebase.query(this.ref, this.firebase.where('memberIds', 'array-contains', uid))
-          )
-          .subscribe(docs => {
-            observer.next(new Household(docs[0] || { id: uid }));
-          });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new Household(doc)));
+  getByUser(uid: string): Observable<Household> {
+    return new Observable((observer) => {
+      super
+        .getByQuery(
+          this.firebase.query(this.ref, this.firebase.where('memberIds', 'array-contains', uid))
+        )
+        .subscribe((docs) => {
+          observer.next(new Household(docs[0] || { id: uid }));
         });
-      }
     });
   }
 
   getInvites(uid: string): Observable<Households> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       super
-        .getMany(
+        .getByQuery(
           this.firebase.query(this.ref, this.firebase.where('inviteIds', 'array-contains', uid))
         )
-        .subscribe(docs => {
-          observer.next(docs.map(doc => new Household(doc)));
+        .subscribe((docs) => {
+          observer.next(docs.map((doc) => new Household(doc)));
         });
     });
   }
 
   create = (data: Household): string => super.create(data.getObject());
-  update = (data: ModelObject | Models, id?: string): void => super.update(data, id);
+  update = (data: ReturnType<Household['getObject']> | Households, id?: string): void =>
+    super.update(data, id);
   delete = (id: string): void => super.delete(id);
 
   hasAuthorPermission(household: Household, user: User, recipe: Recipe): boolean {

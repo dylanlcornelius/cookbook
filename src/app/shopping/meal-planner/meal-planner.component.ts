@@ -4,7 +4,7 @@ import { CurrentUserService } from '@currentUserService';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 import { NotificationService } from '@modalService';
-import { SuccessNotification } from '@notification';
+import { FailureNotification, SuccessNotification } from '@notification';
 import { User } from '@user';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { HouseholdService } from '@householdService';
@@ -66,19 +66,19 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
 
         this.householdService
-          .get(this.user.uid)
+          .getByUser(this.user.uid)
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(household => {
+          .subscribe((household) => {
             this.householdId = household.id;
 
-            const userIngredient$ = this.userIngredientService.get(this.householdId);
-            const recipes$ = this.recipeService.get();
-            const ingredients$ = this.ingredientService.get();
-            const mealPlan$ = this.mealPlanService.get(this.householdId);
+            const userIngredient$ = this.userIngredientService.getByUser(this.householdId);
+            const recipes$ = this.recipeService.getAll();
+            const ingredients$ = this.ingredientService.getAll();
+            const mealPlan$ = this.mealPlanService.getByUser(this.householdId);
 
             combineLatest([userIngredient$, recipes$, ingredients$, mealPlan$])
               .pipe(takeUntil(this.unsubscribe$))
@@ -87,7 +87,7 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
                   userIngredients,
                   ingredients
                 );
-                this.recipes = recipes.map(recipe => {
+                this.recipes = recipes.map((recipe) => {
                   recipe.ingredients = this.recipeIngredientService.buildRecipeIngredients(
                     recipe.ingredients,
                     [...ingredients, ...recipes]
@@ -97,13 +97,13 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
                 this.ingredients = ingredients;
 
                 mealPlan.recipes = mealPlan.recipes
-                  .map(planRecipe => recipes.find(({ id }) => id === planRecipe.id))
-                  .filter(recipe => recipe);
+                  .map((planRecipe) => recipes.find(({ id }) => id === planRecipe.id))
+                  .filter((recipe) => !!recipe) as Recipe[];
                 this.mealPlan = mealPlan;
 
                 this.filteredRecipes = this.recipeControl.valueChanges.pipe(
                   startWith(''),
-                  map(value =>
+                  map((value) =>
                     this.recipes
                       .filter(({ name }) =>
                         name.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : '')
@@ -137,6 +137,11 @@ export class MealPlannerComponent implements OnInit, OnDestroy {
 
   addIngredients(recipeId: string): void {
     const recipe = this.mealPlan.recipes.find(({ id }) => id === recipeId);
+    if (!recipe) {
+      this.notificationService.setModal(new FailureNotification('Recipe not found!'));
+      return;
+    }
+
     const callback = (success: boolean) => {
       if (success) {
         this.mealPlan.recipes = this.mealPlan.recipes.filter(({ id }) => id !== recipeId);

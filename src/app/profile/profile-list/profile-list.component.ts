@@ -22,7 +22,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   loading = true;
 
-  dataSource;
+  dataSource: MatTableDataSource<User>;
   id: string;
   currentUser: User;
 
@@ -54,34 +54,34 @@ export class ProfileListComponent implements OnInit, OnDestroy {
   load(): void {
     this.loading = this.loadingService.set(true);
     const user$ = this.currentUserService.getCurrentUser();
-    const users$ = this.userService.get();
-    const recipes$ = this.recipeService.get();
+    const users$ = this.userService.getAll();
+    const recipes$ = this.recipeService.getAll();
 
     combineLatest([user$, users$, recipes$])
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(([user, users, recipes]) => {
         this.currentUser = user;
-        const recipeCounts = {};
+        const recipeCounts: { [key: string]: number } = {};
 
-        recipes.forEach(recipe => {
+        recipes.forEach((recipe) => {
           if (!recipeCounts[recipe.uid]) {
             recipeCounts[recipe.uid] = 0;
           }
           recipeCounts[recipe.uid]++;
         });
 
-        users.forEach(user => {
+        users.forEach((user) => {
           user.recipeCount = recipeCounts[user.uid] || 0;
 
           user.ratingCount = recipes.reduce<number>((sum, recipe) => {
-            if (recipe.ratings.find(rating => rating.uid === user.uid)) {
+            if (recipe.ratings.find((rating) => rating.uid === user.uid)) {
               sum++;
             }
             return sum;
           }, 0);
 
           this.imageService.download(user).then(
-            url => {
+            (url) => {
               if (url) {
                 user.image = url;
               }

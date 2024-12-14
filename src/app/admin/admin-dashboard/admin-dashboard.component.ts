@@ -1,25 +1,24 @@
 import { Component, OnDestroy } from '@angular/core';
-import { IngredientService } from '@ingredientService';
-import { RecipeService } from '@recipeService';
-import { UserService } from '@userService';
-import { ConfigService } from '@configService';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { UserIngredientService } from '@userIngredientService';
-import { UserItemService } from '@userItemService';
-import { takeUntil } from 'rxjs/operators';
-import { SuccessNotification } from '@notification';
-import { NotificationService, ValidationService } from '@modalService';
-import { NavigationService } from '@navigationService';
-import { Validation } from '@validation';
-import { Context } from '@context';
-import { Model, Models } from '@model';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { CommentService } from '@commentService';
-import { HouseholdService } from '@householdService';
-import { RecipeHistoryService } from '@recipeHistoryService';
-import { TutorialService } from '@tutorialService';
-import { FeedbackService } from '@feedbackService';
+import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
+import { Context } from '@context';
+import { FeedbackService } from '@feedbackService';
+import { HouseholdService } from '@householdService';
+import { IngredientService } from '@ingredientService';
+import { NotificationService, ValidationService } from '@modalService';
+import { Model, Models } from '@model';
+import { NavigationService } from '@navigationService';
+import { SuccessNotification } from '@notification';
+import { RecipeHistoryService } from '@recipeHistoryService';
+import { RecipeService } from '@recipeService';
+import { TutorialService } from '@tutorialService';
+import { UserIngredientService } from '@userIngredientService';
+import { UserItemService } from '@userItemService';
+import { UserService } from '@userService';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,7 +28,7 @@ import { ConfigType } from '@configType';
 export class AdminDashboardComponent implements OnDestroy {
   private unsubscribe$ = new Subject<void>();
   private refresh$ = new BehaviorSubject(undefined);
-  private context$;
+  private context$?: Subscription;
 
   configTypes: ConfigType[];
 
@@ -59,7 +58,7 @@ export class AdminDashboardComponent implements OnDestroy {
 
   tabChanged(event: MatTabChangeEvent): void {
     this.unsubscribe$.next();
-    const context = this.contexts.find(context => context.title === event.tab.textLabel);
+    const context = this.contexts.find((context) => context.title === event.tab.textLabel);
 
     this.refresh$.subscribe(() => {
       if (this.context$) {
@@ -67,7 +66,7 @@ export class AdminDashboardComponent implements OnDestroy {
       }
 
       this.context$ = context?.service
-        .get()
+        .getAll()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: Models) => {
           context.dataSource = data;
@@ -80,12 +79,11 @@ export class AdminDashboardComponent implements OnDestroy {
   };
 
   remove = (context: Context, id: string): void => {
-    this.validationService.setModal(
-      new Validation(`Are you sure you want to delete this document?`, this.removeEvent, [
-        context,
-        id,
-      ])
-    );
+    this.validationService.setModal({
+      text: `Are you sure you want to delete this document?`,
+      function: this.removeEvent,
+      args: [context, id],
+    });
   };
 
   removeEvent = (context: Context, id: string): void => {
@@ -93,9 +91,10 @@ export class AdminDashboardComponent implements OnDestroy {
   };
 
   revert = (): void => {
-    this.validationService.setModal(
-      new Validation('Are you sure you want to revert your changes?', this.revertEvent, [])
-    );
+    this.validationService.setModal({
+      text: 'Are you sure you want to revert your changes?',
+      function: this.revertEvent,
+    });
   };
 
   revertEvent = (): void => {
@@ -104,9 +103,11 @@ export class AdminDashboardComponent implements OnDestroy {
   };
 
   save = (context: Context): void => {
-    this.validationService.setModal(
-      new Validation('Are you sure you want to save your changes?', this.saveEvent, [context])
-    );
+    this.validationService.setModal({
+      text: 'Are you sure you want to save your changes?',
+      function: this.saveEvent,
+      args: [context],
+    });
   };
 
   saveEvent = (context: Context): void => {

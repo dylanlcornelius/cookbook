@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ModalComponent } from '@modalComponent';
+import { ModalComponent, ModalComponentParams } from '@modalComponent';
 
 describe('ModalComponent', () => {
-  let component: ModalComponent;
-  let fixture: ComponentFixture<ModalComponent>;
+  let component: ModalComponent<ModalComponentParams>;
+  let fixture: ComponentFixture<ModalComponent<ModalComponentParams>>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -34,7 +34,7 @@ describe('ModalComponent', () => {
 
   describe('close', () => {
     it('should set params to undefined', () => {
-      component.params = { value: 'test' };
+      component.params = {};
 
       component.close();
 
@@ -42,9 +42,9 @@ describe('ModalComponent', () => {
     });
 
     it('should set params to undefined and callback', () => {
-      component.params = { value: 'test', callback: () => {} };
+      component.params = { callback: () => {} };
 
-      spyOn(component.params, 'callback');
+      spyOn(component.params, 'callback' as never);
 
       component.close();
 

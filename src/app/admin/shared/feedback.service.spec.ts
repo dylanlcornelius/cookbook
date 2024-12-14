@@ -1,40 +1,25 @@
 import { TestBed } from '@angular/core/testing';
-
-import { FeedbackService } from './feedback.service';
-import { FirebaseService } from '@firebaseService';
-import { FirestoreService } from '@firestoreService';
-import { of } from 'rxjs';
 import { Feedback } from '@feedback';
+import { FirestoreService } from '@firestoreService';
+import { FeedbackService } from './feedback.service';
 
 describe('FeedbackService', () => {
   let service: FeedbackService;
-  let firebase: FirebaseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(FeedbackService);
-    firebase = TestBed.inject(FirebaseService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getFeedbacks', () => {
-    it('should get all documents', () => {
-      spyOn(firebase, 'where');
-      spyOn(firebase, 'query');
-      spyOn(FirestoreService.prototype, 'getMany');
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
+  describe('factory', () => {
+    it('should construct a model', () => {
+      const result = service.factory({});
 
-      service.get().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(firebase.where).not.toHaveBeenCalled();
-      expect(firebase.query).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.getMany).not.toHaveBeenCalled();
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(result).toBeInstanceOf(Feedback);
     });
   });
 

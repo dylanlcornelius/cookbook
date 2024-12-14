@@ -1,24 +1,23 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import {
+  FormBuilder,
+  FormGroupDirective,
   FormsModule,
   ReactiveFormsModule,
-  FormGroupDirective,
-  FormBuilder,
   Validators,
 } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IngredientService } from '@ingredientService';
-
-import { IngredientEditComponent } from './ingredient-edit.component';
-import { Ingredient } from '@ingredient';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
-import { of } from 'rxjs';
-import { ConfigService } from '@configService';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Config } from '@config';
+import { ConfigService } from '@configService';
+import { Ingredient } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { of } from 'rxjs';
+import { IngredientDetailComponent } from '../ingredient-detail/ingredient-detail.component';
+import { IngredientEditComponent } from './ingredient-edit.component';
 
 describe('IngredientEditComponent', () => {
   let component: IngredientEditComponent;
@@ -63,42 +62,42 @@ describe('IngredientEditComponent', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ 'ingredient-id': 'id' });
 
-      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
-      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
+      spyOn(ingredientService, 'getById').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'getByName').and.returnValue(of([new Config({})]));
 
       fixture = TestBed.createComponent(IngredientEditComponent);
       fixture.detectChanges();
 
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(ingredientService.getById).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
     });
 
     it('should get an ingredient with an alt amount', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({ 'ingredient-id': 'id' });
 
-      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({ altAmount: '1' })));
-      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
+      spyOn(ingredientService, 'getById').and.returnValue(of(new Ingredient({ altAmount: '1' })));
+      spyOn(configService, 'getByName').and.returnValue(of([new Config({})]));
 
       fixture = TestBed.createComponent(IngredientEditComponent);
       fixture.detectChanges();
 
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(ingredientService.getById).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
     });
 
     it('should not get an ingredient', () => {
       const route = TestBed.inject(ActivatedRoute);
       route.params = of({});
 
-      spyOn(ingredientService, 'get').and.returnValue(of(new Ingredient({})));
-      spyOn(configService, 'get').and.returnValue(of([new Config({})]));
+      spyOn(ingredientService, 'getById').and.returnValue(of(new Ingredient({})));
+      spyOn(configService, 'getByName').and.returnValue(of([new Config({})]));
 
       fixture = TestBed.createComponent(IngredientEditComponent);
       fixture.detectChanges();
 
-      expect(ingredientService.get).not.toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(ingredientService.getById).not.toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
     });
   });
 

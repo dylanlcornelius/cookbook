@@ -1,23 +1,27 @@
 import { Action } from '@actions';
+import { ActionService } from '@actionService';
 import { TestBed } from '@angular/core/testing';
 import { CurrentUserService } from '@currentUserService';
-import { User } from '@user';
-import { of } from 'rxjs';
-import { ActionService } from '@actionService';
-
-import { FirestoreService } from './firestore.service';
-import { Recipe } from '@recipe';
 import { FirebaseService } from '@firebaseService';
+import { Model } from '@model';
+import { Recipe } from '@recipe';
+import { User } from '@user';
+import { DocumentReference, Query } from 'firebase/firestore';
+import { of } from 'rxjs';
+import { FirestoreService } from './firestore.service';
 
 describe('FirestoreService', () => {
-  let service: FirestoreService;
+  let service: FirestoreService<Model>;
   let firebase: FirebaseService;
   let currentUserService: CurrentUserService;
   let actionService: ActionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: String, useValue: 'test' }],
+      providers: [
+        { provide: String, useValue: 'test' },
+        { provide: Function, useValue: (data: any) => new Model(data) },
+      ],
     });
     service = TestBed.inject(FirestoreService);
     firebase = TestBed.inject(FirebaseService);
@@ -71,12 +75,12 @@ describe('FirestoreService', () => {
     });
   });
 
-  describe('getOne', () => {
+  describe('getById', () => {
     it('should get one document', () => {
       spyOn(firebase, 'doc');
-      spyOn(firebase, 'onSnapshot').and.returnValue(of({ data: () => {}, id: 'id' }));
+      spyOn(firebase, 'onSnapshot').and.returnValue(of({ data: () => {}, id: 'id' }) as any);
 
-      service.getOne('id').subscribe(data => {
+      service.getById('id').subscribe((data) => {
         expect(data.id).toEqual('id');
       });
 
@@ -85,11 +89,11 @@ describe('FirestoreService', () => {
     });
   });
 
-  describe('getMany', () => {
+  describe('getByQuery', () => {
     it('should get one document', () => {
-      spyOn(firebase, 'onSnapshot').and.returnValue(of([{ data: () => {}, id: 'id' }]));
+      spyOn(firebase, 'onSnapshot').and.returnValue(of([{ data: () => {}, id: 'id' }] as any));
 
-      service.getMany().subscribe(data => {
+      service.getByQuery({} as Query<Model>).subscribe((data) => {
         expect(data[0].id).toEqual('id');
       });
 
@@ -97,32 +101,22 @@ describe('FirestoreService', () => {
     });
   });
 
-  describe('get', () => {
-    it('should call getOne', () => {
-      spyOn(service, 'getOne');
-      spyOn(service, 'getMany');
+  describe('getAll', () => {
+    it('should get one document', () => {
+      spyOn(firebase, 'onSnapshot').and.returnValue(of([{ data: () => {}, id: 'id' }] as any));
 
-      service.get('id');
+      service.getAll().subscribe((data) => {
+        expect(data[0].id).toEqual('id');
+      });
 
-      expect(service.getOne).toHaveBeenCalled();
-      expect(service.getMany).not.toHaveBeenCalled();
-    });
-
-    it('should call getMany', () => {
-      spyOn(service, 'getOne');
-      spyOn(service, 'getMany');
-
-      service.get();
-
-      expect(service.getOne).not.toHaveBeenCalled();
-      expect(service.getMany).toHaveBeenCalled();
+      expect(firebase.onSnapshot).toHaveBeenCalled();
     });
   });
 
   describe('create', () => {
     it('should create a document', () => {
       spyOn(service, 'commitAction');
-      spyOn(firebase, 'doc').and.returnValue({});
+      spyOn(firebase, 'doc').and.returnValue({} as DocumentReference<Model>);
       spyOn(firebase, 'setDoc');
 
       service.create(new Recipe({}).getObject());
@@ -165,7 +159,7 @@ describe('FirestoreService', () => {
       spyOn(service, 'updateOne');
       spyOn(service, 'updateAll');
 
-      service.update(null);
+      service.update(new Recipe({}).getObject());
 
       expect(service.updateOne).not.toHaveBeenCalled();
       expect(service.updateAll).not.toHaveBeenCalled();

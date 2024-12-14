@@ -1,39 +1,38 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { SPACE, COMMA, TAB } from '@angular/cdk/keycodes';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { RecipeService } from '@recipeService';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormArray,
-  ValidatorFn,
-  AbstractControl,
-  FormGroupDirective,
-  FormControl,
-} from '@angular/forms';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IngredientService } from '@ingredientService';
-import { UOM, UOMs } from '@uoms';
-import { UomService } from '@uomService';
-import { ErrorMatcher } from '../../util/error-matcher';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { Recipe, Recipes } from '@recipe';
-import { CurrentUserService } from '@currentUserService';
-import { first, map, startWith, takeUntil } from 'rxjs/operators';
-import { Ingredients } from '@ingredient';
-import { titleCase } from 'title-case';
-import { LoadingService } from '@loadingService';
-import { MatStepper, StepperOrientation } from '@angular/material/stepper';
+import { COMMA, SPACE, TAB } from '@angular/cdk/keycodes';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ValidationService } from '@modalService';
-import { Validation } from '@validation';
-import { ConfigService } from '@configService';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { MatStepper, StepperOrientation } from '@angular/material/stepper';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Configs } from '@config';
+import { ConfigService } from '@configService';
 import { ConfigType } from '@configType';
-import { TitleService } from '@TitleService';
+import { CurrentUserService } from '@currentUserService';
+import { Ingredients } from '@ingredient';
+import { IngredientService } from '@ingredientService';
+import { LoadingService } from '@loadingService';
+import { ValidationService } from '@modalService';
+import { Recipe, Recipes } from '@recipe';
 import { RecipeIngredient, RecipeIngredients } from '@recipeIngredient';
 import { RecipeIngredientService } from '@recipeIngredientService';
+import { RecipeService } from '@recipeService';
+import { TitleService } from '@TitleService';
+import { UOM, UOMs } from '@uoms';
+import { UomService } from '@uomService';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { first, map, startWith, takeUntil } from 'rxjs/operators';
+import { titleCase } from 'title-case';
+import { ErrorMatcher } from '../../util/error-matcher';
 
 function TitleCaseValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null =>
@@ -56,8 +55,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
 
   id: string;
-  originalRecipe: Recipe;
-  recipe: Recipe;
+  originalRecipe?: Recipe;
+  recipe?: Recipe;
   recipesForm: FormGroup;
   categoryControl = new FormControl();
 
@@ -69,7 +68,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   ingredientFilter = '';
   recipes: Recipes;
   ingredients: Ingredients;
-  recipeCategories;
+  recipeCategories: Observable<string[]>;
   recipeAsIngredients: { id: string; name: string }[];
   types: Configs;
 
@@ -118,6 +117,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   unload(): void {
+    type RecipeListFields = Recipe[keyof typeof this.listFields][0];
+
     const recipe = this.originalRecipe || new Recipe({});
     const form = this.recipesForm.value;
 
@@ -126,13 +127,16 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     form.isServedCold = form.bestServed === 'COLD';
     delete form.bestServed;
 
-    const isUnchanged = Object.keys(form).find(key => {
-      const listField = this.listFields[key];
-
+    const isUnchanged = Object.keys(form).find((key) => {
+      const listField = this.listFields[key as keyof typeof this.listFields];
       return listField
-        ? recipe[key].map(property => property[listField]).join('|') !==
-            form[key].map(property => property[listField]).join('|')
-        : recipe[key] !== form[key];
+        ? recipe[key as keyof typeof this.listFields]
+            .map((property: RecipeListFields) => property[listField as keyof RecipeListFields])
+            .join('|') !==
+            form[key]
+              .map((property: RecipeListFields) => property[listField as keyof RecipeListFields])
+              .join('|')
+        : recipe[key as keyof Recipe] !== form[key];
     });
 
     if (isUnchanged) {
@@ -146,11 +150,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
     const queryParams$ = this.route.queryParams;
-    const ingredients$ = this.ingredientService.get();
-    const recipes$ = this.recipeService.get();
-    const configs$ = this.configService.get(ConfigType.RECIPE_TYPE);
+    const ingredients$ = this.ingredientService.getAll();
+    const recipes$ = this.recipeService.getAll();
+    const configs$ = this.configService.getByName(ConfigType.RECIPE_TYPE);
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.loading = this.loadingService.set(true);
       this.id = params['id'];
       this.recipesForm = new FormBuilder().group({
@@ -178,7 +182,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         Observable<Recipe>?
       ] = [queryParams$, ingredients$, recipes$, configs$];
       if (this.id) {
-        observables$.push(this.recipeService.get(this.id));
+        observables$.push(this.recipeService.getById(this.id));
         this.title = 'Edit a Recipe';
       } else {
         this.titleService.set('Create a New Recipe');
@@ -198,7 +202,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
             this.recipeService
               .getForm()
               .pipe(first())
-              .subscribe(form => {
+              .subscribe((form) => {
                 if (form) {
                   this.recipe = form;
                   this.recipeService.setForm(null);
@@ -274,9 +278,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   initIngredients(): void {
     this.allAvailableIngredients = [...this.ingredients, ...this.recipes]
-      .reduce((result, ingredient) => {
+      .reduce((result: RecipeIngredients, ingredient) => {
         const currentIngredient = this.addedIngredients.find(
-          addedIngredient => addedIngredient.id === ingredient.id
+          (addedIngredient) => addedIngredient.id === ingredient.id
         );
         if (!currentIngredient && ingredient.id !== this.recipe?.id) {
           const disabled =
@@ -297,7 +301,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           );
         }
         return result;
-      }, [] as RecipeIngredients)
+      }, [])
       .sort((a, b) => a.name.localeCompare(b.name));
 
     this.applyIngredientFilter(false);
@@ -306,13 +310,15 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   initCategories(): void {
     this.recipeCategories = this.categoryControl.valueChanges.pipe(
       startWith(''),
-      map(value =>
+      map((value) =>
         this.recipes
-          .reduce((allCategories, { categories }) => {
+          .reduce((allCategories: string[], { categories }) => {
             categories
               .filter(({ category }) => category !== 'New!' && category !== 'Needs Image')
               .forEach(({ category }) => {
-                const isFound = allCategories.find(currentCategory => currentCategory === category);
+                const isFound = allCategories.find(
+                  (currentCategory) => currentCategory === category
+                );
 
                 if (!isFound) {
                   allCategories.push(category);
@@ -320,7 +326,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
               });
             return allCategories;
           }, [])
-          .filter(category =>
+          .filter((category) =>
             category.toLowerCase().includes(value?.toLowerCase ? value.toLowerCase() : '')
           )
           .sort((a, b) => a.localeCompare(b))
@@ -328,7 +334,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  initCategory(category: string): FormGroup {
+  initCategory(category?: string): FormGroup {
     return new FormBuilder().group({
       category: category,
     });
@@ -382,12 +388,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.recipeAsIngredients = ingredients.controls
       .reduce((list, ingredient) => {
         if (
-          ingredient.get('uom').value === UOM.RECIPE &&
-          !steps.controls.some(step => step.get('recipeId')?.value === ingredient.get('id').value)
+          ingredient.get('uom')?.value === UOM.RECIPE &&
+          !steps.controls.some(
+            (step) => step.get('recipeId')?.value === ingredient.get('id')?.value
+          )
         ) {
           list.push({
-            id: ingredient.get('id').value,
-            name: ingredient.get('name').value,
+            id: ingredient.get('id')?.value,
+            name: ingredient.get('name')?.value,
           });
         }
         return list;
@@ -493,7 +501,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     const ingredient = ingredients.controls[index].value;
     const steps = <FormArray>this.recipesForm.controls['steps'];
     const recipeIndex = steps.controls.findIndex(
-      control => control.get('recipeId')?.value === ingredient.id
+      (control) => control.get('recipeId')?.value === ingredient.id
     );
     if (recipeIndex !== -1) {
       steps.removeAt(recipeIndex);
@@ -503,8 +511,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.refreshRecipeAsIngredients();
   }
 
-  getUOMs(volumeUnit: UOM, weightUnit: UOM): string[] {
-    return [...this.uomService.relatedUOMs(volumeUnit), ...this.uomService.relatedUOMs(weightUnit)];
+  getUOMs(volumeUnit?: UOM, weightUnit?: UOM): string[] {
+    return [
+      ...(volumeUnit ? this.uomService.relatedUOMs(volumeUnit) : []),
+      ...(weightUnit ? this.uomService.relatedUOMs(weightUnit) : []),
+    ];
   }
 
   applyIngredientFilter(filterValue: string | false): void {
@@ -512,10 +523,10 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       this.ingredientFilter = filterValue.trim().toLowerCase();
     }
 
-    this.availableIngredients = this.allAvailableIngredients.filter(ingredient => {
+    this.availableIngredients = this.allAvailableIngredients.filter((ingredient) => {
       return (
         ingredient.name.toLowerCase().includes(this.ingredientFilter) &&
-        !this.addedIngredients.find(addedIngredient => {
+        !this.addedIngredients.find((addedIngredient) => {
           return ingredient.id === addedIngredient.id;
         })
       );
@@ -523,13 +534,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   }
 
   resetForm(formDirective: FormGroupDirective): void {
-    this.validationService.setModal(
-      new Validation(
-        `Are you sure you want to undo your current changes to the recipe wizard?`,
-        this.resetFormEvent,
-        [formDirective]
-      )
-    );
+    this.validationService.setModal({
+      text: `Are you sure you want to undo your current changes to the recipe wizard?`,
+      function: this.resetFormEvent,
+      args: [formDirective],
+    });
   }
 
   resetFormEvent = (formDirective: FormGroupDirective): void => {
@@ -567,7 +576,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         const form = this.recipesForm.value;
 
         form.isServedHot = form.bestServed === 'HOT';
@@ -575,14 +584,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         form.isServedCold = form.bestServed === 'COLD';
         delete form.bestServed;
 
-        form.ingredients.forEach(ingredient => {
+        form.ingredients.forEach((ingredient: Partial<RecipeIngredient>) => {
           delete ingredient.name;
           delete ingredient.volumeUnit;
           delete ingredient.weightUnit;
         });
 
         let recipeId = this.originalRecipe?.id;
-        if (this.id) {
+        if (this.id && this.originalRecipe) {
           form.uid = this.originalRecipe.uid;
           form.author = this.originalRecipe.author;
           form.status = this.originalRecipe.status;

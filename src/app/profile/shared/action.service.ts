@@ -23,7 +23,7 @@ export class ActionService {
       return;
     }
 
-    this.get(uid).then(userAction => {
+    this.get(uid).then((userAction) => {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - weekStart.getDay());
       const week = `${weekStart.getDate()}/${
@@ -38,7 +38,7 @@ export class ActionService {
 
       if (userAction.actions[week]) {
         let exists = false;
-        Object.keys(userAction.actions[week]).forEach(id => {
+        Object.keys(userAction.actions[week]).forEach((id) => {
           if (id === action) {
             userAction.actions[week][action] += number;
             exists = true;
@@ -54,12 +54,12 @@ export class ActionService {
     });
   }
 
-  get(uid: string): Promise<{ id?: string; uid: string; actions: any }> {
+  get(uid: string): Promise<{ id?: string; uid: string; actions: any } | undefined> {
     return this.firebase
       .getDocs(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
-      .then(querySnapshot => {
-        const action = [];
-        querySnapshot.forEach(doc => {
+      .then((querySnapshot) => {
+        const action: { id?: string; uid: string; actions: any }[] = [];
+        querySnapshot.forEach((doc) => {
           const data = doc.data();
           action.push({ id: doc.id, uid: data.uid || '', actions: data.actions || {} });
         });

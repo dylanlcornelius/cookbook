@@ -3,6 +3,7 @@ import { FirebaseService } from '@firebaseService';
 
 import { ImageService } from '@imageService';
 import { Recipe } from '@recipe';
+import { UploadTask } from 'firebase/storage';
 
 describe('ImageService', () => {
   let service: ImageService;
@@ -52,13 +53,15 @@ describe('ImageService', () => {
           callback({ bytesTransferred: 50, totalBytes: 100 });
           final();
         },
-      };
+      } as UploadTask;
+
+      const file = new File([''], 'filename', { type: 'text/html' });
 
       spyOn(firebase, 'ref');
       spyOn(firebase, 'uploadBytesResumable').and.returnValue(uploadTask);
       spyOn(service, 'get').and.returnValue(Promise.resolve('url'));
 
-      service.upload('path', null).subscribe(url => {
+      service.upload('path', file).subscribe((url) => {
         expect(url).toBeDefined();
       });
 
@@ -77,13 +80,15 @@ describe('ImageService', () => {
           callback({ bytesTransferred: 50, totalBytes: 100 });
           error();
         },
-      };
+      } as UploadTask;
+
+      const file = new File([''], 'filename', { type: 'text/html' });
 
       spyOn(firebase, 'ref');
       spyOn(firebase, 'uploadBytesResumable').and.returnValue(uploadTask);
       spyOn(service, 'get').and.returnValue(Promise.resolve('url'));
 
-      service.upload('path', null).subscribe(() => {});
+      service.upload('path', file).subscribe(() => {});
 
       expect(firebase.ref).toHaveBeenCalled();
       expect(firebase.uploadBytesResumable).toHaveBeenCalled();

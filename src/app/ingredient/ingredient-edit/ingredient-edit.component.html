@@ -19,7 +19,7 @@
         required
       />
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('name').valid && ingredientsForm.get('name').touched">
+        <span *ngIf="!ingredientsForm.get('name')?.valid && ingredientsForm.get('name')?.touched">
           Please enter Ingredient Name
         </span>
       </mat-error>
@@ -34,7 +34,9 @@
       </mat-select>
       <mat-error>
         <span
-          *ngIf="!ingredientsForm.get('category').valid && ingredientsForm.get('category').touched"
+          *ngIf="
+            !ingredientsForm.get('category')?.valid && ingredientsForm.get('category')?.touched
+          "
         >
           Please enter a valid number for Ingredient Category
         </span>
@@ -52,7 +54,7 @@
         />
         <mat-error>
           <span
-            *ngIf="!ingredientsForm.get('amount').valid && ingredientsForm.get('amount').touched"
+            *ngIf="!ingredientsForm.get('amount')?.valid && ingredientsForm.get('amount')?.touched"
           >
             Please enter a valid number for Ingredient Volume Amount
           </span>
@@ -68,7 +70,7 @@
           </mat-option>
         </mat-select>
         <mat-error>
-          <span *ngIf="!ingredientsForm.get('uom').valid && ingredientsForm.get('uom').touched">
+          <span *ngIf="!ingredientsForm.get('uom')?.valid && ingredientsForm.get('uom')?.touched">
             Please enter a valid Volume Unit of Measurement
           </span>
         </mat-error>
@@ -87,7 +89,7 @@
         <mat-error>
           <span
             *ngIf="
-              !ingredientsForm.get('altAmount').valid && ingredientsForm.get('altAmount').touched
+              !ingredientsForm.get('altAmount')?.valid && ingredientsForm.get('altAmount')?.touched
             "
           >
             Please enter a valid number for Ingredient Weight Amount
@@ -105,7 +107,7 @@
         </mat-select>
         <mat-error>
           <span
-            *ngIf="!ingredientsForm.get('altUOM').valid && ingredientsForm.get('altUOM').touched"
+            *ngIf="!ingredientsForm.get('altUOM')?.valid && ingredientsForm.get('altUOM')?.touched"
           >
             Please enter a valid Weight Unit of Measurement
           </span>
@@ -123,7 +125,7 @@
       <mat-error>
         <span
           *ngIf="
-            !ingredientsForm.get('buyableUOM').valid && ingredientsForm.get('buyableUOM').touched
+            !ingredientsForm.get('buyableUOM')?.valid && ingredientsForm.get('buyableUOM')?.touched
           "
         >
           Please select a valid option for Ingredient Buyable Unit of Measurement
@@ -140,7 +142,7 @@
         [errorStateMatcher]="matcher"
       />
       <mat-error>
-        <span *ngIf="!ingredientsForm.get('calories').valid">
+        <span *ngIf="!ingredientsForm.get('calories')?.valid">
           Please enter a valid number for Ingredient Calories
         </span>
       </mat-error>

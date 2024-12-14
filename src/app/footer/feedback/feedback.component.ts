@@ -4,7 +4,7 @@ import { CurrentUserService } from '@currentUserService';
 import { Feedback } from '@feedback';
 import { FeedbackService } from '@feedbackService';
 import { LoadingService } from '@loadingService';
-import { ModalComponent } from '@modalComponent';
+import { ModalComponent, ModalComponentParams } from '@modalComponent';
 import { NotificationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { User } from '@user';
@@ -24,7 +24,7 @@ export class FeedbackComponent implements OnInit {
   user: User;
 
   @ViewChild(ModalComponent)
-  modal: ModalComponent;
+  modal: ModalComponent<ModalComponentParams>;
 
   constructor(
     private loadingService: LoadingService,
@@ -41,7 +41,7 @@ export class FeedbackComponent implements OnInit {
     this.loading = this.loadingService.set(true);
     const user$ = this.currentUserService.getCurrentUser();
 
-    user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+    user$.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
       this.form = new FormBuilder().group({
         description: [null, Validators.required],
       });

@@ -53,12 +53,12 @@ describe('RecipeHistoryModalComponent', () => {
       };
       component.form = new FormBuilder().group({ name: [null, Validators.required] });
 
-      spyOn(component.params, 'function');
+      spyOn(component.params, 'function' as never);
       spyOn(component.modal, 'close');
 
       component.onSubmit();
 
-      expect(component.params.function).not.toHaveBeenCalled();
+      expect(component.params?.function).not.toHaveBeenCalled();
       expect(component.modal.close).not.toHaveBeenCalled();
     });
 
@@ -73,12 +73,12 @@ describe('RecipeHistoryModalComponent', () => {
       };
       component.form = new FormBuilder().group({ timesCooked: [null] });
 
-      spyOn(component.params, 'function');
+      spyOn(component.params, 'function' as never);
       spyOn(component.modal, 'close');
 
       component.onSubmit();
 
-      expect(component.params.function).toHaveBeenCalled();
+      expect(component.params?.function).toHaveBeenCalled();
       expect(component.modal.close).toHaveBeenCalled();
     });
   });

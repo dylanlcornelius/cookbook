@@ -133,7 +133,7 @@ describe('RecipeFilterService', () => {
     it('should filter by search', () => {
       const result = service.recipeFilterPredicate(
         new Recipe({
-          steps: [{ step: 'thing' }],
+          steps: [{ step: 'thing' }, {}],
           categories: [{ name: 'category' }],
           ingredients: [{ name: 'ingredient' }],
           author: 'testy',

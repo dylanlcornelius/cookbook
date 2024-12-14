@@ -23,7 +23,7 @@
         cdkAutosizeMinRows="10"
       ></textarea>
       <mat-error>
-        <span *ngIf="!form.get('description').valid && form.get('description').touched">
+        <span *ngIf="!form.get('description')?.valid && form.get('description')?.touched">
           Please enter a description
         </span>
       </mat-error>

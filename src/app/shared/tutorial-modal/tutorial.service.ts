@@ -1,19 +1,19 @@
+import { Action } from '@actions';
 import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
-import { CurrentUserService } from '@currentUserService';
-import { FirestoreService } from '@firestoreService';
-import { Models, ModelObject } from '@model';
-import { Observable } from 'rxjs';
-import { Tutorial, TutorialModal, Tutorials } from '@tutorial';
-import { TutorialModalService } from '@modalService';
 import { Router } from '@angular/router';
-import { Action } from '@actions';
+import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
+import { FirestoreService } from '@firestoreService';
+import { TutorialModalService } from '@modalService';
+import { ModelObject } from '@model';
+import { Tutorial, TutorialModal, Tutorials } from '@tutorial';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TutorialService extends FirestoreService {
+export class TutorialService extends FirestoreService<Tutorial> {
   constructor(
     private router: Router,
     firebase: FirebaseService,
@@ -21,19 +21,14 @@ export class TutorialService extends FirestoreService {
     actionService: ActionService,
     private tutorialModalService: TutorialModalService
   ) {
-    super('tutorials', firebase, currentUserService, actionService);
+    super('tutorials', (data) => new Tutorial(data), firebase, currentUserService, actionService);
   }
 
-  get(): Observable<Tutorials> {
-    return new Observable(observer => {
-      super.get().subscribe(docs => {
-        observer.next(docs.map(doc => new Tutorial(doc)).sort(this.sort));
-      });
-    });
-  }
-
+  getAll = (): Observable<Tutorials> =>
+    super.getAll().pipe(map((tutorials) => tutorials.sort(this.sort)));
   create = (data: ModelObject): string => super.create(data);
-  update = (data: ModelObject | Models, id?: string): void => super.update(data, id);
+  update = (data: ReturnType<Tutorial['getObject']> | Tutorials, id?: string): void =>
+    super.update(data, id);
   delete = (id: string): void => super.delete(id);
   sort = (a: Tutorial, b: Tutorial): number => a.order - b.order;
 
@@ -44,7 +39,7 @@ export class TutorialService extends FirestoreService {
     this.tutorialModalService.setModal(
       new TutorialModal(
         startingUrl ? this.router.url : '/home',
-        startingUrl ? this.router.url : null
+        startingUrl ? this.router.url : undefined
       )
     );
   }

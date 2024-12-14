@@ -1,17 +1,13 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { AdminDashboardComponent } from './admin-dashboard.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { ConfigService } from '@configService';
-import { of } from 'rxjs';
-import { NotificationService, ValidationService } from '@modalService';
-import {
-  MatTab,
-  MatTabChangeEvent,
-} from '@angular/material/tabs';
+import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { ConfigService } from '@configService';
+import { NotificationService, ValidationService } from '@modalService';
+import { of } from 'rxjs';
+import { AdminDashboardComponent } from './admin-dashboard.component';
 
 describe('AdminDashboardComponent', () => {
   let component: AdminDashboardComponent;
@@ -44,27 +40,27 @@ describe('AdminDashboardComponent', () => {
   describe('tabChanged', () => {
     it('should not load a collection', () => {
       const event = new MatTabChangeEvent();
-      event.tab = new MatTab(null, null);
+      event.tab = new MatTab(null as any, null);
       event.tab.textLabel = 'Admin Dashboard';
 
-      spyOn(configService, 'get');
+      spyOn(configService, 'getAll');
 
       component.tabChanged(event);
 
-      expect(configService.get).not.toHaveBeenCalled();
+      expect(configService.getAll).not.toHaveBeenCalled();
     });
 
     it('should load a collection', () => {
       const event = new MatTabChangeEvent();
-      event.tab = new MatTab(null, null);
+      event.tab = new MatTab(null as any, null);
       event.tab.textLabel = 'Configurations';
 
-      spyOn(configService, 'get').and.returnValue(of([]));
+      spyOn(configService, 'getAll').and.returnValue(of([]));
 
       component.tabChanged(event);
       component.revertEvent();
 
-      expect(configService.get).toHaveBeenCalledTimes(2);
+      expect(configService.getAll).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -72,7 +68,7 @@ describe('AdminDashboardComponent', () => {
     it('should create a document', () => {
       spyOn(configService, 'create');
 
-      component.contexts[0].add();
+      component.contexts[0].add?.();
 
       expect(configService.create).toHaveBeenCalled();
     });

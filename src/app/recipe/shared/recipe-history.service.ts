@@ -1,28 +1,34 @@
 import { ActionService } from '@actionService';
 import { Injectable } from '@angular/core';
+import { CurrentUserService } from '@currentUserService';
+import { FirebaseService } from '@firebaseService';
 import { FirestoreService } from '@firestoreService';
+import { RecipeHistories, RecipeHistory } from '@recipeHistory';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CurrentUserService } from '@currentUserService';
-import { RecipeHistories, RecipeHistory } from '@recipeHistory';
-import { FirebaseService } from '@firebaseService';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RecipeHistoryService extends FirestoreService {
+export class RecipeHistoryService extends FirestoreService<RecipeHistory> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('recipe-histories', firebase, currentUserService, actionService);
+    super(
+      'recipe-histories',
+      (data) => new RecipeHistory(data),
+      firebase,
+      currentUserService,
+      actionService
+    );
   }
 
   add(uid: string, recipeId: string): void {
-    this.get(uid, recipeId)
+    this.getByUserAndRecipe(uid, recipeId)
       .pipe(take(1))
-      .subscribe(recipeHistory => {
+      .subscribe((recipeHistory) => {
         const today = new Date();
         const lastDateCooked = `${today.getDate()}/${
           today.getMonth() + 1
@@ -49,9 +55,9 @@ export class RecipeHistoryService extends FirestoreService {
   }
 
   set(uid: string, recipeId: string, timesCooked: number, updateDate: boolean): void {
-    this.get(uid, recipeId)
+    this.getByUserAndRecipe(uid, recipeId)
       .pipe(take(1))
-      .subscribe(recipeHistory => {
+      .subscribe((recipeHistory) => {
         const today = new Date();
         const lastDateCooked = `${today.getDate()}/${
           today.getMonth() + 1
@@ -73,35 +79,29 @@ export class RecipeHistoryService extends FirestoreService {
       });
   }
 
-  get(uid: string, recipeId: string): Observable<RecipeHistory>;
-  get(uid: string): Observable<RecipeHistories>;
-  get(): Observable<RecipeHistories>;
-  get(uid?: string): Observable<RecipeHistory | RecipeHistories>; // type for spyOn
-  get(uid?: string, recipeId?: string): Observable<RecipeHistory | RecipeHistories> {
-    return new Observable(observable => {
-      if (uid && recipeId) {
-        super
-          .getMany(
-            this.firebase.query(
-              this.ref,
-              this.firebase.where('uid', '==', uid),
-              this.firebase.where('recipeId', '==', recipeId)
-            )
+  getByUserAndRecipe(uid: string, recipeId: string): Observable<RecipeHistory> {
+    return new Observable((observable) => {
+      super
+        .getByQuery(
+          this.firebase.query(
+            this.ref,
+            this.firebase.where('uid', '==', uid),
+            this.firebase.where('recipeId', '==', recipeId)
           )
-          .subscribe(docs => {
-            observable.next(new RecipeHistory(docs[0]));
-          });
-      } else if (uid) {
-        super
-          .getMany(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
-          .subscribe(docs => {
-            observable.next(docs.map(doc => new RecipeHistory(doc)));
-          });
-      } else {
-        super.get().subscribe(docs => {
-          observable.next(docs.map(doc => new RecipeHistory(doc)));
+        )
+        .subscribe((docs) => {
+          observable.next(new RecipeHistory(docs[0]));
         });
-      }
+    });
+  }
+
+  getByUser(uid: string): Observable<RecipeHistories> {
+    return new Observable((observable) => {
+      super
+        .getByQuery(this.firebase.query(this.ref, this.firebase.where('uid', '==', uid)))
+        .subscribe((docs) => {
+          observable.next(docs.map((doc) => new RecipeHistory(doc)));
+        });
     });
   }
 

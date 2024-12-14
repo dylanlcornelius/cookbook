@@ -16,7 +16,7 @@ describe('RecipeMultiplierService', () => {
 
   describe('getQuantity', () => {
     it('should return default quantities', () => {
-      const quantity = service.getQuantity('recipeId', undefined, undefined);
+      const quantity = service.getQuantity('recipeId', '', '');
 
       expect(quantity).toEqual('1');
     });
@@ -40,7 +40,7 @@ describe('RecipeMultiplierService', () => {
 
   describe('decrement', () => {
     it('should default to the recipe servings', () => {
-      service.decrement('recipeId', undefined);
+      service.decrement('recipeId', '');
 
       expect(service.multipliers.recipeId).toEqual(1);
     });
@@ -64,7 +64,7 @@ describe('RecipeMultiplierService', () => {
 
   describe('increment', () => {
     it('should default to the recipe servings', () => {
-      service.increment('recipeId', undefined);
+      service.increment('recipeId', '');
 
       expect(service.multipliers.recipeId).toEqual(2);
     });

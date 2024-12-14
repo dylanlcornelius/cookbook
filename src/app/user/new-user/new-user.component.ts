@@ -6,6 +6,7 @@ import { User } from '@user';
 import { UserService } from '@userService';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ImageUploadProgress } from 'src/app/shared/image-upload/image-upload.component';
 import { ErrorMatcher } from 'src/app/util/error-matcher';
 
 @Component({
@@ -26,7 +27,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
   });
   themeControl = new FormControl(true);
   userImage: string;
-  userImageProgress;
+  userImageProgress: ImageUploadProgress;
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -47,14 +48,14 @@ export class NewUserComponent implements OnInit, OnDestroy {
     this.currentUserService
       .getCurrentUser()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.user = user;
         this.firstNameControl.patchValue(user.firstName);
         this.lastNameControl.patchValue(user.lastName);
         this.themeControl.patchValue(user.theme);
 
         this.imageService.download(user).then(
-          url => {
+          (url) => {
             if (url) {
               this.userImage = url;
             }
@@ -87,7 +88,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
       hasChange = true;
     }
     if (this.user.theme !== this.themeControl.value) {
-      this.user.theme = this.themeControl.value;
+      this.user.theme = !!this.themeControl.value;
       hasChange = true;
     }
 

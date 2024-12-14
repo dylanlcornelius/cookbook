@@ -38,12 +38,12 @@ describe('HouseholdInviteModalComponent', () => {
       expect(result).toBeDefined();
     });
 
-    it('should return undefined', () => {
+    it('should return an empty string', () => {
       const user = undefined;
 
       const result = component.displayFn(user);
 
-      expect(result).toBeUndefined();
+      expect(result).toEqual('');
     });
   });
 
@@ -66,12 +66,12 @@ describe('HouseholdInviteModalComponent', () => {
         users: [],
       };
 
-      spyOn(component.params, 'function');
+      spyOn(component.params, 'function' as never);
       spyOn(component.modal, 'close');
 
       component.confirm();
 
-      expect(component.params.function).toHaveBeenCalled();
+      expect(component.params?.function).toHaveBeenCalled();
       expect(component.modal.close).toHaveBeenCalled();
     });
   });

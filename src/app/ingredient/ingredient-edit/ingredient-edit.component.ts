@@ -24,7 +24,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   title: string;
 
   ingredientsForm: FormGroup;
-  ingredient: Ingredient;
+  ingredient?: Ingredient;
   id: string;
   volumeUnits: VOLUME_UOMs;
   weightUnits: WEIGHT_UOMs;
@@ -64,9 +64,9 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
   }
 
   public load(): void {
-    const configs$ = this.configService.get(ConfigType.INGREDIENT_CATEGORY);
+    const configs$ = this.configService.getByName(ConfigType.INGREDIENT_CATEGORY);
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.loading = this.loadingService.set(true);
       this.id = params['ingredient-id'];
       this.ingredientsForm = new FormBuilder().group({
@@ -82,7 +82,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
       const observables$: [Observable<Configs>, Observable<Ingredient>?] = [configs$];
       if (this.id) {
-        observables$.push(this.ingredientService.get(this.id));
+        observables$.push(this.ingredientService.getById(this.id));
         this.title = 'Edit an Ingredient';
       } else {
         if (!this.isQuickView) {
@@ -97,8 +97,8 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
           this.categories = configs;
           this.ingredient = ingredient;
 
-          if (ingredient) {
-            this.titleService.set(`Edit ${ingredient.name}`);
+          if (this.ingredient) {
+            this.titleService.set(`Edit ${this.ingredient.name}`);
 
             this.ingredientsForm.patchValue({
               name: this.ingredient.name,
@@ -144,7 +144,7 @@ export class IngredientEditComponent implements OnInit, OnDestroy {
 
     const form = this.ingredientsForm.value;
 
-    if (this.id) {
+    if (this.id && this.ingredient) {
       form.creationDate = this.ingredient.creationDate;
 
       this.ingredientService.update(new Ingredient(form).getObject(), this.id);

@@ -1,10 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 import { FirestoreService } from '@firestoreService';
-
-import { RecipeService } from '@recipeService';
-import { Recipe, RECIPE_STATUS } from '@recipe';
 import { NotificationService, ValidationService } from '@modalService';
+import { Recipe, RECIPE_STATUS } from '@recipe';
+import { RecipeService } from '@recipeService';
 
 describe('RecipeService', () => {
   let service: RecipeService;
@@ -24,7 +22,7 @@ describe('RecipeService', () => {
 
   describe('getForm', () => {
     it('should return the editor form', () => {
-      service.getForm().subscribe(form => {
+      service.getForm().subscribe((form) => {
         expect(form).toBeDefined();
       });
     });
@@ -40,25 +38,11 @@ describe('RecipeService', () => {
     });
   });
 
-  describe('get', () => {
-    it('should get all documents', () => {
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of([{}]));
+  describe('factory', () => {
+    it('should construct a model', () => {
+      const result = service.factory({});
 
-      service.get().subscribe(docs => {
-        expect(docs).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
-    });
-
-    it('should get one document based on an id', () => {
-      spyOn(FirestoreService.prototype, 'get').and.returnValue(of({}));
-
-      service.get('id').subscribe(doc => {
-        expect(doc).toBeDefined();
-      });
-
-      expect(FirestoreService.prototype.get).toHaveBeenCalled();
+      expect(result).toBeInstanceOf(Recipe);
     });
   });
 

@@ -8,7 +8,7 @@ import { User } from '@user';
 import { UserIngredient } from '@userIngredient';
 import { IngredientService } from '@ingredientService';
 import { Ingredient } from '@ingredient';
-import { UserItem } from '@userItem';
+import { UserItem, UserItems } from '@userItem';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CurrentUserService } from '@currentUserService';
@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
 import { RecipeIngredientService } from '@recipeIngredientService';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigService } from '@configService';
-import { Config } from '@config';
+import { Config, Configs } from '@config';
 
 describe('ShoppingListComponent', () => {
   let component: ShoppingListComponent;
@@ -92,11 +92,11 @@ describe('ShoppingListComponent', () => {
       ];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(userItemService, 'get').and.returnValue(of(userItems));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'getByUser').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'getAll').and.returnValue(of(ingredients));
+      spyOn(userItemService, 'getByUser').and.returnValue(of(userItems));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
 
       component.load();
       fixture.detectChanges();
@@ -104,11 +104,11 @@ describe('ShoppingListComponent', () => {
 
       expect(component.displayIngredients).toBeDefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(userItemService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userIngredientService.getByUser).toHaveBeenCalled();
+      expect(ingredientService.getAll).toHaveBeenCalled();
+      expect(userItemService.getByUser).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
     });
 
     it('should not load unavailable ingredients and items', () => {
@@ -119,24 +119,24 @@ describe('ShoppingListComponent', () => {
         }),
       ];
       const userItems = [new UserItem({ id: 'itemId2' })];
-      const configs = [];
+      const configs: Configs = [];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(userItemService, 'get').and.returnValue(of(userItems));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'getByUser').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'getAll').and.returnValue(of(ingredients));
+      spyOn(userItemService, 'getByUser').and.returnValue(of(userItems));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
 
       component.load();
 
       expect(component.displayIngredients).toBeDefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(userItemService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userIngredientService.getByUser).toHaveBeenCalled();
+      expect(ingredientService.getAll).toHaveBeenCalled();
+      expect(userItemService.getByUser).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
     });
 
     it('should handle empty user ingredients and user items', () => {
@@ -146,25 +146,25 @@ describe('ShoppingListComponent', () => {
           id: 'ingredientId',
         }),
       ];
-      const userItems = [];
-      const configs = [];
+      const userItems: UserItems = [];
+      const configs: Configs = [];
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(userItemService, 'get').and.returnValue(of(userItems));
-      spyOn(configService, 'get').and.returnValue(of(configs));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'getByUser').and.returnValue(of(userIngredients));
+      spyOn(ingredientService, 'getAll').and.returnValue(of(ingredients));
+      spyOn(userItemService, 'getByUser').and.returnValue(of(userItems));
+      spyOn(configService, 'getByName').and.returnValue(of(configs));
 
       component.load();
 
-      expect(component.displayIngredients).toBeNull();
+      expect(component.displayIngredients).toBeUndefined();
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(userItemService.get).toHaveBeenCalled();
-      expect(configService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userIngredientService.getByUser).toHaveBeenCalled();
+      expect(ingredientService.getAll).toHaveBeenCalled();
+      expect(userItemService.getByUser).toHaveBeenCalled();
+      expect(configService.getByName).toHaveBeenCalled();
     });
   });
 
@@ -279,7 +279,7 @@ describe('ShoppingListComponent', () => {
       spyOn(notificationService, 'setModal');
       spyOn(component.ingredientControl, 'reset');
 
-      component.addItem(null);
+      component.addItem(undefined);
 
       expect(userItemService.create).not.toHaveBeenCalled();
       expect(notificationService.setModal).not.toHaveBeenCalled();

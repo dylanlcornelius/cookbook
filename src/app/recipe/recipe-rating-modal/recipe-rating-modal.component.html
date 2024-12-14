@@ -1,6 +1,6 @@
-<app-modal [params]="params" *ngIf="params?.recipe && params?.uid">
+<app-modal [params]="params" *ngIf="params && params?.recipe && params?.uid">
   <div class="text-center">
-    <h4>{{ params?.text }}</h4>
+    <h4>{{ params.text }}</h4>
   </div>
   <br />
   <h6>Recommended Ratings:</h6>

@@ -18,7 +18,6 @@ import { UserIngredientService } from '@userIngredientService';
 import { of } from 'rxjs';
 import { MealPlan } from '../shared/meal-plan.model';
 import { MealPlanService } from '../shared/meal-plan.service';
-
 import { MealPlannerComponent } from './meal-planner.component';
 
 describe('MealPlannerComponent', () => {
@@ -86,22 +85,22 @@ describe('MealPlannerComponent', () => {
       });
 
       spyOn(currentUserService, 'getCurrentUser').and.returnValue(of(new User({})));
-      spyOn(householdService, 'get').and.returnValue(of(new Household({ id: 'id' })));
-      spyOn(userIngredientService, 'get').and.returnValue(of(userIngredients));
-      spyOn(recipeService, 'get').and.returnValue(of(recipes));
-      spyOn(ingredientService, 'get').and.returnValue(of(ingredients));
-      spyOn(mealPlanService, 'get').and.returnValue(of(mealPlan));
+      spyOn(householdService, 'getByUser').and.returnValue(of(new Household({ id: 'id' })));
+      spyOn(userIngredientService, 'getByUser').and.returnValue(of(userIngredients));
+      spyOn(recipeService, 'getAll').and.returnValue(of(recipes));
+      spyOn(ingredientService, 'getAll').and.returnValue(of(ingredients));
+      spyOn(mealPlanService, 'getByUser').and.returnValue(of(mealPlan));
 
       component.load();
       fixture.detectChanges();
       component.recipeControl.setValue(undefined);
 
       expect(currentUserService.getCurrentUser).toHaveBeenCalled();
-      expect(householdService.get).toHaveBeenCalled();
-      expect(userIngredientService.get).toHaveBeenCalled();
-      expect(recipeService.get).toHaveBeenCalled();
-      expect(ingredientService.get).toHaveBeenCalled();
-      expect(mealPlanService.get).toHaveBeenCalled();
+      expect(householdService.getByUser).toHaveBeenCalled();
+      expect(userIngredientService.getByUser).toHaveBeenCalled();
+      expect(recipeService.getAll).toHaveBeenCalled();
+      expect(ingredientService.getAll).toHaveBeenCalled();
+      expect(mealPlanService.getByUser).toHaveBeenCalled();
       expect(component.mealPlan.recipes.length).toEqual(1);
     });
   });
@@ -157,9 +156,25 @@ describe('MealPlannerComponent', () => {
       expect(mealPlanService.formattedUpdate).toHaveBeenCalled();
     });
 
-    it('should not add recipe ingredients', () => {
+    it('should not add recipe ingredients when the recipe is not found', () => {
       component.user = new User({});
       component.mealPlan = new MealPlan({ recipes: [new Recipe({}), new Recipe({})] });
+
+      spyOn(mealPlanService, 'formattedUpdate');
+      const spy = jasmine.createSpy('addIngredients');
+      recipeIngredientService.addIngredients = spy;
+
+      component.addIngredients('recipe');
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(mealPlanService.formattedUpdate).not.toHaveBeenCalled();
+    });
+
+    it('should not add recipe ingredients when the callback returns an unsuccessful status', () => {
+      component.user = new User({});
+      component.mealPlan = new MealPlan({
+        recipes: [new Recipe({ id: 'recipe' }), new Recipe({})],
+      });
 
       spyOn(mealPlanService, 'formattedUpdate');
       const spy = jasmine.createSpy('addIngredients');

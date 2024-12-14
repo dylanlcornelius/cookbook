@@ -23,21 +23,21 @@
         <mat-error>
           <span
             *ngIf="
-              !recipesForm.get('name').valid &&
-              recipesForm.get('name').touched &&
-              !recipesForm.get('name').errors?.wrongCase
+              !recipesForm.get('name')?.valid &&
+              recipesForm.get('name')?.touched &&
+              !recipesForm.get('name')?.errors?.wrongCase
             "
           >
             Please enter Recipe Name
           </span>
           <span
             *ngIf="
-              !recipesForm.get('name').valid &&
-              recipesForm.get('name').touched &&
-              recipesForm.get('name').errors?.wrongCase
+              !recipesForm.get('name')?.valid &&
+              recipesForm.get('name')?.touched &&
+              recipesForm.get('name')?.errors?.wrongCase
             "
           >
-            Recipe Name is not in title case: {{ recipesForm.get('name').errors?.wrongCase }}
+            Recipe Name is not in title case: {{ recipesForm.get('name')?.errors?.wrongCase }}
           </span>
         </mat-error>
       </mat-form-field>
@@ -56,7 +56,9 @@
         ></textarea>
         <mat-error>
           <span
-            *ngIf="!recipesForm.get('description').valid && recipesForm.get('description').touched"
+            *ngIf="
+              !recipesForm.get('description')?.valid && recipesForm.get('description')?.touched
+            "
           >
             Please enter valid sentences
           </span>
@@ -72,7 +74,7 @@
           [errorStateMatcher]="matcher"
         />
         <mat-error>
-          <span *ngIf="!recipesForm.get('time').valid && recipesForm.get('time').touched">
+          <span *ngIf="!recipesForm.get('time')?.valid && recipesForm.get('time')?.touched">
             Please enter a Recipe Preparation Time
           </span>
         </mat-error>
@@ -87,7 +89,7 @@
           [errorStateMatcher]="matcher"
         />
         <mat-error>
-          <span *ngIf="!recipesForm.get('servings').valid">
+          <span *ngIf="!recipesForm.get('servings')?.valid">
             Please enter a valid number for Recipe Servings
           </span>
         </mat-error>
@@ -435,7 +437,7 @@
           mat-button
           matTooltip="Back"
           color="primary"
-          [routerLink]="['/recipe/detail/', recipe.id]"
+          [routerLink]="['/recipe/detail/', recipe?.id]"
           *ngIf="id"
         >
           <mat-icon>arrow_back</mat-icon>

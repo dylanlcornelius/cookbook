@@ -16,7 +16,15 @@ this.recipeRatingModalParams = {
 import { Component, Input, ViewChild } from '@angular/core';
 import { Recipe } from '@recipe';
 import { RecipeService } from '@recipeService';
-import { ModalComponent } from '@modalComponent';
+import { ModalComponent, ModalComponentParams } from '@modalComponent';
+
+export interface RecipeRatingModalParams extends ModalComponentParams {
+  function: () => void;
+  recipe: Recipe;
+  uid: string;
+  timesCooked: number;
+  text: string;
+}
 
 @Component({
   selector: 'app-recipe-rating-modal',
@@ -24,32 +32,28 @@ import { ModalComponent } from '@modalComponent';
   styleUrls: ['./recipe-rating-modal.component.scss'],
 })
 export class RecipeRatingModalComponent {
-  params;
+  params?: RecipeRatingModalParams;
 
   @Input()
-  set Params(params: {
-    function: () => void;
-    recipe: Recipe;
-    uid: string;
-    timesCooked: number;
-    text: string;
-  }) {
+  set Params(params: RecipeRatingModalParams | undefined) {
     this.params = params;
   }
 
   @ViewChild(ModalComponent)
-  modal: ModalComponent;
+  modal: ModalComponent<RecipeRatingModalParams>;
 
   constructor(private recipeService: RecipeService) {}
 
   onRate(rating: number, recipe: Recipe): void {
-    this.recipeService.rateRecipe(rating, this.params.uid, recipe);
-    this.params.function();
+    if (this.params) {
+      this.recipeService.rateRecipe(rating, this.params.uid, recipe);
+      this.params.function();
+    }
     this.modal.close();
   }
 
   confirm(): void {
-    this.params.function();
+    this.params?.function();
     this.modal.close();
   }
 

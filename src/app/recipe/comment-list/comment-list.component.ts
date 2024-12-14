@@ -9,7 +9,6 @@ import { NotificationService, ValidationService } from '@modalService';
 import { SuccessNotification } from '@notification';
 import { User } from '@user';
 import { UserService } from '@userService';
-import { Validation } from '@validation';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -51,8 +50,8 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   load(): void {
     const user$ = this.currentUserService.getCurrentUser();
-    const comments$ = this.commentService.get(this.id);
-    const users$ = this.userService.get();
+    const comments$ = this.commentService.getByDocument(this.id);
+    const users$ = this.userService.getAll();
 
     combineLatest([user$, comments$, users$])
       .pipe(takeUntil(this.unsubscribe$))
@@ -60,8 +59,8 @@ export class CommentListComponent implements OnInit, OnDestroy {
         this.user = user;
 
         this.comments = comments
-          .map(comment => {
-            comment.authorName = users.find(({ uid }) => uid == comment.author)?.name;
+          .map((comment) => {
+            comment.authorName = users.find(({ uid }) => uid == comment.author)?.name || '';
             comment.date =
               comment.creationDate?.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
                 ? 'Today'
@@ -79,7 +78,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
         this.parentComments = this.comments
           .filter(({ parent }) => !parent)
-          .map(comment => {
+          .map((comment) => {
             const control = new FormControl();
             control.setValue(comment.text);
             comment.control = control;
@@ -88,13 +87,13 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
         this.childCommentsByParentId = this.comments
           .filter(({ parent }) => parent)
-          .map(comment => {
+          .map((comment) => {
             const control = new FormControl();
             control.setValue(comment.text);
             comment.control = control;
             return comment;
           })
-          .reduce((list, comment) => {
+          .reduce((list: typeof this.childCommentsByParentId, comment) => {
             if (!list[comment.parent]) {
               list[comment.parent] = [comment];
             } else {
@@ -141,9 +140,11 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   deleteComment(id: string): void {
-    this.validationService.setModal(
-      new Validation('Are you sure you want to delete this comment?', this.deleteCommentEvent, [id])
-    );
+    this.validationService.setModal({
+      text: 'Are you sure you want to delete this comment?',
+      function: this.deleteCommentEvent,
+      args: [id],
+    });
   }
 
   deleteCommentEvent = (comment: Comment): void => {
@@ -154,7 +155,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
       commentsToDelete = commentsToDelete.concat(childComments);
     }
 
-    commentsToDelete.forEach(comment => this.commentService.delete(comment));
+    commentsToDelete.forEach((comment) => this.commentService.delete(comment));
     this.notificationService.setModal(new SuccessNotification('Comment deleted'));
   };
 }

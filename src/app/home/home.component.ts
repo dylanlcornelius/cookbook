@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   load(): void {
     const user$ = this.currentUserService.getCurrentUser();
-    const navs$ = this.navigationService.get();
+    const navs$ = this.navigationService.getAll();
 
     combineLatest([user$, navs$])
       .pipe(takeUntil(this.unsubscribe$))

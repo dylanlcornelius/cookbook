@@ -5,7 +5,6 @@ import { FailureNotification, InfoNotification, SuccessNotification } from '@not
 import { NotificationService, RecipeIngredientModalService } from '@modalService';
 import { RecipeHistoryService } from '@recipeHistoryService';
 import { UserIngredientService } from '@userIngredientService';
-import { RecipeIngredientModal } from '@recipeIngredientModal';
 import { Recipe, Recipes } from '@recipe';
 import { UserIngredient, UserIngredients } from '@userIngredient';
 import { Ingredient, Ingredients } from '@ingredient';
@@ -66,10 +65,11 @@ export class RecipeIngredientService {
       )
       .sort(({ isOptional: a }, { isOptional: b }) => Number(b) - Number(a));
     while (startingIngredients.length) {
-      const recipeIngredient = startingIngredients.pop();
+      const recipeIngredient = startingIngredients.pop()!;
 
       const ingredientRecipe = recipes.find(({ id }) => id === recipeIngredient.id);
-      const alreadyEvaluated = recipeIngredient.paths.includes(ingredientRecipe?.id);
+      const alreadyEvaluated =
+        ingredientRecipe && recipeIngredient.paths.includes(ingredientRecipe.id);
       if (alreadyEvaluated) {
         continue;
       }
@@ -80,7 +80,7 @@ export class RecipeIngredientService {
       }
 
       const recipeIngredients = ingredientRecipe.ingredients
-        .map(current => {
+        .map((current) => {
           // recipe ingredient should allow optional
           return new RecipeIngredient({
             ...current,
@@ -113,7 +113,7 @@ export class RecipeIngredientService {
 
     let startingIngredients = [...recipe.ingredients];
     while (startingIngredients.length) {
-      const ingredient = startingIngredients.pop();
+      const ingredient = startingIngredients.pop()!;
 
       const isAdded = addedRecipes.find(({ id }) => id === ingredient.id);
       if (!isAdded) {
@@ -145,6 +145,10 @@ export class RecipeIngredientService {
         .filter(({ isOptional, uom }) => !isOptional && uom !== UOM.RECIPE)
         .reduce((calories, recipeIngredient) => {
           const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
+          if (!ingredient) {
+            return calories;
+          }
+
           const quantity = this.numberService.toDecimal(recipeIngredient.quantity);
           const convertedQuantity = this.uomService.convert(
             recipeIngredient.uom,
@@ -176,19 +180,17 @@ export class RecipeIngredientService {
     const recipeIngredients = this.findRecipeIngredients(recipe, recipes);
 
     if (recipeIngredients.length > 0) {
-      this.recipeIngredientModalService.setModal(
-        new RecipeIngredientModal(
-          this.addIngredientsEvent,
-          recipe,
-          recipes,
-          recipeIngredients,
-          ingredients,
-          userIngredients,
-          uid,
-          householdId,
-          callback
-        )
-      );
+      this.recipeIngredientModalService.setModal({
+        function: this.addIngredientsEvent,
+        recipe,
+        recipes,
+        recipeIngredients,
+        ingredients,
+        userIngredients,
+        uid,
+        householdId,
+        callback,
+      });
     } else {
       this.notificationService.setModal(new InfoNotification('Recipe has no ingredients'));
       callback?.();
@@ -206,7 +208,7 @@ export class RecipeIngredientService {
   ): void => {
     recipeIngredients
       .filter(({ uom }) => uom !== UOM.RECIPE)
-      .reduce((list, recipeIngredient) => {
+      .reduce((list: RecipeIngredients, recipeIngredient) => {
         const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
         if (!ingredient) {
           return list;
@@ -244,7 +246,7 @@ export class RecipeIngredientService {
             cartQuantity = convertedValue / Number(ingredient.altAmount);
           }
         }
-        if (!convertedValue) {
+        if (!convertedValue || !cartQuantity) {
           this.notificationService.setModal(
             new FailureNotification(`Calculation error: ${recipeIngredient.name}`)
           );
@@ -261,8 +263,8 @@ export class RecipeIngredientService {
 
         return list;
       }, [])
-      .forEach(recipeIngredient => {
-        const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id);
+      .forEach((recipeIngredient) => {
+        const ingredient = ingredients.find(({ id }) => id === recipeIngredient.id)!;
 
         const userIngredient = userIngredients.find(
           ({ ingredientId }) => ingredientId === recipeIngredient.id
@@ -289,7 +291,7 @@ export class RecipeIngredientService {
 
     if (recipe && recipes) {
       const cookedRecipeIds = this.findRecipeIds(recipe, recipes);
-      cookedRecipeIds.forEach(recipeId => {
+      cookedRecipeIds.forEach((recipeId) => {
         this.recipeHistoryService.add(uid, recipeId);
         if (householdId !== uid) {
           this.recipeHistoryService.add(householdId, recipeId);

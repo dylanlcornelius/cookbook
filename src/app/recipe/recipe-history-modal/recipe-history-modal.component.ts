@@ -17,9 +17,18 @@ this.recipeHistoryModalParams = {
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalComponent } from '@modalComponent';
+import { ModalComponent, ModalComponentParams } from '@modalComponent';
 import { ErrorMatcher } from '../../util/error-matcher';
 import { RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
+
+export interface RecipeHistoryModalParams extends ModalComponentParams {
+  function: RecipeDetailComponent['updateRecipeHistoryEvent'];
+  recipeId: string;
+  uid: string;
+  householdId: string;
+  timesCooked: number;
+  text: string;
+}
 
 @Component({
   selector: 'app-recipe-history-modal',
@@ -32,17 +41,10 @@ export class RecipeHistoryModalComponent implements OnInit {
 
   matcher = new ErrorMatcher();
 
-  params;
+  params?: RecipeHistoryModalParams;
 
   @Input()
-  set Params(params: {
-    function: RecipeDetailComponent['updateRecipeHistoryEvent'];
-    recipeId: string;
-    uid: string;
-    householdId: string;
-    timesCooked: number;
-    text: string;
-  }) {
+  set Params(params: RecipeHistoryModalParams | undefined) {
     this.params = params;
     if (this.params) {
       this.form.patchValue({
@@ -52,7 +54,7 @@ export class RecipeHistoryModalComponent implements OnInit {
   }
 
   @ViewChild(ModalComponent)
-  modal: ModalComponent;
+  modal: ModalComponent<RecipeHistoryModalParams>;
 
   constructor() {}
 
@@ -71,11 +73,11 @@ export class RecipeHistoryModalComponent implements OnInit {
       return;
     }
 
-    this.params.function(
+    this.params?.function(
       this.params.recipeId,
       this.params.uid,
       this.params.householdId,
-      this.form.get('timesCooked').value,
+      this.form.get('timesCooked')?.value,
       updateDate
     );
     this.modal.close();

@@ -12,7 +12,7 @@ export class RecipeIngredient extends Model {
   weightUnit: UOM;
   selected: boolean;
   disabled: boolean;
-  parent: string;
+  parent: string | null;
   parentName: string;
   paths: string[];
   cartQuantity: number;

@@ -1,41 +1,32 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Action } from '@actions';
-import { Ingredient, IngredientObject, Ingredients } from '@ingredient';
-import { FirestoreService } from '@firestoreService';
-import { CurrentUserService } from '@currentUserService';
 import { ActionService } from '@actionService';
+import { Injectable } from '@angular/core';
+import { CurrentUserService } from '@currentUserService';
 import { FirebaseService } from '@firebaseService';
+import { FirestoreService } from '@firestoreService';
+import { Ingredient, IngredientObject, Ingredients } from '@ingredient';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class IngredientService extends FirestoreService {
+export class IngredientService extends FirestoreService<Ingredient> {
   constructor(
     firebase: FirebaseService,
     currentUserService: CurrentUserService,
     actionService: ActionService
   ) {
-    super('ingredients', firebase, currentUserService, actionService);
+    super(
+      'ingredients',
+      (data) => new Ingredient(data),
+      firebase,
+      currentUserService,
+      actionService
+    );
   }
 
-  get(id: string): Observable<Ingredient>;
-  get(): Observable<Ingredients>;
-  get(): Observable<Ingredient | Ingredients>; // type for spyOn
-  get(id?: string): Observable<Ingredient | Ingredients> {
-    return new Observable(observer => {
-      if (id) {
-        super.get(id).subscribe(doc => {
-          observer.next(new Ingredient(doc));
-        });
-      } else {
-        super.get().subscribe(docs => {
-          observer.next(docs.map(doc => new Ingredient(doc)).sort(this.sort));
-        });
-      }
-    });
-  }
-
+  getAll = (): Observable<Ingredients> =>
+    super.getAll().pipe(map((ingredients) => ingredients.sort(this.sort)));
   create = (data: IngredientObject): string => super.create(data, Action.CREATE_INGREDIENT);
   update = (data: IngredientObject | Ingredients, id?: string): void =>
     super.update(data, id, Action.UPDATE_INGREDIENT);

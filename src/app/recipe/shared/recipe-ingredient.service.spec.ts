@@ -1,16 +1,15 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Ingredient, Ingredients } from '@ingredient';
 import { NotificationService, RecipeIngredientModalService } from '@modalService';
+import { NumberService } from '@numberService';
 import { Recipe } from '@recipe';
 import { RecipeHistoryService } from '@recipeHistoryService';
-import { UserIngredient } from '@userIngredient';
-import { UserIngredientService } from '@userIngredientService';
+import { RecipeIngredient } from '@recipeIngredient';
+import { RecipeIngredientService } from '@recipeIngredientService';
 import { UOM } from '@uoms';
 import { UomService } from '@uomService';
-
-import { RecipeIngredientService } from '@recipeIngredientService';
-import { Ingredient } from '@ingredient';
-import { NumberService } from '@numberService';
-import { RecipeIngredient } from '@recipeIngredient';
+import { UserIngredient, UserIngredients } from '@userIngredient';
+import { UserIngredientService } from '@userIngredientService';
 
 describe('RecipeIngredientService', () => {
   let service: RecipeIngredientService;
@@ -270,6 +269,11 @@ describe('RecipeIngredientService', () => {
             uom: UOM.TABLESPOON,
             quantity: 10,
           },
+          {
+            id: 'ingredient-missing',
+            uom: UOM.TABLESPOON,
+            quantity: 10,
+          },
         ],
       });
 
@@ -306,7 +310,7 @@ describe('RecipeIngredientService', () => {
         ingredients: [],
       });
 
-      const ingredients = [];
+      const ingredients: Ingredients = [];
 
       spyOn(service, 'findRecipeIngredients').and.returnValue(recipe.ingredients);
       spyOn(numberService, 'toDecimal').and.callThrough();
@@ -741,7 +745,7 @@ describe('RecipeIngredientService', () => {
         }),
       ];
 
-      spyOn(numberService, 'toDecimal').and.returnValue(null);
+      spyOn(numberService, 'toDecimal').and.returnValue(NaN);
       spyOn(uomService, 'convert').and.returnValue(false);
       spyOn(userIngredientService, 'update');
       spyOn(recipeHistoryService, 'add');
@@ -928,7 +932,7 @@ describe('RecipeIngredientService', () => {
         }),
       ];
 
-      const userIngredients = [];
+      const userIngredients: UserIngredients = [];
 
       const recipe = new Recipe({
         id: 'id',
@@ -984,7 +988,7 @@ describe('RecipeIngredientService', () => {
         }),
       ];
 
-      const userIngredients = [];
+      const userIngredients: UserIngredients = [];
 
       const recipe = new Recipe({
         id: 'id',
@@ -1042,7 +1046,7 @@ describe('RecipeIngredientService', () => {
         }),
       ];
 
-      const userIngredients = [];
+      const userIngredients: UserIngredients = [];
 
       const recipe = new Recipe({
         id: 'id',
